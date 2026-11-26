@@ -5670,3 +5670,19 @@
       from: PJR-3M4M・PJR-2Q0G を統合した runner で、start → review と実体の actor（sonnet-executor）を確かめた。
       to: runner 変更後の exec run の動作を smoke で確かめた
   previous_event_id: reg_ef421388d4744dc597ac82421b2a878a
+- v: 1
+  id: reg_73d249f72d6f4e889886b1b68fc57f0e
+  ts: "2026-11-26T15:41:50Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-AEGN・PJR-1TYG の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-26"
+      to: "-"
+  previous_event_id: reg_8f86a9fad1564b7db9dd9a70668bb137

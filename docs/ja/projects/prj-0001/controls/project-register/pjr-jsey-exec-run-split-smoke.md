@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-26T12:18:06Z"
   conclusion: runner 変更後の exec run の動作を smoke で確かめた
   autopilot: approved
 ---
