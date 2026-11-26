@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-nfr-usability-sample-150",
   "run_id": "T-KATA-REVIEW-ALL-nfr-usability-sample-150-20261126T085754Z-c6787407",
-  "updated_at": "2026-11-26T09:05:36.190Z",
+  "updated_at": "2026-11-26T09:06:36.420Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-usability-sample-150/T-KATA-REVIEW-ALL-nfr-usability-sample-150-20261126T085754Z-c6787407/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T09:05:36.190Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T09:06:36.420Z",
       "artifact_ref": null
     }
   },
