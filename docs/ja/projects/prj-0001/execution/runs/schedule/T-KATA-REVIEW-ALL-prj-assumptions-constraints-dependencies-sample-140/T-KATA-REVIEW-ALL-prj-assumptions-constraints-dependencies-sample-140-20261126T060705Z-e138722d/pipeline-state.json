@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140",
   "run_id": "T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140-20261126T060705Z-e138722d",
-  "updated_at": "2026-11-26T06:11:09.644Z",
+  "updated_at": "2026-11-26T06:12:05.956Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140/T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140-20261126T060705Z-e138722d/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T06:11:09.644Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T06:12:05.956Z",
       "artifact_ref": null
     }
   },
