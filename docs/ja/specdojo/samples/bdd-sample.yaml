@@ -12,7 +12,7 @@ entities:
     description: >-
       店舗で販売対象として管理する商品の種類。一個ずつの現物や販売時の明細とは区別する。
       商品・売上記録・売上明細は実装前の業務モデルとして本辞書で定義し、管理単位と関連は [[specdojo:ccd-sample|概念クラス図 サンプル]] に合わせる。
-      用語参照は [[specdojo:gl-sample|用語集 在庫・調達]] を対象とする。
+      用語は [[specdojo:gl-sample|用語集 在庫・調達]] を参照する。
     related_terms: [tm-standard-product]
     key_fields: [product_id]
     fields:
@@ -55,8 +55,8 @@ entities:
   - logical_name: 売上記録
     physical_name: sale
     description: >-
-      一回の店頭販売で確定した会計の管理単位。一件以上の売上明細を持ち、入力途中や取り消した取引は含めない。
-      顧客が特定されない現金販売も記録する。顧客の基本情報とつけ残高の台帳は本辞書の対象外とする。
+      一回の店頭販売で確定した会計の管理単位。一件以上の売上明細を持ち、入力途中の取引と取り消した取引は含めない。
+      顧客を特定しない現金販売も記録する。顧客の基本情報とつけ残高の台帳は本辞書の対象外とする。
     related_terms: [tm-sales, tm-accounts-receivable]
     key_fields: [sale_id]
     fields:
@@ -88,7 +88,7 @@ entities:
       - logical_name: 支払方法
         physical_name: payment_method
         type: enum
-        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。本部への登録の受付状態とは別の判断軸。
+        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。本部売上受付の受付状態とは別の判断軸とする。
         constraints:
           required: true
         example: cash
@@ -102,7 +102,7 @@ entities:
         type: string
         description: >-
           購入者として特定した顧客の識別子。一見客の現金販売では省略できる。
-          つけ販売では請求先を特定するために必要であり、未設定を現金販売と読み替えない。
+          つけ販売では請求先を特定するために必要とする。未設定を現金販売と読み替えない。
         constraints:
           required: false
         example: CUS-001
@@ -147,7 +147,7 @@ entities:
       - logical_name: 販売数量
         physical_name: quantity
         type: integer
-        description: この行で販売する商品の個数。販売対象のない行や返品の数量は含めない。
+        description: この行で販売した商品の個数。販売対象のない行や返品の数量は含めない。
         unit: 個
         constraints:
           required: true
@@ -164,12 +164,12 @@ entities:
     fields:
       - logical_name: 本部売上ID
         physical_name: sale_id
-        description: 本部が採番した売上の識別子。店舗の売上記録の売上IDとは別に採番されるため、同じ値と読み替えずに照合する。
+        description: 本部が採番した売上の識別子。本部は店舗の売上記録の売上IDとは別に採番するため、店舗側は両者を同じ値と読み替えずに照合する。
       - logical_name: 受付状態
         physical_name: status
         description: >-
-          本部が売上を受け付けたかを表す。拒否は応答コードで返るため、この項目の値がないことを受付済みと扱わない。
-          許容値は応答スキーマに合わせ、ここでは業務上の意味を対応付ける。
+          本部が売上を受け付けたかを表す。本部は拒否を応答コードで返すため、受付状態の値がないことを受付済みと扱わない。
+          許容値は応答スキーマに合わせ、本辞書では業務上の意味を対応付ける。
         allowed_values_detailed:
           - value: ACCEPTED
             label: 本部が売上を受け付け、重複なく登録した
