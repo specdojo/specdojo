@@ -31,7 +31,7 @@ Impact Analysis (Business) Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は `specdojo:imp-business-rulebook` とし、`based_on` に入力の変更要求 ID を列挙する。
+共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は `specdojo:imp-business-rulebook` とし、`based_on` に入力の変更要求の個票 ID（小文字の `pjr-xxxx`。本文では `PJR-XXXX` と書く）を列挙する。
 
 ## 5. 本文要件
 

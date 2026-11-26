@@ -93,3 +93,29 @@
       from: "-"
       to: easy
   previous_event_id: reg_c8d7d8d2ab41454383f6386f1d0295a8
+- v: 1
+  id: reg_83a32d4d19f34fd38f634d26da22fe96
+  ts: "2026-11-26T20:20:50Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_add4ff872d194ae380a8c0a71905b972
+- v: 1
+  id: reg_d0ed71d4cc654f2288adf8368e995fd3
+  ts: "2026-11-26T20:23:21Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_83a32d4d19f34fd38f634d26da22fe96
