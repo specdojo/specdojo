@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-AEGN",
   "run_id": "pjr-aegn-20261126T152946Z-ef9f6cdc",
-  "updated_at": "2026-11-26T15:35:13.318Z",
+  "updated_at": "2026-11-26T15:35:23.771Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AEGN/pjr-aegn-20261126T152946Z-ef9f6cdc/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-26T15:35:13.318Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T15:35:23.771Z",
       "artifact_ref": null
     }
   },
