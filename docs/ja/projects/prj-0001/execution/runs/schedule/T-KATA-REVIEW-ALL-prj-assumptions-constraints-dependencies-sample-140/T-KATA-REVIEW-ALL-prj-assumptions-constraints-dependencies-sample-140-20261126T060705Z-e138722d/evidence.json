@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140-20261126T060705Z-e138722d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T06:07:54.505Z",
+    "completed_at": "2026-11-26T06:10:26.270Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../prj-assumptions-constraints-dependencies-sample.md       | 12 ++++++------\n 1 file changed, 6 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md",
+      "status": "passed",
+      "summary": "整形した。差分は直した 3 か所の行と表の列幅の調整だけ"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-assumptions-constraints-dependencies-sample\n  type: project\n  status: ready\n  rulebook: specdojo:prj-assumptions-constraints-dependencies-rulebook\n  based_on:\n    - specdojo:prj-scope-sample\n    - specdojo:prj-charter-sample\n  supersedes: []\n---\n\n# 前提・制約・依存関係: 駄菓子屋きぬや 販売管理システム\n\n初期リリース準備から店頭試用までに、作業の開始・保留・再判断に使う前提、制約、依存を整理する。\n\n受入判定は \\[\\[specdojo:prj-success-criteria-and-acceptance\n… output omitted …\n 検知したこと | 記録先 | 報告・判断 |\n| - | - | - |\n| 通信断による未記録、端末利用不能など発生済みの支障 | \\[\\[specdojo:pm-issue-log-sample\\|課題ログ]]（ACD 項目 ID・是正期限を付ける） | 所有者が開発担当へ報告し、開始・継続に響けば店主代表が判断する |\n| 確認参加者の不足、助言遅延など将来の不確実な影響 | \\[\\[specdojo:pm-risk-register-sample\\|リスク登録簿]]（顕在化したら元の ID を付けて課題へ移す） | 開発担当が週次と兆候検知時に店主代表へ報告する |\n| 対象範囲、費用・時間上限、期日の変更案 | \\[\\[specdojo:pm-change-request-log-sample\\|変更要求ログ]] | 開発担当が起案し、店主代表が承認・却下・保留する |\n| 未決事項の解消、延期・再開の判断 | 該当する PJR・課題・変更要求に判断理由と証跡を付記する | 開発担当が本書と Schedule の追従を確かめ、店主代表へ完了を報告する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7650 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7650 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1690}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  15:10:37\n   Duration  2.48s (transform 5.58s, setup 898ms, import 7.75s, tests 6.06s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）の段を終えた。sample の事実を成功条件・憲章・スコープ・pm-plan・pm-members・rulebook と突き合わせ、ACD-D04 の初期受入の条件 ID（2 か所）と ACD-D01 の未定義の担当名を直した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4-1: R4 / 3. 依存関係（ACD-D04） / 初期受入の必須条件が「SC-01・AC-01〜AC-04」で、成功条件の必須条件（SC-01・SC-07・SC-09・AC-01〜AC-05）と食い違う / 「SC-01・SC-07・SC-09・AC-01〜AC-05 を正とする」に直した / vp-qe-verifiability。正本は prj-success-criteria-and-acceptance-criteria-sample の「判定対象と適用範囲」と「判定手順と証跡」の 2 番 / -",
+    "R4-2: R4 / 3. 依存関係（ACD-D04） / 「SC-02 以降の将来測定を初期受入の証拠に使わない」は、初期受入で判定する SC-07・SC-09 まで含んでしまう / 「運用開始後に判定する SC を初期受入の証拠に使わない」に直した / vp-arc-technical-constraints。正本は成功条件の「判定対象と適用範囲」（運用開始後は SC-02〜SC-06・SC-08・SC-10） / -",
+    "R4-3: R4 / 3. 依存関係（ACD-D01） / 「店番担当」は pm-members-sample.yaml と pm-organization-sample にない担当名 / 「その日の店番をする代表」に直した / vp-dev-implementation-readiness。pm-members-sample.yaml の member は店主代表・開発担当・同行レビュー担当・技術メンター・家族利用者代表で、スコープでは店番を店主代表と家族利用者代表が担う。「店番担当」を member に足す案は採らなかった / 要判断",
+    "確かめの表（R4）: 1 本文冒頭の wikilink 先（成功条件・pm-plan・スコープ・憲章・課題ログ・リスク登録簿・変更要求ログ） / samples 配下の各ファイル / ファイルの有無と H1 を読んだ / 一致 / 各 sample が存在する。2 前提条件の章の、スコープ「対象業務」「スコープ外」「境界の判断基準」 / prj-scope-sample.md / 見出しを読んだ / 一致 / 1・4・5 章にある。境界の判断基準の 3 番が操作の単純化にあたる。3 ACD-A01 の SC-02・SC-03 / 成功条件の成功基準の表 / 表を読んだ / 一致 / 記録継続と負担。運用開始後 2 週間に判定。4 ACD-A02 の、憲章「未決事項」にオフライン時の扱いが残る / prj-charter-sample.md の未決事項 / 表を読んだ / 一致 / 論点「オフライン時の扱い」がある。5 制約事項の章の、憲章「主要前提・制約」の支出・公開情報 / prj-charter-sample.md の主要前提・制約 / 表を読んだ / 一致 / 費用上限と公開禁止の情報の 2 つの制約がある。6 ACD-C02 の、pm-plan の U-01 を店主代表が承認する / pm-plan-sample.md / U-01 を grep した / 一致 / U-01 は現金支出上限で、PM が提示し PO が判断する。7 ACD-D03 の、初期受入の対象外とする扱いは決定済み・記録方法は未決 / prj-scope-sample.md のスコープ外と、成功条件の例外条件と未解決事項 / 読んだ / 一致。8 ACD-D04 の初期受入の条件 ID / 成功条件の判定対象と適用範囲 / 読んだ / 不一致（R4-1・R4-2 で直した）。9 ACD-D01 の店番担当 / pm-members-sample.yaml / grep した / 不一致（R4-3 で直した）。10 開発担当の Role（PM・DEV） / pm-members-sample.yaml / 読んだ / 一致 / developer の roles は PM・BA・DEV。11 同行レビュー担当・技術メンター / pm-members-sample.yaml / 読んだ / 一致 / roles は QE と ARC。12 3 つの表の列と項目 ID の規則 / prj-assumptions-constraints-dependencies-rulebook.md の項目 ID と各章 / 読んだ / 一致 / 列名がそろい、旧 ACD-C01 の廃止と非再利用も規則どおり。13 frontmatter（type project、rulebook、based_on、supersedes） / rulebook の deliverable_type と deliverable-frontmatter.schema.yaml / 読んだ / 一致（schema の検証は親 runner の lint-fm に任せる）。14 PJR-KN01・kinuya-* の記録 / 正本なし / 本文で架空の参照名と明記 / 確かめない / 共通サンプル文脈の仮定として対象外。",
+    "申し送り: 本 sample の frontmatter の status は ready のまま触っていない。直した内容を人が採るか確かめる必要がある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140/T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140-20261126T060705Z-e138722d/executor.log",
+      "bytes": 6638,
+      "truncated": false
+    }
+  ]
+}
