@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
@@ -65,8 +65,27 @@ claude の 5 時間の利用枠の上限（You've hit your 5-hour limit）で止
 
 ## 6. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 6.1. 解決内容
+
+- 直し方は CLI の組み込み検出に決めた。`src/exec/run/shared.ts` の `isRateLimitError` で、0 以外の終了かつ出力に `hit your 5-hour limit` を含むとき、設定の有無に関わらず上限として検出する。0 で終わった出力は対象外。
+- 理由は、`exec-defaults.yaml` は保護された設定で反映に承認が要ること、provider 別の `rate_limit_detection` が全体設定を置き換えるため設定漏れが再発しやすいこと。検出は executor と reporter の段が共有する `isRateLimitError` を通るため、同じに扱われ、`--on-rate-limit fallback` で代わりの agent に切り替わる。
+- 種類の分類は既存の `limitKind` が `session_limit` にし、「resets 2:20am (Asia/Tokyo)」から再開時刻を読む。
+- 見張りの分類（`src/exec/watch-scan-classify.ts`）の `usage_limit` の規則に `5-hour limit`・`session limit` を足した（記録の文言のみに当てる規則）。
+
+### 6.2. 確認結果
+
+- 単体テストを追加した: 検出（非 0 で検出・0 では検出しない）、`limit.test.ts` の session_limit と再開時刻、`watch-scan-classify.test.ts` の `usage_limit` への分類。対象 3 ファイルは通過。
+- 切り替えは検出後の既存の経路（`rate_limit` の結果）を使うため、新規の経路は足していない。実 run での確かめは統合の後にオーケストレーターが行う。
+
+### 6.3. 保護された設定の案（反映は承認のもと）
+
+- `.specdojo/exec-defaults.yaml` の claude の `rate_limit_detection.stderr_patterns` に `5-hour limit` を足す案。組み込み検出があるため必須ではなく、設定を正にしたい場合のみ。今回は変更していない。
+
+### 6.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 行の文案: `exec run` が claude の 5 時間の利用枠の上限（「You've hit your 5-hour limit」）を session limit として検出し、`--on-rate-limit fallback` で代わりの agent に切り替えるようにした。`exec watch scan` はこの止まりを `usage_limit` に分類する。
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- なし
