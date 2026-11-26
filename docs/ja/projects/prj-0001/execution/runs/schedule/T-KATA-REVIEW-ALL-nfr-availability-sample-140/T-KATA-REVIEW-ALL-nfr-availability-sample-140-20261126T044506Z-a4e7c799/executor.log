@@ -1,0 +1,33 @@
+R4（正しさ）のレビューが終わり、誤りを 1 件見つけて sample を直しました。変更したファイルは `docs/ja/specdojo/samples/nfr-availability-sample.md` の 1 行だけです。この sample はコマンドやオプションを書かない業務要件の完成例なので、他の sample にある事実と schema のキーに突き合わせました。
+
+**直した誤り**：概要の章に「店番担当が記録できないことに気付いたら紙の販売控えへ切り替える」とありました。運用方針（opd-index と opd-incident-management）と運用手順（opr-incident）では、P1 に気付いてから 30 分たっても再開できない場合に `PO` が切替を決めると定めています。そこで「記録を 30 分たっても再開できなければ `PO` が紙の販売控えへの切替を決める」に直しました。
+
+**確かめの表**（確かめられない主張はありません）：
+
+| No | 主張（箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 営業日の 90% 以上で記録を続ける目標（概要） | `samples/prj-overview-sample.md` | grep | 一致 | L78「営業日の90%以上」 |
+| 2 | 紙の販売控えへの切替を店番担当が気付いた時点で行う（概要） | `samples/opd-index-sample.md`、`samples/opd-incident-management-sample.md`、`samples/opr-incident-sample.md` | grep | 不一致 → 修正 | opd-index L97、opd-incident-management L50、opr-incident L73 |
+| 3 | 対象時間帯は営業日の 10:00〜18:00（適用範囲） | `samples/opd-index-sample.md` | grep | 一致 | L34 |
+| 4 | 計画停止は閉店後に限る（適用範囲） | `samples/opd-index-sample.md` | grep | 一致 | L108-111 |
+| 5 | ACD-A02 は通信断の頻度と影響が未確認という前提 | `samples/prj-assumptions-constraints-dependencies-sample.md` | grep | 一致 | L26 |
+| 6 | 監視は 5 分続けて応答がないと通知する（`nfr-avl-002`） | `samples/opd-index-sample.md` | grep | 一致 | L89 |
+| 7 | RTO の暫定は翌営業日の開店まで、RPO の暫定は前日の閉店時点 | `samples/opd-index-sample.md` | 読み取り | 一致 | L122-123 |
+| 8 | バックアップは閉店後に 1 日 1 回自動で取り、復元を月次で演習する（`nfr-avl-003`） | `samples/opd-index-sample.md`、`samples/opr-backup-restore-sample.md` | grep | 一致 | opd-index L121・L125、opr-backup-restore L63 |
+| 9 | 復旧の終点は販売・在庫・つけを各 1 件記録できた時刻 | `samples/opr-incident-sample.md` | grep | 一致 | L60 |
+| 10 | 紙の控えと登録した記録を件数・金額で照合する（`nfr-avl-004`） | `samples/opd-index-sample.md`、`samples/opr-incident-sample.md` | grep | 一致 | opd-index L98、opr-incident L60 |
+| 11 | 予備のタブレットは置かず、故障中は紙の控えで販売を続ける（未決事項） | `samples/opd-incident-management-sample.md` | grep | 一致 | L42 |
+| 12 | frontmatter の `type: requirement`・`part_of`・`based_on`・`rulebook` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`common-frontmatter.schema.yaml` | grep | 一致 | requirement は enum にあり、`part_of`・`based_on` は common の L69・L72 |
+| 13 | rulebook がこの sample を宣言している | `rulebooks/nfr-availability-rulebook.md` | grep | 一致 | L8 |
+| 14 | wikilink の参照先 5 件が存在する | 各 sample の frontmatter の `id` | grep | 一致 | 参照先の id がすべて見つかった |
+| 15 | `sac-availability`・`stc-availability` はまだ存在しない文書としてバッククォートで書く | `samples/sac-sample.md`、rulebook | grep | 一致 | sac-sample L21、rulebook L126 |
+
+plan の finding は次のとおり扱いました。
+- **F001**（冗長さ）：R4 の観点に当たらないので扱っていません。
+- **F002**（判定の確かめやすさ）：測定・検証方法の章の末尾の段落が暫定の判定の扱いをまとめているので、追加の直しは要らないと判断しました。
+
+lint などの検査は、終了後に親の runner が実行します。自分で走らせた検査はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）のレビューで、nfr-availability-sample の事実を参照先の sample と schema に突き合わせた。15 件のうち 1 件が不一致だったため、概要の章の紙の販売控えへの切替の判断者と時機を正本（opd-index、opd-incident-management、opr-incident）に合わせて直した。","handoff":["R4-1: R4 / 1. 概要（対象・目的） / 「店番担当が記録できないことに気付いたら紙の販売控えへ切り替える」が正本と食い違う。正本では P1 に気付いてから 30 分たっても記録を再開できない場合に `PO` が切替を決める / 「記録を 30 分たっても再開できなければ `PO` が紙の販売控えへの切替を決める」に直した / vp-arc-technical-constraints。正本は opd-index-sample L97、opd-incident-management-sample L50、opr-incident-sample L73 / -","確かめの表（R4、全 15 件）: (1) 営業日の 90% 以上の目標 = prj-overview-sample L78 と一致。(2) 紙の控えへの切替 = 不一致のため修正（R4-1）。(3) 10:00〜18:00 = opd-index-sample L34 と一致。(4) 計画停止は閉店後 = opd-index-sample L108-111 と一致。(5) ACD-A02 = prj-assumptions-constraints-dependencies-sample L26 と一致。(6) 5 分続けて応答なしで通知 = opd-index-sample L89 と一致。(7) RTO・RPO の暫定値 = opd-index-sample L122-123 と一致。(8) 1 日 1 回の自動バックアップと月次の復元演習 = opd-index-sample L121・L125、opr-backup-restore-sample L63 と一致。(9) 復旧の終点は各 1 件の記録 = opr-incident-sample L60 と一致。(10) 件数・金額の照合 = opd-index-sample L98、opr-incident-sample L60 と一致。(11) 予備のタブレットなし = opd-incident-management-sample L42 と一致。(12) frontmatter の `type: requirement`・`part_of`・`based_on` = deliverable / common の frontmatter schema と一致。(13) rulebook の sample 宣言 = nfr-availability-rulebook L8 と一致。(14) wikilink の参照先 5 件の id が存在する。(15) `sac-availability`・`stc-availability` は未作成の文書としてバッククォートで書いており、sac-sample L21 と rulebook L126 に同じ記述がある。確かめられない主張はなし。","F001（vp-arc-conciseness）は R4 の観点に当たらないため扱わない。F002（vp-qe-verifiability）は、測定・検証方法の章の末尾の段落が暫定の判定の扱いをまとめており、可用性要件一覧の基準欄から判定が読み取れるため、追加の直しは要らないと判断した。"],"validations":[{"command":"npm run lint:md:changed","status":"not_run","summary":"親の runner が実行する検査のため executor では実行しない"}]}
+</specdojo_executor_evidence>
