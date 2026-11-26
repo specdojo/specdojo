@@ -1,0 +1,35 @@
+R4（正しさ）のレビューを終えました。誤りは1件見つかり、`docs/ja/specdojo/samples/bes-sample.md` の1行を直しました。markdownlint とフォーマット検査（prettier）はどちらも通っています。
+
+**直した点（F010）**
+「発生条件」の章で、金額計算と端数処理の委ね先が `[[specdojo:br-sample|販売金額計算の業務ルールサンプル]]` になっていました。ところが `br-sample` の中身は在庫不足判定で、販売金額や端数は扱っていません。販売金額のルールを書いた sample は見つからなかったので、仮置き ID `br-sales-amount` に置き換え、未作成で照合していないことを書き添えました。
+
+**照合した主な事実**
+本文の文書 ID・項目名・状態値・参照先を、frontmatter の schema、関連する sample、`bes-rulebook` と突き合わせました。誤りは上の1件だけでした。
+
+| No | 主張 | 突き合わせた先 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter（`type: requirement`、`rulebook`、`based_on`、`supersedes`） | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`common-frontmatter.schema.yaml`、`bes-rulebook` | 一致 |
+| 2 | 一覧の `bes-cash-sale-confirmed`（「顧客が商品を購入した」、`P-03`） | `bes-index-sample.md` の25行目と38行目 | 一致 |
+| 3 | `P-03` が店頭販売であること | `cdfd-overview-sample.md` の44行目 | 一致 |
+| 4 | 発生時点を確定の記録時とし、控えの印字を待たない | `bes-index-sample.md` の25行目 | 一致 |
+| 5 | 事実データの8項目 | `bes-index-sample.md` の25行目の事実データ列 | 一致 |
+| 6 | `br-sample` が販売金額計算のルールである | `br-sample.md` | 不一致（直しました） |
+| 7 | `payment_status` / `unconfirmed` / `cdsd-order-status` | samples の全文検索で出てこない | 確かめられない |
+| 8 | `bps-sales-order-flow` が未作成 | `sf-sample.md`、`bac-sample.md` も未作成として扱っている | 一致 |
+| 9 | `bdd-sales-record` | samples に出てこない | 確かめられない（本文の `_UNDECIDED_` に書いてあるとおり） |
+
+No 7 と No 9 は、状態定義とデータモデルが用意されるまで確かめられません。
+
+**判断を残している点**
+条件1の `payment_status` / `unconfirmed` は、照合先がないまま書かれた物理名に見えます。rulebook は記述ガイドの「事実データ」で物理項目名を推測して確定することを戒め、禁止事項で物理カラムを正本として書くことを禁じています。本文は仮置きと `_UNDECIDED_` で未照合を示しているので、今回は残しました。業務上の言い方（「会計が未確定」）に絞るかどうかは決めてください。
+
+**扱わなかった指摘**
+- F005・F007・F008（確定の記録が成立したか分からない場面）は、前の段の直しで「照合するまで未判定」になっており、解消済みです。
+- F001〜F004、F006、F009、F012、F013 は、kata ガイドの「kata の観点の組」で kata のレビューには使わないとされている観点なので、直していません。
+- F002 と F011（承認者と記録先）は、R4 で扱う観点ではありません。kata の承認は登録簿で追う方針なので、扱う段に任せます。
+
+markdownlint（`npx markdownlint-cli2`）とフォーマット検査（`npx prettier --check`）は、直した sample に対して実行しました。`npm run lint:md` などの検証は、終了後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: bes-sample の主張を schema・関連 sample・bes-rulebook と照合した。誤りは F010 の1件で、在庫不足判定の `br-sample` を販売金額計算の委ね先にしていたため、仮置き ID `br-sales-amount`（未作成・未照合）に直した。ほかの主張は一致したか、正本が未作成で確かめられないもの。","handoff":["R4-1: R4 / 4. 発生条件 / 金額計算と端数処理の委ね先が `[[specdojo:br-sample]]` になっているが、br-sample は在庫不足判定で販売金額や端数を定義していない（F010） / 仮置き ID `br-sales-amount`（未作成で未照合）に置き換えた / vp-arc-technical-constraints、vp-qe-verifiability。docs/ja/specdojo/samples/br-sample.md の H1「駄菓子屋きぬや 在庫不足判定」 / -","R4-2: R4 / 4. 発生条件 / 条件1の `payment_status` / `unconfirmed` は照合先の正本がない物理名で、rulebook の記述ガイド「事実データ」（物理項目名を推測して確定しない）と禁止事項（物理カラムを正本として書かない）に触れるおそれがある / - / vp-dev-implementation-readiness。仮置きと `_UNDECIDED_` で未照合を示しているので残した。選ばなかった案は「会計がまだ確定していない」に絞って物理名を外すこと / 要判断","確かめ1: frontmatter（`type: requirement`、`rulebook`、`based_on`、`supersedes`） / docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、common-frontmatter.schema.yaml、bes-rulebook / 読み取り / 一致 / requirement は deliverableType の enum にあり、`based_on` と `supersedes` は common-frontmatter の72〜75行目で定義されている","確かめ2: 導入の `bes-cash-sale-confirmed`（「顧客が商品を購入した」、`P-03`） / docs/ja/specdojo/samples/bes-index-sample.md / grep / 一致 / 25行目と38行目","確かめ3: `P-03` が店頭販売 / docs/ja/specdojo/samples/cdfd-overview-sample.md / grep / 一致 / 44行目","確かめ4: 2. いつ（確定の記録時点で、控えの印字を待たない） / bes-index-sample.md / 読み取り / 一致 / 25行目","確かめ5: 5. 事実データの8項目 / bes-index-sample.md / 読み取り / 一致 / 25行目の事実データ列","確かめ6: br-sample が販売金額計算のルールである / docs/ja/specdojo/samples/br-sample.md / 読み取り / 不一致 / 在庫不足判定の仕様だったため R4-1 で直した","確かめ7: `payment_status` / `unconfirmed`（`cdsd-order-status`） / docs/ja/specdojo/samples 配下 / grep / 確かめられない / samples に出てこない。状態定義の正本が要る","確かめ8: `bps-sales-order-flow` が未作成 / sf-sample.md、bac-sample.md / grep / 一致 / どちらも未作成として扱っている","確かめ9: `bdd-sales-record` / samples 配下 / grep / 確かめられない / 出てこない。本文の `_UNDECIDED_` に書いてあるとおりで、データモデルの正本が要る","F005・F007・F008（確定の成立が不明な場面）は、前の段の直しで「照合するまで未判定」になっており解消済み。F001〜F004、F006、F009、F012、F013 は kata ガイドの「kata の観点の組」で kata のレビューには使わない観点なので直していない。F002 と F011（承認者と記録先）は R4 の観点ではなく、kata の承認は登録簿で追う方針なので扱う段に任せた。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bes-sample.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/samples/bes-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/bes-sample.md だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"yaml の変更がない","reason":"変更したのは Markdown だけで、*.yaml / *.yml は変更していない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下だけ"}]}
+</specdojo_executor_evidence>
