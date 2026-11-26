@@ -1,0 +1,10 @@
+`docs/ja/specdojo/samples/pm-roles-sample.yaml` について、R3（読みやすさ）の観点で文を 2 か所直しました。schema 検査と Prettier の整形チェックはどちらも通っています。意味や、判断に要る背景・制約は変えていません。frontmatter の `status` も触っていません。
+
+- **R3-1（PO の `project_note`）:** 前半に主語がなく、途中で「人間が」が出てくるため、誰が何をするのかが一文の中でねじれていました。「記録を優先する。」で文を切り、後半を「範囲・費用・参加時間の上限、受入、公開・継続は人間が最終判断する。」としました（根拠: W1、W2、W3）。
+- **R3-2（冒頭コメントの 4 行目）:** 「共通責務は based_on の上位標準を参照する」は主語と述語がねじれていました。2 行目の「〜の正本: …」に書き方をそろえ、「共通責務の正本: based_on の上位標準。」としました（根拠: W2、`vp-ux-language-consistency`）。
+
+W4 から W10 と、ほかの 6 ロールの `project_note` に、直すべき点は見つかりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさの観点で pm-roles-sample.yaml の文を 2 か所直した（PO の project_note を 2 文に分けた。冒頭コメントの共通責務の行を『正本:』の書き方にそろえた）。schema 検査と Prettier の整形チェックは通った。","handoff":["R3-1: R3 / roles の PO の project_note / 前半に主語がなく途中で『人間が』が出るため、誰が優先し誰が判断するのかがねじれている / 『…記録を優先する。範囲・費用・参加時間の上限、受入、公開・継続は人間が最終判断する。』の 2 文に分けた / W1、W2、W3 / -","R3-2: R3 / 冒頭コメント（共通責務の行） / 『共通責務は based_on の上位標準を参照する』は主語と述語がねじれており、ほかの行の『〜の正本: …』の書き方とも食い違う / 『共通責務の正本: based_on の上位標準。』にした / W2、vp-ux-language-consistency / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-roles.schema.yaml --data docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/pm-roles-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは sample の YAML だけで、plan / result / 個票は変更していない"}]}
+</specdojo_executor_evidence>
