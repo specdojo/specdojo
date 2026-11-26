@@ -1,0 +1,29 @@
+R4（正しさ）の段を終えました。`docs/ja/specdojo/samples/sac-sample.md` を正本と突き合わせ、誤り 1 件と F001 を直しました。直したのはこのファイルだけで、result には手を入れていません。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: requirement`、`rulebook`、`based_on` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`common-frontmatter.schema.yaml`、`sac-rulebook.md` | grep で読み取り | 一致 | `requirement` が列挙値にあり、`based_on` もキーとして定義されている。rulebook の `deliverable_type: requirement`・`sample: specdojo:sac-sample` と一致 |
+| 2 | 概要表の要件 ID と基準（`nfr-perf-001`〜`003`・`005`・`006`） | `nfr-performance-sample.md` の性能要件一覧 | 読み取り | 一致 | P95 は 2 秒以内（仮置き）、P99 は記録のみ、件数の一致、全体で 1 分以内、開店までに完了（暫定） |
+| 3 | 商品検索（`nfr-perf-004`）を対象外にすること | `nfr-performance-sample.md` | 読み取り | 一致 | 受入条件の行に「`nfr-perf-004` を除く要件の合否判定」とある |
+| 4 | ピーク時の負荷（平日 16:00〜18:00、60 件/時、均等な間隔） | `nfr-performance-sample.md` の適用範囲・負荷条件と測定方法 | 読み取り | 一致 | 区分「ピーク時」の行と `nfr-perf-001` の測定方法 |
+| 5 | 2.1 の前提・操作・判定（印字を除く、1 時間 × 1 回、平均値だけで判定しない） | `nfr-performance-sample.md` | 読み取り | 一致 | `nfr-perf-001`・`nfr-perf-002` の測定方法の行 |
+| 6 | 2.3 の 30 回の試行と、事前に登録するつけの顧客 | `nfr-performance-sample.md` | 読み取り | 一致 | `nfr-perf-005` の測定方法の行 |
+| 7 | 2.4 の 3 回実行と、最も長い回で判定すること | `nfr-performance-sample.md` | 読み取り | 一致 | `nfr-perf-006` の行 |
+| 8 | 仮置き値（95% が 2 秒以内、60 取引/時）の出どころ | `tsp-index-sample.md` | 読み取り | 一致 | 138 行目の `_ASSUMPTION_` |
+| 9 | 「下位: `st-cash-sale-commit-response-010` が `SAC-PERF-01`・`SAC-PERF-02` を分解して測る」 | `stc-sample.md`、`nfr-performance-sample.md` の 83 行目 | grep で読み取り | 不一致 → 修正 | 取りこぼしの照合は `st-cash-sale-commit-records-010` が受け持つ |
+| 10 | `sac-availability`（まだ存在しない文書）が通信断を扱うこと | `nfr-availability-sample.md` の 78 行目 | grep で読み取り | 一致 | 文書がないため、バッククォートで仮置きしているのは正しい |
+| 11 | 閉店時刻と開店時刻の具体的な値 | 共通サンプル文脈、`bes-index-sample.md`、`cop-sample.md` | grep で読み取り | 確かめられない | 通常の営業日の時刻を定めた正本がない。`cop-sample` の「正午の開店」は切替日だけの値 |
+
+**直した点（`docs/ja/specdojo/samples/sac-sample.md`）**
+
+- **下位のテストの対応（No 9）:** `st-cash-sale-commit-response-010` が `SAC-PERF-01` を測り、`st-cash-sale-commit-records-010` が `SAC-PERF-02` を照合する、と書き直しました。
+- **F001（日次締めの合否の境界）:** 時間の数値は足していません。rulebook が「根拠のない閾値の追加」を禁じているためです。代わりに 2.4.1 の前提に、試行の前に閉店時刻と翌日の開店時刻を試験の控えに記録する手順を足しました。2.4.3 と 2.4.4 は、この 2 つの時刻の間の時間以内なら合格、超える回か完了しない回があれば不合格、と判定できる形にしました。
+- **F002:** 前の段で、概要表の「閉店後の日次締めを翌日の開店前に終える」と 2.4 の見出しがすでにそろっています。観点も R3 のものなので扱っていません。
+
+検査は `npx prettier --check` だけを流して通りました。ほかの lint は親の runner が流します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 の正しさの段を完了した。sac-sample の事実 11 件を schema、nfr-performance-sample、tsp-index-sample、stc-sample と突き合わせた。下位テストの対応の誤り 1 件を直し、F001 に対応して日次締めの合否の境界を、控えに記録した閉店時刻から翌日の開店時刻までの時間として判定できる形にした。","handoff":["確かめの表: No1 frontmatter の `type: requirement`、`rulebook`、`based_on` / 正本 deliverable-frontmatter.schema.yaml、common-frontmatter.schema.yaml、sac-rulebook.md / 一致（`requirement` が列挙値にあり、`based_on` もキーとして定義されている）。No2 概要表の `nfr-perf-001`〜`003`・`005`・`006` の基準 / 正本 nfr-performance-sample.md の性能要件一覧 / 一致。No3 `nfr-perf-004` を対象外にすること / 正本 nfr-performance-sample.md の 82 行目 / 一致。No4 ピーク時の負荷（平日 16:00〜18:00、60 件/時、均等な間隔） / 正本 nfr-performance-sample.md の適用範囲・負荷条件 / 一致。No5 2.1 の印字を除く、1 時間 × 1 回、平均値だけで判定しない / 正本 nfr-performance-sample.md の測定方法 / 一致。No6 2.3 の 30 回とつけの顧客の事前登録 / 正本 nfr-performance-sample.md の `nfr-perf-005` / 一致。No7 2.4 の 3 回実行と最も長い回での判定 / 正本 nfr-performance-sample.md の `nfr-perf-006` / 一致。No8 仮置き値（95% が 2 秒以内、60 取引/時） / 正本 tsp-index-sample.md の 138 行目 / 一致。No9 下位テストの対応 / 正本 stc-sample.md、nfr-performance-sample.md の 83 行目 / 不一致のため修正。No10 `sac-availability` / 正本 nfr-availability-sample.md の 78 行目 / 一致（まだ存在しない文書のためバッククォートで仮置き）。No11 閉店時刻と開店時刻の値 / 共通サンプル文脈、bes-index-sample.md、cop-sample.md / 確かめられない（通常の営業日の時刻を定めた正本がない）。","[minor/vp-qe-verifiability] 概要の下位の行で、`st-cash-sale-commit-response-010` が `SAC-PERF-02` も測るとしていたが、stc-sample と nfr-performance-sample では取りこぼしの照合を `st-cash-sale-commit-records-010` が受け持つ。response-010 が `SAC-PERF-01` を測り、records-010 が `SAC-PERF-02` を照合する、と直した。","[minor/vp-qe-verifiability] F001: 2.4.4 の合否の境界が「翌日の開店まで」だけで、判定に使う時刻がなかった。rulebook が根拠のない閾値の追加を禁じているため時間の数値は足さず、2.4.1 の前提に、試行の前に閉店時刻と翌日の開店時刻を試験の控えに記録する手順を足した。2.4.3 と 2.4.4 は、この 2 つの時刻の間の時間以内なら合格、超える回か完了しない回があれば不合格と判定できる形にした。解消済み。","F002（vp-ux-language-consistency）: 前の段で、概要表の『閉店後の日次締めを翌日の開店前に終える』と 2.4 の見出し『閉店後の日次締めの完了』がすでにそろっている。観点も R3 のものなので、この段では扱わない。","申し送り: 通常の営業日の閉店時刻と開店時刻は、共通サンプル文脈にも業務イベントの sample にも正本がない。日次締めの完了時間（`nfr-perf-006` の `_UNDECIDED_`）を確定するときに、nfr-performance-sample の側で決めるとよい。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴として蓄積されるファイルを変更していない","reason":"変更したのは sample だけで、plan / result / 個票を変更していないため"}]}
+</specdojo_executor_evidence>
