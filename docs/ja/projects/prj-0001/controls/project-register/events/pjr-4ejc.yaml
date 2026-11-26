@@ -38,3 +38,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_821e9f386b784e64809ba9765b7dd81f
+  ts: "2026-11-26T22:33:59Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "メモ" updated
+  changes:
+    - field: section
+      from: ""
+      to: メモ
+    - field: description
+      from: prj-0001 で register\_sync を有効にした直後に、起票・branch-merge・branch-guard・branch-check・exec run の記帳先を確かめた記録。
+      to: 2026-11-26（JST 2026-11-27）に、prj-0001 で `register_sync` を有効にした直後の動きを確かめた。
+  previous_event_id: reg_65e15702c53d4539be32ab5455c89275
