@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-bdd-sample-140
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-bdd-sample-140/T-KATA-REVIEW-ALL-bdd-sample-140-20261126T032910Z-e1c85ec4/plan.md
   started_at: "2026-11-26T03:29:21.425Z"
+  completed_at: "2026-11-26T03:32:50.758Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R4（正しさ）として bdd-sample.yaml の事実の主張を、schema と参照先の sample に突き合わせた。誤りは 1 件で、商品 description にある用語集への wikilink の表示名を直した。
+- ほかの主張は、確かめの対象外とした駄菓子屋の業務の値を除き、正本と一致した。schema 検査と prettier 検査は通った。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R4-1 | R4 | entities 商品 description（15 行目） | 用語集への wikilink の表示名「用語集 在庫・調達」が、参照先 `specdojo:gl-sample` の title「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」と合わない。参照先に「調達」という語はない。 | 表示名を参照先の title に合わせた。 | vp-qe-verifiability（gl-sample.yaml の 5 行目） | - |
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/bdd-sample.yaml`: entities の商品 description（15 行目）にある用語集への wikilink の表示名を「用語集 在庫・調達」から、参照先 `specdojo:gl-sample` の title に合わせた表示名へ直した。差分は 1 行。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- R4-1: R4 / entities 商品 description（15 行目） / 用語集への wikilink の表示名「用語集 在庫・調達」が、参照先 specdojo:gl-sample の title「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」と合わない（参照先に「調達」という語はない） / 表示名を参照先の title に合わせた / vp-qe-verifiability（gl-sample.yaml の 5 行目） / -
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+sample-maintenance の R4 として、sample の事実を schema（`bdd.schema.yaml`）と参照先の sample に突き合わせた。誤りは参照先の title と合わない表示名 1 件で、これを直した。ほかは維持した。rulebook を正とする矛盾や根拠不足による見送りは、evidence に記録がない。

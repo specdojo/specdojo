@@ -12,7 +12,7 @@ entities:
     description: >-
       店舗で販売対象として管理する商品の種類。一個ずつの現物や販売時の明細とは区別する。
       商品・売上記録・売上明細は実装前の業務モデルとして本辞書で定義し、管理単位と関連は [[specdojo:ccd-sample|概念クラス図 サンプル]] に合わせる。
-      用語は [[specdojo:gl-sample|用語集 在庫・調達]] を参照する。
+      用語は [[specdojo:gl-sample|用語集（駄菓子屋きぬやの販売・在庫・つけ管理）]] を参照する。
     related_terms: [tm-standard-product]
     key_fields: [product_id]
     fields:
