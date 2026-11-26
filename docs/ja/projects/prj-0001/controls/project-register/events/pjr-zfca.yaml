@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_61492a6a49d94828bc7532ca1eb7a369
+  ts: "2026-11-26T22:16:44Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec release の --force を、動いていない run の claim に限ってオーケストレーターに許す
+    - field: description
+      from: ""
+      to: PJR-E189 の決定（候補 A）を実装する。specdojo-orchestrator の --force は、claim を持つ run が動いていないと CLI が確かめられるときだけ通し、判定できないときは断る。--reset-worktree と --all-blocked は利用者の承認を得て使う運用のまま。
+    - field: input
+      from: ""
+      to: '["PJR-E189 で候補 A を採った（indie、2026-11-26）","いまの CLI は、--force を人の actor のときだけ通す（src/exec/events.ts の canOverrideCrossActor）","2026-11-26 に、opus-executor が claim したまま止まった review 9 件と imp-interface-140 を、indie が --force で戻した","担当 DEV・期限 2026-12-31 は indie の指示（2026-11-26）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-E189"]'
