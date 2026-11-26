@@ -1,0 +1,28 @@
+R4（正しさ）を確かめた結果、sample に正本と食い違う事実は見つからず、sample は編集していません。確かめた主張は 11 件で、すべて一致しました。
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: flow` | `deliverable-frontmatter.schema.yaml` の type の列挙値、rulebook の `deliverable_type: flow` | 一致 |
+| 2 | `status: draft`、`based_on` と `supersedes` の配列 | `common-frontmatter.schema.yaml`（status の列挙値、`idRefArray`） | 一致 |
+| 3 | `rulebook: specdojo:cdfd-uc-rulebook` | `rulebookRef` の pattern、rulebook の id と `sample` 宣言 | 一致 |
+| 4 | ケース `C-02`「欠品から補充まで」、通過順 在庫 → 仕入 → 販売、ID `cdfd-uc-replenishment` | `cdfd-overview-sample.md` の「ユースケース別 CDFD」の表の行 | 一致 |
+| 5 | 領域 ID の範囲（`P-05`〜`P-06`、`P-01`〜`P-02`、`P-03`〜`P-04`）と参照先 `cdfd-inventory`・`cdfd-purchasing`・`cdfd-sales` | 全体概要の「プロセスグループ別 CDFD」の表 | 一致 |
+| 6 | 開始イベント「在庫が補充基準を下回った」 | 全体概要の `P-06` の起点イベント | 一致 |
+| 7 | データストア名と区分（商品台帳、在庫記録・仕入記録、売場棚は物理保管） | 全体概要の「データストア」の章 | 一致 |
+| 8 | D2 の class 定義（形状・色） | 全体概要の「凡例（本プロダクト共通）」、`cdfd-d2-rulebook.md` | 一致 |
+| 9 | `direction: down`、戻りの線を上のノードを左辺にした `a <- b` で書くこと | `cdfd-d2-rulebook.md` の「エッジ」の規定、`cdfd-uc-rulebook.md` の「概念データフロー」の節 | 一致 |
+| 10 | 参照先の見出し「凡例（本プロダクト共通）」 | 全体概要の見出し | 一致 |
+| 11 | `stsd-product` をインラインコードで仮置き | rulebook の参照先列の規定（未作成の文書は ID をインラインコードで仮置き）、`cdfd-sample.md` の同じ ID | 一致 |
+
+全体概要と内容が食い違う点が 1 つ見つかりました。同じ系列の sample との突き合わせは R5 の担当なので、R4 では直さず R5 へ渡します。
+
+- **発注単位をどのグループが扱うか**: sample では在庫が「発注単位に合う数量を確定」し、図の線も `item_master -> inventory: "補充基準・発注単位"` です。全体概要では、`P-01`（仕入）が「数量を発注単位に合わせて確定」し、線は `product_master -> purchasing: "仕入先・発注単位"` です。
+- **直す案**: 在庫が受け取る線を「補充基準」だけにし、商品台帳から仕入へ「発注単位」の線を足します。役割表の 3.1・3.2 と、データストアの表の商品台帳の行も合わせて直します。
+
+R1 の申し送りどおり、「店番担当」と「家族利用者代表」の役割名の食い違いも R5 に任せます。
+
+検査はすべて親 runner が実行するので、ここでは何も実行していません。result ファイルは編集していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: cdfd-uc-sample の主張 11 件を schema・rulebook・全体概要 sample・D2 記法ルールと突き合わせ、すべて一致した。直す誤りがないため sample は変更していない。R5 の担当に当たる全体概要との食い違い 1 件を申し送る。","handoff":["R4 の確かめの表（列: No / 主張（本文の箇所） / 正本 / 確かめ方 / 結果 / 根拠）。1: frontmatter の `type: flow` / `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`cdfd-uc-rulebook.md` / 読み取り / 一致 / type の列挙値に flow があり、rulebook の `deliverable_type: flow`。2: `status: draft`、`based_on`・`supersedes` の配列 / `common-frontmatter.schema.yaml` / 読み取り / 一致 / status の列挙値が draft・ready・deprecated で、`based_on`・`supersedes` は `idRefArray`。3: `rulebook: specdojo:cdfd-uc-rulebook` / `common-frontmatter.schema.yaml` の `rulebookRef`、rulebook の frontmatter / 読み取り / 一致 / pattern `^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$` に合い、rulebook が `sample: specdojo:cdfd-uc-sample` を宣言している。4: ケース `C-02`「欠品から補充まで」、通過順 在庫 → 仕入 → 販売、product ID `cdfd-uc-replenishment` / `docs/ja/specdojo/samples/cdfd-overview-sample.md` の「ユースケース別 CDFD」 / 読み取り / 一致 / 表の `C-02` の行。5: 領域 ID の範囲（`P-05`〜`P-06`、`P-01`〜`P-02`、`P-03`〜`P-04`）と参照先 `cdfd-inventory`・`cdfd-purchasing`・`cdfd-sales` / 全体概要の「プロセスグループ別 CDFD」 / 読み取り / 一致 / 表の在庫・仕入・販売の行。6: 開始イベント「在庫が補充基準を下回った」 / 全体概要の「在庫（P-05〜P-06）」の表 / 読み取り / 一致 / `P-06` の起点イベントと同じ文言。7: データストア名と区分（商品台帳はマスタ・構成データ、在庫記録・仕入記録はトランザクションデータ、売場棚は物理保管として併記） / 全体概要の「データストア」 / 読み取り / 一致 / 同じ名称・区分で、売場棚を例外として併記する説明もある。8: D2 の class 定義（process・event・store_master・store_transaction・physical_store・material_flow の形状と色） / 全体概要の「凡例（本プロダクト共通）」、`cdfd-d2-rulebook.md` / 読み取り / 一致 / 凡例の D2 の class の値と同じ。9: `direction: down`、戻りの線を `a <- b` で書くこと / `cdfd-d2-rulebook.md` の「エッジ」、`cdfd-uc-rulebook.md` の「概念データフロー」 / 読み取り / 一致 / 例外時の戻りの図は上にあるノードを左辺にしている。10: 参照先の見出し「凡例（本プロダクト共通）」 / 全体概要 / 読み取り / 一致 / 同じ見出しがある。11: `stsd-product` をインラインコードで仮置き / `cdfd-uc-rulebook.md` の参照先列の規定、`cdfd-sample.md` / 読み取り・grep / 一致 / 未作成の文書はインラインコードで仮置きする規定で、`cdfd-sample.md` も同じ ID を使っている。D2 の描画は親 runner の lint:d2 に任せた。","R5 への申し送り（要判断・R4 では未修正）: 発注単位をどのグループが扱うかが全体概要と食い違う。sample では在庫が「発注単位に合う数量を確定」し（3.1 の役割表）、図の線が `item_master -> inventory: \"補充基準・発注単位\"`、データストアの表の商品台帳の行は関連が在庫だけである。全体概要では `P-01`（仕入）が「補充対象と数量を発注単位に合わせて確定し、仕入先へ発注する」とし、線は `product_master -> purchasing: \"仕入先・発注単位\"` と `product_master -> inventory: \"補充基準\"` である。直す案: 在庫が受け取る線を「補充基準」だけにし、`item_master -> purchasing: \"発注単位\"` を足す。3.1・3.2 の役割と、商品台帳の行（関連を「在庫、仕入」、利用を「在庫が補充基準を、仕入が発注単位を参照する」）も合わせて直す。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdfd-uc-sample.md","status":"not_applicable","summary":"変更ファイルなし","reason":"executor は sample を含むどのファイルも変更していないため、Prettier の適用条件（変更した *.md など）を満たさない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan・result・個票などの履歴ファイルを変更していない"}]}
+</specdojo_executor_evidence>
