@@ -1,0 +1,30 @@
+R4（正しさ）のレビューを終えました。sample の記述に誤りは見つからず、`docs/ja/specdojo/samples/sysd-index-sample.md` は編集していません。
+
+sample のコード・schema・script のパスと `npm run` のコマンドは、架空リポジトリのものだと `_ASSUMPTION_` に明記されています。そのため本リポジトリの `src/` やコマンドリファレンスとは突き合わせられず、表には「確かめられない」として残しました。SpecDojo 側に正本がある主張と、参照している既存 sample との整合は、すべて一致しました。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: architecture` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、rulebook の「推奨 Frontmatter 項目」 | grep と読み取り | 一致 | schema の 15 行目に `architecture` があり、rulebook も「`type` は `architecture`」と定めている |
+| 2 | frontmatter の `rulebook: specdojo:sysd-index-rulebook` | `docs/ja/specdojo/rulebooks/sysd-index-rulebook.md` | 読み取り | 一致 | rulebook の id と、rulebook が求める値の両方に合う |
+| 3 | wikilink `[[specdojo:clis-sample]]` | `docs/ja/specdojo/samples/clis-sample.md` | id の grep | 一致 | id が `specdojo:clis-sample`、H1 が「駄菓子屋きぬや 販売管理 CLI 仕様」 |
+| 4 | wikilink `[[specdojo:ifx-cmd-sample]]` | `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` | 読み取り | 一致 | id が `specdojo:ifx-cmd-sample`、title が「レシート印刷コマンド連携仕様サンプル」 |
+| 5 | wikilink `[[specdojo:prj-overview-sample]]` | `docs/ja/specdojo/samples/prj-overview-sample.md` | 読み取り | 一致 | id が一致する |
+| 6 | 構文・終了コードの値はリファレンス `kinuya-cli-reference` を正とする（SSOT 一覧・公開操作の行） | `clis-sample.md` の 41 行目と 85 行目 | 読み取り | 一致 | `clis-sample` も構文と終了コードの正本を `kinuya-cli-reference` にしている |
+| 7 | 設定が壊れていれば停止する（SSOT 一覧の設定の行、変更の入口の CLI・設定の行） | `clis-sample.md` の 59 行目と 101 行目 | 読み取り | 一致 | 破損時は「店舗設定不正」で終了コード `4`、欠落時は既定設定で進む |
+| 8 | 正常な会計では、本部受付とローカル保存を確かめてから完了を表示する | `clis-sample.md` の 116 行目 | 読み取り | 一致 | 同じ前提が `_ASSUMPTION_` で書かれている |
+| 9 | 印刷の検証が成功・用紙切れ・時間切れを扱い、対象が食い違えば警告と控えを残す | `ifx-cmd-sample.yaml` の 40、61、112、134 行目 | 読み取り | 一致 | 時間切れの上限は `timeout_seconds: 30`。対象の不一致は印字結果不明として扱う |
+| 10 | 印字未完了でも売上を再送せず、自動で再印刷しない | `clis-sample.md` の 111 行目 | 読み取り | 一致 | 「売上は再送しない」「保存済みレシートだけを再印刷」 |
+| 11 | 保存に失敗したら、取引番号と保存できた範囲を残し、売上を再登録しない | `clis-sample.md` の 114 行目 | 読み取り | 一致 | 終了コード `4` で、会計を再実行しない |
+| 12 | schema の参照名 `kinuya-session-schema`、`kinuya-store-config-schema`、`kinuya-receipt-format-schema` | `clis-sample.md` の 59 行目と 74 行目、`ifx-cmd-sample.yaml` | 読み取り | 一致 | 同じ参照名が使われている |
+| 13 | 架空リポジトリのパスと `npm run` の script（`lint:api`、`api:generate`、`records:generate`、`validate:records`、`validate:config`、`docs:cli`、`test:*` に引数を付けた形） | 架空リポジトリ | — | 確かめられない | `_ASSUMPTION_` で同梱しないと明記されているため、確かめるには実際のリポジトリが要る |
+
+**検証**
+
+- sample を変更していないので、markdownlint は対象外です。
+- lint・schema などの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）のレビューで、sysd-index-sample の主張 13 件を確かめた。frontmatter の type と rulebook、wikilink の 3 件、clis-sample と ifx-cmd-sample への参照（終了コードの正本、設定破損時の停止、会計完了の条件、印刷の失敗と再送しない扱い、保存失敗、schema の参照名）はすべて一致した。架空リポジトリのパスと npm script は ASSUMPTION で同梱しないと明記されているため「確かめられない」とした。誤りがないので sample は編集していない。","handoff":[],"validations":[{"command":"npx markdownlint docs/ja/specdojo/samples/sysd-index-sample.md","status":"not_applicable","summary":"sample を変更していない","reason":"executor が変更した *.md ファイルがないため"}]}
+</specdojo_executor_evidence>
