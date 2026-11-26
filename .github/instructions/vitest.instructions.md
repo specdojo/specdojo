@@ -18,6 +18,7 @@ applyTo: "tests/**/*.test.ts"
 
 - テストコードは `tests/` 配下に配置する。
 - 単体テストのファイル名は `*.test.ts`、実 Git リポジトリ・worktree・CLI 子プロセスを使う統合テストは `*.integration.test.ts` とし、`*.spec.ts` は使わない。
+- 実 agent（claude CLI など）を呼ぶテストは `*.agent.test.ts` とし、`npm test` に入れず `vitest.agent.config.ts` で任意に流す。
 - テスト対象の本番コードのパスが分かるように、`tests/` 配下のディレクトリ構造を対応させる。
 - テストデータや fixture を分ける場合は、関連するテストに近い `tests/` 配下へ置く。
 - 同じ対象の単体テストと統合テストが混在する場合は、純粋な解析・整形・選択ロジックを `*.test.ts`、実プロセスや実 Git を必要とする契約を `*.integration.test.ts` へ分離する。
