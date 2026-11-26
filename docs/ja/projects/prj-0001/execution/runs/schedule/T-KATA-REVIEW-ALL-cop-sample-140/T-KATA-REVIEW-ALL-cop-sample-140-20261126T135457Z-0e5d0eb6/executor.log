@@ -1,0 +1,32 @@
+R4（正しさ）の確認が終わりました。本文の事実に誤りは見つからなかったので、`docs/ja/specdojo/samples/cop-sample.md` は変更していません。result はこの段の担当外なので書いていません。
+
+**確かめた主張と結果**
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: operations` | `deliverable-frontmatter.schema.yaml`（17 行目の enum） | 一致 |
+| 2 | `rulebook: specdojo:cop-rulebook`、`id: specdojo:cop-sample` | `cop-rulebook.md` の frontmatter（`sample: specdojo:cop-sample`）、Sample 記述標準の命名 | 一致 |
+| 3 | 10 章の名前と順序、各表の列（「概要（cutover-day）」〜「関連ドキュメント」） | `cop-rulebook.md` の本文要件 | 一致 |
+| 4 | Role code の `PO`・`DEV`・`QE` | `pm-roles.schema.yaml` の enum（96 行目）、`pm-roles-sample.yaml` | 一致 |
+| 5 | 記録先の decision 個票と issue 個票 | `register-item-frontmatter.schema.yaml` の `ItemType` enum | 一致 |
+| 6 | `run_id` と保存先の `migration/<run_id>/` | `dmd-sample.md` の 39・71・99〜103 行目 | 一致 |
+| 7 | 正本切替を `mip-index` の GO4 とする記述 | `mip-index-sample.md` の 120 行目 | 一致 |
+| 8 | つけ残高 25 件 | `dmd-sample.md` の 24・77・83 行目 | 一致 |
+| 9 | 臨時休業の前提と、T-30m までに終えるリハーサル合否 | `mip-index-sample.md` の 24・68 行目、`mtp-sample.md` の 17 行目 | 一致 |
+| 10 | 役割名（店主代表など）と、本文に人物名・個人の連絡先がないこと | Sample 記述標準の共通登場人物 | 一致 |
+
+開店時刻（正午）や作業の分数など、駄菓子屋の業務の値は正本がなく、共通サンプル文脈とも食い違わないため、確かめの対象から外しました。
+
+**grade の指摘 F001**
+指摘された文はすでにありません。今の本文は「判断者の店主代表の Role code `PO`」と役割名と Role code を併記しており、前の段で直っています。この指摘の観点（`vp-ux-language-consistency`）は R3 の担当でもあるので、この段では手を入れていません。
+
+**R5 に回す食い違い（未修正）**
+- 重大度「高」の基準が `cop-index-sample.md` とずれています。こちらは「販売の記録が 10 分以上できなければ、復旧の見込みにかかわらずロールバック」、`cop-index-sample.md`（118 行目）は「15 分を超え、閉店までに直る見込みがない」です。rulebook は `cop-index` と矛盾させないよう求めているので、どちらに合わせるかを決める必要があります。
+- 判断者の呼び方も、`cop-index-sample.md` は「切替責任者」、こちらは「店主代表」です。
+
+**検証**
+lint などの検査は親 runner が実行するので、ここでは流していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: cop-sample の事実（frontmatter の type と rulebook、10 章の名前と順序、Role code の PO/DEV/QE、register の decision/issue、`run_id` と `migration/<run_id>/`、mip-index の GO4、つけ残高 25 件、臨時休業の前提）を schema、cop-rulebook、関連 sample と突き合わせ、すべて一致した。誤りがないため sample は編集していない。F001 は前の段で直っており、R3 の観点なので扱わなかった。","handoff":["R4 確かめの表（主張 / 正本 / 結果）: 1) frontmatter の `type: operations` / `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の enum（17 行目） / 一致。2) `rulebook: specdojo:cop-rulebook` と `id: specdojo:cop-sample` / `docs/ja/specdojo/rulebooks/cop-rulebook.md` の frontmatter（`sample: specdojo:cop-sample`）と Sample 記述標準の命名 / 一致。3) 10 章の名前と順序、各表の列 / `cop-rulebook.md` の本文要件 / 一致。4) Role code の `PO`・`DEV`・`QE` / `pm-roles.schema.yaml` の enum（96 行目）と `pm-roles-sample.yaml` / 一致。5) decision 個票と issue 個票 / `register-item-frontmatter.schema.yaml` の `ItemType` enum / 一致。6) `run_id` と `migration/<run_id>/` / `docs/ja/specdojo/samples/dmd-sample.md` の 39・71・99〜103 行目 / 一致。7) 正本切替を `mip-index` の GO4 とする記述 / `mip-index-sample.md` の 120 行目 / 一致。8) つけ残高 25 件 / `dmd-sample.md` の 24・77・83 行目 / 一致。9) 臨時休業の前提と、T-30m までのリハーサル合否 / `mip-index-sample.md` の 24・68 行目と `mtp-sample.md` の 17 行目 / 一致。10) 役割名を使い、人物名と個人の連絡先を書かない / Sample 記述標準の共通登場人物 / 一致。開店時刻や作業の分数など正本のない業務の値は、共通サンプル文脈と食い違わないため対象外とした。","F001（`vp-ux-language-consistency`、line=62）: 指摘された文は今の sample にない。73 行目が「判断者の店主代表の Role code `PO`」と役割名と Role code を併記しており、前の段で直っている。この観点は R3 の担当のため、R4 では編集していない。次の grade で解消を確かめること。","R5 への申し送り: 重大度「高」の基準が `cop-index-sample.md` とずれている。cop-sample は「販売の記録が 10 分以上できなければ、復旧の見込みにかかわらずロールバック」、`cop-index-sample.md` の 118 行目は「15 分を超え、閉店までに直る見込みがない」。rulebook は `cop-index` と矛盾させないことを求めるため、R5 でどちらに合わせるかを決めること。判断者の呼び方（`cop-index-sample.md` は「切替責任者」、cop-sample は「店主代表」）も R5 で確かめること。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"lint:md は親 runner が実行する（parent validation）。ファイルを変更していない。"}]}
+</specdojo_executor_evidence>
