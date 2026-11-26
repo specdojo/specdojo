@@ -554,10 +554,7 @@ export class AutoRunStopWatch {
     this.removeMarker();
   }
 
-  /**
-   * Record the stop and set the exit code. A failure exit code is kept so a failed task is not
-   * hidden; queue requests are finished by the queue runner, which owns them.
-   */
+  /** Record the stop; queue requests are finished by the queue runner, which owns them. */
   finish(drainedTasks: readonly string[]): void {
     const request = this.current;
     if (!request) return;
@@ -571,7 +568,7 @@ export class AutoRunStopWatch {
     this.write(
       `[run] stopped by exec stop (${describeStopTarget(request.target)}): ${request.message}\n`,
     );
-    if (!process.exitCode) process.exitCode = EXEC_STOP_EXIT_CODE;
+    process.exitCode = EXEC_STOP_EXIT_CODE;
   }
 }
 

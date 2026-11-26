@@ -987,7 +987,7 @@ runner は自分が起動した子プロセスの終了を待ってから次の�
 | `exec stop --cancel [--track <track> \| --queue <queue-id>]` | 指示を取り消す。まだ抜けていない run は、次のタスクが終わった区切りから claim を再開する |
 
 - 指示は `exec/.locks/stop-requests/` に置かれ、run は各タスクが終わるたび（と、タスクを準備する前）に読みます。指示を見た run は `[run] stop requested ...` を出し、走っているタスクが終わるのを待ちます。
-- 止まった run は、止めた記録を `<execution_path>/exec/stops/<日時>-<対象>.json`（対象・理由・指示と停止の時刻）に残し、`[run] stopped by exec stop ...` を出して終了コード 76 で終わります。走っている間にタスクが失敗した場合は、失敗を隠さないよう終了コード 1 を返します。`exec cycle` は要約に `auto=stopped` を出し、同じく 76 で終わります。記録は run の終わりの記帳の commit に含めます。
+- 止まった run は、止めた記録を `<execution_path>/exec/stops/<日時>-<対象>.json`（対象・理由・指示と停止の時刻）に残し、`[run] stopped by exec stop ...` を出して終了コード 76 で終わります。先に失敗したタスクがあっても終了コードは 76 で、タスクの失敗記録は残ります。`exec cycle` は要約に `auto=stopped` を出し、同じく 76 で終わります。記録は run の終わりの記帳の commit に含めます。
 - 予約の列への指示は、走っている段が終わった区切りで列を `stopped` にします（`reason` は `stopped by exec stop: <text>`）。終了コード 76 で抜けた段は失敗とせず `pending` に戻すため、`--step-continue` の段でも飛ばされません。同じ `exec queue run <queue-id>` で、止めた段から再開します。project や track への指示で段の auto run が止まった場合も、列は同じくその段で止まります。
 - `exec status` の末尾の `stop requests:` と、`exec queue status` の `stop=requested (<text>)` に、開いている指示が出ます。run が指示を見た後は `draining: no new tasks; waiting for <n> running task(s) (<task-id>...)` と、終わりを待っているタスクを示します。
 - 走っている auto run（予約の列なら列の runner）がない対象への指示は `Nothing to stop: ...` で、同じ対象への二重の指示は `A stop request ... already exists` で拒否し、どちらも終了コード 1 で終わります。指示のない対象の `--cancel` も `No stop request for ...` で終了コード 1 です。
