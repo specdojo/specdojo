@@ -5651,3 +5651,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cc01fbab11e948ec94317e30b59ec577
+- v: 1
+  id: reg_8f86a9fad1564b7db9dd9a70668bb137
+  ts: "2026-11-26T12:18:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。T4E0・FNB7 の統合後の smoke が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: PJR-3M4M・PJR-2Q0G を統合した runner で、start → review と実体の actor（sonnet-executor）を確かめた。
+      to: runner 変更後の exec run の動作を smoke で確かめた
+  previous_event_id: reg_ef421388d4744dc597ac82421b2a878a
