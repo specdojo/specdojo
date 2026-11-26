@@ -363,10 +363,10 @@ export async function resumeSingleRegisterItemWorktree(
   // 本体から再開する場合は、register の遷移と agent の起動より前に、その記録を本体へ取り込む。
   const foreignWait = findForeignWaitRecords({ repoRoot, worktree, itemId: item.id });
   if (foreignWait) {
-    const adopt = (): string | null => {
+    const adopt = async (): Promise<string | null> => {
       try {
         const count = countForeignCommits(repoRoot, foreignWait);
-        adoptForeignWaitRecords({
+        await adoptForeignWaitRecords({
           repoRoot,
           schedulePath,
           itemId: item.id,
@@ -387,7 +387,7 @@ export async function resumeSingleRegisterItemWorktree(
         );
       }
     };
-    const adoptFailure = lifecycleLock ? await lifecycleLock.runExclusive(adopt) : adopt();
+    const adoptFailure = lifecycleLock ? await lifecycleLock.runExclusive(adopt) : await adopt();
     if (adoptFailure) return refuse(adoptFailure);
   }
 

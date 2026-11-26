@@ -266,14 +266,14 @@ describe("commitTrailingRunRecords", () => {
     expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
   });
 
-  it("lets a failed run's records be committed before its exec branch merges cleanly later", () => {
+  it("lets a failed run's records be committed before its exec branch merges cleanly later", async () => {
     const fixture = setupRepository();
     const taskId = "T-B-doc-010";
     const runId = `${taskId}-20261115T000000Z-aaaa`;
     const claim = writeEvent(fixture, taskId, "claim", RUNNER);
     const records = writeRunRecords(fixture, taskId, runId);
     const checkpointPaths = [records.plan, records.result, claim];
-    const worktree = checkpointAndEnsureWorktree({
+    const worktree = await checkpointAndEnsureWorktree({
       context: fixture.context,
       worktreeTaskId: taskId,
       base: fixture.worktreeBase,
@@ -296,7 +296,7 @@ describe("commitTrailingRunRecords", () => {
     writeEvent(fixture, taskId, "unblock", RUNNER);
     commitTrailingRunRecords(fixture.context);
 
-    mergeWorktreeIntoCurrent({
+    await mergeWorktreeIntoCurrent({
       context: fixture.context,
       worktree,
       taskId,

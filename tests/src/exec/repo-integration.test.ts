@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { withTaskIntegrationLock } from "../../../src/exec/repo-integration.js";
+import {
+  integrateTaskRepositories,
+  withTaskIntegrationLock,
+} from "../../../src/exec/repo-integration.js";
 
 function deferred(): { promise: Promise<void>; resolve: () => void } {
   let resolve: () => void = () => undefined;
@@ -39,5 +42,50 @@ describe("withTaskIntegrationLock", () => {
 
     await expect(failed).rejects.toThrow(/merge failed: T-1/);
     await expect(withTaskIntegrationLock(() => Promise.resolve("next"))).resolves.toBe("next");
+  });
+
+  it("holds the integration lock until an asynchronous root merge finishes", async () => {
+    const merge = deferred();
+    const events: string[] = [];
+    const first = withTaskIntegrationLock(async () => {
+      await integrateTaskRepositories({
+        worktree: { path: "/task", branch: "exec/task", name: "task", created: false },
+        mergeMessage: "merge task",
+        checkProject: () => [],
+        beforeProjectMerge: async () => {
+          events.push("commit");
+        },
+        mergeProject: async () => {
+          events.push("merge:start");
+          await merge.promise;
+          events.push("merge:end");
+        },
+      });
+      events.push("integrated");
+    });
+    const second = withTaskIntegrationLock(async () => {
+      events.push("next");
+    });
+    await new Promise((resolve) => setImmediate(resolve));
+    expect(events).toEqual(["commit", "merge:start"]);
+    merge.resolve();
+    await Promise.all([first, second]);
+    expect(events).toEqual(["commit", "merge:start", "merge:end", "integrated", "next"]);
+  });
+
+  it("propagates an asynchronous root merge failure before releasing the integration lock", async () => {
+    const first = withTaskIntegrationLock(() =>
+      integrateTaskRepositories({
+        worktree: { path: "/task", branch: "exec/task", name: "task", created: false },
+        mergeMessage: "merge task",
+        checkProject: () => [],
+        beforeProjectMerge: () => undefined,
+        mergeProject: async () => {
+          throw new Error("root merge failed");
+        },
+      }),
+    );
+    await expect(first).rejects.toThrow("root merge failed");
+    await expect(withTaskIntegrationLock(async () => "next")).resolves.toBe("next");
   });
 });

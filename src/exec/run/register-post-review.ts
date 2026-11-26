@@ -30,7 +30,7 @@ import {
   spawnRegisterTransition,
   type RegisterRunContext,
 } from "./register-core.js";
-import { commitRegisterState } from "./register-state.js";
+import { commitRegisterStateAsync } from "./register-state.js";
 import {
   resolveAgentOverride,
   resolvePinnedRateLimitRunOptions,
@@ -572,7 +572,7 @@ export async function runRegisterPostReview(params: {
   const commitFailureLogPath = runLogPath(reviewStatePath, "post-review-commit.log");
   const headBeforeCommit = gitOutput(context.repoRoot, ["rev-parse", "HEAD"]).trim();
   try {
-    commitRegisterState(
+    await commitRegisterStateAsync(
       context.repoRoot,
       registerPaths,
       `exec(register ${item.id}): post-review ${verdict}`,

@@ -27,7 +27,7 @@ import {
   qualifiedRepoPaths,
 } from "./agent-protected-config.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   foldEventsToState,
   readAllEventFiles,
   releaseSchedulerLock,
@@ -314,7 +314,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
 
   let lockDir = "";
   try {
-    lockDir = acquireSchedulerLock(context.schedulePath, {
+    lockDir = await acquireSchedulerLockAsync(context.schedulePath, {
       actor: `worktree-prepare:${state.actor}`,
       lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
       lockStaleMs: DEFAULT_LOCK_STALE_MS,
@@ -343,7 +343,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
       if (!existsSync(path)) throw new Error(`Required execution file not found: ${path}`);
     }
 
-    const worktree = checkpointAndEnsureWorktree({
+    const worktree = await checkpointAndEnsureWorktree({
       context,
       worktreeTaskId,
       base,
@@ -508,7 +508,7 @@ function commit(opts: CommitOpts): void {
   });
 }
 
-function merge(opts: MergeOpts): void {
+async function merge(opts: MergeOpts): Promise<void> {
   const context = resolveContext(opts);
   const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
   // prepare left the root's own copies of the checkpoint files uncommitted (the exec branch
@@ -520,7 +520,7 @@ function merge(opts: MergeOpts): void {
     ...(claimEventPath ? [claimEventPath] : []),
     ...gradeCheckpointPaths(context),
   ];
-  mergeWorktreeIntoCurrent({
+  await mergeWorktreeIntoCurrent({
     context,
     worktree,
     taskId: opts.task,
@@ -654,9 +654,9 @@ export function registerExecWorktreeCommands(exec: Command): void {
   );
   mergeCommand.option("--ff-only", "Require a fast-forward merge", false);
   mergeCommand.option("--dry-run", "Print the merge command without merging", false);
-  mergeCommand.action((opts: MergeOpts) => {
+  mergeCommand.action(async (opts: MergeOpts) => {
     try {
-      merge(opts);
+      await merge(opts);
     } catch (error) {
       commandError(error);
     }

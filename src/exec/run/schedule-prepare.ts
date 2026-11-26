@@ -257,17 +257,17 @@ function taskGradeResultPaths(params: {
  * Bring the grade the runner just checked into the branch so the review agent and the completion
  * check judge the same grade as the runner (PJR-ZSRD). Returns the refreshed repo-relative paths.
  */
-export function refreshReviewGradeCheckpoint(params: {
+export async function refreshReviewGradeCheckpoint(params: {
   task: ReadyTaskView;
   projectId: string | undefined;
   catalogPath: string | undefined;
   repoRoot: string;
   worktree: ExecWorktree;
   failureLogPath?: string;
-}): string[] {
+}): Promise<string[]> {
   const { task, projectId } = params;
   if ((task.mode ?? "edit") !== "review" || !projectId) return [];
-  const refreshed = refreshWorktreeCheckpoint({
+  const refreshed = await refreshWorktreeCheckpoint({
     repoRoot: params.repoRoot,
     worktreePath: params.worktree.path,
     paths: reviewGradeSidecarPaths({ ...params, projectId }),
@@ -566,7 +566,7 @@ export async function prepareSingleTask(
     const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
     const refreshed = dryRun
       ? []
-      : refreshReviewGradeCheckpoint({
+      : await refreshReviewGradeCheckpoint({
           task,
           projectId,
           catalogPath: planGenPaths.catalogPath,
@@ -794,7 +794,7 @@ export async function prepareSingleTask(
     : undefined;
   let worktree: ExecWorktree;
   try {
-    worktree = checkpointAndEnsureWorktree({
+    worktree = await checkpointAndEnsureWorktree({
       context: { repoRoot, schedulePath, executionPath },
       worktreeTaskId,
       base: worktreeBase,
@@ -818,7 +818,7 @@ export async function prepareSingleTask(
   reportProductWorktrees(worktree);
   // A fresh claim checkpoints the current grade; a resume keeps the branch and needs a refresh.
   const reviewGradeRefreshed = skipClaim
-    ? refreshReviewGradeCheckpoint({
+    ? await refreshReviewGradeCheckpoint({
         task,
         projectId,
         catalogPath: planGenPaths.catalogPath,

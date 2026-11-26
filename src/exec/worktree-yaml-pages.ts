@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { runWorktreeProcess } from "./worktree-process.js";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { YAML_PAGE_MARKER, yamlPageRelPath } from "../docs/yaml-pages.js";
@@ -113,19 +113,28 @@ export type YamlPagesBuildResult = {
 };
 
 /** Returns undefined when the worktree has no SpecDojo CLI to build with. */
-export type YamlPagesBuilder = (worktreePath: string) => YamlPagesBuildResult | undefined;
+export type YamlPagesBuilder = (
+  worktreePath: string,
+) => YamlPagesBuildResult | undefined | Promise<YamlPagesBuildResult | undefined>;
 
 // worktree の準備と同じく worktree の checkout にある CLI で `specdojo build --only yaml-pages` を流す。
 // CLI が無い worktree は準備のときもページを作らないため、作り直しも行わない。
-function runWorktreeYamlPagesBuild(worktreePath: string): YamlPagesBuildResult | undefined {
+async function runWorktreeYamlPagesBuild(
+  worktreePath: string,
+): Promise<YamlPagesBuildResult | undefined> {
   const resolved = resolveWorktreeBuildCommand(worktreePath);
   if (!resolved) return undefined;
-  const result = spawnSync(resolved.command, [...resolved.args, "--only", "yaml-pages"], {
-    cwd: worktreePath,
-    env: worktreeBuildEnvironment(worktreePath),
-    encoding: "utf8",
-    maxBuffer: BUILD_OUTPUT_MAX_BUFFER,
-  });
+  const result = await runWorktreeProcess(
+    resolved.command,
+    [...resolved.args, "--only", "yaml-pages"],
+    {
+      cwd: worktreePath,
+      env: worktreeBuildEnvironment(worktreePath),
+      stdio: "pipe",
+      maxBuffer: BUILD_OUTPUT_MAX_BUFFER,
+    },
+    "yaml-pages-build",
+  );
   return {
     exitCode: result.status,
     output: [result.stdout, result.stderr].filter(Boolean).join("\n").trim(),
@@ -143,13 +152,13 @@ export type YamlPagesRefresh =
  * changed after its page was generated. A failed rebuild names the changed YAML and keeps the
  * build output, which names the YAML whose page could not be generated.
  */
-export function refreshWorktreeYamlPages(
+export async function refreshWorktreeYamlPages(
   worktreePath: string,
   options: { stale?: (path: string) => string[]; build?: YamlPagesBuilder } = {},
-): YamlPagesRefresh {
+): Promise<YamlPagesRefresh> {
   const sources = (options.stale ?? staleYamlPageSources)(worktreePath);
   if (sources.length === 0) return { status: "skipped" };
-  const result = (options.build ?? runWorktreeYamlPagesBuild)(worktreePath);
+  const result = await (options.build ?? runWorktreeYamlPagesBuild)(worktreePath);
   if (!result) {
     process.stdout.write(
       `Skipping YAML display page rebuild: no SpecDojo CLI in ${worktreePath}\n`,
@@ -180,10 +189,12 @@ const MAX_REFRESH_SUMMARY_LENGTH = 1_000;
  * skipped rebuilds record nothing, so the recorded validations keep the configured order. A failed
  * rebuild becomes a failed runner validation (and a failure output log), which fails the batch.
  */
-export function refreshYamlPagesBeforeParentValidations(
+export async function refreshYamlPagesBeforeParentValidations(
   roots: ParentValidationRoots,
-  refresh: (worktreePath: string) => YamlPagesRefresh = refreshWorktreeYamlPages,
-): ParentValidationBatchResult {
+  refresh: (
+    worktreePath: string,
+  ) => YamlPagesRefresh | Promise<YamlPagesRefresh> = refreshWorktreeYamlPages,
+): Promise<ParentValidationBatchResult> {
   const targets: { repo: string; path: string }[] = [
     { repo: PARENT_VALIDATION_PROJECT_REPO, path: roots.project },
     ...Object.entries(roots.repos ?? {}).map(([repo, path]) => ({ repo, path })),
@@ -193,7 +204,7 @@ export function refreshYamlPagesBeforeParentValidations(
   for (const target of targets) {
     let outcome: YamlPagesRefresh;
     try {
-      outcome = refresh(target.path);
+      outcome = await refresh(target.path);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       outcome = {

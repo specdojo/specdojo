@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { runWorktreeProcess } from "./worktree-process.js";
 import { existsSync, lstatSync, mkdirSync, rmSync, unlinkSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import {
@@ -170,7 +170,7 @@ function trackedPackageLockDirs(worktreePath: string): string[] {
   return [...dirs].sort();
 }
 
-export type NpmCiRunner = (packageDir: string) => void;
+export type NpmCiRunner = (packageDir: string) => void | Promise<void>;
 
 export const NPM_CI_ARGS: readonly string[] = [
   "ci",
@@ -180,15 +180,20 @@ export const NPM_CI_ARGS: readonly string[] = [
   "--no-fund",
 ];
 
-function runNpmCi(packageDir: string): void {
+async function runNpmCi(packageDir: string): Promise<void> {
   const command = process.platform === "win32" ? "npm.cmd" : "npm";
   // PJR-T01P: lock から入れる依存は主の作業ツリーと同じになるため、cache にある tarball を
   // 再検証せずに使い（--prefer-offline）、準備に要らない audit と fund の問い合わせを省く。
-  const result = spawnSync(command, NPM_CI_ARGS, {
-    cwd: packageDir,
-    env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
-    stdio: "inherit",
-  });
+  const result = await runWorktreeProcess(
+    command,
+    NPM_CI_ARGS,
+    {
+      cwd: packageDir,
+      env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
+      stdio: "inherit",
+    },
+    "npm-ci",
+  );
   if (result.error) {
     throw new Error(`npm ci could not start in ${packageDir}: ${result.error.message}`);
   }
@@ -208,10 +213,10 @@ function removeLegacyNodeModulesLink(packageDir: string): void {
 // 旧方式の共有 symlink は npm に辿らせず、先に link 自体だけを削除する。
 // lock が無い worktree は導入しない。依存が無いまま検証が失敗したときに原因を追えるよう、
 // 導入しなかったことをログに残す（PJR-86Q5）。
-export function installWorktreeDependencies(
+export async function installWorktreeDependencies(
   worktreePath: string,
   npmCi: NpmCiRunner = runNpmCi,
-): void {
+): Promise<void> {
   const packageDirs = trackedPackageLockDirs(resolve(worktreePath));
   if (packageDirs.length === 0) {
     process.stdout.write(
@@ -227,11 +232,11 @@ export function installWorktreeDependencies(
     process.stdout.write(
       `Installing worktree dependencies: ${relative(worktreePath, packageDir) || "."}\n`,
     );
-    npmCi(packageDir);
+    await npmCi(packageDir);
   }
 }
 
-export type WorktreeArtifactBuilder = (worktreePath: string) => void;
+export type WorktreeArtifactBuilder = (worktreePath: string) => void | Promise<void>;
 
 const SPECDOJO_CONFIG_REL = join(".specdojo", "specdojo.config.json");
 
@@ -283,7 +288,7 @@ export function resolveWorktreeBuildCommand(worktreePath: string): WorktreeComma
 // worktree を cwd にして build を実行する。child は cwd から .specdojo/specdojo.config.json を
 // 辿るため、生成先は worktree 側になる。ローカル設定は worktree へ複製せず、主の作業ツリーの
 // ファイルのパスを環境変数で渡す（PJR-NC9R）。
-function runWorktreeBuild(worktreePath: string): void {
+async function runWorktreeBuild(worktreePath: string): Promise<void> {
   const resolved = resolveWorktreeBuildCommand(worktreePath);
   if (!resolved) {
     process.stdout.write(
@@ -292,11 +297,16 @@ function runWorktreeBuild(worktreePath: string): void {
     return;
   }
   process.stdout.write("Generating worktree artifacts: specdojo build\n");
-  const result = spawnSync(resolved.command, resolved.args, {
-    cwd: worktreePath,
-    env: worktreeBuildEnvironment(worktreePath),
-    stdio: "inherit",
-  });
+  const result = await runWorktreeProcess(
+    resolved.command,
+    resolved.args,
+    {
+      cwd: worktreePath,
+      env: worktreeBuildEnvironment(worktreePath),
+      stdio: "inherit",
+    },
+    "specdojo-build",
+  );
   if (result.error) {
     throw new Error(
       formatWorktreeBuildFailure(worktreePath, `could not start: ${result.error.message}`),
@@ -313,14 +323,14 @@ function runWorktreeBuild(worktreePath: string): void {
 // 複製されない。生成物の存在を前提とする検証は、成果物と無関係に失敗するため、依存の install
 // 直後にまとめて生成する。生成対象が増えても追従が要らないよう、scope を絞らず build を通しで
 // 実行する（全 scope で数秒。npm ci に対して無視できる）。
-export function generateWorktreeArtifacts(
+export async function generateWorktreeArtifacts(
   worktreePath: string,
   build: WorktreeArtifactBuilder = runWorktreeBuild,
-): void {
+): Promise<void> {
   const root = resolve(worktreePath);
   // SpecDojo の設定を持たないリポジトリには生成物が無い。build は失敗するだけなので実行しない。
   if (!existsSync(join(root, SPECDOJO_CONFIG_REL))) return;
-  build(root);
+  await build(root);
 }
 
 /**
@@ -410,7 +420,7 @@ function recoverWorktreeAddAfterTransientFailure(params: {
   return false;
 }
 
-export function ensureExecWorktree(opts: {
+export async function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
   taskId: string;
@@ -419,9 +429,9 @@ export function ensureExecWorktree(opts: {
   branch?: string;
   /** Directory under `<base>/<task-name>/` for multi-repository tasks (see execWorktreePath). */
   repoDirName?: string;
-  installDependencies?: (worktreePath: string) => void;
-  generateArtifacts?: (worktreePath: string) => void;
-}): ExecWorktree {
+  installDependencies?: NpmCiRunner;
+  generateArtifacts?: WorktreeArtifactBuilder;
+}): Promise<ExecWorktree> {
   const repoRoot = resolve(opts.repoRoot);
   const baseRelative = relative(repoRoot, resolve(opts.worktreeBase));
   if (baseRelative === "" || (!baseRelative.startsWith(`..${sep}`) && baseRelative !== "..")) {
@@ -442,8 +452,8 @@ export function ensureExecWorktree(opts: {
         `Worktree ${worktreePath} uses branch ${registeredAtPath.branch ?? "(detached)"}; expected ${branch}`,
       );
     }
-    (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
-    (opts.generateArtifacts ?? generateWorktreeArtifacts)(worktreePath);
+    await (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
+    await (opts.generateArtifacts ?? generateWorktreeArtifacts)(worktreePath);
     return { path: worktreePath, branch, name, created: false };
   }
 
@@ -483,7 +493,7 @@ export function ensureExecWorktree(opts: {
     }),
   );
 
-  (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
-  (opts.generateArtifacts ?? generateWorktreeArtifacts)(worktreePath);
+  await (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
+  await (opts.generateArtifacts ?? generateWorktreeArtifacts)(worktreePath);
   return { path: worktreePath, branch, name, created: true };
 }

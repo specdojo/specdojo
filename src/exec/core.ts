@@ -6,7 +6,7 @@ import {
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   buildEvent,
   canReleaseTask,
   collectRepeatable,
@@ -436,7 +436,7 @@ export async function runLockedEventCommand(
     const lockTimeoutMs = Number(opts.lockTimeoutMs);
     const lockStaleMs = Number(opts.lockStaleMs);
 
-    lockDir = acquireSchedulerLock(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
+    lockDir = await acquireSchedulerLockAsync(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
 
     const state = loadValidatedExecState(schedulePath);
     if (!state) return;
@@ -592,7 +592,7 @@ export async function runReleaseAllBlocked(opts: ExecCommandOpts): Promise<void>
     const lockTimeoutMs = Number(opts.lockTimeoutMs);
     const lockStaleMs = Number(opts.lockStaleMs);
 
-    lockDir = acquireSchedulerLock(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
+    lockDir = await acquireSchedulerLockAsync(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
 
     const state = loadValidatedExecState(schedulePath);
     if (!state) return;

@@ -43,7 +43,7 @@ import {
   type LockedEventAction,
 } from "./core.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   canBlockTask,
   canCancelTask,
   canClaimTask,
@@ -500,7 +500,11 @@ export function registerExecCommands(program: Command): void {
       const lockTimeoutMs = Number(opts.lockTimeoutMs);
       const lockStaleMs = Number(opts.lockStaleMs);
 
-      lockDir = acquireSchedulerLock(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
+      lockDir = await acquireSchedulerLockAsync(schedulePath, {
+        actor,
+        lockTimeoutMs,
+        lockStaleMs,
+      });
 
       const state = loadValidatedExecState(schedulePath);
       if (!state) return;

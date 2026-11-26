@@ -1,7 +1,8 @@
-import { spawnSync } from "node:child_process";
+import { runWorktreeProcess, timeWorktreeOperation } from "./worktree-process.js";
+import { gitResultAsync } from "../shared/git.js";
 import { existsSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
-import { acquireSchedulerLock, releaseSchedulerLock } from "./events.js";
+import { acquireSchedulerLockAsync, releaseSchedulerLock } from "./events.js";
 import {
   rebuildRegisterTicketFromEvents,
   unionRegisterEventLogs,
@@ -49,15 +50,20 @@ function usesLocalSpecdojoDistBin(repoRoot: string): boolean {
   }
 }
 
-function runBuildIfStaleAfterMerge(repoRoot: string): void {
+async function runBuildIfStaleAfterMerge(repoRoot: string): Promise<void> {
   try {
     const scriptPath = resolve(repoRoot, "tools", "build-if-stale.mjs");
     if (!existsSync(scriptPath) || !usesLocalSpecdojoDistBin(repoRoot)) return;
-    const result = spawnSync(process.execPath, [scriptPath], {
-      cwd: repoRoot,
-      stdio: "inherit",
-      shell: false,
-    });
+    const result = await runWorktreeProcess(
+      process.execPath,
+      [scriptPath],
+      {
+        cwd: repoRoot,
+        stdio: "inherit",
+        shell: false,
+      },
+      "build-if-stale",
+    );
     if (result.error) {
       process.stderr.write(
         `  [integrate] warning: build-if-stale could not start: ${result.error.message}\n`,
@@ -135,11 +141,11 @@ function registerEventDisplayId(path: string): string | undefined {
 // merge has no conflicts (for example a hook rejection), conflicts on other paths, or cannot be
 // completed; the caller then aborts the merge. The commit uses --no-verify because a regular
 // `git merge` does not run pre-commit either, and only the item's own bookkeeping was resolved.
-function resolveBranchOwnedConflicts(params: {
+async function resolveBranchOwnedConflicts(params: {
   repoRoot: string;
   branchOwnedPaths: string[];
   message?: string;
-}): string[] | null {
+}): Promise<string[] | null> {
   const { repoRoot } = params;
   const conflicted = zeroSeparatedPaths(repoRoot, ["diff", "--name-only", "--diff-filter=U", "-z"]);
   if (conflicted.length === 0) return null;
@@ -217,7 +223,7 @@ function resolveBranchOwnedConflicts(params: {
   }
   const unresolved = zeroSeparatedPaths(repoRoot, ["diff", "--name-only", "--diff-filter=U", "-z"]);
   if (unresolved.length > 0) return null;
-  const commit = gitResult(repoRoot, [
+  const commit = await gitResultAsync(repoRoot, [
     "commit",
     "--no-verify",
     ...(params.message ? ["-m", params.message] : ["--no-edit"]),
@@ -229,7 +235,7 @@ function resolveBranchOwnedConflicts(params: {
 // Serializes with the scheduler lock so parallel merges do not race on root HEAD.
 // `releaseRootPaths` are root-side working copies of bookkeeping files that the exec branch also
 // carries (see releaseRootWorkingCopies); they are restored when the merge does not complete.
-export function mergeWorktreeIntoCurrent(params: {
+export async function mergeWorktreeIntoCurrent(params: {
   context: WorktreeOpsContext;
   worktree: ExecWorktree;
   taskId: string;
@@ -242,7 +248,7 @@ export function mergeWorktreeIntoCurrent(params: {
   ffOnly?: boolean;
   dryRun?: boolean;
   failureLogPath?: string;
-}): void {
+}): Promise<void> {
   const { context, worktree, taskId } = params;
   assertCommitScope(context, worktree, taskId, { dryRun: params.dryRun });
   const targetBranch = currentBranch(context.repoRoot);
@@ -258,7 +264,7 @@ export function mergeWorktreeIntoCurrent(params: {
   const releasePathSet = new Set(releasePaths);
   try {
     if (!params.dryRun) {
-      lockDir = acquireSchedulerLock(context.schedulePath, {
+      lockDir = await acquireSchedulerLockAsync(context.schedulePath, {
         actor: `worktree-merge:${targetBranch}`,
         lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
         lockStaleMs: DEFAULT_LOCK_STALE_MS,
@@ -362,7 +368,9 @@ export function mergeWorktreeIntoCurrent(params: {
       : params.message
         ? ["merge", "--no-ff", "-m", params.message, worktree.branch]
         : ["merge", "--no-ff", "--no-edit", worktree.branch];
-    const mergeResult = gitResult(context.repoRoot, mergeArgs);
+    const mergeResult = await timeWorktreeOperation("root-merge", () =>
+      gitResultAsync(context.repoRoot, mergeArgs),
+    );
     if (mergeResult.status === 0) {
       merged = true;
     } else {
@@ -374,7 +382,7 @@ export function mergeWorktreeIntoCurrent(params: {
         0;
       const resolved =
         mergeInProgress && !params.ffOnly
-          ? resolveBranchOwnedConflicts({
+          ? await resolveBranchOwnedConflicts({
               repoRoot: context.repoRoot,
               branchOwnedPaths: (params.resolveConflictsWithBranchPaths ?? []).map((path) =>
                 repoRelative(context.repoRoot, path),
@@ -427,7 +435,7 @@ export function mergeWorktreeIntoCurrent(params: {
       throw new Error(`git merge failed: ${summary}`);
     }
   } finally {
-    if (merged) runBuildIfStaleAfterMerge(context.repoRoot);
+    if (merged) await runBuildIfStaleAfterMerge(context.repoRoot);
     if (!merged && released.length > 0) restoreRootWorkingCopies(context.repoRoot, released);
     if (lockDir) releaseSchedulerLock(lockDir);
   }

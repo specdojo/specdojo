@@ -379,7 +379,7 @@ export type ParentValidationRunOptions = {
   // 変更の種類で選ぶ検証（`paths` あり）の判定に使う変更一覧。省略時はすべて流す（PJR-T01P）。
   selection?: ParentValidationSelection;
   // 親の検証の前に YAML の表示のページを作り直す処理（PJR-TF6F）。テストで差し替える。
-  refreshYamlPages?: (worktreePath: string) => YamlPagesRefresh;
+  refreshYamlPages?: (worktreePath: string) => YamlPagesRefresh | Promise<YamlPagesRefresh>;
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
@@ -398,7 +398,7 @@ export async function runConfiguredParentValidationBatch(
     parentValidationGateFor(execDefaults).run(label, labels, async () => {
       // YAML を変えた run だけ、古い表示のページを作り直してから検査する。作り直しの失敗は
       // 親の検証の失敗として記録し、残りの検証は従来どおり流す。
-      const refreshed = refreshYamlPagesBeforeParentValidations(
+      const refreshed = await refreshYamlPagesBeforeParentValidations(
         typeof cwd === "string" ? { project: cwd } : cwd,
         options.refreshYamlPages,
       );
