@@ -1,0 +1,23 @@
+`sf-index-sample.md` に R3（読みやすさ）の文の直しを 6 件入れ、ほかに直さない指摘 1 件を `handoff` に残しました。prettier と markdownlint でこの sample を確かめ、エラーは 0 件です。`npm run lint:md` などの全体の検査は、このあと親 runner が実行します。
+
+変更したのは `docs/ja/specdojo/samples/sf-index-sample.md` だけです（12 行追加、13 行削除）。意味と、判断に要る背景・例外・制約は変えていません。
+
+| No | 箇所 | 直した内容 | 根拠 |
+| --- | --- | --- | --- |
+| R3-1 | 冒頭の段落 | 「洗い出しと…入口として使う」のねじれを直しました。1. 目的と対象範囲と重なる使い道は削り、「個別機能仕様への入口とする」に絞りました。 | W2、`vp-arc-conciseness` |
+| R3-2 | 1. 目的と対象範囲 | 主語「本一覧は」を補いました。読点の多い役割ごとの使い道の文は、2 文に分けました。 | W1、W3 |
+| R3-3 | 1. 目的と対象範囲の対象外 | `P-01` を正本の表記に合わせ、「仕入計画と仕入先への発注」にしました。 | W8、`vp-ux-language-consistency` |
+| R3-4 | 3. システム化機能一覧 | 「在庫未反映…通知しない」の主語として、販売とつけ販売の機能を補いました。 | W1 |
+| R3-5 | 3. システム化機能一覧 | 「個別仕様は…完成例で…正とする」の項目を削りました。ねじれがあり、表の個別仕様の列と `Q-03` と同じことを述べていたためです。 | W2、`vp-arc-conciseness` |
+| R3-6 | 4. 未決事項の `Q-01` | 「〜以外の BPS と〜以外の画面仕様」は係り方が二通りに読めるため、作成済みのものを言い切る形にしました。 | W5 |
+
+**直さなかった指摘（R3-7、要判断）:** 1. 目的と対象範囲で、役割名の「店主代表」と Role code の `DEV`・`QE` が混ざっています。Sample 記述標準では、本文に役割名を使います。一方、QE には共通登場人物の役割名がなく、統一できないため Role code のままにしました。開発担当（DEV）のような正式名を添える案は、選びませんでした。
+
+grade の指摘はこの段では扱いませんでした。
+- **F001**（`vp-pm-control-reporting`）は、kata の段のレビューで使わない観点です。
+- **F002**（`vp-dev-change-impact`）と **F004**（`vp-qe-kata-conformance`）は、R5 で扱います。
+- **F003** は、前の段で表のセルに「`Q-02` で未決」が足されて直っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として sf-index-sample.md に文の直しを 6 件入れた（W1・W2・W3・W5・W8・vp-arc-conciseness）。意味・判断に要る背景・例外・制約は維持。prettier と markdownlint でエラーなし。","handoff":["R3-1: R3 / 冒頭の導入段落 / 「機能分割・テスト対象の洗い出しと、個別機能仕様への入口として使う」が主語と述語でねじれ、使い道が 1. 目的と対象範囲と重複する / 「各機能を業務プロセス領域と画面へ対応付け、個別機能仕様への入口とする。」にした / W2、vp-arc-conciseness / -","R3-2: R3 / 1. 目的と対象範囲 / 第1文に主語がなく、第2文は読点が多く使い道と判断を1文に詰めている / 主語「本一覧は」を補い、役割ごとの使い道の文と「読み手は、業務からの漏れと機能の重なりを一覧で判断する。」の2文に分けた / W1、W3 / -","R3-3: R3 / 1. 目的と対象範囲（対象外の行） / P-01 の表記「仕入先への発注」が概念データフロー図と2. 機能構成の「仕入計画」と揃っていない / 「仕入計画と仕入先への発注（`P-01`）」にした / W8、vp-ux-language-consistency / -","R3-4: R3 / 3. システム化機能一覧（注記2項目目） / 「在庫未反映・結果不明を販売完了とは通知しない」の主語がない / 「販売とつけ販売の機能は、在庫未反映または結果不明の取引を販売完了として通知しない」にした / W1 / -","R3-5: R3 / 3. システム化機能一覧（注記の個別仕様の項目） / 「個別仕様は…完成例で…その他は一覧行の要約を正とする」がねじれ、表の個別仕様の列と Q-03 の当面の扱いの言い直しになっている / 項目を削除した / W2、vp-arc-conciseness / -","R3-6: R3 / 4. 未決事項（Q-01 の論点） / 「補充依頼確定以外の BPS と販売登録画面以外の画面仕様」の修飾の係りが二通りに読める / 「BPS は補充依頼確定、画面仕様は販売登録画面だけが作成済みで、…に基づく暫定である」にした / W5 / -","R3-7: R3 / 1. 目的と対象範囲 / 役割名（店主代表）と Role code（DEV・QE）が同じ文に混在する / - / W8、sample-authoring-standard の役割名・Role code の区分。QE に対応する共通登場人物の役割名がなく統一できないため Role code を維持した。選ばなかった案: 「開発担当（DEV）」のように正式名を添える / 要判断","grade finding の扱い: F001（vp-pm-control-reporting）は kata の段のレビューで使わない観点、F002（vp-dev-change-impact）と F004（vp-qe-kata-conformance の kata 相互整合）は R5 の観点のためこの段では扱わない。F003 は前の段で表のセルに「`Q-02` で未決」が補われ解消済み。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"整形完了"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample のみで、plan・result・個票を変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ への成果物変更なし","reason":"変更は docs/ja/specdojo/samples/ 配下のみで docs/ja/projects/ に届かないため"}]}
+</specdojo_executor_evidence>
