@@ -22,7 +22,7 @@ members:
       - 範囲、費用・参加時間上限、受入、公開・継続の最終判断
       - 店頭運用と引き継ぎへの専門支援
     scheduler_strategy: critical-first
-    note: 店舗の当事者として最終判断する。OPS の支援は PM が導入準備へ取り込み、初期は独立した owner にしない。判断の場は営業後の週1回で、急ぎの判断は店頭で受ける。
+    note: 店舗の当事者として最終判断する。OPS としての支援は PM が導入準備へ取り込むため、初期は OPS を独立した owner にしない。判断の場は営業後の週1回で、急ぎの判断は店頭で受ける。
   - nickname: developer
     display_name: 開発担当
     email: null

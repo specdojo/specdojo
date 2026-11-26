@@ -1,0 +1,16 @@
+R3（読みやすさ）の段で、`docs/ja/specdojo/samples/pm-members-sample.yaml` の文を 1 か所だけ直しました。grade の指摘 F001（表示名「同行レビュー担当」の変更）は、正本と多数の sample に関わるため変えずに「要判断」として残しています。
+
+**直した箇所**
+- R3-1｜R3｜`shop-owner` の `note`｜指摘: 「初期は独立した owner にしない」で、何を owner にしないのかが一つに決まらない。｜直した案: 「OPS としての支援は PM が導入準備へ取り込むため、初期は OPS を独立した owner にしない。」とし、理由と結論のつながりも明示した。｜根拠: W1・W4｜印: -
+
+**変えなかった箇所**
+- R3-2｜R3｜`peer-reviewer` の `display_name`、`rules` の 2 行目｜指摘 F001: 表示名「同行レビュー担当」が、レビューの独立性（第三者視点）を伝えない。｜変えない理由: この表示名は Sample 記述標準の「共通サンプル文脈」の登場人物表（`sample-authoring-standard.md` 90 行目）で正本として決まっています。さらに docs 配下の projects 以外の 23 ファイルで使われています（`cop-index-sample`、`cop-sample`、`mip-index-sample`、`bps-sample`、`cnd-sample`、`ifx-file-sample`、`trc-requirements-to-specs-sample` など）。本 sample だけ変えると、R5（整合）の観点で食い違いが生じます。なお、`note` の「実装に加わらない第三者として」で独立性は読み取れます。｜直した案: 変えるなら、標準の表示名を「第三者レビュー担当」に改めてから、使っている全ファイルをそろえる。登録簿の項目として扱う。｜根拠: `vp-ux-language-consistency`・W8｜印: 要判断
+
+**検証**
+- schema 検査（`npm run validate:schema:file`）: valid
+- `npx prettier --check`: 問題なし
+- 残りの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 の段で pm-members-sample.yaml の shop-owner の note を、主語と指示先が一つに決まる文へ直した（W1・W4）。F001（表示名「同行レビュー担当」の変更）は、正本の Sample 記述標準の共通サンプル文脈と、docs 配下の projects 以外の 23 ファイルで使われている表示名のため変えず、要判断として handoff に残した。schema 検査と prettier は問題なし。","handoff":["No: R3-1 / 段: R3 / 箇所: docs/ja/specdojo/samples/pm-members-sample.yaml の shop-owner の note / 指摘: 「初期は独立した owner にしない」で、何を owner にしないのかが一つに決まらない / 直した案: 「OPS としての支援は PM が導入準備へ取り込むため、初期は OPS を独立した owner にしない。」に直した / 根拠: W1・W4 / 印: -","No: R3-2 / 段: R3 / 箇所: docs/ja/specdojo/samples/pm-members-sample.yaml の peer-reviewer の display_name と rules の 2 行目 / 指摘: grade の F001。表示名「同行レビュー担当」が nickname の `peer-reviewer` と note の第三者視点に合わず、独立性が伝わらない / 直した案: 本タスクでは変えない。「同行レビュー担当」は docs/ja/specdojo/standards/sample-authoring-standard.md の共通サンプル文脈の登場人物表（90 行目）で正本として決まっており、docs 配下の projects 以外の 23 ファイル（cop-index-sample、cop-sample、mip-index-sample、bps-sample、cnd-sample、ifx-file-sample、trc-requirements-to-specs-sample など）で使われている。本 sample だけ変えると R5 の観点で食い違いが生じる。note の「実装に加わらない第三者として」で独立性は読み取れる。変える場合は、標準の表示名を「第三者レビュー担当」に改め、使っている全ファイルをそろえる登録簿の項目を起こす / 根拠: `vp-ux-language-consistency`・W8 / 印: 要判断"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/samples/pm-members-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/pm-members-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/pm-members-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
