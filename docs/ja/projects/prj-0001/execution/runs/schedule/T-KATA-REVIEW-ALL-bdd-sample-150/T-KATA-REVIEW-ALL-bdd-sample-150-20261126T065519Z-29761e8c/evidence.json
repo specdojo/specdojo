@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-bdd-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-bdd-sample-150-20261126T065519Z-29761e8c",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T06:56:07.971Z",
+    "completed_at": "2026-11-26T06:59:35.081Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/bdd-sample.yaml | 12 ++++++------\n 1 file changed, 6 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "docs/ja/specdojo/samples/bdd-sample.yaml: valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7670 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7670 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bdd-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dura\n… output omitted …\nster-plan-escape.test.ts\",\"duration_ms\":1542}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  16:00:13\n   Duration  2.85s (transform 6.97s, setup 1.13s, import 10.10s, tests 5.94s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bdd-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bdd-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）で bdd-sample.yaml の食い違いを 2 件直した（価格を税込に統一・合計例を 100 に変更、つけの対象を常連客に限定し related_terms に常連客を追加）。相手側の文書を直す案（sf-sample の Q-01）と、ID の例の扱い（要判断）を handoff に残した。schema 検査と prettier は通過した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: 段 R5 / 箇所 商品.標準販売価格、売上明細.販売単価、売上記録.合計金額 / 指摘 標準販売価格と販売単価を税抜としており、ifx-api-sample の unit_price（税込みの円）、uis-sample の税込単価、dmd-sample・cdr-sample の税込の円と食い違う。合計金額の例 108 は税抜 100 円に税を足した値で、ほかの sample の税込単価と合わない / 直した案 標準販売価格と販売単価の説明を一個あたりの税込価格に変え、合計金額の例を 108 から 100（100 円×1 個）に変えた / 根拠 vp-qe-kata-conformance（kata 相互）、vp-dev-change-impact。税込とする sample が 4 つで、sf-sample の Q-01 もこの食い違いを未決として挙げていた。選ばなかった案は、bdd-sample を税抜のまま残し、ifx-api・uis・dmd・cdr の sample を税抜に直す案。業務上の意味が変わるため人が確かめる / 印 要判断",
+    "R5-2: 段 R5 / 箇所 売上記録.支払方法、売上記録.顧客ID、売上記録.related_terms / 指摘 用語集（gl-sample）では、つけ（tm-accounts-receivable）を使えるのは店主代表が認めた常連客（tm-sales-regular-customer）だけ。bdd-sample の credit の表記と顧客IDの説明は「顧客のつけ」となっており、対象が常連客に限られることが読めない / 直した案 credit の label を「常連客のつけとして後日受領する」、顧客IDの説明を「請求先の常連客を特定する」にし、売上記録の related_terms に tm-sales-regular-customer を足した / 根拠 vp-qe-kata-conformance（kata 相互）。gl-sample の tm-sales-regular-customer の定義「顧客のうち、店主代表がつけの利用を認めた人」 / 印 -",
+    "R5-3: 段 R5 / 箇所 sf-sample の Q-01（相手側） / 指摘 R5-1 を採った場合、sf-sample の Q-01 の「画面の税込単価と業務データ辞書の税抜の販売単価の対応」が古い記述になる / 直した案 - / 根拠 vp-dev-change-impact。相手側の文書は docs/ja/specdojo/samples/sf-sample.md。直す案は、Q-01 の該当部分を「業務データ辞書も税込の販売単価とし、税区分と端数処理の条件は未決」に直すか、税抜との対応の項目を Q-01 から外すこと。R5-1 を戻す場合は不要 / 印 -",
+    "R5-4: 段 R5 / 箇所 売上記録.売上ID、商品.商品ID の example / 指摘 売上IDの例 SALE-001 と商品IDの例 PRD-001 が、ほかの sample の ID の形と合わない。uis-sample・ifx-file-sample・etc-sample・bes-sample は取引番号を TX-YYYYMMDD-NNNN とし、ifx-api-sample の商品コードは 4〜13 桁の数字、uis-sample は 8 桁の数字としている。本部売上受付では、店舗の売上IDと本部売上IDの照合の手がかり（API の transaction_id）が bdd-sample から読めない / 直した案 - / 根拠 vp-qe-kata-conformance（kata 相互）。売上IDを取引番号と同じものとしてよいか、商品IDを商品コードと同じものとしてよいかの根拠が見つからず（取り消した取引にも取引番号は振られ、ccd-sample も売上ID・商品IDの名前を使う）、例を変えなかった。選ばなかった案は、売上IDの例を TX-20261108-0012、商品IDの例を 8 桁の数字に変え、本部売上IDの説明に照合は店舗の取引番号（transaction_id）で行うと足す案。人が同じものとしてよいかを決めたら bdd-sample と ccd-sample を一緒に直す / 印 要判断"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bdd-sample-150/T-KATA-REVIEW-ALL-bdd-sample-150-20261126T065519Z-29761e8c/executor.log",
+      "bytes": 7240,
+      "truncated": false
+    }
+  ]
+}
