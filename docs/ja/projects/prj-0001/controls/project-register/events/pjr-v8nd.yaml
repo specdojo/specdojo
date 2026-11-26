@@ -38,3 +38,45 @@
     - field: derived_from
       from: ""
       to: '["PJR-FNB7"]'
+- v: 1
+  id: reg_6b717464149f47e5ba7c68d2accf6870
+  ts: "2026-11-26T10:41:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_57828228305c4b33b4495c8045411c48
+- v: 1
+  id: reg_493f5b07bdd34dd3baaeb1d61539b07f
+  ts: "2026-11-26T10:41:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_6b717464149f47e5ba7c68d2accf6870
+- v: 1
+  id: reg_6097e7500a3a4444912168c0e39b2f9e
+  ts: "2026-11-26T10:41:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_493f5b07bdd34dd3baaeb1d61539b07f

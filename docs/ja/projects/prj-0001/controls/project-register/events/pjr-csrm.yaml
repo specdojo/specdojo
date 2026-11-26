@@ -38,3 +38,45 @@
     - field: derived_from
       from: ""
       to: '["PJR-P8SX"]'
+- v: 1
+  id: reg_2d3634b560fb4e41a60db586ba9e59e2
+  ts: "2026-11-26T10:41:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_6701b5de205b45ba8707c8cb10e7c5ef
+- v: 1
+  id: reg_bfd0909e01bd48d3a087950772ffd4db
+  ts: "2026-11-26T10:41:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_2d3634b560fb4e41a60db586ba9e59e2
+- v: 1
+  id: reg_eb3a81103d304e6db7d155102484a170
+  ts: "2026-11-26T10:41:55Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_bfd0909e01bd48d3a087950772ffd4db
