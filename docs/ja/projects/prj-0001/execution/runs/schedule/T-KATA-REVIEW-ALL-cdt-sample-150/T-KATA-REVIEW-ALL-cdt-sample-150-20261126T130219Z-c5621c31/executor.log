@@ -1,0 +1,28 @@
+R5（整合）の段では、`docs/ja/specdojo/samples/cdt-sample.md` の食い違い 2 種を sample 側で直しました（計 3 か所）。ほかに 1 件を、相手側の文書を直す案として残しています。直した後に Prettier で整形し、`prettier --check` が通ることを確かめました。それ以外の検査（`lint:md` など）は、このあと親 runner が実行します。
+
+照合した相手は次のとおりです。
+
+- 同じ接頭辞の sample: `cdt-sample` だけで、index の sample はありません。
+- `supersedes` の参照先 `cld-sample`: `deprecated` で後継として `cdt-sample` を示しており、食い違いはありません。
+- wikilink の参照先: `bdd-sample`・`gl-sample`・`br-sample`・`uis-sample`
+- 商品台帳を扱うほかの sample: `cdsd-sample`・`cdfd-overview-sample`・`bps-sample`・`bds-sample`
+- 用語集（`gl-common` ほか）と共通サンプル文脈
+
+**直した点**
+
+- **R5-1**（概要・関連仕様との関係）: 「税区分」を「税率区分」に直しました（2 か所）。`uis-sample` の商品台帳は「税率区分（8% または 10%）」と書いており、こちらにそろえています。
+- **R5-2**（関連仕様との関係の用語集の行）: 用語集の語義として「通年で棚に置く方針」と書いていましたが、`gl-sample` の定番商品の定義は「継続して棚に置くと決め、在庫を補充しながら販売する商品」です。用語集の語義に合わせて「継続して棚に置き補充する方針」に直しました。本文の「通年」は、この語義を店の方針として絞り込んだものなので、そのまま残しています。
+
+**相手側を直す案（変更なし・要判断）**
+
+- **R5-3**（棚札タグ・区分の変更・棚札タグの管理）: 商品台帳の扱いが `cdsd-sample` と食い違っています。
+  - `cdt-sample`: 店主代表が「紙の商品台帳」を正本として、変更理由・適用日・棚札タグの管理欄を記録する。
+  - `cdsd-sample`: 商品台帳が持つのは商品の識別・表示名・標準販売価格・補充基準で、承認後に OPS だけが更新する。
+  - 直す案: `cdsd-sample` の商品台帳の内容に「取扱区分・商品区分・棚札タグ」を足し、更新者を店主代表と整合させる。あるいは、`cdt-sample` の「紙の商品台帳」が現行の運用（AS-IS）を指すと明記する。
+  - 要判断の理由: `cdfd-overview-sample` は現行の保管先を「商品ノート」とし、システム化後の保管先を未決としています。どちらを正とするか決められないため、sample は変えていません。
+
+grade の F001（区分を変えたときの棚札の貼り替え）は、前の段で本文に反映済みです。また kata-guide は `vp-ops-operability` を kata の段では使わないとしているため、R5 では扱いませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: cdt-sample の食い違い 2 種（税率区分の表記 2 か所、用語集の定番商品の語義 1 か所）を直した。商品台帳の扱いの食い違い 1 件は相手側を直す案として handoff に残した。","handoff":["R5-1: R5 / 1. 概要、4. 関連仕様との関係 / 「税区分」が uis-sample の「税率区分（8% または 10%）」と食い違う / 2 か所を「税率区分」に直した / vp-qe-kata-conformance（uis-sample の集計の章で、商品台帳が税率区分を持つと書いている）/ -","R5-2: R5 / 4. 関連仕様との関係（用語集の行）/ 用語集の語義として「通年で棚に置く方針」と書いているが、gl-sample の tm-standard-product の定義は「継続して棚に置くと決め、在庫を補充しながら販売する商品」 / 「継続して棚に置き補充する方針」に直した（本文の「通年」は店の方針として残した） / vp-qe-kata-conformance、vp-dev-change-impact / -","R5-3: R5 / 2.3. 棚札タグ、3.2.2. 区分を変更する場合、3.4. 棚札タグの管理 / cdt-sample は店主代表が「紙の商品台帳」を正本として取扱区分の変更理由・適用日・棚札タグの管理欄を記録するとしている。cdsd-sample は商品台帳の内容を商品の識別・表示名・標準販売価格・補充基準とし、承認後に OPS だけが更新するとしており、食い違う / - / 相手側の案: cdsd-sample の商品台帳の内容に取扱区分・商品区分・棚札タグを足し、更新者を店主代表と整合させる。あるいは cdt-sample の「紙の商品台帳」が現行の運用（AS-IS）を指すと明記する。cdfd-overview-sample が現行を「商品ノート」、システム化後の保管先を未決としているため、どちらを正とするか決められなかった / 要判断","F001（grade、vp-ops-operability）: 3.2.2. 区分を変更する場合に、店番が適用日までに棚札を新しい表示名に貼り替えると前の段で書き足し済み。kata-guide の「kata の観点の組」で vp-ops-operability は kata の段では使わないため、R5 では扱わなかった"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdt-sample.md","status":"passed","summary":"Edit 後に prettier --write で表を整形し、check が通った"}]}
+</specdojo_executor_evidence>
