@@ -1,0 +1,23 @@
+R3（読みやすさ）として sample の文を直し、grade の finding F001 にも手を入れました。対象ファイルは `docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md` の 1 つだけです（10 行追加、10 行削除）。Prettier と markdownlint はどちらも問題なしでした。ほかの検査は、このあと親 runner が実行します。
+
+直したのは次の 6 件で、R3-1 は判断待ちです。
+
+| No | 箇所 | 直したこと | 根拠 |
+| --- | --- | --- | --- |
+| R3-1 | 目的と適用範囲の表 | 列名「使う人」を「使う役割（Role code）」に変え、中身を役割名から Role code に置き換えた（開発担当→`DEV`、同行レビュー担当→`QE`、店主代表→`PO`） | F001、`vp-ux-language-consistency` |
+| R3-2 | 目的と適用範囲の冒頭の文 | 主語が「本書は」のまま「直さない」と続くのを避け、「表を手で直さない」を「表は手で直さない」にした | W1、W2 |
+| R3-3 | 対象外の 1 行目 | 「要求一覧がまだ版を固めていない」を「要求一覧の版もまだ固まっていない」にした | W2 |
+| R3-4 | 充足状況サマリの優先順の前の 1 文 | 3 つの名詞を並べた書き方をやめ、「優先して解消する要求と要求に対応しない仕様を、理由とともに優先順に示す。」にした | W5 |
+| R3-5 | ギャップと対応方針の末尾の文 | 「担当と期限は各行を…追跡し」のねじれを直し、「各行は…追跡し、担当と期限は本書に持たない」にした | W2 |
+| R3-6 | 同じ文 | PJR の初出に「プロジェクト登録簿（PJR）」と正式名を添えた | W8 |
+
+R3-1 で判断が要る点があります。
+- Sample 記述標準の「共通登場人物」の章は、表の表示名には役割名を、責務を表す項目には Role code を使うと定めています。今回の列は責務の割り当てに近いと見て、F001 に合わせて Role code にしました。
+- 同行レビュー担当→`QE` と店主代表→`PO` の対応は、人と組織の定義標準にある Role code の責務の説明から推したものです。標準に明記された対応ではありません。
+- 役割名のまま残すほうがよいと判断する場合は、この変更だけを戻してください。
+
+用語の整合（R5）に当たる表記ゆれが 1 つ残っています。表のセルで `req-r1-004` がコード書式のところとそうでないところがありますが、この段では扱っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として trc-requirements-to-specs-sample を見直した。F001（使う人の欄を Role code へ統一）と W1・W2・W5・W8 に当たる文の直しを入れた。Prettier と markdownlint は問題なし。","handoff":["No: R3-1; 段: R3; 箇所: 目的と適用範囲 の表（使う人の列）; 指摘: 使う人の欄が通称（開発担当・店主代表・同行レビュー担当）で書かれ、メンバー定義の Role code と照合できない（grade F001）; 直した案: 列名を「使う役割（Role code）」にし、値を `DEV`・`QE`・`PO` に置き換えた（開発担当→`DEV`、同行レビュー担当→`QE`、店主代表→`PO`）; 根拠: `vp-ux-language-consistency`、F001; 印: 要判断（Sample 記述標準の「共通登場人物」は表の表示名に役割名、責務を表す項目に Role code を使うと定める。この列を責務の割り当てとみなすかは人の判断に委ねる。同行レビュー担当→`QE` と店主代表→`PO` の対応は人と組織の定義標準の Role code の責務から推したもので、標準に明記されていない）","No: R3-2; 段: R3; 箇所: 目的と適用範囲 の冒頭の文; 指摘: 主語「本書は」が「表を手で直さない」にかかり、主語と述語がねじれている; 直した案: 「表は手で直さない」にした; 根拠: W1、W2; 印: -","No: R3-3; 段: R3; 箇所: 目的と適用範囲 の対象外（次期リリースの要求）; 指摘: 「要求一覧がまだ版を固めていない」は主語と述語がねじれている; 直した案: 「要求一覧の版もまだ固まっていない」にした; 根拠: W2; 印: -","No: R3-4; 段: R3; 箇所: 充足状況サマリ の優先順の前の 1 文; 指摘: 「優先して解消する要求と、要求に対応しない仕様、その理由は」の並列で、修飾がどこまでかかるか読めない; 直した案: 「優先して解消する要求と要求に対応しない仕様を、理由とともに優先順に示す。」にした; 根拠: W5; 印: -","No: R3-5; 段: R3; 箇所: ギャップと対応方針 の末尾の文; 指摘: 「担当と期限は各行を…追跡し」で主語と述語がねじれている; 直した案: 「各行は…登録候補として追跡し、担当と期限は本書に持たない。」にした; 根拠: W2; 印: -","No: R3-6; 段: R3; 箇所: ギャップと対応方針 の末尾の文; 指摘: 略語 PJR の初出に正式名がない; 直した案: 「プロジェクト登録簿（PJR）」にした; 根拠: W8; 印: -","申し送り（R5 向け）: 表のセルで `req-r1-004` がコード書式のところとそうでないところがある。用語の整合として R5 で扱う。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は sample 1 ファイルだけで、plan・result・個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに *.yaml / *.yml がないため"}]}
+</specdojo_executor_evidence>
