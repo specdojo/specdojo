@@ -1,0 +1,29 @@
+R4（正しさ）の確かめでは誤りが見つからず、`docs/ja/specdojo/samples/gl-sample.yaml` は変更していません。schema 検査と参照検査はどちらもエラーなしで通りました。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 行目の modeline `$schema=../../../specdojo/schemas/v1/gl.schema.yaml` | `docs/specdojo/schemas/v1/gl.schema.yaml`、gl-rulebook | sample の場所から相対パスを解決した | 一致 | `docs/ja/specdojo/samples/` から 3 階層上がると `docs/` になり、`docs/specdojo/schemas/v1/gl.schema.yaml` が存在する |
+| 2 | `id: specdojo:gl-sample`、`type: glossary`、`rulebook: specdojo:gl-rulebook` | `gl.schema.yaml` | pattern と const を読み、schema 検査を実行した | 一致 | id は `^([a-z0-9-]+:)?gl-[a-z0-9-]+$`、type は `const: glossary`、rulebook は `-rulebook` の pattern に合う。schema 検査は `valid` |
+| 3 | トップレベルの `title`・`locale: ja`・`status: draft` | `gl.schema.yaml`、gl-rulebook | `status` の enum と rulebook の必須表を読んだ | 一致 | `status` の enum は `draft`/`ready`/`deprecated`。rulebook は `status` を必須としている |
+| 4 | 全用語の id（`tm-...`） | `gl.schema.yaml`、gl-rulebook「ID規約」 | pattern を照合し、schema 検査を実行した | 一致 | すべて `^tm-[a-z0-9-]+$` に合う |
+| 5 | 用語の項目のキー（`term`、`englishName`、`aliases`、`definition`、`notes`、`category`、`relatedTerms`、`status`、`example`） | `gl.schema.yaml`（`additionalProperties: false`） | 許されているキーを照合した | 一致 | schema にないキーはなく、必須の `id`・`term`・`definition` はすべての用語にある |
+| 6 | 各用語の `status: official` | `gl.schema.yaml` | enum を読んだ | 一致 | enum は `official`/`deprecated`/`candidate` |
+| 7 | `category`・`relatedTerms` の参照先 | gl-rulebook「`category`・`relatedTerms`」 | `node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references docs/ja/specdojo/samples/gl-sample.yaml` を実行した | 一致 | 出力なしで正常終了した。参照先はすべて同じファイル内の id で、id の重複もない |
+| 8 | 先頭コメント「新規は `tm-<領域>-<概念>` で採番し、接頭辞のない参照済み ID は維持する」 | gl-rulebook「ID規約」 | rulebook の本文を読んだ | 一致 | rulebook に「新規は `tm-<領域>-<概念>`」「確定・参照済み ID は接頭辞がなくても維持する」とある |
+| 9 | 先頭コメント「商品は共通用語集 gl-common（`tm-common-product`）を正本とする」 | gl-rulebook「横断の概念は `gl-common` へ集める」 | rulebook を読み、`docs` 配下を grep した | 確かめられない | `gl-common` という置き方は rulebook と合う。ただし `tm-common-product` はこの sample と過去の実行記録にしか出てこない。参照先の有無は R1 の申し送りどおり R5 の範囲 |
+| 10 | `tm-reorder-point` の `example`「店主代表が追加発注を行う」と `notes` の対応（R1 からの申し送り） | sample の `notes` | 両方を読み比べた | 一致 | 現在の例文は、発注を判断するのが店主代表であることを示しており、`notes` と食い違わない |
+| 11 | `tm-safety-stock` の `notes`「発注点は安全在庫に販売見込み数量を加えた水準なので、安全在庫を下回る前に発注候補に挙がる」 | sample 内の定義 | 発注点と安全在庫の定義から論理を確かめた | 一致 | 発注点は安全在庫以上になるので、記述は矛盾しない。数値は正本のない業務の仮定なので、確かめの対象にしていない |
+
+**検査**
+
+- 実行して通ったのは schema 検査（`npm run validate:schema:file`）と用語参照の検査（`glossary-references`）です。
+- `npm run validate:history-links` は、履歴ファイルを変更していないので実行していません。
+- Prettier と markdownlint は、変更したファイルがないので実行していません。
+
+result は reporter と runner が書くので、作っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: gl-sample.yaml の主張 11 件を gl.schema.yaml・gl-rulebook・検証コマンドと突き合わせた。10 件は一致し、誤りはなかったため sample は変更していない。先頭コメントの `tm-common-product`（gl-common）は参照先を確かめられず、R5 の範囲として残した。schema 検査と glossary-references 検査は通った。","handoff":[],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/gl-sample.yaml: valid"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"出力なしで正常終了。ID の重複も参照先の欠けもない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"executor は plan.md・result.md・個票などの履歴ファイルを変更していない"},{"command":"npx prettier --check docs/ja/specdojo/samples/gl-sample.yaml","status":"not_applicable","summary":"変更したファイルがない","reason":"確かめで誤りが見つからず、sample を含めてどのファイルも変更していない"}]}
+</specdojo_executor_evidence>
