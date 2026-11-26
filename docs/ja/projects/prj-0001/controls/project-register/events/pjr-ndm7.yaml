@@ -38,3 +38,45 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_48bbc3fd1a5f42e59d289169809201e9
+  ts: "2026-11-26T21:01:41Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "概要" updated
+  changes:
+    - field: section
+      from: ""
+      to: 概要
+    - field: description
+      from: imp-interface-sample の影響詳細一覧の確定済みレシートの印字で、波及先が一覧にない仮の ID ifx-cmd-receipt-printer になっている。ifx-index-sample は変えず、波及先を ifx-cmd-sample の参照にする。
+      to: 型のレビュー T-KATA-REVIEW-ALL-imp-interface-sample-150 の R5-4 で、imp-interface-sample の「影響詳細一覧」の「確定済みレシートの印字」の備考にある波及先 `ifx-cmd-receipt-printer` が、ifx-index-sample に名前のない仮の ID と指摘された。ifx-index-sample は ready の正本のため変えず、本書の波及先を `ifx-cmd-sample` の参照に寄せる（indie の判断、2026-11-26）。
+  previous_event_id: reg_25519d300e5242078c92283603e70c9f
+- v: 1
+  id: reg_85d817581fab476ea72d5805b529f73b
+  ts: "2026-11-26T21:01:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_48bbc3fd1a5f42e59d289169809201e9
+- v: 1
+  id: reg_77f1807b51874d40960f334beac2f848
+  ts: "2026-11-26T21:01:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_85d817581fab476ea72d5805b529f73b

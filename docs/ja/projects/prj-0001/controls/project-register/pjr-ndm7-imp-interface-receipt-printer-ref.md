@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 概要
 
-imp-interface-sample の影響詳細一覧の確定済みレシートの印字で、波及先が一覧にない仮の ID ifx-cmd-receipt-printer になっている。ifx-index-sample は変えず、波及先を ifx-cmd-sample の参照にする。
+型のレビュー T-KATA-REVIEW-ALL-imp-interface-sample-150 の R5-4 で、imp-interface-sample の「影響詳細一覧」の「確定済みレシートの印字」の備考にある波及先 `ifx-cmd-receipt-printer` が、ifx-index-sample に名前のない仮の ID と指摘された。ifx-index-sample は ready の正本のため変えず、本書の波及先を `ifx-cmd-sample` の参照に寄せる（indie の判断、2026-11-26）。
 
 ## 2. 入力
 
@@ -30,13 +30,19 @@ imp-interface-sample の影響詳細一覧の確定済みレシートの印字�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `docs/ja/specdojo/samples/imp-interface-sample.md` の「影響詳細一覧」の「確定済みレシートの印字」の備考から、仮の ID `ifx-cmd-receipt-printer` をなくし、波及先を `[[specdojo:ifx-cmd-sample|...]]` の wikilink で示している。表示名は sample の H1 に合わせる。
+- `docs/ja/specdojo/samples/imp-interface-sample.md` に `ifx-cmd-receipt-printer` が残っていないことを grep で確かめている。
+- `ifx-index-sample` とほかの sample・rulebook は変えていない。imp-interface-sample の変更は上の箇所だけにとどめている。
+- 表の列がずれていない（セル内の `|` を `\|` でエスケープしている）。
+- `npm run lint:fm`・`npm run -s lint:md` が通る。
+- 個票の対応結果に、変更した箇所と、grep と検査の結果を書いている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                     | 担当 | 状態 | メモ                          |
+| --- | -------------------------------------------------------- | ---- | ---- | ----------------------------- |
+| 1   | 印字の波及先を `ifx-cmd-sample` の wikilink に置き換える | BA   | open | `ifx-index-sample` は変えない |
+| 2   | grep と検査を流し、対応結果に書く                        | BA   | open | -                             |
 
 ## 5. 対応結果
 
