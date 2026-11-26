@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-22xe-etc-index-sample-path-alignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-23T04:55:59Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T12:15:44Z"
+  conclusion: etc-index-sample の外部結合テストの経路を tsp-index・itc-index とそろえた
   derived_from:
     - PJR-30PT
   commit_type: docs

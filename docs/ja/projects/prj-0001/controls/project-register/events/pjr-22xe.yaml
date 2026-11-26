@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5a8104ed8b3f4d3f81517624f5485836
+- v: 1
+  id: reg_846d37ad0b334913a9a0ee7b6113ddd7
+  ts: "2026-11-26T12:15:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後の型の grade で rulebook 93 点・sample 94 点の pass を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: etc-index-sample の外部結合テストの経路を tsp-index・itc-index とそろえた
+  previous_event_id: reg_c54c91d0ad62431facc4391832b16011
