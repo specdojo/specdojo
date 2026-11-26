@@ -1,0 +1,25 @@
+R5 の修正を入れ終え、最後に報告をまとめています。
+
+`docs/ja/specdojo/samples/sf-sample.md` だけを直しました。同じ系列の sample や参照先との食い違いを 3 件解消し、相手側の文書で直すべき点は直さずに案として残しています。prettier と markdownlint はこのファイルで 0 件でした。lint や test の正式な検査は、このあと親 runner が実行します。
+
+**sample を直した点**
+
+- **R5-1（目的と概要・未決事項）**: 本文は `sf-index` を「未作成」としていました。実際には `specdojo:sf-index-sample` があり、`SF-POS-01` が本書に対応付けられています。そこで wikilink に変え、`Q-01` から「`sf-index` の対応」を外しました。
+- **R5-2（入出力・未決事項）**: 前の段が `Q-01` に足した「業務データ辞書の税抜の販売単価」という前提は、いまの業務データ辞書と合いません。辞書では販売単価も標準販売価格も税込で、税率区分の項目はありません。入力行を「標準販売価格（税込）、税率区分」に直し、`Q-01` の論点を「業務データ辞書に未定義の税率区分の正本」に置き換えました。
+- **R5-3（入出力・検証・未決事項）**: 用語を参照先にそろえました。「税区分」は画面仕様の表記「税率区分」に、`V-04` の「商品台帳の単価」は辞書の「標準販売価格」にしました。
+
+**相手側を直す案（変更していません）**
+
+- **R5-4**: `bdd-sample.yaml` の商品に、税率区分（8% / 10%）の項目を足す案です。画面仕様は「商品台帳が税率区分を持つ」と書いていますが、辞書に該当する項目がありません。
+- **R5-5（要判断）**: 辞書の売上記録の注記は、税額と請求額の確認を「販売管理 CLI 仕様」に任せています。一方、本書とシステム化機能一覧は CLI を対象外としています。CLI で確かめるのは会計ではなく照会だ、とも読めるため、どちらを直すかは決めていません。直すなら辞書の注記を販売登録画面に向けるか、照会用の CLI と明記するかです。
+
+**grade の指摘の扱い**
+
+- F004 と F006 が R5 の観点に当たります。
+  - F004 は前の段の修正で解消済みでした。
+  - F006 は前提が古くなっていたので、R5-2 で直しました。
+- F001 と F002 の観点は kata のレビューでは使わないため、対象外です。F003 と F005 はほかの段の観点なので扱っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: sf-sample.md を同じ系列の sample・参照先に合わせて 3 件直し、相手側を直す案を 2 件 handoff に残した。","handoff":["R5-1: R5 / 目的と概要・未決事項 / `sf-index` を「未作成」としていたが、`specdojo:sf-index-sample` があり `SF-POS-01` が本書に対応付けられている / wikilink [[specdojo:sf-index-sample|システム化機能一覧]] に変え、`Q-01` から「`sf-index` の対応」を外した / `vp-qe-kata-conformance`（sf-index-sample の機能一覧の `SF-POS-01` 行） / -","R5-2: R5 / 入出力・未決事項 / 前の段が `Q-01` に足した「画面の税込単価と業務データ辞書の税抜の販売単価の対応」が、いまの業務データ辞書（bdd-sample.yaml）と食い違う。辞書は標準販売価格・販売単価とも税込で、税率区分の項目を持たない / 入力行を「標準販売価格（税込）、税率区分、販売可能な在庫数量」にし、`Q-01` の論点を「税計算（業務データ辞書に未定義の税率区分の正本を含む）」に置き換えた / `vp-qe-kata-conformance`、`vp-dev-change-impact`（bdd-sample.yaml の標準販売価格・販売単価の description） / -","R5-3: R5 / 入出力・検証・受入観点・未決事項 / 「税区分」が画面仕様（uis-sample）の「税率区分」と違い、`V-04` の「商品台帳の単価」が業務データ辞書の「標準販売価格」と違う / 「税率区分」「商品の標準販売価格」にそろえた / `vp-qe-kata-conformance`（uis-sample の集計の説明、bdd-sample.yaml の商品） / -","R5-4: R5 / 入出力（相手側） / 画面仕様は「商品台帳は税込単価と税率区分を持つ」とするが、業務データ辞書の商品に税率区分の項目がない / - / `vp-qe-kata-conformance`。相手側の案: bdd-sample.yaml の商品に税率区分（8% / 10%）の項目を足し、sf-sample の `Q-01` から税率区分の正本の論点を外す / -","R5-5: R5 / 業務プロセス・画面との対応（相手側） / 業務データ辞書の売上記録の注記は「税額と請求額を確認する操作は販売管理 CLI 仕様に従う」とするが、sf-sample は CLI による会計を、sf-index-sample は販売管理 CLI を対象外とする / - / `vp-qe-kata-conformance`。相手側の案: bdd-sample.yaml の注記を販売登録画面に向けるか、照会用の CLI と明記する。照会は会計に当たらないとも読めるため、どちらを直すかを決めていない / 要判断","grade の指摘の扱い: F004（`vp-dev-change-impact`）は前の段の修正で `Q-01`・`Q-02` に見直す箇所が対応付けられており、解消済み。F006（`vp-qe-kata-conformance`）は前提の「辞書は税抜」が古くなっていたため R5-2 で直した。F001・F002 の観点は kata の段のレビューでは使わないため対象外。F003・F005 は R4 の観点のためこの段では扱わない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sf-sample.md","status":"passed","summary":"sf-sample.md を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sf-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
