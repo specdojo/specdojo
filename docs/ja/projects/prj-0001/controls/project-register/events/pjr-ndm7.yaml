@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_25519d300e5242078c92283603e70c9f
+  ts: "2026-11-26T21:01:00Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: imp-interface-sample の印字の波及先を ifx-cmd-sample の参照にする
+    - field: description
+      from: ""
+      to: imp-interface-sample の影響詳細一覧の確定済みレシートの印字で、波及先が一覧にない仮の ID ifx-cmd-receipt-printer になっている。ifx-index-sample は変えず、波及先を ifx-cmd-sample の参照にする。
+    - field: input
+      from: ""
+      to: '["T-KATA-REVIEW-ALL-imp-interface-sample-150 の R5-4 で、波及先 ifx-cmd-receipt-printer が ifx-index-sample にない仮の ID と指摘された（2026-11-26）","R5-4 は、ready の ifx-index-sample を変えず、本書の波及先を ifx-cmd-sample の参照に寄せる案 (b) にする（indie の判断、2026-11-26）","R5-1（照会 API 停止時の障害波及を高にした直し）は 150 の直しのまま確定し、追加の作業はしない（indie の判断、2026-11-26）","担当 BA・期限 2026-11-30 は indie の指示（2026-11-26）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
