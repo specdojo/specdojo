@@ -51,7 +51,8 @@ interfaces:
       店主代表と開発担当が本部受付とローカル記録を照合し、確認できなければ取引を保留する。
       店番担当は会計・取消を繰り返さない。回復の条件は詳細契約で確認する。
     spec_ref: specdojo:ifx-api-sample
-    # 詳細契約: [[specdojo:ifx-api-sample|本部売上登録API]]。
+    # 詳細契約: [[specdojo:ifx-api-sample|本部売上登録API]]。CLI 仕様などが参照する
+    # 架空正本 `ifx-api-kinuya-sales.yaml` の完成例にあたる。
     # 取引 ID による重複排除と、応答コードごとの店舗端末の扱いは同契約に委譲する。
     # _UNDECIDED_: 結果不明時の受付照会と保存失敗後の回復方式が未決。
     # DEV が ARC の助言を受けて本部側と方式を決め、同契約へ反映する。
