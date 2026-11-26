@@ -170,3 +170,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_808f08a55b7745df933536e1415be6da
+- v: 1
+  id: reg_e8623bf746044818939c8b04fbef343a
+  ts: "2026-11-26T10:10:54Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件と残課題の文書サイトのビルドでの確認を、next の deploy の成功で確かめ、indie の承認（2026-11-26）を得て close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: リポジトリをまたぐ wikilink は project 修飾の doc id と external_projects の source_url で解決する方式とし、解決先がない場合は警告にとどめてビルドを止めない。2026-11-26 の next の deploy（run 45713911145）で、またぐ wikilink の警告が出ないことを確かめた
+  previous_event_id: reg_808ac9eaa2a94c2ea5d4731dec16a644

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-66er-cross-repository-links
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T05:02:47Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T10:10:54Z"
+  conclusion: リポジトリをまたぐ wikilink は project 修飾の doc id と external_projects の source_url で解決する方式とし、解決先がない場合は警告にとどめてビルドを止めない。2026-11-26 の next の deploy（run 45713911145）で、またぐ wikilink の警告が出ないことを確かめた
   derived_from:
     - PJR-8HCB
   commit_type: feat
