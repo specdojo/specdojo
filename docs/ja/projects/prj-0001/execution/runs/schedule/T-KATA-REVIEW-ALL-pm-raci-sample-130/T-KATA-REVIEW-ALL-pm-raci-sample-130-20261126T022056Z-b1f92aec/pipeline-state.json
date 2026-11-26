@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-pm-raci-sample-130",
   "run_id": "T-KATA-REVIEW-ALL-pm-raci-sample-130-20261126T022056Z-b1f92aec",
-  "updated_at": "2026-11-26T02:27:44.712Z",
+  "updated_at": "2026-11-26T02:28:39.674Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-raci-sample-130/T-KATA-REVIEW-ALL-pm-raci-sample-130-20261126T022056Z-b1f92aec/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T02:27:44.712Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T02:28:39.674Z",
       "artifact_ref": null
     }
   },
