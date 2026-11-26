@@ -134,8 +134,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-26 20:02 | PJR-FNB7 | sonnet-executor        |
 | 2026-11-27 00:43 | PJR-1TYG | sonnet-executor        |
 | 2026-11-27 00:46 | PJR-1TYG | sonnet-executor        |
+| 2026-11-27 07:31 | PJR-1TYG | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-1TYG とした（統合 merge commit `21a27d974e`、2026-11-27 00:39 JST。実行時点で `review`）。この worktree の HEAD に含まれることを確認した。直前に統合された PJR-AEGN（merge commit `587629d5bf`）より後である。今回の run は `pjr-jsey-20261126T154440Z-4e79d082`、executor の nickname は `pipeline-state.json` の actor に記録された `sonnet-executor` である。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-1TYG とした（統合 merge commit `21a27d974e`、2026-11-27 00:39 JST。実行時点で `review`）。この worktree の HEAD に含まれることを確認した。直前に統合された PJR-AEGN（merge commit `587629d5bf`）より後である。その後に統合された項目（PJR-CSRM など）は対象一覧に含まれない。今回の run は `pjr-jsey-20261126T222836Z-d9dc918f`、executor の nickname は `pipeline-state.json` の actor に記録された `sonnet-executor` である。
 
 申し送り: executor が変更した成果物は本個票のみ。親 runner の検証（lint-ts・lint-fm・lint-md・lint-mermaid・lint-d2・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
