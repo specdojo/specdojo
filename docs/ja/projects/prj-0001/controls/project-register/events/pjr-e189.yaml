@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-ESE7"]'
+- v: 1
+  id: reg_810d559d2fdc4e82b6cfc3794c29e982
+  ts: "2026-11-26T20:30:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景
+  previous_event_id: reg_186bbaaa953548af98342b4bac5dc6ae
+- v: 1
+  id: reg_548a1b36400c41638cb9eb18d48d618b
+  ts: "2026-11-26T20:31:02Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "回答候補" updated
+  changes:
+    - field: section
+      from: ""
+      to: 回答候補
+  previous_event_id: reg_810d559d2fdc4e82b6cfc3794c29e982
