@@ -3,10 +3,10 @@ version: 1
 document: specdojo:etc-index-rulebook
 path: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
 target: kata
-rubric: grade-rubric-v2
+rubric: grade-rubric-v3
 verdict: pass
 score: 93
-graded_at: "2026-11-23T01:47:01.579Z"
+graded_at: "2026-11-26T10:49:50.045Z"
 graded_by: opus-review-executor
 content_hash: c2bbdfbdc9c087ab8a0ea42ab92ff4c69a820d0880a327e2f8d8102942a5f1fb
 categories:
@@ -159,3 +159,7 @@ findings:
     message_ja: >-
       rulebook の呼び名「外部結合テストカタログ 概要／対象別」が、適用先 `dct-test-specs-template.yaml` の
       name「外部結合テスト（全体構成）」「外部結合テスト（対象別）」と一致しておらず、同じ成果物が別名で並び誤読されるため、dct 側と呼び名を揃えるか対応を明記すべきである。
+size_metrics:
+  characters: 6014
+  operations_characters: 0
+  operations_ratio: 0

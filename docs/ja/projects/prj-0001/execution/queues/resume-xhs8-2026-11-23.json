@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "queue_id": "resume-xhs8-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T01:02:35.903Z",
+  "updated_at": "2026-11-23T01:11:17.010Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-XHS8",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--resume-note",
+        "完了条件の2回目の実行にある、オーケストレーターが行った比較と測りの結果を個票の対応結果に書き写し、作業内容の表の該当の行をdoneにして完了として報告する。比較と測りは流し直さない。",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T01:02:43.425Z",
+      "completed_at": "2026-11-23T01:11:17.005Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

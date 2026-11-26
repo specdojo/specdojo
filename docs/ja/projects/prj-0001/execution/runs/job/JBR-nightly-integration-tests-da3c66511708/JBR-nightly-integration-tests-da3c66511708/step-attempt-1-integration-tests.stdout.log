@@ -1,0 +1,649 @@
+
+> specdojo@0.9.2 test:integration
+> vitest run --config vitest.integration.config.ts --reporter=default --reporter=json --outputFile.json=/tmp/specdojo-integration-jhh4hR/vitest.json
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.12 [39m[90m/workspaces/specdojo-workspace/specdojo[39m
+
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-gCPsOp/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-1Af7ai/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-3VOdpt/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-5Ty2e4/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-pLYxyJ/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-rNbHif/GRADE
+commit-targets:
+  execution/grade/criteria/doc.yaml
+  execution/grade/results/doc.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Xhw0xa/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Xhw0xa/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Xhw0xa/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-AMcDko/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-AMcDko/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-nWPEF2/GRADE-NEWER
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-AMcDko/worktrees/prj-0001-T-T-doc-010/app2
+Generating worktree artifacts: specdojo build
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-PPP4dL/GRADE-REFRESH
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-w37H7e/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-w37H7e/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-w37H7e/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-apmvNI/GRADE-SAME
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-w37H7e/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-w37H7e/worktrees/prj-0001-T-T-doc-010/app2
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-vW87SC/REVIEW-PASS
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-worktree-ops-base-vW87SC/REVIEW-PASS
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-vW87SC/REVIEW-FAIL
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-worktree-ops-base-vW87SC/REVIEW-FAIL
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-zdSumw/GRADE-UNRELATED
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-gJZ7mv/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-gJZ7mv/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-gJZ7mv/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-hc2LMy/T-T-doc-010
+commit-targets:
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rn0hoJ/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rn0hoJ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rn0hoJ/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-TbNzvM/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-WEyWB4/worktrees/prj-0001-T-T-doc-010/project
+Created: /tmp/specdojo-catalogless-cli-WMbz5G/docs/ja/projects/prj-test/register/pjr-ab12-note.md (added PJR-AB12)
+Created: /tmp/specdojo-catalogless-cli-WMbz5G/docs/ja/projects/prj-test/register/events/pjr-ab12.yaml
+[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-WEyWB4/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-WEyWB4/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-oHj0Oo/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-cSwDBN/worktrees/prj-0001-T-T-doc-010/project
+Updated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → open)
+Updated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-cSwDBN/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-2iYlVz/T-T-doc-010
+Committed: 4484e04 (PJR-AB12)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-cSwDBN/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/a.md
+result-markdownlint: result execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md not found; skipped pre-commit lint
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-wqWCxg/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-m2PsmX/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-m2PsmX/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nWvHWm/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-5O0O0D/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nWvHWm/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nWvHWm/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/shared.md
+commit-targets:
+  docs/a.md
+result-markdownlint: result execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md not found; skipped pre-commit lint
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-5O0O0D/T-T-doc-020
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-j6tjxz/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-fkwMvy/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-j6tjxz/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-j6tjxz/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/conflict.md
+Register item: PJR-AB12 — pipeline test item  [todo]
+  Agent: exec-1
+Generated: note-plan.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-AYl2AZ/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Rwjf68/T-T-doc-010
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-AYl2AZ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-AYl2AZ/worktrees/prj-0001-T-T-doc-010/app2
+Updated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-g205CV/worktrees/prj-0001-T-T-doc-010/project
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-g205CV/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-iEVKkA/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-g205CV/worktrees/prj-0001-T-T-doc-010/app2
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+commit-targets:
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zsnOjK/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zsnOjK/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zsnOjK/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] resolved bookkeeping conflicts with exec/T-T-doc-010: execution/exec/events/20260613T000000Z_agent_T-T-doc-010_claim.json, execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+Updated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-LrLtmU/T-T-doc-010
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Created: /tmp/specdojo-catalogless-cli-hd7GEe/docs/ja/projects/prj-test/register/pjr-ab12-note.md (added PJR-AB12)
+Created: /tmp/specdojo-catalogless-cli-hd7GEe/docs/ja/projects/prj-test/register/events/pjr-ab12.yaml
+commit-targets:
+  docs/a.md
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (0fa174cac9ef)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (a8c9e7154c3d)
+  [run] setup: worktree /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12 (exec/test-PJR-AB12)
+Running PJR-AB12 in worktree (executor/reporter pipeline)
+  CWD: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12
+<specdojo_executor_evidence>{"final_message":"pipeline-artifact.md を更新した。","validations":[{"command":"npm test","status":"passed","summary":"全テスト成功。"}]}</specdojo_executor_evidence>
+  Executor evidence: docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190035Z-2f460c87/evidence.json
+  Running parent validations (PJR-AB12): test-integration
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-paQsQH/worktrees/prj-0001-T-T-doc-010/project
+  [integrate] merged register events as a union: docs/prj/controls/project-register/events/pjr-0abc.yaml (kept 1 event(s) only on the merge target)
+  Parent validation test-integration: passed
+  Running reporter: node /tmp/specdojo-register-pipeline-e2e-CBQ8or/fake-agent.mjs --nickname report-1 --settings .specdojo/claude/settings.report.json
+  [integrate] resolved bookkeeping conflicts with exec/T-T-doc-010: docs/prj/controls/project-register/events/pjr-0abc.yaml
+{"schema_version":1,"mode":"edit","summary":["register 項目を pipeline 経由で処理した。"],"changed_files":[],"handoff":[],"approach":"plan と executor evidence だけを根拠に結果を構成した。"}Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-paQsQH/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-paQsQH/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-f8k5b6/T-T-doc-010
+WARN:  sample 'opd-sample' exists but no rulebook declares it: /workspaces/specdojo-workspace/specdojo/docs/ja/specdojo/samples/opd-sample.md
+commit-targets:
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+  docs/conflict.md
+  Reporter complete: report-1 (format attempts: 1)
+Updated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2lCOnS/worktrees/prj-0001-T-T-doc-010/project
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-targets:
+  docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190035Z-2f460c87/result.md
+  docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190035Z-2f460c87/evidence.json
+  docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190035Z-2f460c87/executor.log
+  docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190035Z-2f460c87/parent-validation-metrics.jsonl
+  docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190035Z-2f460c87/pipeline-state.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2lCOnS/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2lCOnS/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-vVK9qT/T-T-doc-010
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/plan.md
+ [32m✓[39m tests/src/commands/git.integration.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 7058[2mms[22m[39m
+     [33m[2m✓[22m[39m queues behind the runner, holds through the entire hook, then lets runner integration proceed [33m 1129[2mms[22m[39m
+     [33m[2m✓[22m[39m bypasses a held lifecycle lock for reads, including from a repository without config [33m 879[2mms[22m[39m
+     [33m[2m✓[22m[39m takes over an abandoned lifecycle lock and resolves -C relative to the caller [33m 1056[2mms[22m[39m
+     [33m[2m✓[22m[39m preserves a failing hook exit code and releases the lifecycle lock [33m 1076[2mms[22m[39m
+     [33m[2m✓[22m[39m restores paths a pre-commit hook formatted and staged after a pathspec commit [33m 1024[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses writes without project config before changing the index [33m 963[2mms[22m[39m
+     [33m[2m✓[22m[39m returns a warning without blocking a direct commit while an exec run is active [33m 928[2mms[22m[39m
+commit-targets:
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+  docs/a.md
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/integrate.log
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-L2Oi3q/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-L2Oi3q/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-L2Oi3q/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-EoYPRu/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-fghtMQ/T-T-doc-010
+commit-targets:
+  docs/a.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-aPYdiz/execution/generated
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-3UKmwH/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-3UKmwH/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-3UKmwH/worktrees/prj-0001-T-T-doc-010/app2
+Generated: note-plan.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-akbBdi/T-T-doc-010
+commit-targets:
+  docs/unmerged.md
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (1b4edde717f3)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (b82ecfc77862)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-B7QyWD/worktrees/prj-0001-T-T-doc-010/project
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-poBX8U/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-c1nlTm/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-B7QyWD/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-B7QyWD/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-dtH2ir/T-T-doc-010
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (55dc587f9e13)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-FLnm5l/T-T-doc-010
+  [integrate] app1: already merged; skipped
+commit-targets:
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+  docs/a.md
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (bcc84d269383)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-oAqOaH/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-jJYn2i/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Iap5ll/T-T-doc-010
+Created: /tmp/specdojo-catalogless-cli-HtjbQM/docs/ja/projects/prj-test/register/pjr-ab12-note.md (added PJR-AB12)
+Created: /tmp/specdojo-catalogless-cli-HtjbQM/docs/ja/projects/prj-test/register/events/pjr-ab12.yaml
+/tmp/specdojo-pipeline-e2e-aPYdiz/execution/exec/events/20261125T190039Z_local-gemma-executor_T-TEST-doc-010_claim_3a45502a.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-jJYn2i/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-jJYn2i/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/d.yaml
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (23bcdc067334)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (baa8c03f1713)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-mbSBGb/T-T-doc-030
+  [integrate] app1: already merged; skipped
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/tampered.md
+  [integrate] app2: already merged; skipped
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-cj6Bdm/T-T-doc-010
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  src/sneaky.ts
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  src/sneaky.ts
+Updated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-MBKPnZ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  src/sneaky.ts
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  src/sneaky.ts
+commit-targets:
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/result.md
+  docs/a.md
+  execution/runs/schedule/T-T-doc-010/T-T-doc-010/integrate.log
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-uB0mMa/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-uB0mMa/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-uB0mMa/worktrees/prj-0001-T-T-doc-010/app2
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-CBQ8or/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-targets (app1):
+  app1:src/feature.ts
+run done: PJR-AB12 (status: review — confirm and close with "register close")
+Register run summary:
+  PJR-AB12  success  transition=review  commit=committed 4bb9d624592c
+  [integrate] app2: no changes; skipped
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-FEJopB/T-T-doc-140
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (9a2ce31d74b2)
+commit-scope: skipped non-target changes (left in worktree):
+  docs/stale.md
+  src/unrelated.ts
+commit-targets:
+  execution/runs/schedule/T-T-doc-140/T-T-doc-140/result.md
+  docs/a.md
+[smoke:targets] Record PJR-CD34 in PJR-AB12
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rGlErw/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-8J3ncX/T-T-doc-010
+commit-scope: integration blocked; 3 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml
+  docs/specdojo/schemas/v1/new-type.schema.yaml
+  packages/docs-site/sidebar-config.ts
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rGlErw/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rGlErw/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets (app1):
+  app1:.gitignore
+  app1:settings.json
+最上位に追加したファイル:
+  app1:.gitignore
+  app1:settings.json
+ [32m✓[39m tests/src/exec/parent-validation-output.integration.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 10065[2mms[22m[39m
+     [33m[2m✓[22m[39m lets a validation with large output finish while the runner's event loop is blocked [33m 3018[2mms[22m[39m
+     [33m[2m✓[22m[39m records the runner's detection lag separately from the child's run time (PJR-P8SX) [33m 3012[2mms[22m[39m
+     [33m[2m✓[22m[39m notices a validation's end on time while another task's commit hook runs (PJR-P8SX) [33m 3024[2mms[22m[39m
+     [33m[2m✓[22m[39m names the stalled npm script stage and the elapsed time in the block reason on timeout [33m 1010[2mms[22m[39m
+/tmp/specdojo-pipeline-e2e-aPYdiz/execution/exec/events/20261125T190040Z_local-gemma-executor_T-TEST-doc-010_block_ee524a35.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UXRb0K/worktrees/prj-0001-T-T-doc-010/project
+[smoke:targets] Record PJR-CD34 in PJR-AB12
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-zBuEX4/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UXRb0K/worktrees/prj-0001-T-T-doc-010/app1
+commit-scope: integration blocked; 3 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml
+  docs/specdojo/schemas/v1/new-type.schema.yaml
+  packages/docs-site/sidebar-config.ts
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UXRb0K/worktrees/prj-0001-T-T-doc-010/app2
+Committed: 447893a (PJR-AB12)
+[smoke:reopen] Open PJR-AB12 if terminal
+Generated: note-plan.md
+commit-targets (app1):
+  app1:feature.txt
+最上位に追加したファイル:
+  app1:feature.txt
+commit-targets (app2):
+  app2:feature.txt
+最上位に追加したファイル:
+  app2:feature.txt
+  [integrate] app1: not merged; retained exec branch exec/prj-0001-T-T-doc-010
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (cf4983e3884b)
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-jNCHCz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-fq9GBm/T-T-doc-010
+commit-scope: integration blocked; 3 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml
+  docs/specdojo/schemas/v1/new-type.schema.yaml
+  packages/docs-site/sidebar-config.ts
+Created: /tmp/specdojo-register-prj-target-PAK71L/worktree/docs/project-register/pjr-new1-external-item.md (added PJR-NEW1)
+Created: /tmp/specdojo-register-prj-target-PAK71L/worktree/docs/project-register/events/pjr-new1.yaml
+Committed: 066c634 (PJR-NEW1)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-FVXnyi/worktrees/prj-0001-T-T-doc-010/project
+ [32m✓[39m tests/src/exec/kata-review-stage.integration.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 11098[2mms[22m[39m
+     [33m[2m✓[22m[39m grades the kata once with --target kata and completes when the kata grade passes [33m 3683[2mms[22m[39m
+     [33m[2m✓[22m[39m records the verdict instead of blocking when the executor records the freshness check as failed [33m 3723[2mms[22m[39m
+     [33m[2m✓[22m[39m does not complete the review while the kata grade is needs-work [33m 3691[2mms[22m[39m
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-FVXnyi/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-FVXnyi/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets (app1):
+  app1:README.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-NMDBB0/T-T-doc-010
+  [integrate] app2: no changes; skipped
+commit-scope: integration blocked; 3 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml
+  docs/specdojo/schemas/v1/new-type.schema.yaml
+  packages/docs-site/sidebar-config.ts
+  [integrate] app1: not merged; retained exec branch exec/prj-0001-T-T-doc-010
+  [integrate] app2: no changes; skipped
+  [integrate] app1: not merged; retained exec branch exec/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-VwymVa/T-T-doc-010
+commit-scope: integration blocked; 3 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml
+  docs/specdojo/schemas/v1/new-type.schema.yaml
+  packages/docs-site/sidebar-config.ts
+Created: /tmp/specdojo-catalogless-cli-x3xhh1/docs/ja/projects/prj-test/register/pjr-ab12-note.md (added PJR-AB12)
+Created: /tmp/specdojo-catalogless-cli-x3xhh1/docs/ja/projects/prj-test/register/events/pjr-ab12.yaml
+Updated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → open)
+Updated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-aEWbzJ/worktrees/prj-0001-T-T-doc-010/project
+Committed: 070c836 (PJR-AB12)
+[smoke:run] Run PJR-AB12 with exec-rate-limit (exec-rate-limit)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-aEWbzJ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-aEWbzJ/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app2: no changes; skipped
+  [integrate] app1: not merged; retained exec branch exec/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-z7j8vD/T-T-doc-010
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/specdojo/schemas/v1/existing.schema.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-dIdwPN/T-T-doc-010
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/specdojo/schemas/v1/existing.schema.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Kk9f9v/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-lfETEf/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Kk9f9v/worktrees/prj-0001-T-T-doc-010/app1
+Updated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-bes-index.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Kk9f9v/worktrees/prj-0001-T-T-doc-010/app2
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-bes-index.yaml
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/010-deliverables-catalog/dct-bes-index.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-WITKPg/T-T-doc-010
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/specdojo/schemas/v1/esil.schema.yaml
+/tmp/specdojo-pipeline-e2e-aPYdiz/execution/exec/events/20261125T190043Z_local-gemma-executor_T-TEST-doc-010_complete_6113a011.json
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/specdojo/schemas/v1/esil.schema.yaml
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/specdojo/schemas/v1/esil.schema.yaml
+  [integrate] app1: merged feature/t-t-doc-010 into main (2938f4777973)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (e338bb90cb5b)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-wsGhFJ/T-T-doc-010
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  packages/docs-site/sidebar-config.ts
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  packages/docs-site/sidebar-config.ts
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  packages/docs-site/sidebar-config.ts
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Rn6zYO/T-KATA-tsp-index-sample-080
+Generating worktree artifacts: specdojo build
+commit-targets:
+  docs/ja/specdojo/samples/tsp-index-sample.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-GuEap2/worktrees/prj-0001-T-T-doc-010/project
+Register item: PJR-AB12 — pipeline test item  [todo]
+  Agent: exec-rate-limit
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-GuEap2/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-GuEap2/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-qaz4Dm/T-KATA-tsp-index-rulebook-080
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-OaUgSI/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-dqMu4n/worktrees/prj-other-PJR-OTHER/app1
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/stray.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-dqMu4n/worktrees/prj-other-PJR-OTHER/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-7ulhm6/pjr-0137-20261106T160500Z-aabbccdd
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/stray.md
+commit-targets:
+  execution/runs/register/PJR-0137/pjr-0137-20261106T160500Z-aabbccdd/result.md
+  execution/runs/register/PJR-0137/pjr-0137-20261106T160500Z-aabbccdd/integrate.log
+Generated: note-plan.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-MLGoxB/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-MLGoxB/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-MLGoxB/worktrees/prj-0001-T-T-doc-010/app2
+ [32m✓[39m tests/src/register/register-branch.integration.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 12698[2mms[22m[39m
+     [33m[2m✓[22m[39m commits and pushes add/update/transitions in another worktree and preserves source changes [33m 2117[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the legacy current-branch commit when disabled [33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m publishes concurrent runner responses under the shared lock without editing the exec tree [33m 1324[2mms[22m[39m
+     [33m[2m✓[22m[39m merges an independent remote edit and refuses conflicting responses without losing source edits [33m 824[2mms[22m[39m
+     [33m[2m✓[22m[39m retains executor responses when push is rejected [33m 685[2mms[22m[39m
+     [33m[2m✓[22m[39m rebases a runner response after another clone pushes between its pull and push [33m 832[2mms[22m[39m
+     [33m[2m✓[22m[39m writes locally without --commit even when synchronization is enabled [33m 320[2mms[22m[39m
+     [33m[2m✓[22m[39m honors a custom branch and named remote, creating a local branch from the remote [33m 510[2mms[22m[39m
+     [33m[2m✓[22m[39m routes cross-project add to register without requiring a local integration branch [33m 491[2mms[22m[39m
+     [33m[2m✓[22m[39m stops with initialization guidance before writing if the remote branch is absent [33m 319[2mms[22m[39m
+     [33m[2m✓[22m[39m does not create a worktree, fetch or push on dry-run [33m 342[2mms[22m[39m
+     [33m[2m✓[22m[39m pushes schedule claim/complete events and reads state from the register branch [33m 627[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects a claim when a different clone has already claimed the task [33m 511[2mms[22m[39m
+     [33m[2m✓[22m[39m rebases and retries an actual non-fast-forward rejection without losing either writer [33m 623[2mms[22m[39m
+     [33m[2m✓[22m[39m preserves local commits and reports recovery steps when the server rejects a push [33m 581[2mms[22m[39m
+     [33m[2m✓[22m[39m leaves a rebase conflict and the local record available for manual recovery [33m 519[2mms[22m[39m
+     [33m[2m✓[22m[39m uses an external project's configured register branch via its CLI [33m 1668[2mms[22m[39m
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-DFz3q1/T-T-doc-010
+Updated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-wbUf8b/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Created: /tmp/specdojo-register-prj-target-t0LS8L/worktree/docs/project-register/pjr-se1f-self-repo-item.md (added PJR-SE1F)
+Created: /tmp/specdojo-register-prj-target-t0LS8L/worktree/docs/project-register/events/pjr-se1f.yaml
+Committed: 12b0295 (PJR-SE1F)
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  src/evidence.ts
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-KwQ8ud/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-TEksuL/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-KwQ8ud/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-KwQ8ud/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-AxA6AR/PJR-0137
+[build] step 1/4: register build (prj-0001)
+ [32m✓[39m tests/src/register/external-project.integration.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 6506[2mms[22m[39m
+     [33m[2m✓[22m[39m delegates to the target CLI, commits once on its integration branch, and leaves the source unchanged [33m 3551[2mms[22m[39m
+     [33m[2m✓[22m[39m delegates through Node to a SpecDojo self repository without a .bin shim [33m 2490[2mms[22m[39m
+  [integrate] app1: not merged; retained exec branch feature/t-t-doc-010
+commit-targets:
+  docs/a.md
+  src/unrelated.ts
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (9828913dfa8a)
+Updated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JlYD99/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-UJZIPk/pjr-0137-20261106T160500Z-aabbccdd
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nb49Bi/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-register-pipeline-e2e-wt-QsOllD/test-PJR-AB12
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-register-pipeline-e2e-wt-QsOllD/test-PJR-AB12
+  [run] setup: worktree /tmp/specdojo-register-pipeline-e2e-wt-QsOllD/test-PJR-AB12 (exec/test-PJR-AB12)
+Running PJR-AB12 in worktree (executor/reporter pipeline)
+  CWD: /tmp/specdojo-register-pipeline-e2e-wt-QsOllD/test-PJR-AB12
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nb49Bi/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nb49Bi/worktrees/prj-0001-T-T-doc-010/app2
+  Executor evidence: docs/ja/projects/test/execution/runs/register/PJR-AB12/pjr-ab12-20261125T190043Z-8c3abf35/evidence.json
+run failed: PJR-AB12 (status: waiting; worktree kept: /tmp/specdojo-register-pipeline-e2e-wt-QsOllD/test-PJR-AB12)
+Created: /tmp/specdojo-catalogless-cli-SQW3Lf/docs/ja/projects/prj-test/register/pjr-ab12-note.md (added PJR-AB12)
+Created: /tmp/specdojo-catalogless-cli-SQW3Lf/docs/ja/projects/prj-test/register/events/pjr-ab12.yaml
+WARN:  sample 'opd-sample' exists but no rulebook declares it: /workspaces/specdojo-workspace/specdojo/docs/ja/specdojo/samples/opd-sample.md
+  [integrate] app1: merged feature/t-t-doc-010 into main (9f9db6f63f90)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (dd47f364f08e)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-RIQYQo/pjr-0137-20261106T160500Z-aabbccdd
+  [integrate] app1: already merged; skipped
+  [integrate] app2: already merged; skipped
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-dependent-items.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-epic-items.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-handoffs.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-build-multi-project-AF1LEa/docs/ja/projects/prj-0001/controls/generated/pm-decision-log.md
+[build] done: register build (prj-0001) (1.0s)
+[build] step 2/4: register build (prj-0002)
+Updated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-derived-items.md
+Generated: /tmp/specdojo-register-resume-wt-m8keKu/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr

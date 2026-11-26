@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "queue_id": "kra-night1-2026-11-24",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-24T13:56:57.391Z",
+  "updated_at": "2026-11-24T13:56:57.633Z",
+  "state": "running",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "running",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--auto",
+        "--project",
+        "prj-0001",
+        "--track",
+        "kata-review-all",
+        "--parallel",
+        "4",
+        "--loop",
+        "--max-rounds",
+        "1000",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "wait",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-24T13:56:57.633Z"
+    }
+  ]
+}

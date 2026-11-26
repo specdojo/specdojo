@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "queue_id": "day-e-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T02:00:04.910Z",
+  "updated_at": "2026-11-23T02:07:14.553Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-EKGQ",
+        "--executor-by",
+        "sonnet-executor",
+        "--fallback-executor-by",
+        "opus-executor",
+        "--reporter-by",
+        "gemma26-reporter",
+        "--fallback-reporter-by",
+        "sonnet-reporter",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T02:00:05.381Z",
+      "completed_at": "2026-11-23T02:07:14.550Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

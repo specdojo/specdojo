@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "queue_id": "kata-review-cal-2026-11-24",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-24T04:08:37.985Z",
+  "updated_at": "2026-11-24T04:52:57.486Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--auto",
+        "--project",
+        "prj-0001",
+        "--track",
+        "kata-review-calibration",
+        "--parallel",
+        "2",
+        "--loop",
+        "--max-rounds",
+        "100",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "wait"
+      ],
+      "started_at": "2026-11-24T04:08:38.233Z",
+      "completed_at": "2026-11-24T04:52:57.482Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

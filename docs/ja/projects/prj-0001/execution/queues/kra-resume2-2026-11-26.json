@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "queue_id": "kra-resume2-2026-11-26",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-25T21:01:30.336Z",
+  "updated_at": "2026-11-25T22:12:22.204Z",
+  "state": "cancelled",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-clis-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ],
+      "started_at": "2026-11-25T21:01:35.904Z",
+      "completed_at": "2026-11-25T22:12:22.200Z",
+      "exit_code": null,
+      "summary": "terminated by SIGINT"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-cop-index-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-cop-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-dct-index-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 5,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-dct-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 6,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-gl-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 7,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-ifd-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 8,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-ifx-api-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 9,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-ifx-cmd-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    },
+    {
+      "index": 10,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-cdt-sample-120",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--if-busy",
+        "wait"
+      ]
+    }
+  ],
+  "reason": "src の merge のため取り消し、後で作り直す"
+}

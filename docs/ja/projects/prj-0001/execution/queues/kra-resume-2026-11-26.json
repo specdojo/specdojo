@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "queue_id": "kra-resume-2026-11-26",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-25T20:59:12.921Z",
+  "updated_at": "2026-11-25T20:59:36.099Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-clis-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:27.610Z",
+      "completed_at": "2026-11-25T20:59:32.811Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-cop-index-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:32.814Z",
+      "completed_at": "2026-11-25T20:59:33.127Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-cop-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:33.132Z",
+      "completed_at": "2026-11-25T20:59:33.538Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-dct-index-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:33.542Z",
+      "completed_at": "2026-11-25T20:59:33.943Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 5,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-dct-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:33.947Z",
+      "completed_at": "2026-11-25T20:59:34.270Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 6,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-gl-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:34.273Z",
+      "completed_at": "2026-11-25T20:59:34.603Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 7,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-ifd-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:34.606Z",
+      "completed_at": "2026-11-25T20:59:34.903Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 8,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-ifx-api-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:34.906Z",
+      "completed_at": "2026-11-25T20:59:35.224Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 9,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-ifx-cmd-sample-120",
+        "--resume-from",
+        "executor",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:35.231Z",
+      "completed_at": "2026-11-25T20:59:35.676Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 10,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-resume",
+      "argv": [
+        "exec",
+        "resume",
+        "--project",
+        "prj-0001",
+        "--task",
+        "T-KATA-REVIEW-ALL-cdt-sample-120",
+        "--reporter-by",
+        "sonnet-reporter"
+      ],
+      "started_at": "2026-11-25T20:59:35.685Z",
+      "completed_at": "2026-11-25T20:59:36.095Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

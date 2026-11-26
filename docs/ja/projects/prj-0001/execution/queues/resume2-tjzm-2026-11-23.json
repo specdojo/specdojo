@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "queue_id": "resume2-tjzm-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T02:47:45.324Z",
+  "updated_at": "2026-11-23T02:56:15.715Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-TJZM",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--resume-note",
+        "親の検証のtest-integrationでtests/src/exec/register-pipeline-e2e.integration.test.tsのdry-runの期待値が、エスケープ付きのタイトルのままで落ちた。dry-runの行はエスケープする前のタイトルを出すように直したので、テストの期待値を新しい出力に合わせる。ほかにエスケープ付きのタイトルを期待するテストがないかをrgで探して直す。",
+        "--executor-by",
+        "sonnet-executor",
+        "--fallback-executor-by",
+        "opus-executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T02:47:45.594Z",
+      "completed_at": "2026-11-23T02:56:15.711Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

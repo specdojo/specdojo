@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "queue_id": "resume2-beq8-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T01:12:41.609Z",
+  "updated_at": "2026-11-23T01:17:46.102Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-BEQ8",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--resume-note",
+        "完了条件の3回目の実行にある、親の検証で落ちたtest-unitの原因を直す。started_atが日付の値でも文字列でも時刻として使い、両方の形を単体テストで確かめる。test:unitを流して通ることを確かめてから報告する。",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T01:12:41.866Z",
+      "completed_at": "2026-11-23T01:17:46.100Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}
