@@ -88,7 +88,7 @@ components:
         subject:
           type: string
           description: 対象の商品の識別子（任意）
-          examples: [product/PROD-0001]
+          examples: [product/PRD-001]
         data:
           $ref: "#/components/schemas/StockChangedData"
 
@@ -99,8 +99,8 @@ components:
       properties:
         product_id:
           type: string
-          pattern: "^PROD-[0-9]{4}$"
-          description: 商品ID（例 PROD-0001）
+          pattern: "^PRD-[0-9]{3}$"
+          description: 商品ID（業務データ辞書の `product_id`。例 PRD-001）
         delta:
           type: integer
           description: 増減量（減少は負の値）
