@@ -1,0 +1,17 @@
+R3（読みやすさ）として、`docs/ja/specdojo/samples/dct-index-sample.yaml` の文を 4 か所直しました。意味と判断に要る背景は変えていません。schema 検査と Prettier の検査は通っています。
+
+| No | 箇所 | 指摘 | 直した案 | 根拠 |
+| --- | --- | --- | --- | --- |
+| 1 | `size` の注記コメント | 「拡大する判断はしていない」は判断した主体が消え、否定形で結論が読みにくい | 「scaffold の規模は small のまま据え置く」と肯定形で言い切る | W6 |
+| 2 | プロダクト成果物グループの注記 1 行目 | 主語「プロダクト側は」と述語「目的が分かれる」がねじれている。読点も多い | 「参照する目的（業務の確認、設計、受入・検証、稼働後の対応）ごとにグループを分ける」とする | W2、W3 |
+| 3 | 同じ注記の 2 行目 | 「以後」と「その」が何を指すか、一つに決まらない | 「プロダクト側のグループの配列順は探索順であり」とする | W4 |
+| 4 | `user-interface-model` の `overview` | 「同じ手順で記録・確認できる」が「タブレット」にかかるのか「画面と操作」にかかるのか読み分けられない | 「記録・確認できるよう、タブレットの画面と操作を管理する」とする | W5 |
+| 5 | `business-model` の `overview` | この sample の「つけ払い」は、共通サンプル文脈と同じファイル内の「つけ管理」「つけ」と表記がずれている | 「つけ管理」にそろえる | W8 |
+
+どの指摘も「要判断」の印は付けていません。
+
+文体（W10）、「など」の範囲（W7）、表・箇条書きの使い方（W9）は問題なしと判断しました。frontmatter の `status`（`ready`）は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として dct-index-sample.yaml の注記コメントと overview の文を 4 か所直した（W2〜W6、W8）。schema 検査と prettier の検査は通過。","handoff":["1: R3 / size の注記コメント / 「scaffold の規模を拡大する判断はしていない」は判断の主体が消え、否定形で結論が読みにくい / 「scaffold の規模は small のまま据え置く」と肯定形で言い切る / W6 / -","2: R3 / プロダクト成果物グループの注記 1 行目 / 主語「プロダクト側は」と述語「目的が分かれる」がねじれ、読点が多い / 「参照する目的（業務の確認、設計、受入・検証、稼働後の対応）ごとにグループを分ける」とする / W2、W3 / -","3: R3 / プロダクト成果物グループの注記 2 行目 / 「以後」「その」の参照先が一つに決まらない / 「プロダクト側のグループの配列順は探索順であり」とする / W4 / -","4: R3 / `user-interface-model` の `overview` / 「同じ手順で記録・確認できる」が「タブレット」と「画面と操作」のどちらにかかるか読み分けられない / 「記録・確認できるよう、タブレットの画面と操作を管理する」とする / W5 / -","5: R3 / `business-model` の `overview` / この sample の「つけ払い」は共通サンプル文脈とファイル内の「つけ管理」「つけ」と表記がずれる / 「つけ管理」にそろえる / W8、`vp-ux-language-consistency` / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-index-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint","status":"not_applicable","summary":"変更は YAML のみ","reason":"変更したファイルに *.md がないため"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

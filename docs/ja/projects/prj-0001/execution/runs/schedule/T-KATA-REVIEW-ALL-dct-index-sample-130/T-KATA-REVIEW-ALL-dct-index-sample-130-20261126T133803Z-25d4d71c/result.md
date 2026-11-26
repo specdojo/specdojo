@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-dct-index-sample-130
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-dct-index-sample-130/T-KATA-REVIEW-ALL-dct-index-sample-130-20261126T133803Z-25d4d71c/plan.md
   started_at: "2026-11-26T13:38:13.425Z"
+  completed_at: "2026-11-26T13:46:01.814Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,32 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- kata レビューの段 R3（読みやすさ）として、`docs/ja/specdojo/samples/dct-index-sample.yaml` の注記コメントと `overview` の文を 5 件直した。根拠はチェック項目 W2〜W6 と W8、観点 `vp-ux-language-consistency` である。
+- 意味と判断に要る背景・例外・制約は変えていない。schema 検査（`validate:schema:file`）と prettier の検査は通過した。runner の `lint:md:changed`、`lint:fm:changed`、`validate:schema` なども通過した。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | R3 | size の注記コメント | 「scaffold の規模を拡大する判断はしていない」は判断の主体が消え、否定形で結論が読みにくい。 | 「scaffold の規模は small のまま据え置く」と肯定形で言い切る。 | W6 | - |
+| 2 | R3 | プロダクト成果物グループの注記 1 行目 | 主語「プロダクト側は」と述語「目的が分かれる」がねじれ、読点が多い。 | 「参照する目的（業務の確認、設計、受入・検証、稼働後の対応）ごとにグループを分ける」とする。 | W2、W3 | - |
+| 3 | R3 | プロダクト成果物グループの注記 2 行目 | 「以後」「その」の参照先が一つに決まらない。 | 「プロダクト側のグループの配列順は探索順であり」とする。 | W4 | - |
+| 4 | R3 | `user-interface-model` の `overview` | 「同じ手順で記録・確認できる」が「タブレット」と「画面と操作」のどちらにかかるか読み分けられない。 | 「記録・確認できるよう、タブレットの画面と操作を管理する」とする。 | W5 | - |
+| 5 | R3 | `business-model` の `overview` | この sample の「つけ払い」は、共通サンプル文脈やファイル内の「つけ管理」「つけ」と表記がずれる。 | 「つけ管理」にそろえる。 | W8、`vp-ux-language-consistency` | - |
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/dct-index-sample.yaml`: size の注記コメントを肯定形に直した。プロダクト成果物グループの注記は、主語と述語のねじれを解消し、「以後」「その」の参照先を明示した。`user-interface-model` の `overview` は修飾関係が読み分けられる語順にした。`business-model` の `overview` は「つけ払い」を「つけ管理」に統一した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 指摘 5 件は、いずれも「要判断」の印を付けていない。
+- 1: R3 / size の注記コメント / 「scaffold の規模を拡大する判断はしていない」は判断の主体が消え、否定形で結論が読みにくい / 「scaffold の規模は small のまま据え置く」と肯定形で言い切る / W6 / -
+- 2: R3 / プロダクト成果物グループの注記 1 行目 / 主語「プロダクト側は」と述語「目的が分かれる」がねじれ、読点が多い / 「参照する目的（業務の確認、設計、受入・検証、稼働後の対応）ごとにグループを分ける」とする / W2、W3 / -
+- 3: R3 / プロダクト成果物グループの注記 2 行目 / 「以後」「その」の参照先が一つに決まらない / 「プロダクト側のグループの配列順は探索順であり」とする / W4 / -
+- 4: R3 / `user-interface-model` の `overview` / 「同じ手順で記録・確認できる」が「タブレット」と「画面と操作」のどちらにかかるか読み分けられない / 「記録・確認できるよう、タブレットの画面と操作を管理する」とする / W5 / -
+- 5: R3 / `business-model` の `overview` / この sample の「つけ払い」は共通サンプル文脈とファイル内の「つけ管理」「つけ」と表記がずれる / 「つけ管理」にそろえる / W8、`vp-ux-language-consistency` / -
+- 適用外の検証: `npx markdownlint`（変更したファイルに `*.md` がないため）
+- 適用外の検証: `npm run validate:history-links`（plan・result・個票を変更していないため）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+sample メンテナンスの進め方に従い、レビュー段 R3 の観点（W1〜W10）で `dct-index-sample.yaml` を読み、読みやすさに関わる 5 か所の文を直した。plan に展開された grade の finding と、成果物から届いた Kata 起因の finding はなかった。表記の揺れは、共通サンプル文脈とファイル内の用語（「つけ管理」）に合わせた。
