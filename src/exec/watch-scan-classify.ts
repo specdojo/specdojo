@@ -68,7 +68,7 @@ const SPECIFIC_RULES: readonly Rule[] = [
     category: "usage_limit",
     detail: "usage_limit",
     pattern:
-      /\b(?:rate_limit|session_limit|quota_exhausted) reached\b|rate limit reached|usage limit|RESOURCE_EXHAUSTED|too many requests/iu,
+      /\b(?:rate_limit|session_limit|quota_exhausted) reached\b|rate limit reached|usage limit|\b5-hour limit\b|\bsession limit\b|RESOURCE_EXHAUSTED|too many requests/iu,
     nextAction: NEXT_USAGE_LIMIT,
     messageOnly: true,
   },

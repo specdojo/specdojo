@@ -580,6 +580,19 @@ describe("isRateLimitError", () => {
     expect(actual).toBe(false);
   });
 
+  it("flags claude's 5-hour limit notice on a non-zero exit even without a configured pattern", () => {
+    const output = "You've hit your 5-hour limit · resets 2:20am (Asia/Tokyo)\n";
+
+    expect(isRateLimitError(1, output, detection)).toBe(true);
+    expect(isRateLimitError(1, output, undefined)).toBe(true);
+  });
+
+  it("does not flag the 5-hour limit wording when the process exited zero", () => {
+    const output = "You've hit your 5-hour limit · resets 2:20am (Asia/Tokyo)\n";
+
+    expect(isRateLimitError(0, output, detection)).toBe(false);
+  });
+
   it("flags a stderr pattern when the process exited non-zero", () => {
     const actual = isRateLimitError(1, "error: rate limit reached\n", detection);
 

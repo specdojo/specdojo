@@ -572,8 +572,13 @@ export function isRateLimitError(
 ): boolean {
   // `output` is combined stdout+stderr because some CLIs print failures to stdout. Successful
   // output is ignored by default so quoted configuration/examples do not become false positives.
+  // claude's 5-hour usage limit notice is printed to stdout and is not in every provider's
+  // configured patterns, so it is detected built in. A successful exit never counts.
+  if (exitCode !== 0 && BUILT_IN_SESSION_LIMIT_PATTERN.test(output)) return true;
   return isConfiguredAgentError(exitCode, output, detection);
 }
+
+const BUILT_IN_SESSION_LIMIT_PATTERN = /hit your 5-hour limit/i;
 
 export function isConnectionError(
   exitCode: number | null,

@@ -1,0 +1,12 @@
+claude の 5 時間の利用枠の上限を、使用枠の上限として検出するようにしました。`exec run` は代わりの agent に切り替わり、`exec watch scan` はこの止まりを `usage_limit` に分類します。変更したテスト 3 ファイル（85 件）、`npm run typecheck`、`npm run lint:ts` は通りました。`lint:ts` には、今回の変更とは無関係の max-lines の警告が 43 件出ています。実際の run での確認は、統合の後にオーケストレーターが行います。
+
+- **検出**: `src/exec/run/shared.ts` の `isRateLimitError` に組み込みの検出を足しました。終了コードが 0 以外で、出力に `hit your 5-hour limit` があれば上限とみなします。0 で終わった出力は対象外です。executor の段と reporter の段は同じ関数を通るため、同じに扱われます。
+- **種類と再開時刻**: 既存の `limitKind` が `session_limit` に分類します。「resets 2:20am (Asia/Tokyo)」から再開時刻も読めます。
+- **見張りの分類**: `src/exec/watch-scan-classify.ts` の `usage_limit` の規則に `5-hour limit` と `session limit` を足しました。この規則は記録の文言だけに当たります。
+- **直し方の理由**: `.specdojo/exec-defaults.yaml` は保護された設定で、反映に承認が要ります。また provider ごとの `rate_limit_detection` が全体設定を置き換えるため、設定だけでは書き漏れが再発しやすいです。そのため CLI の組み込みにしました。
+- **テスト**: `tests/src/exec/run/run.test.ts`、`tests/src/exec/limit.test.ts`、`tests/src/exec/watch-scan-classify.test.ts` に、検出・誤検出しないこと・分類のテストを足しました。
+- **個票**: 個票の対応結果を埋め、「CHANGELOG に書く事項」の小節も作りました。`CHANGELOG.md` と `exec-defaults.yaml` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"claude の 5-hour limit を組み込みで session limit として検出し、見張りの分類も usage_limit に分けた。単体テストと個票の対応結果を追加した。","handoff":["直し方は CLI の組み込み検出に決めた。理由は exec-defaults.yaml が保護された設定であることと、provider 別の rate_limit_detection が全体設定を置き換えるため設定漏れが再発しやすいこと。","保護された設定の案: .specdojo/exec-defaults.yaml の claude の rate_limit_detection.stderr_patterns に \"5-hour limit\" を足す。組み込み検出があるため必須ではなく、今回は変更していない。反映は利用者の承認のもと feature ブランチで行う。","CHANGELOG に書く事項（Fixed）: exec run が claude の 5 時間の利用枠の上限を session limit として検出し --on-rate-limit fallback で代わりの agent に切り替える。exec watch scan はこの止まりを usage_limit に分類する。個票の対応結果にも同じ内容を書いた。","統合の後にオーケストレーターが実際の run を流して動きを確かめてから close する（executor は行っていない）。"],"validations":[{"command":"npx vitest run tests/src/exec/limit.test.ts tests/src/exec/run/run.test.ts tests/src/exec/watch-scan-classify.test.ts","status":"passed","summary":"3 ファイル 85 件が通過"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0 件。max-lines の警告 43 件は既存の warning"}]}
+</specdojo_executor_evidence>

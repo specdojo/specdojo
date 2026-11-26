@@ -293,3 +293,19 @@ describe("decidePinnedWait", () => {
     expect(actual).toMatchObject({ action: "skip", reason: "past" });
   });
 });
+
+describe("normalizeAgentLimit with the claude 5-hour limit", () => {
+  it("classifies the notice as a session limit with the provider reset time", () => {
+    const actual = normalizeAgentLimit({
+      output: "You've hit your 5-hour limit · resets 2:20am (Asia/Tokyo)\n",
+      provider: "claude",
+      observedAt: new Date("2026-11-25T16:25:00Z"),
+    });
+
+    expect(actual).toMatchObject({
+      kind: "session_limit",
+      resume_at: "2026-11-25T17:20:00.000Z",
+      resume_source: "provider_reset",
+    });
+  });
+});
