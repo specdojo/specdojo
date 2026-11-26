@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-pm-roles-sample-150",
   "run_id": "T-KATA-REVIEW-ALL-pm-roles-sample-150-20261126T093448Z-6c4a161f",
-  "updated_at": "2026-11-26T09:42:10.397Z",
+  "updated_at": "2026-11-26T09:42:51.758Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-roles-sample-150/T-KATA-REVIEW-ALL-pm-roles-sample-150-20261126T093448Z-6c4a161f/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T09:42:10.397Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T09:42:51.758Z",
       "artifact_ref": null
     }
   },
