@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-dct-index-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-dct-index-sample-140-20261126T140957Z-7cc47cd0",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T14:10:47.107Z",
+    "completed_at": "2026-11-26T14:12:29.773Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml",
+      "status": "passed",
+      "summary": "docs/ja/specdojo/samples/dct-index-sample.yaml: valid（sample を直していないため、現状のファイルの確かめとして実行した）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7822 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7822 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dct-index-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dct-index-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）の確かめで、dct-index-sample.yaml の事実の主張 14 件を schema、src/catalog、rulebook、ドキュメント構成ガイド、テンプレート、doc-index と突き合わせた。14 件すべて一致し、確かめられなかった主張もない。誤りがないため sample は直しておらず、変更したファイルはない。schema 検査は valid だった。",
+  "completion_status": "complete",
+  "handoff": [
+    "確かめの表（R4）。列は No / 主張（本文の箇所） / 正本 / 確かめ方 / 結果 / 根拠。指摘は 0 件のため、指摘の表の行はない。",
+    "C1 / 先頭行 `$schema=../../../specdojo/schemas/v1/dct-index.schema.yaml` / `docs/specdojo/schemas/v1/dct-index.schema.yaml` / sample からの相対パスを解決し、`npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml` を実行 / 一致 / パスは実在し、出力は `valid`",
+    "C2 / `id: specdojo:dct-index-sample` / schema の `id.pattern` / 読み取り / 一致 / pattern `^(?:prj-[0-9]{4,}:dct-index\\|specdojo:dct-index-sample)$` に当たる",
+    "C3 / `type: project`、`rulebook: specdojo:dct-index-rulebook` / schema の `const` と rulebook の frontmatter（`id: specdojo:dct-index-rulebook`、`sample: specdojo:dct-index-sample`） / 読み取り / 一致 / const の値と相互の宣言が合う",
+    "C4 / `status: ready` / schema の `status.enum` / 読み取り / 一致 / enum `[draft, ready, deprecated]` の値。このタスクでは status に手を付けていない",
+    "C5 / `project_id: prj-0001` と、そのコメント「dct-sample と同じ例示値」 / `docs/ja/specdojo/samples/dct-sample.yaml` の 16 行目 / grep / 一致 / dct-sample の `project_id: prj-0001`",
+    "C6 / `size: small` と、そのコメント「ドメインを含めても scaffold の規模は small のまま」 / schema の `size.enum`、rulebook の「メタ情報と規模の決め方」、`src/catalog/catalog.ts` の 440 行目と 478 行目 / 読み取り / 一致 / `--size` を省くと dct-index.yaml の `size` を読む。規模は `min_size` で決まり、ドメイン数では決まらない",
+    "C7 / ドメイン項目のキーの順（`domain` を `name` より前に置く）と `domain` の書式 / rulebook の「禁止事項」、schema の `Domain` / 読み取り / 一致 / 全 17 ドメインで `domain` が先にあり、pattern `^[a-z0-9][a-z0-9-]{0,62}$` に当たる",
+    "C8 / 全ドメインの `domain` 値（project-definition ほか 16 件） / `docs/ja/specdojo/templates/dct-*-template.yaml` の `domain:`、`docs/ja/projects/prj-0001/010-deliverables-catalog/dct-current-state.yaml` / grep / 一致 / current-state 以外はテンプレートにある。current-state は prj-0001 に実在するドメイン",
+    "C9 / business-model のコメント「分割ファイルの `domain` が同じなら索引では1件にまとめる」 / rulebook の「位置づけ」、`src/catalog/build.ts` の 237〜255 行目と 911 行目 / 読み取り / 一致 / 同じ `domain` の部分ファイルを 1 つのドメインカタログへ統合する",
+    "C10 / 分割ファイル名 `dct-business-sales.yaml` と `dct-business-credit.yaml` / `src/catalog/catalog.ts` の 318 行目と 326 行目（`dct-*.yaml` を読む）、rulebook の「位置づけ」（物理ファイル名でなく `domain` 値で識別する） / 読み取り / 一致 / どちらの名前も `dct-*.yaml` に当たり、索引へ入れる条件を満たす",
+    "C11 / 「グループの配列順は探索順であり、着手順は Schedule で管理する」 / rulebook の「グループとサブグループ」 / 読み取り / 一致 / 配列順は表示順で、Schedule の実行順を表さない",
+    "C12 / 分類の正本は docs-structure-guide というコメントと、グループ構成（業務仕様群、アーキテクチャ・システム設計、品質保証、運用） / docs-structure-guide の文書構成図（150〜190 行目）と product/ の構成（361〜373 行目） / 読み取り / 一致 / 非機能要件・業務受入条件・テストは図の「プロダクトの品質保証」にあり、運用は `product/090-operations/` にある",
+    "C13 / wikilink `[[specdojo:sample-authoring-standard]]`、`[[specdojo:docs-structure-guide]]`、`[[specdojo:dct-sample]]` / `.specdojo/doc-index.json`、各文書の frontmatter の id / grep / 一致 / 3 件とも doc-index で実在のパスへ解決する",
+    "C14 / 「同梱の dct-sample は project-definition の記述例」 / `docs/ja/specdojo/samples/dct-sample.yaml` の 17 行目 / grep / 一致 / `domain: project-definition`"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-dct-index-sample-140/T-KATA-REVIEW-ALL-dct-index-sample-140-20261126T140957Z-7cc47cd0/executor.log",
+      "bytes": 6101,
+      "truncated": false
+    }
+  ]
+}
