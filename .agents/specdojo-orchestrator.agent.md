@@ -138,6 +138,8 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 
 `-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: <project-id>:<PJR-XXXX>`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
 
+`register add --dry-run` が出す ID は仮で、実際の起票では振り直される。dry-run の ID を `-m` に書き写さず、subject と `Refs:` には `{id}` と書く（例: `-m "Refs: <project-id>:{id}"`）。`{id}` は実際に起票・更新した項目の ID に置き換わる。起票後の ID は出力の `Created: ... (added PJR-XXXX)` から読む。
+
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
 
 `epic` は `--track <track>` で担う track を指定して起票し、具体的な作業は `--from <epic-id>` を付けた子 todo に分解する。epic 自体は `exec run --register` で実行せず、夜間の実行でも飛ばされる。子項目の状態は `register build` が生成する epic ごとのビューで確かめ、子項目と schedule を材料に人が close を判断する。
