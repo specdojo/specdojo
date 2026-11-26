@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-25T22:40:00Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T22:07:09Z"
+  conclusion: register add --dry-run の ID が仮であることを出力に示し、--commit -m の {id} を実際の項目 ID へ置き換えるようにした
   derived_from:
     - PJR-FNB7
 ---

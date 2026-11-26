@@ -138,3 +138,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b0922030548642f3bdf0c201b10b35a7
+- v: 1
+  id: reg_145b710b5ccb44e2ba90c319c88fefab
+  ts: "2026-11-26T22:07:09Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後の dry-run で注記を、AEGN・WF8Q の close と NDM7 の起票の commit で {id} の置き換えを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: register add --dry-run の ID が仮であることを出力に示し、--commit -m の {id} を実際の項目 ID へ置き換えるようにした
+  previous_event_id: reg_04ba8fbedd8142bda610db371973ec82
