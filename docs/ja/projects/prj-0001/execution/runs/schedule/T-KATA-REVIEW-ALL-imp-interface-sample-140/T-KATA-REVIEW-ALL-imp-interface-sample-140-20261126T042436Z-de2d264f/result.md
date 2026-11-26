@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-imp-interface-sample-140
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-140/T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f/plan.md
   started_at: "2026-11-26T04:24:46.370Z"
+  completed_at: "2026-11-26T20:25:24.857Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
