@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d",
+  "updated_at": "2026-11-26T05:53:51.283Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T05:44:44.823Z",
+      "completed_at": "2026-11-26T05:48:12.418Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-26T05:51:42.061Z",
+      "completed_at": "2026-11-26T05:52:56.679Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T05:53:51.283Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d/result.md"
+  }
+}
