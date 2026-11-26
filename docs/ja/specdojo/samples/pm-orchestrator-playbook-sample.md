@@ -64,7 +64,7 @@ npx specdojo exec run --project kinuya --register <PJR-ID> --worktree \
 
 ## 6. 保護された設定の扱い
 
-- `.specdojo/`・`.agents/`・`package.json`・`AGENTS.md` は agent が書けない。書けない範囲の正本は `.specdojo/` の設定とする。
+- `.specdojo/`・`.agents/rules/`・`.agents/skills/`・`package.json`・`AGENTS.md` などは agent が書けない。書けない範囲の正本は SpecDojo の CLI が持つ固定の定義で、`.specdojo/` の設定では変えられない。
 - 保護された設定の変更が要る項目では、オーケストレーターが executor に変更案を個票の対応結果と報告の `handoff` に書かせる。その後、オーケストレーターが利用者の承認を得て、feature ブランチで反映する。
 
 ## 7. 登録簿項目の完了条件の書き方
@@ -77,7 +77,7 @@ npx specdojo exec run --project kinuya --register <PJR-ID> --worktree \
 
 1. 範囲の項目がすべて close されていることを登録簿で確かめる。close されていない項目があれば、次の版へ回すか待つかを店主代表に確かめる。
 2. 各項目の個票の対応結果から「リリースノートに書く事項」を集め、`kinuya-release-notes` にまとめる。集めた件数が範囲の項目の件数と一致したら次へ進む。
-3. 開発用の PC で全件の検査を流し、すべて通ったら配布物を作る。
+3. 開発用の PC で `npm test`（単体テストと売上記録の統合テストの全件）を流し、終了コードが 0 なら配布物を作る。
 4. 閉店後にタブレットへ入れ替え、`kinuya-test-data` で販売・在庫・つけの記録を 1 件ずつ試す。どれかが通らなければ、前の版へ戻す。
 5. 翌朝の開店前に、店主代表と販売の画面を確かめ、結果を `kinuya-acceptance-record` に残してリリースの項目を close する。
 
