@@ -5,7 +5,7 @@
 # 構造・値の制約は先頭の schema、分類は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] を正本とする。
 #
 # _ASSUMPTION_: 以下は、宣言した全ドメインのカタログを整備した学習用プロジェクトの完成時点を表す。
-# 同梱の [[specdojo:dct-sample|成果物カタログ（ドメイン別）]] は project-definition の記述例に対応する。
+# 同梱の [[specdojo:dct-sample|成果物カタログ（プロジェクト定義）]] は project-definition の記述例に対応する。
 # 他ドメインのカタログ一式は未同梱であり、samples ディレクトリ全体を実在カタログの集合とはみなさない。
 id: specdojo:dct-index-sample
 type: project
