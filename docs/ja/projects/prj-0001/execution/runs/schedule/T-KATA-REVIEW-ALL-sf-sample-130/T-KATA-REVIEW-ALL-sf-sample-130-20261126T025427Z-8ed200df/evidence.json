@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-sf-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-sf-sample-130-20261126T025427Z-8ed200df",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T02:55:16.961Z",
+    "completed_at": "2026-11-26T02:58:20.046Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/sf-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/sf-sample.md | 42 ++++++++++++++++++++++-------------\n 1 file changed, 27 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/sf-sample.md",
+      "status": "passed",
+      "summary": "整形完了（表の列幅のみ調整）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/sf-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:sf-sample\n  type: requirement\n  status: ready\n  rulebook: specdojo:sf-rulebook\n---\n\n# 駄菓子屋きぬや 商品販売機能仕様\n\n## 1. 目的と概要\n\n店主代表と家族利用者代表が、店頭のタブレットから現金販売を記録し、請求額・釣銭と在庫への反映結果を同じ取引で確認できるようにする。ノートへの転記漏れと暗算の誤りを減らし、店番が交代しても記録を続けられるようにする。本機能は \\[\\[specdojo:prj-overview-sample|プロジェクト概要]] の「まず記録する」方針に対応する。成果は `V-02`（請求額・釣銭）、`V-04`・`V-05`（記録と在庫の一致）、`V-08`（店番が操作を続けられること）で確かめる。\n\n上位のシステム化機能一覧は `sf-index`\n… output omitted …\n直す要件・受入観点・関連文書を示す。\n\n| 論点 | 影響と当面の扱い | 確定後に見直す箇所 |\n| - | - | - |\n| `Q-01` `_UNDECIDED_`: `sf-index` の対応、BPS の詳細対応、税計算、取引状態、在庫・印刷・記録先の連携契約が未整備 | 設計境界・税額・再送時の一意性を保証できない。確定までは未照合部分を確定した設計入力に使わない | 「業務プロセス・画面との対応」と `FR-02`・`FR-03` を照合する。`V-02` に税区分・端数処理の条件を加え、`V-04`・`V-05` を照合する。結果をコンポーネント設計と連携仕様へ反映する |\n| `Q-02` `_UNDECIDED_`: 応答時間の受入値と、接続不能・部分失敗時の代替運用が未合意 | `V-05`・`V-08` を判定できず、営業停止や紙からの二重転記のおそれがある | 「非機能・技術制約」の利用構成・性能の行、`V-05`・`V-08`、`opr-sales-recovery` の代替運用。オフライン販売を足す場合は対象範囲と受入条件も見直す |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7562 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7562 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sf-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1783}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  12:00:38\n   Duration  2.73s (transform 5.81s, setup 2.40s, import 8.35s, tests 6.31s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sf-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sf-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として sf-sample.md の文を W1・W3・W4・W5・W8 と表の前の 1 文の規約に沿って直した。grade の finding F001〜F006 は R3 の観点に当たらないため扱わず、ほかの段に任せた。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 1. 目的と概要 / 「これは …方針に対応する」の「これ」が指す先が一つに決まらない / 「本機能は …方針に対応する」にした / W4 / -",
+    "R3-2: R3 / 1. 目的と概要 / 範囲の表の前に、何を示す表かを書いた 1 文がない / 「次の表は、本機能が扱う範囲と扱わない範囲を示す。」を足した / Sample 記述標準の表の前の 1 文 / -",
+    "R3-3: R3 / 1. 目的と概要 / 「店番中の…が利用し、設計と受入試験では…入力にする」は 2 つの主張がつながり、前半の主語が読めない / 「本機能は…が利用する。設計と受入試験は、本書の要件と受入条件を入力にする。」の 2 文に分けた / W1・W3 / -",
+    "R3-4: R3 / 2. 業務プロセス・画面との対応 / 略語 BPS の初出に正式名がない / 「詳細の業務プロセス仕様（BPS）」にした / W8 / -",
+    "R3-5: R3 / 2. 業務プロセス・画面との対応 / 略語 UIS の初出に正式名がない / 「画面仕様（UIS）」にした / W8 / -",
+    "R3-6: R3 / 3.1. 入出力 / 表の前に、何を示す表かを書いた 1 文がない / 受け取る情報と返す情報ごとの入手元・提供先、必須の時点、正本仕様を示す 1 文を足した / Sample 記述標準の表の前の 1 文 / -",
+    "R3-7: R3 / 3.2. 前提条件と事後条件 / 「進行中の取引があれば継続し、別の取引を重ねない」の主語がない / 「進行中の取引があれば、本機能はその取引を継続し、別の取引を重ねて開始しない」にした / W1 / -",
+    "R3-8: R3 / 4.1. 通常処理 / 表の前に、何を示す表かを書いた 1 文がない / 開始条件・確定する結果・判断の正本を示す 1 文を足した / Sample 記述標準の表の前の 1 文 / -",
+    "R3-9: R3 / 4.1. 通常処理 / 「システム」がファイル内の「本機能」と揃わない。1 文に 2 つの主張があり「顧客受領」も読みにくい / 2 文に分け、「本機能は顧客が商品と釣銭を受け取ったことを推測しない」にした / W3・vp-ux-language-consistency / -",
+    "R3-10: R3 / 4.2. 例外・回復条件 / 表の前に、何を示す表かを書いた 1 文がない / 確定できない条件ごとの通知・保持する情報と再開条件を示す 1 文を足した / Sample 記述標準の表の前の 1 文 / -",
+    "R3-11: R3 / 5. 非機能・技術制約 / 表の前に、何を示す表かを書いた 1 文がない / 観点ごとの制約と正本・受入観点を示す 1 文を足した / Sample 記述標準の表の前の 1 文 / -",
+    "R3-12: R3 / 6. 操作手順・コマンド参照 / 表の前に、何を示す表かを書いた 1 文がない / 参照先と参照目的を示す 1 文を足した / Sample 記述標準の表の前の 1 文 / -",
+    "R3-13: R3 / 7. 検証・受入観点 / 表の前の文が、何を満たせば受け入れるかを示していない / 「次の表の対象条件を与え、すべての観点で期待結果を観測できたら受け入れる」を足し、主語を「検証には」にした / Sample 記述標準の表の前の 1 文・W1 / 要判断（受入条件の文は R1 の内容の追加とも読める。受け入れる基準は表の期待結果から言い切れると見て足した。表の前の文を変えない案は選ばなかった）",
+    "R3-14: R3 / 8. 未決事項 / Q-01 の「確定後に見直す箇所」の「〜に税区分・端数処理の条件を加え」が、並べた全項目にかかるのか V-02 だけにかかるのか読めない / 「「業務プロセス・画面との対応」と FR-02・FR-03 を照合する。V-02 に税区分・端数処理の条件を加え、V-04・V-05 を照合する。結果をコンポーネント設計と連携仕様へ反映する」に分けた / W5 / -",
+    "grade の F001〜F006 は扱っていない。kata-guide の「kata の観点の組」で、F001・F002（vp-pm-*）は kata の段では使わない観点、F003・F005（vp-dev-implementation-readiness・vp-dev-testability）は R4、F004（vp-dev-change-impact）と F006（vp-qe-kata-conformance）は R5 の観点に当たるため、R3 の対象外としてそれぞれの段に任せた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sf-sample-130/T-KATA-REVIEW-ALL-sf-sample-130-20261126T025427Z-8ed200df/executor.log",
+      "bytes": 6432,
+      "truncated": false
+    }
+  ]
+}
