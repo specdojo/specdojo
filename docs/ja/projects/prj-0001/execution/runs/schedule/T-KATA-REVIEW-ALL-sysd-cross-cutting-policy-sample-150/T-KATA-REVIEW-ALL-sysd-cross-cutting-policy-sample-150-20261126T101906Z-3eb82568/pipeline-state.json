@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-150",
   "run_id": "T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-150-20261126T101906Z-3eb82568",
-  "updated_at": "2026-11-26T10:30:19.137Z",
+  "updated_at": "2026-11-26T10:31:19.853Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-150/T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-150-20261126T101906Z-3eb82568/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T10:30:19.137Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T10:31:19.853Z",
       "artifact_ref": null
     }
   },
