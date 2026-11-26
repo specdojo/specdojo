@@ -64,3 +64,29 @@
       from: ""
       to: 回答候補
   previous_event_id: reg_810d559d2fdc4e82b6cfc3794c29e982
+- v: 1
+  id: reg_a347dac50f1f467aa6f5a0c1d0ba70c6
+  ts: "2026-11-26T22:13:04Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: section "回答・結論" updated
+  changes:
+    - field: section
+      from: ""
+      to: 回答・結論
+  previous_event_id: reg_548a1b36400c41638cb9eb18d48d618b
+- v: 1
+  id: reg_6e3b7941c6ee438199013c44fe5624c7
+  ts: "2026-11-26T22:13:09Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_a347dac50f1f467aa6f5a0c1d0ba70c6
