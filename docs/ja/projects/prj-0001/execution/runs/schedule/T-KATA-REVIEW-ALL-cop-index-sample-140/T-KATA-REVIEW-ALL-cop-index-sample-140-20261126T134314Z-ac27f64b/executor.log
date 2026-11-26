@@ -1,0 +1,30 @@
+R4（正しさ）のレビューを終えました。直したのは 1 件（F001）で、F002 はこの段の前にすでに直っていました。
+
+**直したこと（`docs/ja/specdojo/samples/cop-index-sample.md` だけを変更）**
+
+- **F001**: GO4 の条件「理由の分からない差異がない」は、判定する人によって読み方が分かれます。「当日タイムライン」の T+7日の行と「切替判定ポイント（GO/NO-GO）」の GO4 の行を、どちらも「売上額とつけ残高合計の差異が 0 円か、差異の理由が日次締めの差異欄にある」に直しました。この基準は `otp-index-sample` の決め方（1 円以上の差異は理由を日次締め記録へ書く）に合わせています。そのあと prettier で表を整えたので、表の列の揃えだけが変わった行もあります。
+- **F002**: 今の本文は「それぞれ表の『確認の時期』までに満たされている」となっていて、GO1 の時期も「前日の T-13:00」です。前の段で解消済みだったため、手は入れていません。
+
+**正本と突き合わせた主張**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: operations` と `rulebook: specdojo:cop-index-rulebook` | schema の列挙値、rulebook の推奨 Frontmatter 項目の章 | 一致 |
+| 2 | 本文の 10 章の順と表の列 | rulebook の本文要件の章 | 一致 |
+| 3 | `mip-index`・`dmd-index`・`mtp-index`・`otp-index`・`pm-decision-log`・`pm-issue-log` の ID | `dct-migration-planning-template.yaml`、`dct-project-management-template.yaml` | 一致 |
+| 4 | `dmd-index` の「洗い替え」 | `dmd-index-sample` の冪等性の記述 | 一致 |
+| 5 | GO1〜GO3 の条件と失敗時の扱い | `mip-index-sample` の当日タイムライン | 一致（cop 側が時刻を細かく書いている） |
+| 6 | T+0:10〜T+2:30 の所要時間 | `mtp-index` | 確かめられない（sample には `mtp-index` の結果がなく、本文でも仮定と明記されているため） |
+
+**決めてほしいこと**
+
+- GO4 の正本である `mip-index-sample` の T+7日の行は、まだ「理由の分からない差異が残っていない」のままです。同じ基準にそろえるかどうかは、R5（整合）で `mip-index-sample` 側を直すかどうかで決めてください。
+
+**検査**
+
+- markdownlint や frontmatter の lint などは親 runner がこのあと流すので、ここでは実行していません。
+- 自分で流したのは prettier での整形だけで、正常に終わりました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめを終えた。F001 として、GO4 の条件をタイムラインと判定ポイントの両方で、差異が 0 円か差異の理由が日次締めの差異欄にある、という数値と状態の基準に直した。F002 は前の段で解消済みだった。","handoff":["R4-1: R4 / 当日タイムライン、切替判定ポイント（GO/NO-GO） / GO4 の条件「理由の分からない差異がない」は判定者によって解釈が分かれる（F001） / T+7日の行と GO4 の行を「売上額とつけ残高合計の差異が 0 円か、差異の理由が日次締めの差異欄にある」に直した / `vp-qe-verifiability`。基準は `otp-index-sample` の日次締めの差異（1 円以上は理由を日次締め記録へ書く）に合わせた / -","R4-2: R4 / 実施条件（事前完了条件） / 導入文と GO1 の確認時期の食い違い（F002）は、前の段の直しで「それぞれ表の『確認の時期』までに」「前日の T-13:00」となり解消済み / - / `vp-qe-omissions-consistency` / -","R4-3: R4 / 切替判定ポイント（GO/NO-GO） / 正本の `mip-index-sample` の GO4 は、まだ「理由の分からない差異が残っていない」のままで、cop 側の新しい基準より曖昧 / -（対象外の kata のため直さない） / R5 または `mip-index-sample` の見直しで、T+7日の行の完了条件を同じ基準にそろえる案 / 要判断（cop を mip に合わせて戻す案は、F001 が未解消に戻るため選ばなかった）","確かめの表 1: 主張 frontmatter の `type: operations` と `rulebook: specdojo:cop-index-rulebook` / 正本 `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/cop-index-rulebook.md` / 確かめ方 grep と読み取り / 結果 一致 / 根拠 schema の 17 行目が `operations`、rulebook の推奨 Frontmatter 項目の章","確かめの表 2: 主張 本文の 10 章の順と各表の列 / 正本 `cop-index-rulebook.md` の本文要件 / 確かめ方 読み取りで照合 / 結果 一致 / 根拠 章名と列名が rulebook の表と同じ","確かめの表 3: 主張 参照する ID（`mip-index`、`dmd-index`、`mtp-index`、`otp-index`、`pm-decision-log`、`pm-issue-log`） / 正本 `docs/ja/specdojo/templates/dct-migration-planning-template.yaml`、`dct-project-management-template.yaml` / 確かめ方 grep / 結果 一致 / 根拠 各 `local_id` の宣言がある","確かめの表 4: 主張 `dmd-index` の洗い替えで取り込み直す / 正本 `docs/ja/specdojo/samples/dmd-index-sample.md` / 確かめ方 grep / 結果 一致 / 根拠 20 行目の冪等性（洗い替え）","確かめの表 5: 主張 GO1〜GO3 の条件と失敗時の扱い / 正本 `docs/ja/specdojo/samples/mip-index-sample.md` のカットオーバー概要 / 確かめ方 grep と照合 / 結果 一致（cop は時刻を細かくしている） / 根拠 116〜118 行目","確かめの表 6: 主張 T+0:10〜T+2:30 の所要時間 / 正本 `mtp-index` / 確かめ方 - / 結果 確かめられない / 根拠 sample に `mtp-index` の結果がなく、本文でも _ASSUMPTION_ と明記している。確かめるには `mtp-index` のリハーサルの結果が要る"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/cop-index-sample.md","status":"passed","summary":"変更した sample の表を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
