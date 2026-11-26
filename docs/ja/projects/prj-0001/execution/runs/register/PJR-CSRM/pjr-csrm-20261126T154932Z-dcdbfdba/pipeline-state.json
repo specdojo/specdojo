@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-CSRM",
   "run_id": "pjr-csrm-20261126T154932Z-dcdbfdba",
-  "updated_at": "2026-11-26T16:24:48.077Z",
+  "updated_at": "2026-11-26T16:24:58.158Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CSRM/pjr-csrm-20261126T154932Z-dcdbfdba/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-26T16:24:48.077Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T16:24:58.158Z",
       "artifact_ref": null
     }
   },
