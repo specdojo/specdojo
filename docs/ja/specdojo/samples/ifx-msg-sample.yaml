@@ -15,7 +15,7 @@ info:
     `contentType` は `application/cloudevents+json`、`data` の形式（`datacontenttype`）は `application/json` に固定する。
     ファイル全体の既定（`defaultContentType`）も `application/cloudevents+json` にする。
     互換: 発行者は任意の `data` 項目を足すとき `info.version` の MINOR を上げ、購読者は知らない項目を無視する。
-    互換を壊す変更では、発行者が `type` の版（`.v1`）を上げる。
+    互換を壊す変更では、発行者が `info.version` の MAJOR と `type` の版（`.v1`）を上げる。
     未決事項: 本部が在庫の通知を受けるかは未合意。
 
 x-spec-meta:
@@ -75,7 +75,7 @@ components:
           enum: [com.kinuya.stock.changed.v1]
         source:
           type: string
-          example: /inventory
+          examples: [/inventory]
         id:
           type: string
           description: イベントID（`source` との組で一意）
@@ -88,7 +88,7 @@ components:
         subject:
           type: string
           description: 対象の商品の識別子（任意）
-          example: product/PROD-0001
+          examples: [product/PROD-0001]
         data:
           $ref: "#/components/schemas/StockChangedData"
 
