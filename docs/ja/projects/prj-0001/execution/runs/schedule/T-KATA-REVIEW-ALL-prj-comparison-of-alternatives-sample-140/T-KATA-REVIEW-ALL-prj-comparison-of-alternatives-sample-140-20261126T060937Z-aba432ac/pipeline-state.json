@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140-20261126T060937Z-aba432ac",
+  "updated_at": "2026-11-26T06:18:44.504Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T06:10:26.206Z",
+      "completed_at": "2026-11-26T06:12:32.861Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140-20261126T060937Z-aba432ac/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-26T06:15:43.427Z",
+      "completed_at": "2026-11-26T06:17:49.868Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140-20261126T060937Z-aba432ac/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T06:18:44.504Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140-20261126T060937Z-aba432ac/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140-20261126T060937Z-aba432ac/result.md"
+  }
+}

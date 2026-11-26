@@ -1,0 +1,24 @@
+R4（正しさ）の確かめが終わりました。`docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md` の誤り 3 件を直しました。前後の sample と外部ヘルプに照らして確かめた結果です。このほかに直すべき誤りは見つかっていません。この sample には CLI・schema・`src/` に関わる記述がないので、コマンドの実行や schema との突き合わせはしていません。frontmatter の `status` は変えていません。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | P-03「在庫過不足」（比較目的と前提条件） | `prj-issues-and-approach-sample.md` | grep で読み取り | 不一致（直した） | P-03 は「在庫の減りに気づくのが遅れる」で、過剰在庫は含まない。「在庫低下の把握遅れ」に直した |
+| 2 | ALT-01・ALT-04 は A-02・A-01 に当たる | 同上 | 読み取り | 一致 | A-01 はタブレット記録、A-02 は紙の様式 |
+| 3 | 日次確認・引き継ぎは A-03 | 同上 | 読み取り | 一致 | A-03 の行 |
+| 4 | ACD-C02・A02・D01〜D04 の内容と参照先 | `prj-assumptions-constraints-dependencies-sample.md` | grep で読み取り | 一致 | 費用上限、通信断、タブレット、技術助言、オフライン方針、初期受入の各行 |
+| 5 | U-01〜U-03 は支出上限・作業時間上限・具体日 | `pm-plan-sample.md` | grep で読み取り | 一致 | 未決事項の表 |
+| 6 | スコープの対象と対象外（EC・会計・仕入れ先連携・複数店舗） | `prj-scope-sample.md` | grep で読み取り | 一致 | スコープ外の表と対象システムの表 |
+| 7 | 「初期受入と2週間の試用継続条件」（比較試行の完了条件、見直しの表） | `prj-success-criteria-and-acceptance-criteria-sample.md` | 読み取り | 不一致（直した） | 正本には「試用継続条件」という条件がない。初期受入は SC-01・SC-07・SC-09 と AC-01〜AC-05。2週間の条件は運用開始後の SC-02・SC-03・SC-08。条件 ID を書く形に直した |
+| 8 | Google 公式ヘルプで編集・書き出しを確かめた | 外部の Google ヘルプ | WebFetch・WebSearch | 一部不一致（直した） | 引用の answer/6000292 は編集だけを扱う。ダウンロードは answer/49114 にあるので、2 つのページを分けて示し、確認日を 2026-11-26 にした |
+| 9 | Square 公式ヘルプで販売に連動した在庫更新を確かめた | 外部の Square ヘルプ（article/8331） | WebFetch | 一致 | 「売上に基づいて、在庫数が更新されます」と書かれている。ページ名は「在庫数を調整する」 |
+| 10 | 判定の値（採択・一部採択・比較試行・保留・非採択）、決定 ID の書き方 | `prj-comparison-of-alternatives-rulebook.md` | grep で読み取り | 一致 | 比較結果と採択理由の章 |
+| 11 | ロールの記号 `PO`・`PM`・`BA`・`DEV`・`QE` | `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` | grep で読み取り | 一致 | 該当する `role:` の値 |
+| 12 | 期間評価の目安「準備着手の承認から2週間」 | なし（`_ASSUMPTION_` として書かれた仮定） | 正本との矛盾がないかを読み取り | 確かめの対象外 | pm-plan の「準備の後に2週間の店頭試用」と食い違わない |
+
+prettier で整形し、markdownlint はエラー 0 件でした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: sample の事実の主張 12 件を、前後の sample・rulebook・defaults・外部ヘルプと突き合わせた。不一致 3 件（P-03 の要約、受入と2週間の条件の参照、Google ヘルプの引用先）を直した。CLI・schema・`src/` に関わる主張はない。","handoff":["P-03 の要約「在庫過不足」は、正本（prj-issues-and-approach-sample の P-03「在庫の減りに気づくのが遅れる」）と合わない。「在庫低下の把握遅れ」に直した。","「成功基準と受入条件 の初期受入と2週間の試用継続条件」は、正本にない条件名だった。初期受入（SC-01・SC-07・SC-09、AC-01〜AC-05）と運用開始後2週間の条件（SC-02・SC-03・SC-08）を ID で書く形に直した。見直し契機の表の同じ表現も直した。","Google スプレッドシートの引用先 answer/6000292 は編集だけを扱い、書き出しの根拠にならない。ダウンロードを扱う answer/49114 を加え、確認日を 2026-11-26 にした。","確かめの表（12 行）は executor の最終応答にある。reporter は result の実施内容へ移す。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
