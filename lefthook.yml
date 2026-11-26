@@ -8,6 +8,12 @@ pre-commit:
     git-lock-warning:
       run: "[ -f dist/specdojo.js ] && node dist/specdojo.js git --project prj-0001 --warn-unlocked || true"
 
+    # register_sync を有効にしたため、develop などで個票・イベントを直接変える commit を止める。
+    # 登録簿の専用ブランチの上では通す。hook の入口を devDependency に頼らせないため dist を使い、無ければ何もしない。
+    register-branch-guard:
+      glob: "docs/ja/projects/prj-0001/{controls/project-register,execution/exec/events}/**"
+      run: "[ ! -f dist/specdojo.js ] || node dist/specdojo.js register branch-guard --project prj-0001 --staged"
+
     # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
     # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
     # フルビルドの検証は CI 側で実行する想定。
