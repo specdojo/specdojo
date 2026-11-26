@@ -1,0 +1,24 @@
+R4（正しさ）の確かめが終わりました。誤りは見つからず、`docs/ja/specdojo/samples/ifd-sample.md` は編集していません。Mermaid の構文は手元で検証しておらず、親 runner の `npm run lint:mermaid` の結果を待っています。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter `type: architecture` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`ifd-mermaid-rulebook.md` | 読み取り | 一致 | schema の型の一覧に `architecture` があり、rulebook の `deliverable_type` も `architecture` |
+| 2 | frontmatter `rulebook: specdojo:ifd-mermaid-rulebook` | rulebook の「推奨 Frontmatter 項目」 | 読み取り | 一致 | rulebook がこの値を必須として指定している |
+| 3 | frontmatter `owner`、`part_of`、`based_on`、`supersedes` | deliverable schema、`common-frontmatter.schema.yaml` | 読み取り | 一致 | `owner` は deliverable schema に、`part_of`・`based_on`・`supersedes` は common schema（69〜75 行目）にある |
+| 4 | 本文の wikilink（`specdojo:prj-overview-sample`、`specdojo:cnd-sample`、`specdojo:clis-sample`） | 各 sample の frontmatter | id の検索 | 一致 | 3 つの id がすべて存在する |
+| 5 | 「プロジェクト概要の『まず記録する』方針」 | `prj-overview-sample.md` | 検索 | 一致 | 42 行目に「Record First（まず記録する）」がある |
+| 6 | 「cnd-sample は店舗側サービスとファイル保存の構成例、clis-sample は本部 API を使う CLI」 | `cnd-sample.md`、`clis-sample.md` | 読み取り | 一致 | cnd-sample はタブレット画面と店舗側保存を扱い、clis-sample を「本部 API を利用する別の学習用構成」と書いている |
+| 7 | `flowchart LR`、`subgraph` の深さ 2、DB は `[(...)]`、保管は `(...)`、経路ラベルに ID と目的、破線を凡例で定義 | rulebook の「Mermaid の表現規約」 | 読み取り | 一致 | 規約どおり（`subgraph` は 3 階層まで可、DB は円筒、ファイル保管は角丸）。色を使っていないので `classDef` の規定は当たらない |
+| 8 | Mermaid の構文が正しいこと | `npm run lint:mermaid` | 実行していない | 確かめられない | 親 runner が実行する。その結果を正とする |
+| 9 | 経路 `PATH-01`〜`PATH-07` の起点・終点が図と表で合うこと | rulebook の本文要件（通信経路と情報の境界） | 図と表の照合 | 一致 | 7 経路すべての起点 → 終点が一致した |
+| 10 | 役割名（店主代表・開発担当・技術メンター・同行レビュー担当・家族利用者代表）と Role code（ARC・DEV・QE・PO・BA） | `sample-authoring-standard.md` の共通登場人物と識別方法 | 読み取り | 一致 | 役割名は人物台帳（84〜94 行目）に、Role code の使い方は 100 行目にある |
+| 11 | 「店番担当」 | 共通サンプル文脈 | 検索 | 確かめの対象外 | 人物台帳にはないが、業務上の一般的な呼び名で、文脈と食い違わない |
+| 12 | 未同梱の架空名（`cnd-kinuya`、`tsd-kinuya-hosting`、`ifx-api-kinuya`、`kinuya-record-schema`、`ops-kinuya-*`、`kinuya:pjr-i001`〜`i005`） | なし | なし | 確かめの対象外 | 本文で架空の参照名と明示されている、正本のない仮定 |
+
+この段の観点で直すべき指摘はないため、`handoff` は空にしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: ifd-sample の frontmatter のキーと値（schema・rulebook）、wikilink 先の id、ほかの sample の内容への言及、Mermaid の表現規約、図と表の経路の対応、役割名と Role code を正本と突き合わせ、すべて一致した。誤りがないため sample は編集していない。Mermaid の構文は親 runner の lint:mermaid に委ねた。架空の参照名と業務上の呼び名は正本のない仮定として確かめの対象外とした。","handoff":[],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"executor は plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
