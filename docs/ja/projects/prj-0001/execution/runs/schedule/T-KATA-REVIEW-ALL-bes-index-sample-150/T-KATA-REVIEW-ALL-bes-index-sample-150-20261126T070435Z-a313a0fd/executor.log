@@ -1,0 +1,24 @@
+R5（整合）のレビューを終え、`docs/ja/specdojo/samples/bes-index-sample.md` を 5 行直しました。変更したのはこのファイルだけで、result は編集していません。markdownlint と prettier のチェックは通っています。
+
+読んだのは対象の sample、個別の `bes-sample`、上位の `cdfd-overview-sample`（`based_on`）、`prj-overview-sample`、用語集、Sample 記述標準の共通サンプル文脈です。用語集には BES・店番・BPS の項目がなく、照らし合わせるものはありませんでした。
+
+**直した食い違い**
+
+1. **`P-05` の行（要判断）**: 上位 CDFD では、入荷数量は入荷検品（`P-02`）が在庫記録へ書き込み、`P-05` の起点は「販売が記録された」だけです。sample は入荷も `P-05` の起点に含めていたため、行を販売だけに絞りました。あわせてイベント ID を `bes-stock-movement-recorded` から `bes-sale-recorded` に変え、名前も「販売が記録された」にしました。sample の冒頭は起点イベントの文言について上位 CDFD を正本としているので、sample 側を直す案を選びました。
+2. **`P-03`・`P-05` の文言の差の未決事項**: 1 で `P-05` の差がなくなったため、未決事項を `P-03` だけに絞りました。照合の表も「文言の差 2 件」から「1 件」に直しています。
+3. **`P-07` の行**: イベント名と上位 CDFD は「常連客」なのに、行の中では「客」「まだ登録のない客」と書いていました。「顧客台帳に未登録の常連客」「常連客」にそろえました。
+4. **「店番担当」**: 一覧の中で定義せずに何度も使っていました。`bes-sample` の定義に合わせて、冒頭に「店番に入る店主代表と家族利用者代表を指す」と足しました。
+
+**判断の確認をお願いしたい点**
+
+1 は、残っていた未決事項の答えを sample 側で決めたことになります。採らない場合は、この差分を戻し、未決事項の行を元の 2 件のまま残してください。ほかに、上位 CDFD の `P-05` に入荷も起点として足す案もありますが、それは CDFD 側の変更になるため選んでいません。
+
+**この段では扱わなかった点**
+
+- **F001・F002**: 観点が `vp-pm-plan-feasibility`・`vp-pm-control-reporting` で、kata-guide ではこの段のレビューに使わない観点です。
+- **F003**: 照合の結果の表はすでにあり、未実施の項目も「未実施」と書かれています。前の段で直っていると判断しました。
+- **`P-04`**: 上位 CDFD の主な担当は店主代表で、sample では店番担当が受け付けます。上位 CDFD ではつけの承認を店主代表が担うと書かれているので、受け付けは店番担当、承認は店主代表と読めば両立します。食い違いとはしませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）で bes-index-sample を上位 CDFD・bes-sample と照らし、P-05 の起点の範囲（入荷を除外し bes-sale-recorded に改名、要判断）、P-03/P-05 未決事項の縮約、P-07 の常連客表記、店番担当の定義の 4 件を sample 側で直した。変更は docs/ja/specdojo/samples/bes-index-sample.md のみ。","handoff":["R5-1: R5 / 1. 業務イベント一覧（P-05 の行） / 行が「販売または入荷」を起点にしていたが、上位 CDFD（specdojo:cdfd-overview-sample）は P-05 の起点を「販売が記録された」とし、入荷数量は仕入グループ（P-02）が在庫記録へ反映すると定めており食い違う / `bes-stock-movement-recorded`（販売または入荷が記録された）を `bes-sale-recorded`（販売が記録された）に改め、入荷は P-02 が反映するため含めないと明記し、発生条件・事実データを販売だけに絞った / vp-qe-kata-conformance、vp-dev-change-impact。sample の冒頭が起点イベントの文言を上位 CDFD を正本とするため sample 側を直した。迷った理由: 前の段が CDFD と行のどちらを直すかを未決事項として残していた。選ばなかった案は、CDFD の P-05 に入荷も起点として足す案（相手側の変更になる）。旧 ID は docs/src 配下の run 記録以外から参照されていない / 要判断","R5-2: R5 / 3.1. 未決事項・3.2. 照合の結果と確定入力として扱う条件 / R5-1 で P-05 の文言差が解消したのに、未決事項と照合の表が P-03・P-05 の 2 件の差として残っていた / 未決事項を P-03（会計の申し出と会計確定の差）だけに絞り、照合の表を「文言の差 1 件」に直した / vp-qe-kata-conformance、vp-dev-change-impact（R5-1 の波及） / -","R5-3: R5 / 1. 業務イベント一覧（P-07 の行） / イベント名と上位 CDFD の起点は「常連客」なのに、行内では「まだ登録のない客」「客」と別の語になっていた / 「顧客台帳に未登録の常連客」「常連客」にそろえた / vp-qe-kata-conformance（上位 CDFD の P-07 起点イベント） / -","R5-4: R5 / 冒頭の段落 / 「店番担当」を複数の行で使っているが一覧内で定義しておらず、個別の BES（specdojo:bes-sample）は店主代表と家族利用者代表を店番担当と定義している / 冒頭に「店番担当は店番に入る店主代表と家族利用者代表を指す」を足した / vp-qe-kata-conformance（bes-sample の 3. 誰が／何が、共通サンプル文脈の共通登場人物） / -","R5-5: R5 / 1. 業務イベント一覧（P-04 の行） / 上位 CDFD の P-04 の主な担当は店主代表、一覧は「店番担当が申し出を受けた時点」で、一見食い違う / - / vp-qe-kata-conformance。CDFD の適用範囲で店主代表が担うのはつけの承認であり、受付は店番担当、承認は店主代表と読めば両立する。prj-overview-sample も家族の店番でのつけの受付を課題にしているため、直さない。食い違いとみなす場合は、CDFD の P-04 の主な担当に家族利用者代表（管理責任: 店主代表）を足す案を CDFD 側で検討する / -","R5-6: R5 / grade finding F001・F002・F003 / F001（vp-pm-plan-feasibility）・F002（vp-pm-control-reporting）は kata-guide の「kata の観点の組」でこの段のレビューに使わない観点として外されている。F003 は照合の結果の表と未実施の明記が前の段で入っており解消済み / - / kata-guide の「kata の観点の組」と 3.2 の照合の結果の表 / -"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bes-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/samples/bes-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/bes-index-sample.md のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したのは Markdown ファイルだけで、*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>
