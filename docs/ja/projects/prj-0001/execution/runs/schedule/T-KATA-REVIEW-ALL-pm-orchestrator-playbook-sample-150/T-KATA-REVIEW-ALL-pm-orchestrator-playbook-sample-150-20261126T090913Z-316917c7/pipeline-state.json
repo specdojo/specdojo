@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-150",
   "run_id": "T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-150-20261126T090913Z-316917c7",
-  "updated_at": "2026-11-26T09:18:17.909Z",
+  "updated_at": "2026-11-26T09:19:17.424Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-150/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-150-20261126T090913Z-316917c7/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T09:18:17.909Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T09:19:17.424Z",
       "artifact_ref": null
     }
   },
