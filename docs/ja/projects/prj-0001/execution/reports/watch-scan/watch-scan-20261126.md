@@ -8,16 +8,17 @@ specdojo:
 
 # 見張りの朝報告 2026-11-26
 
-- 最後に見た時刻: `2026-11-26T10:00:29Z`
+- 最後に見た時刻: `2026-11-26T11:03:27Z`
 - 見張りは exec-defaults の `watch.remedies` で選んだ手当てだけを打つ。それ以外の次にすべきことは人かオーケストレーターが行う。
+- 見張りの対象外は、手で始めた run・再開・直しの途中のため、記録に足さず解きもせず、手当ても打たない。
 
 ## 1. 集計
 
-- 判断が要る（`needs_decision`）: 32
+- 判断が要る（`needs_decision`）: 23
 - 統合先の新しい commit が要る（`needs_target_sync`）: 0
 - 使用量の上限（`usage_limit`）: 0
 - 負荷による時間切れ（`load_timeout`）: 0
-- 中断（`interrupted`）: 4
+- 中断（`interrupted`）: 5
 - 分けられなかった（`unknown`）: 10
 
 ## 2. 止まっているもの
@@ -69,26 +70,26 @@ specdojo:
   - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-2q0g.yaml` の `ready for review`
   - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
   - 最初に見つけた時刻: `2026-11-25T22:20:27Z`
-- `PJR-66ER`（register 項目、`review`、`2026-11-25T10:43:50Z` から）
-  - 理由: 判断が要る（`review_pending`）
-  - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-66er.yaml` の `ready for review`
-  - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
-  - 最初に見つけた時刻: `2026-11-25T13:00:29Z`
 - `PJR-69ZX`（register 項目、`review`、`2026-11-25T00:26:10Z` から）
   - 理由: 判断が要る（`review_pending`）
   - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-69zx.yaml` の `ready for review`
   - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
   - 最初に見つけた時刻: `2026-11-25T13:00:29Z`
-- `PJR-6XG2`（register 項目、`review`、`2026-11-24T17:39:30Z` から）
-  - 理由: 判断が要る（`review_pending`）
-  - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-6xg2.yaml` の `ready for review`
-  - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
-  - 最初に見つけた時刻: `2026-11-24T18:00:25Z`
 - `PJR-B0B8`（register 項目、`review`、`2026-11-25T11:31:21Z` から）
   - 理由: 判断が要る（`review_pending`）
   - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-b0b8.yaml` の `section "完了条件" updated`
   - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
   - 最初に見つけた時刻: `2026-11-25T12:00:26Z`
+- `PJR-FNB7`（register 項目、`review`、`2026-11-25T13:39:47Z` から）
+  - 理由: 判断が要る（`review_pending`）
+  - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-fnb7.yaml` の `ready for review`
+  - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
+  - 最初に見つけた時刻: `2026-11-26T11:03:27Z`
+- `PJR-JSEY`（register 項目、`review`、`2026-11-26T11:02:39Z` から）
+  - 理由: 判断が要る（`review_pending`）
+  - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-jsey.yaml` の `ready for review`
+  - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
+  - 最初に見つけた時刻: `2026-11-26T11:03:27Z`
 - `PJR-PXNQ`（register 項目、`review`、`2026-11-23T03:29:50Z` から）
   - 理由: 判断が要る（`review_pending`）
   - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-pxnq.yaml` の `ready for review`
@@ -99,6 +100,11 @@ specdojo:
   - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-qcj5.yaml` の `ready for review`
   - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
   - 最初に見つけた時刻: `2026-11-24T14:00:31Z`
+- `PJR-T4E0`（register 項目、`review`、`2026-11-25T22:42:53Z` から）
+  - 理由: 判断が要る（`review_pending`）
+  - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-t4e0.yaml` の `ready for review`
+  - 次にすべきこと: post-review の結果を読み、close するか差し戻すかを決める
+  - 最初に見つけた時刻: `2026-11-26T11:03:27Z`
 - `PJR-V681`（register 項目、`review`、`2026-11-16T14:26:42Z` から）
   - 理由: 判断が要る（`review_pending`）
   - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-v681.yaml` の `ready for review`
@@ -129,56 +135,6 @@ specdojo:
   - 根拠: `docs/ja/projects/prj-0001/execution/queues/release-0-10-removals-2026-11-21.json` の `step 1 (exec-run): specdojo exec run --register PJR-GV43 --worktree --if-busy wait --on-rate-limit fallback --project prj-0001`
   - 次にすべきこと: 止まった段の対象の止まりを先に片付け、`specdojo exec queue run` で列を続けるか `exec queue cancel` で止める
   - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-BUSINESS-SPECS-KATA-2-cdsd-execution-140`（schedule のタスク、`blocked`、`2026-11-15T12:20:52Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T122052Z_indie_T-BUSINESS-SPECS-KATA-2-cdsd-execution-140_block_377028f8.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140`（schedule のタスク、`blocked`、`2026-11-15T12:20:43Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T122043Z_indie_T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140_block_2b6e84f8.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-KATA-REVIEW-ALL-imp-interface-sample-140`（schedule のタスク、`blocked`、`2026-11-26T04:31:22Z` から）
-  - 理由: 判断が要る（`validation_failure`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261126T043122Z_opus-executor_T-KATA-REVIEW-ALL-imp-interface-sample-140_block_76b91492.json` の `parent validation failed: lint-fm-changed`
-  - 次にすべきこと: 失敗した検査のログを読み、成果物を直すか検査を直すかを決める
-  - 最初に見つけた時刻: `2026-11-26T05:00:28Z`
-- `T-KATA-WAVE-1-bes-index-140`（schedule のタスク、`blocked`、`2026-11-15T11:11:15Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T111115Z_indie_T-KATA-WAVE-1-bes-index-140_block_462f7d75.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-KATA-WAVE-1-sf-index-140`（schedule のタスク、`blocked`、`2026-11-15T11:11:14Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T111114Z_indie_T-KATA-WAVE-1-sf-index-140_block_dca78e24.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-PROJECT-KATA-pm-quality-management-plan-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:06Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T123206Z_indie_T-PROJECT-KATA-pm-quality-management-plan-140_block_cd43e9f5.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-PROJECT-KATA-pm-raci-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:10Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T123210Z_indie_T-PROJECT-KATA-pm-raci-140_block_d0c3e31c.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:15Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T123215Z_indie_T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140_block_e6e0f813.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-PROJECT-KATA-prj-comparison-of-alternatives-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:19Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T123219Z_indie_T-PROJECT-KATA-prj-comparison-of-alternatives-140_block_61b012f7.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
-- `T-STSD-PILOT-stsd-task-execution-140`（schedule のタスク、`blocked`、`2026-11-15T12:20:48Z` から）
-  - 理由: 判断が要る（`manual_block`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261115T122048Z_indie_T-STSD-PILOT-stsd-task-execution-140_block_6cfce93d.json` の `差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）`
-  - 次にすべきこと: 手で止めた人の理由を読み、その指示（手直しの todo など）が済んでから再開する
-  - 最初に見つけた時刻: `2026-11-24T01:00:29Z`
 - `wave3-pilot-tsp-index-2026-11-21`（列、`stopped`、`2026-11-21T08:49:54.944Z` から）
   - 理由: 判断が要る（`queue_step_failed`）
   - 根拠: `docs/ja/projects/prj-0001/execution/queues/wave3-pilot-tsp-index-2026-11-21.json` の `step 3 (exec-run): specdojo exec run --task T-KATA-WAVE-3-tsp-index-sample-080 --worktree --if-busy wait --on-rate-limit fallback --fallback-executor-by sol-executor --exec-defaults tmp/orchestrator/e`
@@ -202,6 +158,11 @@ specdojo:
   - 根拠: `docs/ja/projects/prj-0001/execution/queues/kra-night1b-2026-11-25.json` の `state=running since=2026-11-24T17:53:39.097Z`
   - 次にすべきこと: 実行中のプロセスがないことを確かめ、`specdojo exec resume` で再開する
   - 最初に見つけた時刻: `2026-11-24T22:00:25Z`
+- `PJR-6PD7`（register 項目、`in-progress`、`2026-09-13T02:11:37Z` から）
+  - 理由: 中断（`stale_in-progress`）
+  - 根拠: `docs/ja/projects/prj-0001/controls/project-register/events/pjr-6pd7.yaml` の `state=in-progress since=2026-09-13T02:11:37Z`
+  - 次にすべきこと: 実行中のプロセスがないことを確かめ、`specdojo exec resume` で再開する
+  - 最初に見つけた時刻: `2026-11-26T11:00:34Z`
 - `rerun-70ss-2026-11-21`（列、`running`、`2026-11-21T00:03:58.232Z` から）
   - 理由: 中断（`stale_running`）
   - 根拠: `docs/ja/projects/prj-0001/execution/queues/rerun-70ss-2026-11-21.json` の `state=running since=2026-11-21T00:03:58.232Z`
@@ -210,11 +171,6 @@ specdojo:
 
 ### 2.3. 分けられなかった
 
-- `T-KATA-REVIEW-ALL-cdt-sample-120`（schedule のタスク、`blocked`、`2026-11-25T16:25:28Z` から）
-  - 理由: 分けられなかった（`unknown`）
-  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261125T162528Z_opus-executor_T-KATA-REVIEW-ALL-cdt-sample-120_block_66b3b5e0.json` の `reporter exited with failure`
-  - 次にすべきこと: 記録とログを読み、止まった理由を確かめる
-  - 最初に見つけた時刻: `2026-11-25T17:00:20Z`
 - `T-KATA-REVIEW-ALL-clis-sample-120`（schedule のタスク、`blocked`、`2026-11-25T16:25:30Z` から）
   - 理由: 分けられなかった（`unknown`）
   - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261125T162530Z_opus-executor_T-KATA-REVIEW-ALL-clis-sample-120_block_96a725e9.json` の `agent exited with non-zero code`
@@ -260,12 +216,38 @@ specdojo:
   - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261125T163335Z_opus-executor_T-KATA-REVIEW-ALL-ifx-cmd-sample-120_block_0b775d47.json` の `agent exited with non-zero code`
   - 次にすべきこと: 記録とログを読み、止まった理由を確かめる
   - 最初に見つけた時刻: `2026-11-25T17:00:20Z`
+- `T-KATA-REVIEW-ALL-imp-interface-sample-140`（schedule のタスク、`blocked`、`2026-11-26T10:43:42Z` から）
+  - 理由: 分けられなかった（`unknown`）
+  - 根拠: `docs/ja/projects/prj-0001/execution/exec/events/20261126T104342Z_opus-executor_T-KATA-REVIEW-ALL-imp-interface-sample-140_block_41574910.json` の `resumed executor target coverage has duplicate entries: specdojo:imp-interface-sample; specdojo exec resume --task T-KATA-REVIEW-ALL-imp-interface-sample-140 --resume-from executor (add --executor-by`
+  - 次にすべきこと: 記録とログを読み、止まった理由を確かめる
+  - 最初に見つけた時刻: `2026-11-26T11:00:34Z`
 
-## 3. 手当て
+## 3. 見張りの対象外
+
+- `T-BUSINESS-SPECS-KATA-2-cdsd-execution-140`（schedule のタスク、`blocked`、`2026-11-15T12:20:52Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140`（schedule のタスク、`blocked`、`2026-11-15T12:20:43Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-KATA-WAVE-1-bes-index-140`（schedule のタスク、`blocked`、`2026-11-15T11:11:15Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-KATA-WAVE-1-sf-index-140`（schedule のタスク、`blocked`、`2026-11-15T11:11:14Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-PROJECT-KATA-pm-quality-management-plan-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:06Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-PROJECT-KATA-pm-raci-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:10Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:15Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-PROJECT-KATA-prj-comparison-of-alternatives-140`（schedule のタスク、`blocked`、`2026-11-15T12:32:19Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+- `T-STSD-PILOT-stsd-task-execution-140`（schedule のタスク、`blocked`、`2026-11-15T12:20:48Z` から）
+  - 触らない理由: 人かオーケストレーターの claim（`claimed by indie`）
+
+## 4. 手当て
 
 - なし
 
-## 4. この日に解けたもの
+## 5. この日に解けたもの
 
 - `PJR-6PD7`（register 項目、`2026-11-25T21:00:27Z`）
 - `PJR-ANF0`（register 項目、`2026-11-25T22:00:38Z`）
@@ -277,7 +259,11 @@ specdojo:
 - `PJR-6PD7`（register 項目、`2026-11-25T23:00:28Z`）
 - `PJR-DZMV`（register 項目、`2026-11-25T23:00:28Z`）
 - `PJR-Q5YP`（register 項目、`2026-11-25T23:00:28Z`）
+- `PJR-6XG2`（register 項目、`2026-11-26T11:00:34Z`、`done` になった）
+- `PJR-66ER`（register 項目、`2026-11-26T11:00:34Z`、`done` になった）
+- `T-KATA-REVIEW-ALL-cdt-sample-120`（schedule のタスク、`2026-11-26T11:00:34Z`、`done` になった）
+- `T-KATA-REVIEW-ALL-imp-interface-sample-140`（schedule のタスク、`2026-11-26T11:00:34Z`、`blocked` になった）
 
-## 5. 読めなかった記録
+## 6. 読めなかった記録
 
 - なし
