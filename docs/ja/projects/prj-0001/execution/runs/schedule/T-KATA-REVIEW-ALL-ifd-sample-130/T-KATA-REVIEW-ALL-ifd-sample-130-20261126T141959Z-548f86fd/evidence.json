@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-ifd-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-ifd-sample-130-20261126T141959Z-548f86fd",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T14:20:48.122Z",
+    "completed_at": "2026-11-26T14:23:06.078Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/ifd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/ifd-sample.md | 24 ++++++++++++++----------\n 1 file changed, 14 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/ifd-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:ifd-sample\n  type: architecture\n  status: ready\n  owner: ARC\n  rulebook: specdojo:ifd-mermaid-rulebook\n  part_of: []\n  based_on: []\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム インフラ構成図\n\n## 1. 概要\n\n単一店舗のタブレットから販売・在庫・つけの情報を記録する配置案を示す。店主代表は本図で店舗外へ渡る情報と通信依存を判断する。技術メンターと開発担当は接続境界を設計し、同行レビュー担当は通信断・保存失敗・復元の検証対象を選ぶ。技術メンターが ARC、開発担当が DEV、同行レビュー担当が QE、店主代表が公開・利用判断の PO を担う学習用の責務対応とする。\n\n\\[\\[specdojo:\n… output omitted …\n-02` の再記録の判断が未確定 | PO / BA / DEV | `kinuya:pjr-i003` へ引き継ぐ。店舗試行前に店主代表が現場の保留方法を判断し、受付照合の契約と業務・運用手順を整備する |\n| *UNDECIDED*: 保全・復元の成立条件 | `PATH-04`〜`PATH-07` の独立性・保管期間・復元先が未確定 | ARC / DEV / PO | `kinuya:pjr-i004` へ引き継ぐ。受入前に損失と停止の許容条件を判断し、`ops-kinuya-backup` / `ops-kinuya-restore` に確認方法を定める |\n| *TODO*: 詳細正本と管理経路 | 参照した架空仕様は未同梱。監視・管理用操作の配置も未整備 | ARC / DEV | `kinuya:pjr-i005` へ引き継ぐ。`kinuya-record-schema` と `ops-kinuya-monitoring` を含む正本を整備し、実運用前に管理主体・到達条件を確定する |\n\n店主代表は、表の保留事項が解消してから実運用の可否を判断する。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7828 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7828 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifd-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n[paren\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1795}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  23:24:21\n   Duration  2.67s (transform 5.97s, setup 682ms, import 8.54s, tests 6.58s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifd-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifd-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3 読みやすさの段として ifd-sample.md に文の直しを 12 件入れ、直さない指摘を 1 件残した。主語の補い（W1）、長文の分割（W3）、受け身の言い換え（W6）、指示語の言い換え（W4）、表の前の 1 文（Sample 記述標準）が対象。frontmatter の status は ready のまま変えていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 1. 概要 / 第 2 文が 3 つの主語と述語を 1 文に連ね、目的の言い方もぼやけている / 店主代表の判断の文と、技術メンター・開発担当・同行レビュー担当の作業の文の 2 文に分けた / W3, W1 / -",
+    "R3-2: R3 / 1. 概要 / 最後の段落（cnd-sample・clis-sample とは別の配置案）に主語がない / 文頭に「本例は」を補った / W1 / -",
+    "R3-3: R3 / 2. インフラ構成図（Mermaid） / 「矢印は〜の向きで、応答を含む」の「応答を含む」が何を指すか読み取れない / 「1 本で依頼とその応答を表す」にした / W2, vp-ux-readability / -",
+    "R3-4: R3 / 2. インフラ構成図（Mermaid） / 記録サービスの呼び出しの文が「想定だが、〜省略し、〜描く」と条件と結論を 1 文に詰めている / 「想定である。」で切り、作図上の省略を別の文にした / W3 / -",
+    "R3-5: R3 / 3. 配置と境界の定義 / 表の前に何の表かを示す 1 文がない / 「次の表は、図中の要素ごとに上位要素との対応、管理主体、保持情報と到達条件を示す。」を足した / Sample 記述標準（表の前の 1 文） / -",
+    "R3-6: R3 / 3. 配置と境界の定義 / 表の後の「これら」の指す先と、「対応は未確認であり、役割の候補として示す」の主語が決まらない / 「描かない要素の配置と権限は」「上位要素との対応の列は、架空の上位図と照合していない役割の候補である」にした / W4, W1 / -",
+    "R3-7: R3 / 4. 通信経路と情報の境界 / 表の前の文が未同梱の注記から始まり、何の表かを示す文が後に回っている / 表の説明を先にし、注記は委譲先の列の参照名が未同梱の架空名であることを示す文にした / Sample 記述標準（表の前の 1 文）, W4 / -",
+    "R3-8: R3 / 5.1. 技術前提・制約 / 「〜が利用条件になる配置案であり、〜構成を保証しない」に主語がない / 「本案はホスティング環境への通信を利用条件とするため、通信不能時の記録継続を保証しない。」にした / W1, W3 / -",
+    "R3-9: R3 / 5.1. 技術前提・制約 / 結果が届かない場合に記録し直さない主体が書かれていない / 「店番担当は未保存と決めつけて同じ販売を記録し直さない」にした（店番担当は PATH-02 の利用条件の表記に合わせた） / W1 / -",
+    "R3-10: R3 / 5.1. 技術前提・制約 / 「直接接続が拒否されるとはしない」が受け身と否定の重なりで読みにくい / 「図で DB を記録処理ゾーンの枠内に描いても、直接接続を拒否する設定にはならない。」にした / W6 / -",
+    "R3-11: R3 / 5.2. 境界・障害の検証対象 / 表の前の文が「以下は」で、指す先がはっきりしない / 「次の表は」にした / W4 / -",
+    "R3-12: R3 / 6. メモ / 将来課題 / 表の前に何の表かを示す 1 文がない。表の後の文は実運用の可否を誰が判断するか書いていない / 課題 ID が架空名であるという注記と合わせて表の前の 1 文を足し、表の後の文の主語を店主代表にした / Sample 記述標準（表の前の 1 文）, W1。主語を店主代表にしたのは、概要に「店主代表が公開・利用判断の PO を担う」とあるため。主体を補うと意味が少し加わるので、元の主語のない文に戻す案は選ばなかった / 要判断",
+    "R3-13: R3 / 6. メモ / 将来課題 / 担当の列に BA があるが、概要の役割対応（ARC・DEV・QE・PO）に BA がなく、略語の正式名と役割が読み取れない / - / W8。概要の役割対応に BA の役割名を足すか、表から BA を外すかは、BA に当たる役割を決める根拠がないため R5 か作者に任せる / 要判断"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-ifd-sample-130/T-KATA-REVIEW-ALL-ifd-sample-130-20261126T141959Z-548f86fd/executor.log",
+      "bytes": 6179,
+      "truncated": false
+    }
+  ]
+}

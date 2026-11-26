@@ -1,0 +1,41 @@
+R4（正しさ）の段で、sample を 1 か所直しました。前の段から残っていた 2 件の指摘は、もう直っていました。
+
+**直した箇所**
+
+- 「関連ドキュメント導線」の受入判定の行は、`[[specdojo:sac-sample|システム受入条件]]` が `nfr-mnt-001`・`002`・`005` の基準を参照すると書いていました。これは事実と違います。
+  - `sac-sample` は性能の受入条件で、参照しているのは `nfr-perf-*` だけです。
+  - `nfr-index-sample` の導線の表でも、保守性の検証は `（なし）` で、月次点検の記録で確かめるとしています。
+- rulebook は `sac-*` への導線を必須としています。そのため行は消さず、文書をまだ置かない場合のバッククォート表記の `` `sac-*` `` に置き換えました。目的の列は「保守性の受入条件は置かず月次点検で確かめる。置くときは同じ値で参照する」です。
+- Prettier で表の幅を揃えたので、差分はこの表の 8 行に出ています。
+
+**前の段から残っていた指摘（どちらも直っていました）**
+
+- F001：`nfr-mnt-004` には、もう「要求日の翌営業日の 10:00 までに反映」という閾値が入っています。
+- F002：一次切り分けの範囲は、もう rulebook の用語定義と同じ「アプリ・データ・端末・外部」です。
+
+**突き合わせた主張と結果**
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter のキー `part_of`・`based_on`・`supersedes` | `common-frontmatter.schema.yaml` | 一致 |
+| 2 | `type: requirement` | `deliverable-frontmatter.schema.yaml`、rulebook | 一致 |
+| 3 | `rulebook` の宣言 | rulebook の frontmatter | 一致 |
+| 4 | 導線の 6 件の sample ID（`nfr-index-sample`・`nfr-availability-sample`・`sac-sample`・`opd-index-sample`・`opr-incident-sample`・`opr-change-sample`） | 各 sample の frontmatter | 一致 |
+| 5 | 営業時間 10:00〜18:00 | `opd-index-sample` 34 行 | 一致 |
+| 6 | P1 に気付いてから 30 分で紙の販売控えへの切替を判断 | `opd-index-sample` 97 行 | 一致 |
+| 7 | 変更と切り戻しは閉店後、切り戻しは `DEV` | `opd-index-sample` 108〜113 行 | 一致 |
+| 8 | 監視はホスティング環境の死活 | `opd-index-sample` 85〜89 行 | 一致 |
+| 9 | 営業日の 90% 以上で記録を継続 | `opd-index-sample` 48 行 | 一致 |
+| 10 | RTO の正本は可用性要件で未決 | `nfr-availability-sample` の `nfr-avl-002` | 一致 |
+| 11 | 受入判定の導線 | `sac-sample`、`nfr-index-sample` 77・84 行 | 不一致（上記のとおり直した） |
+
+業務の値（30 分、翌営業日の 10:00 など）は正本のない仮定で、共通サンプル文脈とも食い違わないため、確かめの対象にしていません。
+
+**検証**
+
+- Prettier だけを流し、通りました。
+- markdownlint などの検査は、終了後に親 runner がまとめて実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で sample の事実を正本と突き合わせ、11 件中 1 件の不一致（受入判定の導線が、性能の受入条件である `sac-sample` を保守性要件の参照元としていた）を、`sac-*` のバッククォート表記と月次点検で確かめる旨に直した。前の段から残っていた F001・F002 は、すでに直っていた。","handoff":["[minor/vp-qe-verifiability] docs/ja/specdojo/samples/nfr-maintainability-sample.md の「関連ドキュメント導線」の受入判定の行：`[[specdojo:sac-sample|システム受入条件]]` が `nfr-mnt-001`・`002`・`005` の判定基準を参照すると書いていたが、`sac-sample` は性能の受入条件で、参照するのは `nfr-perf-*` だけである。`nfr-index-sample` の導線の表（77・84 行）でも、保守性の検証は `（なし）` で月次点検の記録で確かめるとしている。rulebook が必須とする `sac-*` への導線は残し、`sac-*` のバッククォート表記と「保守性の受入条件は置かず月次点検で確かめる。置くときは同じ値で参照する」に直した。","R4 の確かめの表（No / 主張 / 正本 / 確かめ方 / 結果 / 根拠）：1 frontmatter のキー `part_of`・`based_on`・`supersedes` / `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` / grep / 一致 / 69〜75 行。2 `type: requirement` / `deliverable-frontmatter.schema.yaml`・rulebook / 読み取り / 一致 / schema 8 行、rulebook 58 行。3 `rulebook: specdojo:nfr-maintainability-rulebook` / rulebook の frontmatter / 読み取り / 一致 / 3 行。4 導線の 6 件の sample ID / 各 sample の frontmatter / grep / 一致 / すべての `id` が存在する。5 営業時間 10:00〜18:00 / `opd-index-sample` / grep / 一致 / 34 行。6 P1 から 30 分で紙の販売控えへの切替を判断 / `opd-index-sample` / grep / 一致 / 97 行。7 変更と切り戻しは閉店後、切り戻しは `DEV` / `opd-index-sample` / grep / 一致 / 108〜113 行。8 監視はホスティング環境の死活 / `opd-index-sample` / grep / 一致 / 85〜89 行。9 営業日の 90% 以上で記録を継続 / `opd-index-sample` / grep / 一致 / 48 行。10 RTO の正本は可用性要件で未決 / `nfr-availability-sample` / grep / 一致 / `nfr-avl-002`。11 受入判定の導線 / `sac-sample`・`nfr-index-sample` / grep / 不一致（直した） / `sac-sample` 26〜31 行は `nfr-perf-*` だけ、`nfr-index-sample` 77・84 行。","grade の F001（`nfr-mnt-004` が `_UNDECIDED_`）と F002（「通信」と「外部」の表記の違い）は、前の段で直っていた。現在の版は、`nfr-mnt-004` に「要求日の翌営業日の 10:00 まで」の閾値があり、範囲の表記も rulebook の用語定義と同じ「アプリ・データ・端末・外部」である。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"変更した sample を整形した（表の幅を揃えた）"}]}
+</specdojo_executor_evidence>

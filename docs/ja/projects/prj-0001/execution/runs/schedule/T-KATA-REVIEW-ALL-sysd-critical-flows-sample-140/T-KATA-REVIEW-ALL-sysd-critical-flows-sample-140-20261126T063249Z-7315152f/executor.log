@@ -1,0 +1,38 @@
+R4（正しさ）のレビューを終えました。誤りは見つからなかったため、sample（`docs/ja/specdojo/samples/sysd-critical-flows-sample.md`）は変更していません。
+
+**展開された finding の確認（どちらも前の段で直っていた）**
+- F001: 「検証への引渡し」の表には、template が求める「確認状況・不足の解消先」の列があります。5 件すべてに、未実施であること、テストの所在、網羅の不足、解消先（SU-01 または SU-02）が書かれています。
+- F002: 概要の「照合待ち」は、「本部受付後にローカル販売実績の保存が完了していない状態」まで広げてあり、`itc-kinuya-cf-03` と食い違いません。
+
+**確かめの表（R4）**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: architecture`、`rulebook` | rulebook の `deliverable_type`、`deliverable-frontmatter.schema.yaml`、Sample 記述標準 | 一致 |
+| 2 | 一覧と詳細は最大 5 件で、同じ ID の集合 | rulebook の「全体方針」 | 一致（2 件） |
+| 3 | 本部の契約が整うまで自動再送しない | `clis-sample.md` 124 行 | 一致 |
+| 4 | 受付済みなら回復、未受付と確認できた場合だけ再送、確認できなければ保留 | `clis-sample.md` 110 行、116 行 | 一致 |
+| 5 | 受付済みの売上をファイル削除や確定前の取消で戻さない | `clis-sample.md` 109 行 | 一致 |
+| 6 | 印字の失敗は会計を維持し、保存済みレシートだけを再印刷する | `clis-sample.md` 111 行、`ifx-cmd-sample.yaml` の `idempotency` | 一致 |
+| 7 | 印字完了は終了成功と、対象取引の完了報告の両方で判定する | `ifx-cmd-sample.yaml` の exit 0 の説明 | 一致 |
+| 8 | 自動再試行は送信前のビジーと確認できた場合だけ | `ifx-cmd-sample.yaml` の exit 1（`transient_failure`）、`error_handling.retry.on_categories` | 一致 |
+| 9 | 試行識別子はプリンタの重複排除キーではない | `idempotency.guaranteed: false` | 一致 |
+| 10 | 報告の不正は結果不明とし、自動では再印刷しない | `malformed_output_action`、`timeout_action` | 一致 |
+| 11 | `execution`・`error_handling` というキーがある | `ifx-cmd.schema.yaml` 224 行、264 行 | 一致 |
+| 12 | USB 直結の同期印字 | `ifx-cmd-sample.yaml` の `_ASSUMPTION_` | 一致 |
+| 13 | 「まず記録する」方針 | `prj-overview-sample.md` 42 行 | 一致 |
+| 14 | `kinuya-session-schema`・`kinuya-sales-record-schema`・`kinuya-receipt-format-schema` という参照名 | `clis-sample.md` 62・77・78 行 | 一致 |
+| 15 | `kinuya-stsd-sale` は同梱されていない | `stsd-sample.md`（商品の状態を扱い、取引は扱わない） | 一致 |
+| 16 | `kinuya-sysd-index` は同梱されていない架空の参照名 | `sysd-index-sample.md` | 確かめられない（下の申し送りへ） |
+| 17 | `ifx-api-kinuya-sales.yaml`、`kinuya-opr-*`、`KIN-DEC-*` | 正本なし（架空の名前） | 確かめられない（共通サンプル文脈と食い違わないため対象外） |
+
+**申し送り（R5 で扱う）**
+- 設計索引の sample（`specdojo:sysd-index-sample`）は同梱されています。それでも本 sample は `kinuya-sysd-index` を「未同梱の架空参照名」としています。逆に設計索引の 75 行は、重要フローの文書（`kinuya-sysd-critical-flows`）を「未作成」としています。どちらかを直すかどうかを R5 で判断してください。
+
+印字の手順の担当の名前も、印刷コマンドの sample（「店頭利用者」）と本 sample（「店番担当」）で違いますが、これも R5 の観点です。
+
+**検証**: sample を変更していないため、Prettier などこちらで実行する検査は当てはまりません。lint は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: sample の事実の主張を ifx-cmd-sample.yaml、ifx-cmd.schema.yaml、clis-sample.md、prj-overview-sample.md、stsd-sample.md、sysd-index-sample.md、rulebook、template と突き合わせた。不一致は見つからず、sample は変更していない。展開された F001（「確認状況・不足の解消先」の列）と F002（「照合待ち」の定義）は前の段で直っていた。","handoff":["R4-1: R4 / 1. 概要（設計索引・状態用語の定義先）、5.1. 正本と変更影響 / 設計索引の sample（specdojo:sysd-index-sample）は同梱されているが、本 sample は `kinuya-sysd-index` を「未同梱の架空参照名」としている。逆に sysd-index-sample.md の 75 行は重要フローの文書 `kinuya-sysd-critical-flows` を「未作成」としている / - / 突き合わせ先は docs/ja/specdojo/samples/sysd-index-sample.md の 1〜20 行と 75 行。R5（`vp-qe-kata-conformance`、kata 相互）で、本 sample の参照を [[specdojo:sysd-index-sample|システム設計索引]] に替えるか、設計索引側の「未作成」を直すかを決める。どちらの文書を正とするかを決められなかったので直さなかった / 要判断","R4-2: R4 / 確かめの表 / 次の主張を正本と突き合わせ、すべて一致した。type: architecture（rulebook の `deliverable_type`）、最大 5 件（rulebook の全体方針）、自動再送しない（clis-sample.md 124 行）、受付照合での回復と再送の条件（clis-sample.md 110・116 行）、ファイル削除や確定前の取消をしない（clis-sample.md 109 行）、印字の失敗で会計を維持して保存済みレシートだけ再印刷する（clis-sample.md 111 行、ifx-cmd-sample.yaml の idempotency）、exit 0 と対象取引の報告による印字完了の判定、送信前のビジー（transient_failure）に限った再試行（error_handling.retry.on_categories）、重複排除なし（idempotency.guaranteed: false）、報告の不正やタイムアウトは結果不明で自動再印刷しない（malformed_output_action、timeout_action）、execution と error_handling のキー（ifx-cmd.schema.yaml 224・264 行）、USB の同期印字（ifx-cmd-sample.yaml の ASSUMPTION）、「まず記録する」（prj-overview-sample.md 42 行）、schema の参照名（clis-sample.md 62・77・78 行）、`kinuya-stsd-sale` は未同梱（stsd-sample.md は商品の状態だけを扱う） / - / `vp-arc-technical-constraints`、`vp-qe-verifiability` / -","R4-3: R4 / 確かめの表（確かめられない主張） / `ifx-api-kinuya-sales.yaml`、`kinuya-opr-sale-reconciliation`、`kinuya-opr-reprint`、`KIN-DEC-01`・`KIN-DEC-02` は架空の参照名で、本文も未同梱と明記している。正本がなく、共通サンプル文脈とも食い違わないため、確かめの対象外とした / - / R4 の plan（正本のない仮定は確かめの対象にしない） / -","R4-4: R4 / 展開された grade の finding / F001（「検証への引渡し」の確認状況・不足の解消先の列）と F002（「照合待ち」の定義が本部受付後の保存未完了を含む）は、前の段の直しで解消している。表の 5 行すべてに所在・網羅・実施状況・解消先があり、概要 20 行の定義は itc-kinuya-cf-03 と合う / - / `vp-qe-kata-conformance`、`vp-ux-language-consistency` / -","R4-5: R4 / 3.2. 確定後のレシート保存と印字回復 / 印字の失敗時に紙面を確かめる人を、ifx-cmd-sample.yaml は「店頭利用者」、本 sample は「店番担当」と書いている / - / 用語の食い違いなので R5 で用語集と照らし、どちらにそろえるかを決める / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sysd-critical-flows-sample.md","status":"not_applicable","summary":"変更したファイルがない","reason":"このタスクではどのファイルも変更していない（git status は runner 管理の pipeline-state.json だけ）。Prettier の適用条件（変更した md/ts/js/json/yaml がある）を満たさない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"変更した履歴ファイルがない","reason":"plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,30 @@
+確かめた事実はすべて正本と合っていたため、R4（正しさ）では `docs/ja/specdojo/samples/pm-members-sample.yaml` を変更していません。grade の finding F001 も、正本と食い違うため直していません。
+
+**確かめの表**
+
+| No | 主張（sample の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | ファイル全体が schema に適合する | `docs/specdojo/schemas/v1/pm-members.schema.yaml` | `npm run -s validate:schema:file -- --schema … --data …` | 一致 | 出力は `valid` |
+| 2 | `type: project`、`status: draft`、`version: 1` | schema | 読み取り | 一致 | `const: project`、`status` の列挙、`version` は 1 以上 |
+| 3 | `rulebook: specdojo:pm-members-rulebook` | `docs/ja/specdojo/rulebooks/pm-members-rulebook.md` | `grep` で ID を検索 | 一致 | 3 行目の `id` と一致 |
+| 4 | `based_on` の 3 件の ID | 各標準・sample | `grep` で ID を検索 | 一致 | 3 件とも存在する |
+| 5 | `project_id: prj-0001` | `pm-roles-sample.yaml` | 読み取り | 一致 | 11 行目も `prj-0001` |
+| 6 | `roles` に使った PO、PM、BA、DEV、QE、ARC、UX、OPS | `pm-roles-sample.yaml` | `grep` で `code:` を検索 | 一致 | 8 件とも定義されている |
+| 7 | `scheduler_strategy` の値（`critical-first`、`dependency-first`） | schema の列挙値 | 読み取り | 一致 | 列挙値に含まれる |
+| 8 | 5 人の nickname と表示名 | `sample-authoring-standard.md` の「共通登場人物」 | 読み取り | 一致 | 共通人物台帳の nickname と役割名に一致する |
+| 9 | 未成年の member は開発担当と同行レビュー担当 | 同上 | 読み取り | 一致 | 2 人は 12 歳、家族利用者代表は 24 歳 |
+| 10 | ARC と UX は専門支援で、`owner` にしない | `pm-organization-sample.md` | 読み取り | 一致 | 47 行目: ARC、UX、OPS は `owner` に使わない |
+| 11 | 家族利用者は意見を出すだけで、承認責任を持たない | 同上 | 読み取り | 一致 | 16 行目と一致する |
+| 12 | `rules` の交代時の扱い（既存 member を消さず、後任は新しい nickname で追加） | rulebook の禁止事項 | 読み取り | 一致 | 実行ログ記録後の nickname 変更を禁じた行と一致する |
+
+週 1 回、月 2 回、30 分以内といった稼働条件は、駄菓子屋の業務上の仮定で正本がありません。共通サンプル文脈とも食い違わないので、確かめの対象にしていません。
+
+**F001（「同行レビュー担当」の表示名）を直していない理由**
+
+- この finding の観点は `vp-ux-language-consistency` で、R4 の観点に入っていません。
+- 共通登場人物の表で `peer-reviewer` の役割名は「同行レビュー担当」と決まっており、役割の説明も「第三者視点で確認」です。sample の表記は正本どおりです。
+- 「第三者レビュー担当」などに変えると共通サンプル文脈と食い違います。変えるなら、先に `sample-authoring-standard.md` の共通登場人物の表を人が改訂する必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: sample の事実 12 件を schema、rulebook、関連 sample、共通登場人物と突き合わせ、すべて一致した。schema の検査も通ったため sample は変更していない。F001 は R4 の観点ではなく、表示名「同行レビュー担当」が共通登場人物の役割名どおりのため直していない。","handoff":["確かめの表（No、主張、正本、確かめ方、結果、根拠）: 1 sample 全体の schema 適合、schema、validate:schema:file の実行、一致、出力は valid / 2 type・status・version の値、schema、読み取り、一致、const project・status の列挙・version は 1 以上 / 3 rulebook ID、pm-members-rulebook.md、grep、一致、3 行目の id と一致 / 4 based_on の 3 件、各標準と sample、grep、一致、3 件とも存在 / 5 project_id prj-0001、pm-roles-sample.yaml、読み取り、一致、11 行目と一致 / 6 roles の 8 件の code、pm-roles-sample.yaml、grep、一致、8 件とも定義済み / 7 scheduler_strategy の値、schema の列挙値、読み取り、一致 / 8 nickname と表示名の 5 人、sample-authoring-standard.md の共通登場人物、読み取り、一致 / 9 未成年は開発担当と同行レビュー担当、共通登場人物の年齢、読み取り、一致、12 歳と 12 歳、家族利用者代表は 24 歳 / 10 ARC と UX は owner にしない、pm-organization-sample.md、読み取り、一致、47 行目 / 11 家族利用者は承認責任を持たない、pm-organization-sample.md、読み取り、一致、16 行目 / 12 rules の交代時の扱い、rulebook の禁止事項、読み取り、一致。稼働条件（週 1 回、月 2 回、30 分以内）は正本のない業務上の仮定で、共通サンプル文脈と食い違わないので確かめの対象外。","F001（vp-ux-language-consistency、38 行目の display_name「同行レビュー担当」）は直していない。R4 の観点ではなく、sample-authoring-standard.md の共通登場人物で peer-reviewer の役割名が「同行レビュー担当」（役割の説明は「第三者視点で確認」）と決まっており、sample は正本どおりのため。変えるなら、先に共通登場人物の表を人が改訂し、そのあと sample の display_name と rules の 2 行目をそろえる。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/samples/pm-members-sample.yaml","status":"passed","summary":"出力は docs/ja/specdojo/samples/pm-members-sample.yaml: valid"}]}
+</specdojo_executor_evidence>

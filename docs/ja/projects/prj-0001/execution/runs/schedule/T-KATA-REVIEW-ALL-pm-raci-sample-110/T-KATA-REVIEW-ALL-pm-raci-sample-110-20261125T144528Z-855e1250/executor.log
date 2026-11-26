@@ -1,0 +1,16 @@
+R1（目的の過不足）を終えました。grade の指摘 F001 は解消済みで、直したのは `docs/ja/specdojo/samples/pm-raci-sample.md` の 1 ファイルだけです。
+
+**直したこと（R1-1）:** 「成果物別 RACI」の表は行が成果物名だけで、rulebook の「ファイル命名・ID規則」が求める成果物 ID との対応を確かめられませんでした。表に「対象 ID」列を足して各行に ID を書き、表の前に ID の書き方を説明する 1 文を加えました。
+- **ID の出どころ:** 成果物カタログの ID を使い、同じ種類が複数ある成果物は `bps-*` のような接頭辞でまとめました。カタログにないものは、ほかの sample が使っている架空の名前（`kinuya-app`・`kinuya-st-report`・`kinuya-acceptance-record`）にしました。
+- **要判断:** カタログ ID は推測で当てました。人が確かめるべき点は次の 3 つです。
+  - 「利用者要求・操作設計」を `bps-*`・`uis-*` に、「実装・データ設計」を `sysd-index`・`bdd-*`・`kinuya-app` のコードにしたこと。
+  - 「リリース候補」を `kinuya-app` の対象版タグにしたこと。
+  - 案として採らなかったのは、各行を sample への wikilink にする方法と、表を ID 単位の行に分ける方法です。
+
+**変えなかったこと（R1-2）:** rulebook の「本文要件」の必須内容（範囲と省略の理由、二つの表、担当の照合と不一致時の直し先、見直し条件）は全部そろっていて、要らない記述も見つからなかったので、ほかの箇所は直していません。rulebook など sample 以外の文書は変えておらず、frontmatter の `status` もそのままです。
+
+**確認:** Prettier の整形確認は通りました。markdownlint などの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施した。F001 に対応し、pm-raci-sample の「成果物別 RACI」に「対象 ID」列を追加して各行を成果物 ID から特定できるようにした。ほかに過不足は見つからなかった。","handoff":["R1-1: 段=R1 / 箇所=成果物別 RACI / 指摘=統合行が成果物名だけで、rulebook「ファイル命名・ID規則」の「行は成果物 ID で特定し、統合行も各成果物から一意に照合できる」を満たさない（grade F001） / 直した案=「対象 ID」列を追加し、カタログの local ID（同じ種類が複数あるものは `bps-*` などの接頭辞）か、ほかの sample が使う架空名（`kinuya-app`・`kinuya-st-report`・`kinuya-acceptance-record`）を各行に書いた。表の前に ID の書き方を 1 文足した / 根拠=`vp-qe-kata-conformance`。利用者要求・操作設計を `bps-*`・`uis-*`、実装・データ設計を `sysd-index`・`bdd-*`・`kinuya-app` のコード、リリース候補を `kinuya-app` の対象版タグに当てた対応は推定。選ばなかった案は、sample への wikilink にする案（未同梱の成果物は表せない）と、ID ごとに行を分ける案（rulebook の「同じ責任の成果物はまとめる」に反する） / 印=要判断","R1-2: 段=R1 / 箇所=全体 / 指摘=rulebook「本文要件」の必須内容（範囲と省略の理由、採用 Role、兼務・Agent の扱い、二つの表、担当照合と不一致時の更新先、見直し条件）はそろっており、要らない記述も見当たらない / 直した案=- / 根拠=`vp-po-purpose-alignment`、`vp-arc-single-responsibility` / 印=-"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-raci-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは sample の 1 ファイルだけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

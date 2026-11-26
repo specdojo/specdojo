@@ -1,0 +1,34 @@
+R5（整合）の確認を終え、`docs/ja/specdojo/samples/nfr-availability-sample.md` に 4 件の直しを入れました。整形は prettier、変更ファイルの markdownlint は指摘 0 件です。親 runner が回す検査はこちらでは実行していません。
+
+照合した相手は次のとおりです。
+
+- **同じ系列の sample:** index と各分冊。
+- **参照先:** 前提・制約・依存の sample、運用方針（全体・監視・障害対応）、運用手順（バックアップ確認・リストア、障害対応）。
+- **その他:** 用語集、共通サンプル文脈。
+
+用語集には可用性の用語がなく、ここでの食い違いはありませんでした。監視の閾値（5 分）、バックアップの頻度（1 日 1 回、閉店後）、紙の販売控えへの切替（30 分、`PO` が判断）は運用方針・運用手順と一致しています。
+
+**sample を直した点:**
+
+| No | 箇所 | 指摘 | 直した内容 |
+| --- | --- | --- | --- |
+| R5-1 | 適用範囲・除外条件、未決事項 | 信頼性要件は 1 分未満の瞬断を自動回復の対象とし、1 分以上を可用性の停止としている。本書は回線断をすべて停止に数えていて、扱いが重なる | 「1 分以上切れて記録できない時間。1 分未満の瞬断は信頼性要件の自動回復で扱う」とし、未決事項の当面の扱いも「1 分以上の通信断を停止として数え」にそろえた |
+| R5-2 | 未決事項、関連ドキュメント導線 | 記録方法は依存関係 ACD-D03 で決まるのに、前提条件 ACD-A02 しか挙げていない | 「前提条件 ACD-A02、依存関係 ACD-D03」とし、導線の目的欄に「オフライン時の運用方針の決定（ACD-D03）」を足した |
+| R5-3 | 関連ドキュメント導線 | index は可用性の判断記録に `dec-offline-recording` を挙げ、rulebook も導線に `dec-*` を求めているが、本書に行がない | 判断記録の行を足した（オフライン時の記録方法と紙の販売控えへの切替の判断、決定待ち。`nfr-avl-004` の前提） |
+| R5-4 | 可用性要件一覧 | index と運用方針の表記は「目標復旧時間（RTO）」「目標復旧時点（RPO）」だが、本書は略語だけ | 指標欄を正式名つきにした |
+
+**判断が要る点（要判断、直していません）:**
+
+- **R5-5 受入条件・総合テストの ID:** index は `sac-store-sales`・`stc-record-recovery`、本書は `sac-availability`・`stc-availability` で食い違っています。ただ rulebook の良い例が `sac-availability` で、分冊の間でも書き方が分かれています（信頼性・完全性は分冊ごとの ID、機密性・安全性・操作性は `sac-store-sales`）。どちらに寄せるかを決めてもらう必要があるので、本書は変えていません。案は次の 2 つです。
+  - index の可用性の行を本書と rulebook に合わせる。
+  - 分冊ごとの ID に統一する方針を決め、index の各行を直す。
+
+**相手側を直す案（相手の文書は変えていません）:**
+
+- **R5-6 信頼性要件:** `nfr-reliability-sample` の「適用範囲・前提条件」で、ACD-D03 を「前提条件」と書いています。ACD-D03 は依存関係の項目なので、「依存関係 ACD-D03」に直す案です。
+
+grade の F001（冗長さ）と F002（検証のしやすさ）は R5 の観点に当たらないため、この段では扱わず R3・R4 の段に任せました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合を実施し、nfr-availability-sample に 4 件の直し（1 分以上の通信断の線引き、ACD-D03 の参照、判断記録 dec-offline-recording の行、RTO/RPO の正式名）を入れた。sac/stc の ID の食い違いは要判断、信頼性要件の ACD-D03 の分類は相手側を直す案として handoff に残した。","handoff":["R5-1: R5 / 適用範囲・除外条件、未決事項 / 信頼性要件（`nfr-reliability-sample`）は 1 分未満の瞬断を自動回復の対象、1 分以上を可用性の停止としているが、本書は店舗の通信回線の断をすべて停止に数えており扱いが重なる / 条件を「店舗の回線が 1 分以上切れて記録できない時間。1 分未満の瞬断は信頼性要件の自動回復で扱う」、稼働率での扱いを「停止に含める。1 分未満の瞬断は含めない」とし、未決事項の当面の扱いを「1 分以上の通信断を停止として数え」にした / `vp-qe-kata-conformance`（信頼性要件の「適用範囲・前提条件」の店頭の通信瞬断・技術前提の行） / -","R5-2: R5 / 未決事項、関連ドキュメント導線 / 通信断時の記録方法は前提・制約・依存の依存関係 ACD-D03（オフライン時の運用方針の決定）で決まるのに、前提条件 ACD-A02 だけを挙げている / 未決事項を「前提条件 ACD-A02、依存関係 ACD-D03」にし、導線の前提・制約・依存の目的欄に「オフライン時の運用方針の決定（ACD-D03）」を足した / `vp-qe-kata-conformance`（`prj-assumptions-constraints-dependencies-sample` の依存関係の ACD-D03 の行） / -","R5-3: R5 / 関連ドキュメント導線 / 非機能要件 index（`nfr-index-sample`）の導線表は可用性の判断記録に `dec-offline-recording` を挙げ、rulebook の関連ドキュメント導線も設計判断の `dec-*` を求めるが、本書に判断記録の行がない / 判断記録の行（`dec-offline-recording`、オフライン時の記録方法と紙の販売控えへの切替の判断（決定待ち）。`nfr-avl-004` の前提）を足した / `vp-qe-kata-conformance`、`vp-dev-change-impact`（index の関連ドキュメント導線、rulebook の関連ドキュメント導線の記述ルール） / -","R5-4: R5 / 可用性要件一覧 / index と運用方針（`opd-index-sample`）は「目標復旧時間（RTO）」「目標復旧時点（RPO）」と書くが、本書の指標欄は略語だけ / 指標欄を「目標復旧時間（RTO）」「目標復旧時点（RPO）」にした / `vp-qe-kata-conformance`（index のカテゴリ一覧、`opd-index-sample` の未決事項） / -","R5-5: R5 / 関連ドキュメント導線 / 受入条件・総合テストの ID が index（`sac-store-sales`、`stc-record-recovery`）と本書（`sac-availability`、`stc-availability`）で食い違う / - / `vp-dev-change-impact`。本書を index に寄せなかった理由: rulebook の良い例が `sac-availability` で、分冊の間でも信頼性・完全性は分冊ごとの ID、機密性・安全性・操作性は `sac-store-sales` と分かれており、どちらが正か決められない。案 1: index の可用性の行を `sac-availability`・`stc-availability` にする。案 2: 分冊ごとの ID に統一する方針を決め、index の各行を直す / 要判断","R5-6: R5 / 相手側（`nfr-reliability-sample` の適用範囲・前提条件） / 信頼性要件が ACD-D03 を「前提条件 ACD-D03」と書いているが、ACD-D03 は前提・制約・依存の依存関係の項目である / - / `vp-qe-kata-conformance`。相手側の直す案: `nfr-reliability-sample` の技術前提の箇条を「依存関係 ACD-D03」に直す / -","範囲外: grade の F001（`vp-arc-conciseness`）と F002（`vp-qe-verifiability`）は R5 の観点に当たらないため、この段では扱わず R3・R4 の段に任せた。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"表を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

@@ -13,6 +13,8 @@ import {
 import * as path from "node:path";
 import { writeDefaultIndexPages } from "./default-index-pages.js";
 import { isExecRecordPath } from "./exec-record-paths.js";
+import { stageProductRepoDocs } from "./product-repos.js";
+import type { ProductRepo, StagedProductRepo, Warn } from "./product-repos.js";
 
 // package 参照中（eject していない）の kata は利用リポジトリの docs/ 配下に存在しない。
 // VitePress の srcDir は 1 つしか指定できないため、ビルド前に利用側 docs と package 側文書を
@@ -41,6 +43,8 @@ export type KataStagingResult = {
   packageRoot: string | undefined;
   staged: number;
   ejected: number;
+  // repos で宣言したプロダクトのリポジトリから取り込んだ文書（取り込めたものだけ）。
+  productRepos: StagedProductRepo[];
   // dev で利用側 docs の変更・追加・削除を反映する。削除時は同梱文書へ戻す。
   syncFile: (file: string) => void;
 };
@@ -179,7 +183,16 @@ function pruneStaging(directory: string, root: string, expected: Set<string>): b
 // package 側の kata をステージングへ複製する。前回のステージングは差分だけ更新し、
 // package の更新や eject で消えた kata は期待一覧との差で削除して古いまま残らないようにする。
 // eject 済み（利用リポジトリ側に同じ相対パスがある）ファイルは複製せず、利用リポジトリ側を採用する。
-export function stageBundledKata(workspaceRoot: string): KataStagingResult {
+export type KataStagingOptions = {
+  // docs/ja/product/<name>/ へ取り込むプロダクトのリポジトリ。省略時は取り込まない。
+  productRepos?: readonly ProductRepo[];
+  warn?: Warn;
+};
+
+export function stageBundledKata(
+  workspaceRoot: string,
+  options: KataStagingOptions = {},
+): KataStagingResult {
   const stagingRoot = path.join(workspaceRoot, KATA_STAGING_DIR_NAME);
   mkdirSync(path.join(stagingRoot, "docs"), { recursive: true });
   const workspaceDocs = path.join(workspaceRoot, "docs");
@@ -212,6 +225,14 @@ export function stageBundledKata(workspaceRoot: string): KataStagingResult {
     }
   }
 
+  const productRepos = stageProductRepoDocs(
+    workspaceRoot,
+    stagingRoot,
+    options.productRepos ?? [],
+    options.warn,
+  );
+  for (const repo of productRepos) for (const file of repo.files) expected.add(file);
+
   const defaultPages = writeDefaultIndexPages(workspaceRoot, stagingRoot);
   for (const relativePath of defaultPages.keys()) expected.add(path.normalize(relativePath));
   pruneStaging(stagingRoot, stagingRoot, expected);
@@ -240,7 +261,7 @@ export function stageBundledKata(workspaceRoot: string): KataStagingResult {
       rmSync(destination, { force: true });
     }
   };
-  return { stagingRoot, packageRoot, staged, ejected, syncFile };
+  return { stagingRoot, packageRoot, staged, ejected, productRepos, syncFile };
 }
 
 // doc-index の package 側 kata エントリ（例: "node_modules/specdojo/docs/ja/specdojo/..."）を

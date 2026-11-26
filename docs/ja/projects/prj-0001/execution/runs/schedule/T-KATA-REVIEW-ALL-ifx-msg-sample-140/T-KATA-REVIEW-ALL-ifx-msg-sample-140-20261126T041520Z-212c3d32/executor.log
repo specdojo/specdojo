@@ -1,0 +1,33 @@
+R4（正しさ）のレビューを終え、`docs/ja/specdojo/samples/ifx-msg-sample.yaml` で誤り 2 件を直しました（3 行）。Prettier の確認と YAML の読み込みは通りましたが、AsyncAPI 用の検証器はリポジトリに入っていないため、AsyncAPI の構造全体の検証はまだしていません。
+
+**直したこと**
+
+- **`example` → `examples`**: 88 行目付近の `source` と 92 行目付近の `subject` に使っていた単数形の `example` は、AsyncAPI 2.6.0 の Schema Object では定義されていない語です。検証器はエラーにせず無視するため、例が仕様に載りません。仕様にある `examples`（配列）に直しました（`examples: [/inventory]`、`examples: [product/PROD-0001]`）。
+- **互換を壊す変更の版の上げ方**（18 行目）: sample は `type` の版だけを上げると書いていました。rulebook の「版と改訂」の節は、`info.version` の MAJOR も上げると定めています。rulebook を正として「`info.version` の MAJOR と `type` の版（`.v1`）を上げる」に直しました。
+
+**主張ごとの確かめ**
+
+| No | 主張（sample の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 行目 `# specdojo-schema: none reason=external-asyncapi` | `src/kata/yaml-schema-modeline.ts` | 読み取り | 一致 | 先頭コメント行を読む正規表現の `mode`（`none`）と `reason` に合う |
+| 2 | `x-spec-meta` の `id`・`type`・`status`・`rulebook` | `src/shared/document-metadata.ts`、`src/docs/doc-index.ts` | 読み取り | 一致 | 4 つのキーを root か `x-spec-meta` から必須で読む |
+| 3 | `type: api` | `deliverable-frontmatter.schema.yaml`、rulebook の「先頭メタ項目」 | 読み取り | 一致 | 列挙値に `api` がある |
+| 4 | `asyncapi: 2.6.0`、ルートの `defaultContentType` | AsyncAPI 2.6.0 仕様 <https://raw.githubusercontent.com/asyncapi/spec/v2.6.0/spec/asyncapi.md> | 取得して読み取り | 一致 | `defaultContentType` は AsyncAPI Object の固定フィールド |
+| 5 | `protocol: mqtt` | 同上（Server Object） | 取得して読み取り | 一致 | 対応プロトコルの一覧に `mqtt` がある |
+| 6 | `subscribe` は「発行者が送り、購読者が受け取れる」（43 行目） | 同上（Channel Item Object） | 取得して読み取り | 一致 | subscribe は「アプリケーションが作りチャネルへ送るメッセージ」を定める |
+| 7 | Schema Object の `example` | 同上（Schema Object） | 取得して読み取り | 不一致 → 修正 | JSON Schema から取り込む語の一覧にあるのは `examples` だけ |
+| 8 | 互換を壊す変更の版の上げ方（18 行目） | `docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md` の「版と改訂」 | 読み取り | 不一致 → 修正 | rulebook は `info.version` の MAJOR と `type` の版の両方を上げると定める |
+| 9 | `contentType` / `defaultContentType` が `application/cloudevents+json` | rulebook の「形式の使い分け」、CloudEvents の JSON format | 読み取り（CloudEvents の仕様は記憶との照合） | 一致 | structured モードの媒体型 |
+| 10 | `time` は `format: date-time` | rulebook の属性の表（RFC 3339） | 読み取り | 一致 | JSON Schema の `date-time` は RFC 3339 |
+| 11 | `specversion` `"1.0"`、`type` の末尾の版 `.v1` | rulebook の属性の表 | 読み取り | 一致 | 表の値と例が同じ |
+| 12 | 構造は AsyncAPI CLI の `validate` で確かめる（2 行目） | AsyncAPI CLI | 実行できず | 確かめられない | `node_modules` に `@asyncapi` がない。確かめるには `asyncapi validate` の実行が要る |
+| 13 | 連携名「本部への在庫変更通知」は一覧に未掲載（10 行目、27 行目） | `docs/ja/specdojo/samples/ifx-index-sample.yaml` | 読み取り | 一致 | `interfaces` にこの連携の行がない |
+
+**plan に載っていた grade の指摘**
+
+- F001・F002・F003 は、前の段までの手直しで解消されていました（順序の単位が `data.product_id`、チャネルの `description` に発生の契機がある）。
+- F004（一覧の sample に連携の行がない）は R4 で扱う観点ではないため、ほかの段に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめを終え、ifx-msg-sample.yaml の誤り 2 件を直した。AsyncAPI 2.6.0 の Schema Object にない `example` を `examples` に改め、互換を壊す変更の版の上げ方に、rulebook が定める `info.version` の MAJOR を足した。主張ごとの確かめの表（13 件。一致 10、不一致で修正 2、確かめられない 1）は最終応答にある。","handoff":["[minor/R4] ifx-msg-sample.yaml の `source`（88 行目付近）と `subject`（92 行目付近）で使っていた `example` は、AsyncAPI 2.6.0 の Schema Object にない語のため、検証器が無視して例が仕様に載らなかった。仕様にある `examples`（配列）へ直した。根拠: AsyncAPI 2.6.0 仕様の Schema Object（JSON Schema から取り込む語の一覧にあるのは `examples` だけ）。","[minor/R4] ifx-msg-sample.yaml の 18 行目は、互換を壊す変更で `type` の版だけを上げると書いていた。ifx-msg-rulebook の「版と改訂」は `info.version` の MAJOR も上げると定めるため、rulebook を正として「`info.version` の MAJOR と `type` の版（`.v1`）を上げる」に直した。","[要確認/R4] 2 行目の AsyncAPI CLI の `validate` による構造の確かめは、sandbox に `@asyncapi/cli` がないため実行していない。ready にする前に、人が `asyncapi validate docs/ja/specdojo/samples/ifx-msg-sample.yaml` を実行し、結果を実行記録に残す。","[申し送り] grade の F001・F002・F003 は前の段までの手直しで解消済みだった。F004（ifx-index-sample に連携の行がない）は kata の整合の観点で、R4 の観点ではないため扱う段に任せる。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-msg-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"schema の検査を飛ばす印のある YAML","reason":"対象の YAML は先頭行に `specdojo-schema: none reason=external-asyncapi` があり、SpecDojo の schema が対応しないため"},{"command":"asyncapi validate docs/ja/specdojo/samples/ifx-msg-sample.yaml","status":"requires_human","summary":"AsyncAPI CLI は依存になく、sandbox で実行できない。人が AsyncAPI 2.6.0 に対応した検証器で構造を確かめる"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cdfd-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-cdfd-sample-110-20261125T050254Z-31df724f",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T05:03:38.800Z",
+    "completed_at": "2026-11-25T05:07:05.343Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cdfd-sample.md | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "No history files changed",
+      "reason": "The only change is a sample file; no plan, result, or register ticket history file was changed"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cdfd-sample\n  type: flow\n  status: ready\n  rulebook: specdojo:cdfd-rulebook\n  based_on:\n    - specdojo:cdfd-overview-sample\n  supersedes: []\n---\n\n# 概念データフロー図（プロセスグループ別）: 仕入\n\n本書は、駄菓子屋きぬや販売管理の「仕入」グループ（\\[\\[specdojo:cdfd-overview-sample|概念データフロー図（全体概要）]] の `P-01`〜`P-02`）の概念データフロー図である。product 成果物として作成する場合の ID は `cdfd-purchasing` とする。\n\n## 1. 目的\n\n仕入グループの内部フローと在庫・販売グループへの委譲境界を合意し、後続設計の入力にするた\n… output omitted …\nと在庫記録の双方を確認できるまで `P-02-03` の更新と読み返しを再試行する | 仕入記録の一致と在庫記録の入荷数量を確認した後、受入品は `P-02-04`、返品対象は `P-02-05` へ進む |\n\n### 8.2. グループ外への委譲\n\n| 委譲先 | 委譲する事項 | 引き渡す情報 | 本グループへ戻す条件 |\n| - | - | - | - |\n| `cdfd-inventory` | 在庫数の算出、補充基準との比較、補充対象と必要数量の判断 | 在庫記録、発注不可となった商品・数量 | 新規・修正済み補充依頼が仕入グループへ渡された |\n| `cdfd-sales` | 売場棚の商品を用いた店頭販売 | 売場商品、`P-02-04` が仕入記録から渡す確定済みの入荷数量・受入結果 | 販売後の在庫が補充基準を下回り、在庫グループが補充を依頼した |\n| `cdfd-uc-replenishment` | 在庫・仕入・販売を横断する順序と引き渡し条件 | 補充依頼、発注結果、入荷数量、売場商品 | グループ間の引き渡し条件を変更する判断が生じた |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7064 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7064 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdfd-sample-110\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dur\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1601}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  14:11:56\n   Duration  2.52s (transform 6.70s, setup 2.20s, import 8.23s, tests 5.65s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdfd-sample-110/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdfd-sample-110/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R1 (purpose fit) review done. Only one sentence of the Purpose section in docs/ja/specdojo/samples/cdfd-sample.md was changed: the conditional route P-02-05 (return handover) was added to the decision scope. No other missing or unneeded content was found. F001 (vp-arc-conciseness) goes to R3 and F002 (vp-qe-omissions-consistency) goes to R2; the sample was not changed for them.",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/cdfd-sample.md「目的」2 文目 / 指摘: 目的の判断範囲が「補充依頼から発注、入荷検品、売場補充まで」となっていて、条件付きのプロセス `P-02-05` 返品引渡しの起動条件が判断対象から抜けている / 直した案: 「補充依頼から発注、入荷検品、売場補充・返品引渡しまでの起動条件と、発注・受入の主要例外を判断できるようにする。」に直した（sample に反映済み） / 根拠: specdojo:cdfd-rulebook の「記述ガイド」の「目的と適用範囲」（目的は内部フロー・主要例外を判断する利用場面を示す）、sample の「プロセス領域」の `P-02-05`（条件付き） / 印: なし",
+    "No: 2 / 段: R1 / 箇所: 文書全体（目的、適用範囲、プロセス領域、データストア、概念データフロー、個別プロセス主要入出力、状態遷移の参照、主要例外とグループ外への委譲） / 指摘: rulebook の「本文要件」の必須章はすべてあり、任意の「未決事項」は未決の論点がないため置いていない。単一グループで責務は 1 つにまとまっており、Sample 記述標準の禁止事項（人物名、役割の割り当て、承認の進み具合、実装の詳細）にも当たらない。足す・削る内容はない / 直した案: 変更なし / 根拠: specdojo:cdfd-rulebook の「本文要件」と「禁止事項」、specdojo:sample-authoring-standard の「記述ガイド」と「禁止事項」、dct-kata.yaml の cdfd-sample の `done_criteria` / 印: なし",
+    "No: 3 / 段: R1 / 箇所: grade の finding F001（line 256 `P-02-04` 主要入力） / 指摘: 観点 `vp-arc-conciseness` は R3 の観点なので、この段では扱わない / 直した案: R3 で「仕入記録の確定結果」と「確定済みの入荷数量・受入結果」の一方に統一し、図の線の名前と対応させる / 根拠: docs/ja/specdojo/guides/kata-guide.md「kata の観点の組」 / 印: なし",
+    "No: 4 / 段: R1 / 箇所: grade の finding F002（line 257 `P-02-05` 主要入力） / 指摘: 観点 `vp-qe-omissions-consistency` は R2 の観点なので、この段では扱わない / 直した案: R2 で、5.2 の図に検品から返品引渡しへの「不一致・不良情報」の線を足すか、入出力表の主要入力から外し、表と図をそろえる / 根拠: docs/ja/specdojo/guides/kata-guide.md「kata の観点の組」 / 印: なし"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdfd-sample-110/T-KATA-REVIEW-ALL-cdfd-sample-110-20261125T050254Z-31df724f/executor.log",
+      "bytes": 5566,
+      "truncated": false
+    }
+  ]
+}

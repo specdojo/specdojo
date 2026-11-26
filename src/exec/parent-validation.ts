@@ -9,6 +9,8 @@ import {
 } from "./validation-metrics.js";
 import { gitEnvironment } from "./worktree.js";
 import { NpmScriptStageTracker, ValidationOutputFiles } from "./parent-validation-output.js";
+import { EventLoopStallTracker, validationExitTiming } from "./validation-exit-timing.js";
+export { validationExitTiming, type ValidationExitTiming } from "./validation-exit-timing.js";
 import {
   hasValidationProcessTreeSurvivors,
   signalValidationProcessTree,
@@ -618,6 +620,9 @@ export async function invokeParentValidation(
     const stage = new NpmScriptStageTracker();
     const stdoutDecoder = new StringDecoder("utf8");
     const spawnedAt = performance.now();
+    const spawnedAtWall = Date.now();
+    // PJR-P8SX: 検証の子の終わりに runner が気づくまでの遅れを、event loop の止まりと分けて測る。
+    const loopStall = new EventLoopStallTracker();
     let child: ChildProcess;
     try {
       child = spawn(definition.command, [...definition.args], {
@@ -631,6 +636,7 @@ export async function invokeParentValidation(
         detached: VALIDATION_USES_PROCESS_GROUP,
       });
     } catch (error) {
+      loopStall.stop();
       output.dispose();
       throw error;
     }
@@ -718,6 +724,16 @@ export async function invokeParentValidation(
       clearTimeout(closeTimer);
       recordStop(pipesClosed);
       untrack();
+      const eventLoopDelayMaxMs = loopStall.stop();
+      validationMetric("validation-exit-timing", {
+        id: definition.id,
+        ...validationExitTiming({
+          spawnedAt: spawnedAtWall,
+          settledAt: Date.now(),
+          lastWriteAt: output.lastWriteAt(),
+          eventLoopDelayMaxMs,
+        }),
+      });
       output.dispose();
       resolve(result);
     };

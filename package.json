@@ -47,6 +47,7 @@
     "test": "vitest run",
     "test:unit": "vitest run --config vitest.unit.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:agent": "npm run build && vitest run --config vitest.agent.config.ts",
     "test:docs": "vitest run --config vitest.docs.config.ts",
     "test:watch": "vitest",
     "test:e2e": "npm run build && tsx tools/e2e/exec-run-e2e.ts",

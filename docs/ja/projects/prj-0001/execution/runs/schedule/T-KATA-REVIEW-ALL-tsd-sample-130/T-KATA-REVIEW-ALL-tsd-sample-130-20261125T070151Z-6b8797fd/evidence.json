@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-tsd-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-tsd-sample-130-20261125T070151Z-6b8797fd",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T07:02:37.443Z",
+    "completed_at": "2026-11-25T07:06:37.638Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/tsd-sample.md | 51 +++++++++++++++++-----------------\n 1 file changed, 25 insertions(+), 26 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "passed",
+      "summary": "対象の sample を整形した（表の列幅の揃えだけが変わった）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/tsd-sample.md だけで、plan・result・個票を変更していないため"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML を変更していない",
+      "reason": "変更したファイルに *.yaml / *.yml がないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:tsd-sample\n  type: architecture\n  status: draft\n  rulebook: specdojo:tsd-rulebook\n  part_of:\n    - specdojo:tsd-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:opd-index-sample\n---\n\n# データベース（PostgreSQL / Prisma）技術スタック詳細定義（TSD）サンプル\n\n本書は、駄菓子屋きぬや販売管理システムのデータベース基盤（PostgreSQL 16.x）と ORM（Prisma 5.x）について、構成・採用設定・導入から復旧までの手順を定義する。DB の構築、接続トラブルの調査、スキーマ変更、バックアップからの復元\n… output omitted …\n複が試験で 0 件（期日: 結合テスト着手前） | 端末側の退避と再接続時の一括送信の試作を作り、方針と照らして採否を決める | DEV / ARC |\n| `ISSUE-02` | ダンプの外部の保管先 | 決まるまでリージョン障害でダンプを失う。当面はバックアップ環境のボリュームだけに置く | 暗号化と保管期間の自動削除を設定でき、月額 *UNDECIDED* 円以内（期日: 本番運用開始の 2 週間前） | Cloudflare R2 と AWS S3 を比べ、費用を店主代表に諮る | OPS / PO |\n| `ISSUE-03` | 繁忙期にメモリを増やす基準 | 決まるまで 1GB のまま運用し、遅いクエリの記録を週次で見る | 繁忙期想定の会計件数（*UNDECIDED*: 1 時間あたり件数）で会計 API を 30 分間連続して呼び、応答時間の p95 が *UNDECIDED* 秒以内（期日: 総合リハーサル前） | 疑似負荷試験の結果から、CPU 使用率とメモリ使用量の増設の閾値と 1GB → 2GB の手順を決める | OPS / DEV |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7118 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7118 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-tsd-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/dct-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/dct-schema.test.ts (5 tests) 5ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/dct-schema.test.ts\",\"duration_ms\":5}\n[parent-validation:test-f\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1747}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  16:11:36\n   Duration  2.60s (transform 6.05s, setup 941ms, import 8.61s, tests 6.00s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-tsd-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-tsd-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として tsd-sample.md に文の直し 13 件を入れた。grade finding の F002 は解消、F004 は曖昧語として直した（閾値 80% は要判断）。Prettier と markdownlint-cli2 は対象ファイルで通った。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 概要と位置づけ（本書の冒頭の段落） / 1 文に読点が 5 つあり、主語もない / 「作業前に読む。」で文を切り、「作業者は本書を使い、…を判断する。」と主語を立てた / W3、W1 / -",
+    "R3-2: R3 / 1.2. 対象範囲と責務境界 / 略語の RTO/RPO の初出に正式名がない / 「目標復旧時間（RTO）・目標復旧時点（RPO）」にした / W8 / -",
+    "R3-3: R3 / 2.2. 前提条件と必要リソース / 権限の項目に書いた fly proxy 経由の接続が、3 章の接続経路と 5 章と重なっている / 権限の項目からその 1 文を削り、転送の理由とともに 3 章に一本化した / vp-arc-conciseness / -",
+    "R3-4: R3 / 3. 全体構成と接続経路 / 「店頭タブレットは DB 環境へ直接接続しない」は図の矢印をなぞるだけである（grade F002） / その箇条書きを削った / vp-arc-conciseness / -",
+    "R3-5: R3 / 6.2. 本番環境の初期設定手順（手順 1） / 「表の後に示した反映先の」が長い修飾で、何を指すか読みにくい / 「表の後の箇条書きに従い、`fly postgres config update` と `ALTER DATABASE` を実行する」にした / W5、W4 / -",
+    "R3-6: R3 / 6.2. 本番環境の初期設定手順（手順 5） / 「下の…の CI で初回実行する」は実行する主体がはっきりしない / 「…に従い、CI が `npx prisma migrate deploy` を初めて実行する」にした / W1 / -",
+    "R3-7: R3 / 6.3. スキーマ変更とマイグレーションの運用 / 3 つの段階を矢印でつなぎ「2 回のデプロイ」としているため、段階とデプロイの対応が読めない / 「新しい列を追加してアプリを移行するデプロイと、旧列を削除するデプロイの 2 回に分ける」にした / W5 / -",
+    "R3-8: R3 / 7.1. 動作確認一覧（表の前の文） / 「最終利用」が曖昧なうえ、「失敗時に戻る先」が表の列名と一致しない / 「起動からバックアップの取得までを…項目ごとに、合否の判定と失敗時の確認先を示す」にした / W4、vp-ux-language-consistency / -",
+    "R3-9: R3 / 7.1. 動作確認一覧（7. バックアップの取得） / 「大きく減っていない」は曖昧語で、合否を判定できない（grade F004） / 「サイズが前回のダンプの 80% 以上」にした / Sample 記述標準の曖昧語、vp-ux-readability。80% は本文や正本に根拠がない仮の値である。別の案として、絶対値の下限（例: 1MB 以上）や、R4 に回して直さない案も考えた / 要判断",
+    "R3-10: R3 / 7.1. 動作確認一覧（実施状況の表） / 「作成後、初回の取得の後の開店時」と「の後」が続いて読みにくい / 「バックアップ環境を作成し、初回の取得があった日の開店時に確認する」にした / W5 / -",
+    "R3-11: R3 / 8.1. データの永続化と再起動時の挙動 / 「接続し直す」の主語がない。また「再送されない」は行う主体が消える受け身で、入力し直す人もはっきりしない / 「Prisma Client は…接続し直す」「アプリは…再送しないため、店番が…入力し直す」にした / W1、W6 / -",
+    "R3-12: R3 / 8.3. 復元の手順（末尾の文） / 「5 で」だけでは手順の番号だと読み取りにくい / 「手順 5 で」にした / W4 / -",
+    "R3-13: R3 / 9.1. 既知の制約事項（同時接続数） / 「など」の範囲が読めず、「超えないようにする」も回りくどい / 「店頭画面以外（分析のスクリプト、作業端末の `psql`）から接続する場合は、その合計を 40 以内に収める」にした / W7 / -",
+    "grade finding の扱い: F001（`vp-pm-dependency-risk`）は kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点のため扱わない。F003（`vp-dev-implementation-readiness`）は R4 の観点だが、6.2 に本番環境の初期設定手順が既にあり、前の段で解消済みと見る。F005 は「動作確認一覧」の 7 と 8.2 が既に「当日の日付」でそろっていて解消済み。F006 は 8.3 で既に「アプリを止める」が「現状のダンプを取る」より前にあり解消済み。F004 は R3-9 で曖昧語として直したが、80% の値が妥当かは R4 で確かめる。",
+    "申し送り: 8.2 の冒頭「取得の頻度と失敗時の扱いは…運用方針・設計に従い」は 1.3 と内容が重なる。ただし、後の箇条書きにある「方針」が何を指すかをこの文が決めているため、R3 では残した。削るかどうかは R5 または人が判断する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsd-sample-130/T-KATA-REVIEW-ALL-tsd-sample-130-20261125T070151Z-6b8797fd/executor.log",
+      "bytes": 6867,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2Q0G",
+  "run_id": "pjr-2q0g-20261125T131106Z-482bc096",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T13:11:57.318Z",
+    "completed_at": "2026-11-25T13:23:44.960Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-2q0g.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2q0g-grade-conciseness-metrics.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-result.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/size-metrics.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/size-metrics.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2q0g-grade-conciseness-metrics.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-result.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/size-metrics.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/size-metrics.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../pjr-2q0g-grade-conciseness-metrics.md          | 82 +++++++++++++++++++---\n .../ja/specdojo/defaults/pm-review-viewpoints.yaml | 34 ++++++++-\n docs/ja/specdojo/guides/review-guide.md            | 10 ++-\n docs/ja/specdojo/references/command-reference.md   |  6 +-\n docs/specdojo/schemas/v1/grade-result.schema.yaml  | 19 +++++\n .../schemas/v1/pm-review-viewpoints.schema.yaml    | 45 ++++++++++++\n src/grade/apply.ts                                 | 13 +++-\n src/grade/plan.ts                                  | 78 +++++++++++++++++---\n src/grade/targets.ts                               | 37 ++++++++++\n src/review/types.ts                                | 21 ++++++\n src/shared/grade-result.ts                         | 26 +++++++\n 11 files changed, 347 insertions(+), 24 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/grade/size-metrics.test.ts",
+      "status": "passed",
+      "summary": "新しい 15 件の単体テストが通過"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/grade tests/src/review tests/src/docs",
+      "status": "passed",
+      "summary": "17 ファイル 365 件が通過"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsc -b --noEmit",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/grade/size-metrics.ts src/grade/plan.ts src/grade/apply.ts src/grade/targets.ts src/shared/grade-result.ts src/review/types.ts tests/src/grade/size-metrics.test.ts",
+      "status": "passed",
+      "summary": "error 0。変更前からある max-lines-per-function の warn が 2 件"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml --data docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "passed",
+      "summary": "valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check",
+      "status": "passed",
+      "summary": "変更した md・ts・yaml はすべて Prettier の書式どおり"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2",
+      "status": "passed",
+      "summary": "個票・review-guide・command-reference で 0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "exit 0（個票を変更したため実行）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G/src/shared/specdojo-config.ts\n  1257:1  warning  File has too many lines (1127). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7275 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7275 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"duration_ms\":7}\n[parent-vali\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1783}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  22:24:11\n   Duration  2.65s (transform 6.48s, setup 903ms, import 8.78s, tests 5.64s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (test infrastructure or settings changed: docs/specdojo/schemas/v1/grade-result.schema.yaml, docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-…",
+      "test_selection": {
+        "mode": "full",
+        "reason": "test infrastructure or settings changed: docs/specdojo/schemas/v1/grade-result.schema.yaml, docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2Q0G\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/reporter.test.ts\"}\n ✓ tests/src/exec/reporter.test.ts (136 tests) 71ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/exec/reporter.test.ts\",\"duration_ms\":71}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\n… output omitted …\n epics; use dashboard build.\n[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed\n[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "grade が LLM を使わずに大きさの指標（sample との比・前回の grade からの増え方・運用と検証の章の割合）を測って grade result の `size_metrics` に記録し、`grade_rubric.size_limits` の上限を超えると `vp-arc-conciseness` に minor か major の finding を付けるようにした。executor が削れる箇所を示さない場合は note に下げて減点しない。rubric は `grade-rubric-v3`。観点の check と evidence、schema、review-guide、command-reference、個票の対応結果を更新し、単体テストを足した。",
+  "completion_status": "complete",
+  "handoff": [
+    "上限の数値は PJR-8S4T と PJR-CPZH・PJR-Y5AC の実測から決めた（sample との比は minor 1.5・major 2.5、前回からの比は minor 1.3・major 1.8、運用・検証の章の割合は minor 20%・major 30%、それぞれ最小の量あり）。根拠の表は個票の「指標と上限」にある。",
+    "決めた内容: 指標の finding は、executor が `vp-arc-conciseness` で削れる箇所を minor 以上で示した場合だけ減点し、示さない場合は note にする（判断に要る記述まで削らせないため）。新しい観点にせず `vp-arc-conciseness` に付けた。sample との比は成果物だけで求める。YAML とインライン方式には指標を足していない。",
+    "rubric の id を `grade-rubric-v2` から `grade-rubric-v3` に改めた。`grade list --rubric-outdated` と `rubric_outdated: true` の定期 routine で v2 の結果が順に評価し直される（agent の利用枠を使う）。",
+    "前回からの増え方は、前回の結果に `size_metrics` がある場合だけ求める。v3 で 1 回 grade した後から効く。",
+    "実際の grade（agent の起動）は executor から流せないため流していない。統合の後に orchestrator が grade を流し、膨らんだ文書の点数と finding を確かめ、必要なら `size_limits` を見直す。",
+    "今の sld-sample は PJR-8S4T で見直した後の版のため、捕まえないこと（対照）を確かめた。捕まえるのは PJR-8S4T の前の版（運用・検証の章 29%）である。",
+    "`src/grade/apply.ts` の `applyGradeSubmission` と `src/grade/plan.ts` の `renderGradePlanWithEmbedding` は変更前から ESLint の `max-lines-per-function` の warn があり、今回 1〜2 行増えた（error ではない）。",
+    "保護された設定の変更は不要だった。CHANGELOG の文案は個票の「CHANGELOG に書く事項」にある（区分: 変更）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-2Q0G/pjr-2q0g-20261125T131106Z-482bc096/executor.log",
+      "bytes": 7842,
+      "truncated": false
+    }
+  ]
+}

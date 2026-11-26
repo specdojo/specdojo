@@ -185,8 +185,11 @@ verdict_definitions:
 # major がない限り各観点の level は 3 以上であるため、75 は「全 category が level 3 以上」の
 # 下限と一致し、category の数や重みを変えても意味が変わらない。v1 の 70 は category 数に
 # 依存しない根拠を持たなかったため改める。
+# v3 で機械で測る大きさの上限（size_limits）を加えた（PJR-2Q0G）。重みと pass_score は v2 と
+# 同じだが、上限を超えた文書は vp-arc-conciseness の level と verdict が変わりうるため、id を
+# 改めて grade list --rubric-outdated で v2 の結果を選べるようにする。
 grade_rubric:
-  id: grade-rubric-v2
+  id: grade-rubric-v3
   pass_score: 75
   levels:
     - level: 0
@@ -240,6 +243,31 @@ grade_rubric:
       implementation: 7
       planning: 6
       operations: 6
+  # 機械で測る大きさの上限（PJR-2Q0G）。文字数は本文の空白と表の区切り行を除いて数える。
+  # 値が minor / major 以上で、増えた量（運用・検証の章は章の文字数）が min_characters 以上の
+  # とき、vp-arc-conciseness に finding を付ける。agent が削れる箇所を minor 以上で示さなかった
+  # 場合は note に下げ、上限を超えた分が判断に要る背景・制約・例外・完了条件なら減点しない。
+  # 数値の根拠は PJR-8S4T の sld の前後と、膨らんだ例（PJR-CPZH・PJR-Y5AC）の実測である。
+  # 手直しで膨らんだ版は sample 比 3.28 倍・前回比 2.21 倍（代替案比較）、前回比 3.64 倍（品質管理
+  # 計画）、見直し前の sld-sample は運用・検証の章が 29% だった。見直し後に pass 96 の sld-sample
+  # は前回比 0.99〜1.06 倍・10% である。
+  size_limits:
+    sample_ratio: { minor: 1.5, major: 2.5, min_characters: 1000 }
+    growth_ratio: { minor: 1.3, major: 1.8, min_characters: 1000 }
+    operations_ratio: { minor: 0.2, major: 0.3, min_characters: 500 }
+    # 行を含む最も深い見出しがこれらの語を含む節を、文書の運用・検証の章として数える。
+    operations_headings:
+      - 検証
+      - 受入
+      - 承認
+      - 公開
+      - 変更管理
+      - 変更影響
+      - 確認事項
+      - 未決事項
+      - 見直し
+      - 改訂
+      - 廃止
 
 viewpoints:
   - id: vp-po-purpose-alignment
@@ -521,9 +549,9 @@ viewpoints:
     category: usability
     title: 冗長性・簡潔性
     check: >-
-      各節が固有の判断または手順に寄与し、同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲がないか。判断に要る背景・制約・例外・完了条件が残されていれば下限を満たしているとする。長さだけでは fail にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所を具体的に特定できる場合のみ minor とする。
+      各節が固有の判断または手順に寄与し、同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲がないか。共通の正本（ドキュメントメタ情報標準など）にある運用の記述（役割・status と承認・改訂と廃止・文書の品質の検査など）の再掲と、同じ判断を複数の章で言い直すことは冗長として扱う。判断に要る背景・制約・例外・完了条件が残されていれば下限を満たしているとする。長さだけでは減点しない。削る・まとめる・参照に置き換えることで判断情報を失わない箇所を具体的に特定できる場合は minor とし、その量が多い場合（同じ判断を 3 か所以上で言い直す、正本の再掲が章の大半を占めるなど、削れる量が本文の約 2 割以上）は major とする。grade plan に大きさの指標の上限超過が示された文書では、削れる箇所を行番号つきの finding で示す。上限を超えても、超えた分が判断に要る背景・制約・例外・完了条件で削れる箇所がなければ finding を付けない（指標の finding は note に下がり減点しない）。
     evidence: >-
-      同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲（正本への参照で置き換えられるもの）。判断に要る背景・制約・例外・完了条件を残したまま、長さだけを根拠にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所。
+      同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲（正本への参照で置き換えられるもの）、共通の正本にある運用の記述の再掲、同じ判断の複数の章での言い直し、grade plan の大きさの指標（sample との比・前回の grade からの増え方・運用と検証の章の割合）。判断に要る背景・制約・例外・完了条件を残したまま、長さだけを根拠にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所とその量。
     default_severity: minor
     evaluation: referential
   - id: vp-arc-single-responsibility

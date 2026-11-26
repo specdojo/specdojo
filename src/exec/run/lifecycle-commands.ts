@@ -10,7 +10,7 @@ import {
   type ExecDefaultsConfig,
 } from "../agent-config.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   buildEvent,
   claimOwnerOf,
   foldEventsToState,
@@ -73,6 +73,7 @@ import {
 import { runPreparedTask } from "./schedule-task.js";
 import { withTrailingRunRecords } from "./trailing-records.js";
 import { branchOwnedRunRecordPaths } from "../trailing-records.js";
+import { EXEC_STOP_EXIT_CODE } from "../stop-request.js";
 import { repoRelative } from "../../shared/git.js";
 import {
   buildTaskPhaseMap,
@@ -272,6 +273,13 @@ export async function runCycleMode(opts: RunOpts): Promise<void> {
   } else {
     process.exitCode = 0;
     await runBatchMode({ ...opts, auto: true, cycleRebuildStaleTracks: true });
+    // A drain by `exec stop` is not a failure; keep its exit code for the caller (PJR-32PN).
+    if (process.exitCode === EXEC_STOP_EXIT_CODE) {
+      stepOutcomes.push("auto=stopped");
+      process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
+      process.exitCode = EXEC_STOP_EXIT_CODE;
+      return;
+    }
     if (takeStepFailure()) {
       anyFailure = true;
       stepOutcomes.push("auto=failure");
@@ -642,7 +650,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
   if (opts.due) {
     let lockDir = "";
     try {
-      lockDir = acquireSchedulerLock(schedulePath, {
+      lockDir = await acquireSchedulerLockAsync(schedulePath, {
         actor: opts.by ?? "exec-limit-resume",
         lockTimeoutMs: 10_000,
         lockStaleMs: 300_000,

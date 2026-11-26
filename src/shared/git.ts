@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import {
   appendFileSync,
   existsSync,
@@ -184,14 +184,16 @@ export function transientGitFailureReason(
   return undefined;
 }
 
-export function runGitWithTransientRetry<T extends RetryableGitResult>(
-  run: () => T,
-  onTransientFailureRetry: (notice: TransientGitRetryNotice) => void = () => undefined,
-  sleep: (milliseconds: number) => void = sleepSync,
-  repoRoot?: string,
-  recoverFromTransientFailure?: TransientGitRecovery,
-  indexLockWait: IndexLockWaitOptions = {},
-): T {
+type GitRetryStep<T> = { kind: "done"; result: T } | { kind: "retry"; waitMilliseconds: number };
+
+// 再試行の判断だけを持つ。同期の runGitWithTransientRetry と非同期の
+// runGitWithTransientRetryAsync が同じ判断で待ち、待ち方だけを変える（PJR-P8SX）。
+function gitTransientRetryPolicy<T extends RetryableGitResult>(
+  onTransientFailureRetry: (notice: TransientGitRetryNotice) => void,
+  repoRoot: string | undefined,
+  recoverFromTransientFailure: TransientGitRecovery | undefined,
+  indexLockWait: IndexLockWaitOptions,
+): (result: T) => GitRetryStep<T> {
   const limitMilliseconds = indexLockWait.limitMilliseconds ?? indexLockWaitMilliseconds();
   const now = indexLockWait.now ?? Date.now;
   const isLockOrphaned = indexLockWait.isLockOrphaned ?? isIndexLockOrphaned;
@@ -199,9 +201,8 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
   let indexLockStartedAt: number | undefined;
   let nextProgressAt = 0;
   let transientFailureRetries = 0;
-  let result = run();
-
-  while (result.status !== 0) {
+  return (result) => {
+    if (result.status === 0) return { kind: "done", result };
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
     const transientFailure = transientGitFailureReason(stderr, repoRoot);
     if (transientFailure !== undefined) {
@@ -209,7 +210,7 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
       // reports a transient failure. Give those commands a chance to verify/reconcile their
       // postcondition before blindly repeating a non-idempotent operation.
       if (recoverFromTransientFailure?.(transientFailure)) {
-        return { ...result, status: 0, stderr: "" } as T;
+        return { kind: "done", result: { ...result, status: 0, stderr: "" } as T };
       }
       if (transientFailureRetries < TRANSIENT_GIT_RETRY_DELAYS_MS.length) {
         const waitMilliseconds = TRANSIENT_GIT_RETRY_DELAYS_MS[transientFailureRetries];
@@ -220,31 +221,35 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
           waitMilliseconds,
           reason: transientFailure,
         });
-        sleep(waitMilliseconds);
-        result = run();
-        continue;
+        return { kind: "retry", waitMilliseconds };
       }
     }
-    if (!isGitIndexLockContention(stderr)) break;
+    if (!isGitIndexLockContention(stderr)) return { kind: "done", result };
 
     const lockPath = gitIndexLockPath(stderr);
     indexLockStartedAt ??= now();
     const elapsedMilliseconds = now() - indexLockStartedAt;
     if (elapsedMilliseconds >= limitMilliseconds) {
-      return appendStderr(
-        result,
-        `error: index.lock was not released within ${formatWaitDuration(limitMilliseconds)}` +
-          " (run.git_index_lock_wait_seconds in exec-defaults)",
-      );
+      return {
+        kind: "done",
+        result: appendStderr(
+          result,
+          `error: index.lock was not released within ${formatWaitDuration(limitMilliseconds)}` +
+            " (run.git_index_lock_wait_seconds in exec-defaults)",
+        ),
+      };
     }
     // 短い取り合いの間は古いロックか判断しない（git の起動と終了の合間に見えうる）。
     if (indexLockRetries >= INDEX_LOCK_RETRY_ATTEMPTS && lockPath && isLockOrphaned(lockPath)) {
-      return appendStderr(
-        result,
-        `error: index.lock looks stale: no running git process holds ${lockPath}` +
-          ` after ${formatWaitDuration(elapsedMilliseconds)};` +
-          " remove it after confirming no git uses the repository",
-      );
+      return {
+        kind: "done",
+        result: appendStderr(
+          result,
+          `error: index.lock looks stale: no running git process holds ${lockPath}` +
+            ` after ${formatWaitDuration(elapsedMilliseconds)};` +
+            " remove it after confirming no git uses the repository",
+        ),
+      };
     }
     const interval =
       indexLockRetries < INDEX_LOCK_RETRY_ATTEMPTS
@@ -266,10 +271,54 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
         ...(lockPath ? { lockPath } : {}),
       });
     }
-    sleep(waitMilliseconds);
+    return { kind: "retry", waitMilliseconds };
+  };
+}
+
+export function runGitWithTransientRetry<T extends RetryableGitResult>(
+  run: () => T,
+  onTransientFailureRetry: (notice: TransientGitRetryNotice) => void = () => undefined,
+  sleep: (milliseconds: number) => void = sleepSync,
+  repoRoot?: string,
+  recoverFromTransientFailure?: TransientGitRecovery,
+  indexLockWait: IndexLockWaitOptions = {},
+): T {
+  const next = gitTransientRetryPolicy<T>(
+    onTransientFailureRetry,
+    repoRoot,
+    recoverFromTransientFailure,
+    indexLockWait,
+  );
+  let result = run();
+  for (;;) {
+    const step = next(result);
+    if (step.kind === "done") return step.result;
+    sleep(step.waitMilliseconds);
     result = run();
   }
-  return result;
+}
+
+// 同期版と同じ判断で再試行し、待つ間も event loop を止めない（PJR-P8SX）。
+export async function runGitWithTransientRetryAsync<T extends RetryableGitResult>(
+  run: () => Promise<T>,
+  onTransientFailureRetry: (notice: TransientGitRetryNotice) => void = () => undefined,
+  repoRoot?: string,
+  recoverFromTransientFailure?: TransientGitRecovery,
+  indexLockWait: IndexLockWaitOptions = {},
+): Promise<T> {
+  const next = gitTransientRetryPolicy<T>(
+    onTransientFailureRetry,
+    repoRoot,
+    recoverFromTransientFailure,
+    indexLockWait,
+  );
+  let result = await run();
+  for (;;) {
+    const step = next(result);
+    if (step.kind === "done") return step.result;
+    await new Promise((resolveWait) => setTimeout(resolveWait, step.waitMilliseconds));
+    result = await run();
+  }
 }
 
 // spawnSync の既定の maxBuffer（1 MiB）では、未追跡のファイルが多い作業場所の
@@ -297,25 +346,90 @@ export function gitResult(
 
   return runGitWithTransientRetry(
     run,
-    (notice) => {
-      const { attempt, maxAttempts, waitMilliseconds, reason } = notice;
-      const summary = summarizeGitArguments(args);
-      if (notice.elapsedMilliseconds !== undefined && notice.limitMilliseconds !== undefined) {
-        const lock = notice.lockPath ? `, lock: ${notice.lockPath}` : "";
-        process.stderr.write(
-          "warning: waiting for index.lock to be released" +
-            ` (elapsed ${formatWaitDuration(notice.elapsedMilliseconds)}` +
-            ` / limit ${formatWaitDuration(notice.limitMilliseconds)}${lock}` +
-            `, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
-        );
-        return;
-      }
-      process.stderr.write(
-        `warning: git command failed with ${reason}; retrying in ${waitMilliseconds / 1000}s` +
-          ` (attempt ${attempt}/${maxAttempts}, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
-      );
-    },
+    gitRetryNotice(repoRoot, args),
     sleepSync,
+    cwd,
+    recoverFromTransientFailure,
+  );
+}
+
+function gitRetryNotice(
+  repoRoot: string,
+  args: readonly string[],
+): (notice: TransientGitRetryNotice) => void {
+  return (notice) => {
+    const { attempt, maxAttempts, waitMilliseconds, reason } = notice;
+    const summary = summarizeGitArguments(args);
+    if (notice.elapsedMilliseconds !== undefined && notice.limitMilliseconds !== undefined) {
+      const lock = notice.lockPath ? `, lock: ${notice.lockPath}` : "";
+      process.stderr.write(
+        "warning: waiting for index.lock to be released" +
+          ` (elapsed ${formatWaitDuration(notice.elapsedMilliseconds)}` +
+          ` / limit ${formatWaitDuration(notice.limitMilliseconds)}${lock}` +
+          `, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
+      );
+      return;
+    }
+    process.stderr.write(
+      `warning: git command failed with ${reason}; retrying in ${waitMilliseconds / 1000}s` +
+        ` (attempt ${attempt}/${maxAttempts}, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
+    );
+  };
+}
+
+export interface GitAsyncResult extends GitProcessOutcome {
+  stdout: string;
+  stderr: string;
+}
+
+// gitResult と同じ引数・環境・再試行で git を非同期に起動する。commit の hook のように長く
+// かかる git を、並行する別タスクの親の検証の終わりの検出を止めずに待つ（PJR-P8SX）。
+export async function gitResultAsync(
+  repoRoot: string,
+  args: string[],
+  recoverFromTransientFailure?: TransientGitRecovery,
+  extraEnv?: Readonly<Record<string, string>>,
+): Promise<GitAsyncResult> {
+  const cwd = resolve(repoRoot);
+  const run = (): Promise<GitAsyncResult> =>
+    new Promise((resolveRun) => {
+      const stdout: Buffer[] = [];
+      const stderr: Buffer[] = [];
+      let size = 0;
+      let error: Error | undefined;
+      const child = spawn("git", ["-C", cwd, ...args], {
+        cwd,
+        env: { ...gitEnvironment(), ...extraEnv },
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      const collect = (chunks: Buffer[]) => (chunk: Buffer) => {
+        size += chunk.length;
+        if (size > GIT_OUTPUT_MAX_BUFFER) {
+          error ??= Object.assign(new Error("git output exceeded maxBuffer"), { code: "ENOBUFS" });
+          child.kill("SIGTERM");
+          return;
+        }
+        chunks.push(chunk);
+      };
+      child.stdout.on("data", collect(stdout));
+      child.stderr.on("data", collect(stderr));
+      child.on("error", (spawnError) => {
+        error ??= spawnError;
+      });
+      child.on("close", (status, signal) => {
+        resolveRun({
+          status,
+          signal,
+          ...(error ? { error } : {}),
+          stdout: Buffer.concat(stdout).toString("utf8"),
+          stderr: Buffer.concat(stderr).toString("utf8"),
+        });
+      });
+    });
+
+  return runGitWithTransientRetryAsync(
+    run,
+    gitRetryNotice(repoRoot, args),
     cwd,
     recoverFromTransientFailure,
   );

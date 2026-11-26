@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "target": {
+    "kind": "queue",
+    "queueId": "kra-night2-2026-11-25"
+  },
+  "message": "PJR-32PN の実動作の確かめと、申し送りを直した 2 件の再開のため",
+  "requested_at": "2026-11-25T13:37:26.469Z",
+  "stopped_at": "2026-11-25T13:47:55.150Z",
+  "stopped_by": "queue",
+  "queue_step": 7
+}

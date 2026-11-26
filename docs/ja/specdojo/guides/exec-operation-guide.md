@@ -88,7 +88,7 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 | 同じplanで複数agentを比較する                         | `exec trial run`                      | なし            | agent別  |
 | grade・`exec run`・build を混ぜた順番を予約して流す   | `exec queue add` -> `exec queue run`  | 予約ファイル    | 段に依存 |
 
-順番の予約は `<execution_path>/queues/<queue-id>.json` に残り、`exec queue status` と `exec status` の末尾の `queues:` で中身・進み具合・止まった段と理由を確かめます。段の書式と失敗時の扱いは [[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」を参照してください。
+順番の予約は `<execution_path>/queues/<queue-id>.json` に残り、`exec queue status` と `exec status` の末尾の `queues:` で中身・進み具合・止まった段と理由を確かめます。schedule のタスクの再開（`exec resume --task <task-id>`）も段に置けます。流れている列を区切りで止めて後で続けるときは `exec stop --queue <queue-id>` を使います（「走っている自動実行を区切りで止める」を参照）。`exec queue status` の出力を `head` で切っても EPIPE で落ちません。段の書式と失敗時の扱いは [[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」を参照してください。
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
@@ -666,6 +666,21 @@ specdojo exec run --project <project-id> --register <PJR-ID> --worktree --resume
 specdojo exec run --project <project-id> --register <PJR-ID> --worktree --force-restart \
   --executor-by <executor-nickname> --reporter-by <reporter-nickname>
 ```
+
+### 2.9. 走っている自動実行を区切りで止める
+
+設定（`exec-defaults` など）を変える、feature ブランチを統合する、dist を作り直すといった作業は、走っている `exec run --auto --loop`・`exec cycle`・予約の列を区切りで止めてから行います。SIGTERM で止めると走っているタスクが途中で切れ、`exec resume` で手当てが要るため、`exec stop` を使います。
+
+```bash
+# 1. 止める指示を出す（track だけなら --track、予約の列なら --queue）
+specdojo exec stop --project prj-0001 --msg "exec-defaults を変える"
+# 2. 走っているタスクの終わりを待つ（stop requests: の行が消え、run が終了コード 76 で抜ける）
+specdojo exec status --project prj-0001
+# 3. 作業をして、run を起動し直す。予約の列は同じ exec queue run で止めた段から続く
+specdojo exec queue run nightly --project prj-0001
+```
+
+run は新しいタスクを claim せず、走っているタスクを統合と記帳まで終えてから抜けます。抜ける前なら `exec stop --cancel` で取り消せ、run はそのまま続きます。指示の対象・表示・終了コードの詳細は [[specdojo:command-reference|コマンドリファレンス]] の「走っている run を区切りで止める（exec stop）」を参照してください。
 
 ## 3. humanタスクの実行
 

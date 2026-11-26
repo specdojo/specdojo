@@ -260,3 +260,18 @@ describe("classifyStall without a matching rule", () => {
     });
   });
 });
+
+describe("classifyStall with the claude 5-hour limit", () => {
+  it("classifies a block that only carries the 5-hour limit notice as usage_limit", () => {
+    const actual = classifyStall(
+      observation({
+        message: {
+          source: "evidence.json",
+          text: "You've hit your 5-hour limit · resets 2:20am (Asia/Tokyo)",
+        },
+      }),
+    );
+
+    expect(actual.category).toBe("usage_limit");
+  });
+});

@@ -1,0 +1,11 @@
+R2（構成）のレビューを終え、`docs/ja/specdojo/samples/cpd-sample.md` の「1. 概要」で文を 2 か所移しました。照合先は rulebook の「本文要件」「記述ガイド」と template です。章の順・節の構成・表の列と、表と本文の置き場所はほかの章ではすでに合っていたので、変えていません。
+
+- **業務の価値の文を移動（R2-1）**：第 1 段落にあった「店主代表と家族利用者代表が…確認できるようにする」という価値の文を、第 2 段落の結び「本分割は…支える」とひとつの文にまとめました。業務課題 → 放置したときの影響 → 分割が支える価値、の順に読めます。
+- **対象外の文を移動（R2-2）**：`_ASSUMPTION_` の段落にあった「対象は…、在庫更新…は扱わない」という範囲の文を第 1 段落へ移しました。対象・用途・対象外を一か所にまとめる template の最初の指示と rulebook の記述ガイド「概要」に合わせたものです。`_ASSUMPTION_` の段落には、確定度と CLI の例についての説明だけが残ります。
+- **直していない指摘（R2-3、要判断）**：template の「4.2. コンポーネント間の検証対象」には、表の後に「文書検査・描画確認の証跡を参照する」という指示があります。sample にはこれに当たる段落がありません。ただ、rulebook の「全体方針」は整形・lint を業務の受入確認に含めないとしています。sample に検証の証跡を書けば架空の事実にもなるので、sample は変えていません。template のこの指示を消すか、rulebook の記述ガイド「検証と合意の判定」の描画確認の位置づけに合わせて書き直すかは、人の判断が必要です。
+
+検証として `npx prettier --check` を実行し、通りました。lint などの残りの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成レビューを実施し、cpd-sample の「1. 概要」で業務の価値の文と対象外の文を移して template の段落順と前提→結論の流れに合わせた。template の証跡 TODO は sample で満たさず要判断として申し送る。","handoff":["R2-1: R2 / 1. 概要 / 第1段落に業務の期待価値の文（店主代表と家族利用者代表が…確認できるようにする）があり、第2段落の業務根拠・結びと離れて同じ主張が二か所に分かれていた / 第1段落から削除し、第2段落の結び「本分割は…」に統合して、業務課題→放置時の影響→分割が支える価値の順にした / vp-arc-document-structure、rulebook「記述ガイド」の「概要」、template「1. 概要」の1つ目の _TODO_ / -","R2-2: R2 / 1. 概要 / 対象範囲・対象外の文が確定度を示す _ASSUMPTION_ の段落に混在し、template の1つ目の _TODO_（対象コンテナ・分割の目的・用途・対象外）と2つ目の _TODO_（設計案と確認済み構成の区別）の分担と合っていなかった / 対象外の文を第1段落へ移し、_ASSUMPTION_ の段落を確定度と CLI 例の位置づけだけにした / vp-arc-document-structure、template「1. 概要」の _TODO_ の順、rulebook「記述ガイド」の「概要」 / -","R2-3: R2 / 4.2. コンポーネント間の検証対象 / template は表の後に「_TODO_: 文書検査・描画確認の証跡を参照する。」を置くが、sample に該当する段落がない / - / vp-qe-omissions-consistency。rulebook の「全体方針」は文書の整形・lint を業務の受入確認に含めないとしており、sample に証跡を書くと架空の事実になるため、sample は変えなかった。相手側の案: cpd-template の当該 _TODO_ を削除するか、rulebook の記述ガイド「検証と合意の判定」の描画確認（要素名・ラベルの判読）を指す記述に書き直す。選ばなかった案: sample に架空の証跡参照を足す / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cpd-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

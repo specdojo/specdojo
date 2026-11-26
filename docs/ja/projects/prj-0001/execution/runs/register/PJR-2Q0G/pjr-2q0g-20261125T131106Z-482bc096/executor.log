@@ -1,0 +1,48 @@
+I've finished all five work items: grade now measures document size without an LLM, records it, and turns over-limit values into findings. No real grade has been run yet, so I can't say how scores will actually move.
+
+**What changed**
+- **Metrics:** the new `src/grade/size-metrics.ts` counts the body's non-whitespace characters, leaving out table separator rows and finding comments. `grade apply` stores four things in the result's new `size_metrics` field:
+  - the character count;
+  - the ratio to the declared sample (deliverables only);
+  - the growth since the previous grade;
+  - the share of text under headings about verifying or operating the document. Each line counts under its innermost heading, so a mapping section inside a "…と検証" chapter doesn't count.
+- **Findings:** a metric over its limit adds a minor or major finding to `vp-arc-conciseness`. It only lowers the score if the agent also points out removable text there (minor or higher). Otherwise it drops to `note`, so length alone never costs points. The grade plan now shows the metrics to the agent and keeps metric findings out of "前回の指摘".
+- **Limits:** they live in `grade_rubric.size_limits` in `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`, so a project can change them. The values are set from the PJR-8S4T and PJR-CPZH/Y5AC measurements (table below). I added matching schema entries and a value check.
+- **Rubric version:** I changed the id to `grade-rubric-v3`, so `--rubric-outdated` selects all v2 results. Weights and the pass score are unchanged. Old results without `size_metrics` still load.
+- **`vp-arc-conciseness` wording:** it now treats restating the common reference documents and re-saying the same judgment in several chapters as redundant. It allows major when about 20% or more could be cut.
+- **Docs:** updated review-guide and command-reference.
+
+**Default limits**
+
+| Metric | minor | major | Minimum amount |
+| --- | --- | --- | --- |
+| Ratio to the sample | 1.5× | 2.5× | 1,000 more characters than the sample |
+| Growth since the last grade | 1.3× | 1.8× | 1,000 more characters |
+| Verification/operations share | 20% | 30% | 500 characters in those sections |
+
+**Checked against real documents (measured, then pinned in unit tests)**
+
+| Document | Measured | Result |
+| --- | --- | --- |
+| Comparison of alternatives after PJR-CPZH (before the rewrite) | 3.28× sample, 2.21× growth | major, major |
+| Quality management plan now (after PJR-Y5AC) | 1.72× sample, 3.64× growth | minor, major |
+| sld-sample before PJR-8S4T | 29% verification share | minor |
+| sld-sample now | 10% | not flagged |
+
+sld-sample's current version was already slimmed by PJR-8S4T and passes at 96. I treated it as the case that should *not* be flagged; the ticket's wording could be read as expecting it to be caught.
+
+**Things to know**
+- **Growth starts late:** it only works once a document has a v3 result with `size_metrics`.
+- **Inline-mode grades** (written into the document body) don't get the metrics; only the current sidecar results do.
+- **Re-grading load:** switching to v3 means the routine with `rubric_outdated: true` will gradually re-grade every v2 result, which uses agent quota.
+- **Lint warnings:** ESLint's function-length warnings in `apply.ts` and `plan.ts` were already there; I added 1–2 lines to each.
+- **No protected config changed.** I didn't touch `CHANGELOG.md`; the proposed entry is in the ticket.
+- **Size numbers:** my character counts run a little under PJR-8S4T's (9,648 vs 9,885 for the old sld-sample).
+
+**Tests run:** the 15 new unit tests and the existing grade/review/docs tests pass. I also ran `tsc`, ESLint, Prettier, markdownlint, schema validation and `validate:history-links` (exit 0); the runner will rerun its own checks.
+
+The ticket's results section has the full reasoning.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"grade が LLM を使わずに大きさの指標（sample との比・前回の grade からの増え方・運用と検証の章の割合）を測って grade result の `size_metrics` に記録し、`grade_rubric.size_limits` の上限を超えると `vp-arc-conciseness` に minor か major の finding を付けるようにした。executor が削れる箇所を示さない場合は note に下げて減点しない。rubric は `grade-rubric-v3`。観点の check と evidence、schema、review-guide、command-reference、個票の対応結果を更新し、単体テストを足した。","handoff":["上限の数値は PJR-8S4T と PJR-CPZH・PJR-Y5AC の実測から決めた（sample との比は minor 1.5・major 2.5、前回からの比は minor 1.3・major 1.8、運用・検証の章の割合は minor 20%・major 30%、それぞれ最小の量あり）。根拠の表は個票の「指標と上限」にある。","決めた内容: 指標の finding は、executor が `vp-arc-conciseness` で削れる箇所を minor 以上で示した場合だけ減点し、示さない場合は note にする（判断に要る記述まで削らせないため）。新しい観点にせず `vp-arc-conciseness` に付けた。sample との比は成果物だけで求める。YAML とインライン方式には指標を足していない。","rubric の id を `grade-rubric-v2` から `grade-rubric-v3` に改めた。`grade list --rubric-outdated` と `rubric_outdated: true` の定期 routine で v2 の結果が順に評価し直される（agent の利用枠を使う）。","前回からの増え方は、前回の結果に `size_metrics` がある場合だけ求める。v3 で 1 回 grade した後から効く。","実際の grade（agent の起動）は executor から流せないため流していない。統合の後に orchestrator が grade を流し、膨らんだ文書の点数と finding を確かめ、必要なら `size_limits` を見直す。","今の sld-sample は PJR-8S4T で見直した後の版のため、捕まえないこと（対照）を確かめた。捕まえるのは PJR-8S4T の前の版（運用・検証の章 29%）である。","`src/grade/apply.ts` の `applyGradeSubmission` と `src/grade/plan.ts` の `renderGradePlanWithEmbedding` は変更前から ESLint の `max-lines-per-function` の warn があり、今回 1〜2 行増えた（error ではない）。","保護された設定の変更は不要だった。CHANGELOG の文案は個票の「CHANGELOG に書く事項」にある（区分: 変更）。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/grade/size-metrics.test.ts","status":"passed","summary":"新しい 15 件の単体テストが通過"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/grade tests/src/review tests/src/docs","status":"passed","summary":"17 ファイル 365 件が通過"},{"command":"npx tsc -b --noEmit","status":"passed","summary":"型エラーなし"},{"command":"npx eslint src/grade/size-metrics.ts src/grade/plan.ts src/grade/apply.ts src/grade/targets.ts src/shared/grade-result.ts src/review/types.ts tests/src/grade/size-metrics.test.ts","status":"passed","summary":"error 0。変更前からある max-lines-per-function の warn が 2 件"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml --data docs/ja/specdojo/defaults/pm-review-viewpoints.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --check","status":"passed","summary":"変更した md・ts・yaml はすべて Prettier の書式どおり"},{"command":"npx markdownlint-cli2","status":"passed","summary":"個票・review-guide・command-reference で 0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0（個票を変更したため実行）"}]}
+</specdojo_executor_evidence>

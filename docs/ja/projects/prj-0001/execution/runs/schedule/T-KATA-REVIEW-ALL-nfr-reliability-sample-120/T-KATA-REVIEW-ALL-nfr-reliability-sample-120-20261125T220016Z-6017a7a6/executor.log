@@ -1,0 +1,20 @@
+R2（構成）のレビューを終え、sample を 1 か所並べ替えました。変更したのは `docs/ja/specdojo/samples/nfr-reliability-sample.md` だけで、Prettier の確認は通っています。lint などの検査は、このあと親 runner が実行します。
+
+5 つの章の順は rulebook の「本文構成（標準テンプレ）」と合っていて、表の列も rulebook の指定どおりです。対応する template はまだありません（rulebook の `template` が `undecided`）。
+
+**直した点:** 「1. 概要（対象・目的）」の中で、結論の「基準値の厳しさは…から決める」が、その前提になる業務影響の箇条書きより前にありました。次の順に並べ替えました。
+
+1. 対象と目的
+2. 可用性要件との境界
+3. 業務影響の箇条書き
+4. 基準値の決め方
+
+文言は変えていません。
+
+**直していない点:**
+- **関連ドキュメントの表の行の順（要判断）:** 「根拠」の 2 行が rulebook の「位置づけ」の表の順の途中に入っています。末尾へ移すと rulebook の順になりますが、可用性の sample は「根拠」を 2 行目に置いており、移すと兄弟の sample とずれるため、R5（整合）に判断を任せます。
+- **grade の指摘 F001:** `nfr-rel-001` と `nfr-rel-004` の基準が `_UNDECIDED_` のままで合否を判定できないという指摘です。観点 `vp-qe-verifiability` はガイドで R4 に割り当てられているので、R4 に任せます。なお、基準を決める契機は「適用範囲・前提条件」（試用期間の実績）と「測定・検証方法」（見直す契機）に分かれて書かれています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: 「概要（対象・目的）」の中の段落を、対象・目的 → 可用性要件との境界 → 業務影響の箇条書き → 基準値の決め方の順に並べ替えました。それ以外の章の順・粒度・表の配置は rulebook の本文構成と合っています。template は未定です。","handoff":["R2-1: 段 R2 / 箇所 1. 概要（対象・目的） / 指摘: 結論の「基準値の厳しさは、この影響と…初期目標から決める」が、前提になる業務影響の箇条書きより前にあり、前提から結論の順に読めない。可用性要件との境界の段落も、対象を定める最初の段落から離れて章の末尾にある / 直した案: 段落を、対象・目的 → 可用性要件との境界 → 業務影響の導入文と箇条書き → 基準値の決め方の順に並べ替えた（文言は変えていない） / 根拠: `vp-arc-document-structure`、rulebook の「概要（対象・目的）」の記述ガイド（基準値の根拠を業務影響からたどれること） / 印: -","R2-2: 段 R2 / 箇所 5. 関連ドキュメント導線 / 指摘: 「根拠」の 2 行（プロジェクト概要、前提・制約・依存）が、rulebook の「位置づけ」の表の順（`nfr-index`、`nfr-availability`、`sac-*`/`stc-*`、`opd-*`/`opr-*`、`dec-*`）の途中に入っている / 直した案: - / 根拠: `vp-arc-document-structure`。「根拠」の行を末尾へ移すと rulebook の順になるが、`specdojo:nfr-availability-sample` は「根拠」を NFR 全体の入口の直後に置いており、片方だけ直すと兄弟の sample とずれるため変えなかった。NFR の sample で「根拠」の行の位置をそろえるかは R5 で判断してほしい / 印: 要判断","R2-3: 段 R2 / 箇所 3. 信頼性要件一覧 / 指摘: grade の F001（`nfr-rel-001`・`nfr-rel-004` の基準が `_UNDECIDED_` で pass / fail を判定できない）は観点 `vp-qe-verifiability` で、kata-guide の「kata の観点の組」では R4 の観点のため、この段では直さない。基準を決める契機は「適用範囲・前提条件」の技術前提（試用期間の実績から判断する）と「測定・検証方法」の見直しの契機に分かれて書かれており、R4 で備考に判断契機を書く場合はこの 2 か所を参照できる / 直した案: - / 根拠: `vp-qe-verifiability`（R4 に任せる） / 印: -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-reliability-sample.md","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>

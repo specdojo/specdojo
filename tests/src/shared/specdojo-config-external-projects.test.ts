@@ -47,6 +47,32 @@ describe("validateExternalProjects", () => {
     ).toEqual([]);
   });
 
+  it("accepts an http(s) source_url for resolving wikilinks on the docs site", () => {
+    expect(
+      validateExternalProjects(
+        {
+          customer: {
+            path: "../target",
+            project_id: "prj-target",
+            source_url: "https://github.com/example/target/blob/main",
+          },
+        },
+        ["prj-local"],
+        root,
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a source_url that is not an http(s) URL", () => {
+    expect(
+      validateExternalProjects(
+        { customer: { path: "../target", project_id: "prj-target", source_url: "../target" } },
+        ["prj-local"],
+        root,
+      ),
+    ).toEqual(["external_projects.customer.source_url must be an http(s) URL without spaces"]);
+  });
+
   it("rejects an alias that collides with a local project id", () => {
     expect(
       validateExternalProjects(

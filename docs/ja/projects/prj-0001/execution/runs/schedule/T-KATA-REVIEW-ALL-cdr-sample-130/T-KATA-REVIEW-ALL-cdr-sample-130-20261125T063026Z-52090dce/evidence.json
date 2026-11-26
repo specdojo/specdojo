@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cdr-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-cdr-sample-130-20261125T063026Z-52090dce",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T06:31:11.675Z",
+    "completed_at": "2026-11-25T06:34:40.342Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cdr-sample.md | 10 +++++-----\n 1 file changed, 5 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\napplyTo: \"{app,src,tests}/**/*.{ts,tsx}\"\nspecdojo:\n  id: specdojo:cdr-sample\n  type: architecture\n  status: draft\n  rulebook: specdojo:cdr-rulebook\n  based_on:\n    - specdojo:tsd-index-sample\n---\n\n# TypeScript 実装ルール\n\n駄菓子屋きぬや販売管理システム（Next.js・TypeScript）の `app/`・`src/`・`tests/` 配下の TypeScript を実装・更新するときの規則です。言語・ライブラリ・版は \\[\\[specdojo:tsd-index-sample|技術スタック一覧]]、モジュールの配置・境界は `kinuya-web-cpd`、エラーの通知・ログの方針は `kinuy\n… output omitted …\n| 常連客の個人情報が Sentry やログ経由で漏れるため |\n| `// @ts-ignore` で型エラーを消す | 型エラーの原因を残したままにするため |\n| テストで本番の DB 接続先や `.env` の値を使う | 店頭で使っている販売履歴とつけ残高を書き換えるため |\n\n## 8. Next.js のサーバーとクライアントの境界\n\n- DB 接続とつけ残高の更新を行うファイルは、先頭で `server-only` を import する。\n- `\"use client\"` は、入力・タップなど画面の操作を扱うコンポーネントにだけ付け、ページ全体に付けない。\n- サーバーからクライアントコンポーネントへ渡す値は、画面に表示する項目だけに絞った型で定義し、Prisma のモデルの型をそのまま渡さない。\n- *UNDECIDED*: 店頭タブレットの OS と対応ブラウザが決まっていない。決まるまでは、Next.js の既定の対応ブラウザで動く API を使う。既定の対応ブラウザで動かないブラウザ API を使う場合は、変更の説明に対象のブラウザを書く。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7104 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7104 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdr-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dura\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1743}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  15:39:50\n   Duration  2.59s (transform 5.56s, setup 898ms, import 8.04s, tests 6.01s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdr-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdr-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として cdr-sample.md の文を 5 か所直した。F001・F002 は前の段で直っていた。要判断の指摘 2 件は直さずに残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 冒頭段落 / 1 文に読点が 3 つあり、どの文書に従うかと本書の範囲という 2 つの主張が 1 文に入っていた / 「…に従います。本書は、これら 3 つの文書に沿った書き方と検証だけを定めます。」に分け、「それら」を指す先の名詞にした / W3, W4 / -",
+    "R3-2: R3 / 3. 型 / 「Prisma が返す `null` は…境界で変換する」は何に変換するかが読み取れない / 「`undefined` に変換する」と明示した / vp-ux-readability, W1 / -",
+    "R3-3: R3 / 4. エラー処理 / 2 つ目の箇条書きで、1 文に共通処理を通すことと記録・変換を任せることが入り、「その処理」の指す先が遠かった / 「共通のエラー応答処理を通す。Sentry（…が定める送信先）への記録と汎用のエラー応答への変換は、共通のエラー応答処理に任せる。」に分けた / W3, W4 / -",
+    "R3-4: R3 / 6. テストと検証 / つけ上限の箇条書きで、括弧の中に句点のある括弧書きが入り、修飾が長かった / 「つけ上限に対する次の境界の単体テストを追加する。つけ上限は … の `顧客台帳.つけ上限` で、税込の円の整数で持ち、未設定は上限なしを表す。」に分けた / W3, W5 / -",
+    "R3-5: R3 / 8. Next.js のサーバーとクライアントの境界 / `_UNDECIDED_` の文で「だけを使い、それ以外を使う場合は」と、限定した直後に例外を述べていて読みにくかった / 「既定の対応ブラウザで動く API を使う。既定の対応ブラウザで動かないブラウザ API を使う場合は、変更の説明に対象のブラウザを書く。」に分けた / W3, W4 / -",
+    "R3-6: R3 / 冒頭段落・本文全体 / 冒頭段落は「です・ます」、本文と箇条書きは「である」体で、W10 では混在に当たる / - / W10。リポジトリの instructions 文書（例 `.github/instructions/typescript.instructions.md`）も冒頭だけ「です」にしており、そろえるか迷った。選ばなかった案は冒頭を「規則である。…定める。」にそろえること / 要判断",
+    "R3-7: R3 / 6. テストと検証の表 / `npm run test:integration` の「失敗時」の列に、実行する場所（sandbox では実行せず GitHub Actions で実行する）が書かれていて列の意味とずれている。また「内容を報告する」の報告先が読み取れない / - / W1, W9。構成（R2）か正しさ（R4）の段で扱う範囲と考えて直さなかった。選ばなかった案は実行場所を「実行条件」の列へ移すこと / 要判断",
+    "F001・F002（`vp-arc-conciseness`・`vp-qe-kata-conformance`、`server-only` の記述が禁止事項の表と重なる）は、前の段でもう直っていた。本章の箇条書きは「先頭で `server-only` を import する。」だけで、表の理由と重なっていないので、同じ指摘は出していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdr-sample-130/T-KATA-REVIEW-ALL-cdr-sample-130-20261125T063026Z-52090dce/executor.log",
+      "bytes": 5002,
+      "truncated": false
+    }
+  ]
+}

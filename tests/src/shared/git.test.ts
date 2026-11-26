@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -14,6 +14,7 @@ import {
   isGitIndexLockContention,
   isIndexLockOrphaned,
   runGitWithTransientRetry,
+  runGitWithTransientRetryAsync,
   type TransientGitRetryNotice,
 } from "../../../src/shared/git.js";
 
@@ -199,6 +200,50 @@ describe("runGitWithTransientRetry for index.lock contention", () => {
     expect(actual.stderr).toMatch(
       /error: index\.lock looks stale: no running git process holds \/repo\/\.git\/index\.lock after 15s;/,
     );
+  });
+});
+
+describe("runGitWithTransientRetryAsync (PJR-P8SX)", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("retries index.lock contention with the same waits as the synchronous runner", async () => {
+    vi.useFakeTimers();
+    const results = [
+      { status: 128, stderr: englishLockFailure },
+      { status: 128, stderr: japaneseLockFailure },
+      { status: 0, stderr: "" },
+    ];
+    let calls = 0;
+    const notices: TransientGitRetryNotice[] = [];
+
+    const pending = runGitWithTransientRetryAsync(
+      () => Promise.resolve(results[calls++]!),
+      (notice) => notices.push(notice),
+    );
+    await vi.advanceTimersByTimeAsync(INDEX_LOCK_RETRY_WAIT_MS);
+    expect(calls).toBe(2);
+    await vi.advanceTimersByTimeAsync(INDEX_LOCK_RETRY_WAIT_MS);
+    const actual = await pending;
+
+    expect(actual.status).toBe(0);
+    expect(calls).toBe(3);
+    expect(notices.map(({ attempt, reason }) => ({ attempt, reason }))).toEqual([
+      { attempt: 1, reason: "index.lock contention" },
+    ]);
+  });
+
+  it("returns a non-transient failure without retrying", async () => {
+    let calls = 0;
+
+    const actual = await runGitWithTransientRetryAsync(() => {
+      calls += 1;
+      return Promise.resolve({ status: 1, stderr: "error: pathspec 'a.md' did not match" });
+    });
+
+    expect(actual.status).toBe(1);
+    expect(calls).toBe(1);
   });
 });
 

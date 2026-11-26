@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-bes-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-bes-sample-130-20261126T001037Z-87b42f59",
+  "updated_at": "2026-11-26T00:18:39.945Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T00:11:27.490Z",
+      "completed_at": "2026-11-26T00:13:38.386Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bes-sample-130/T-KATA-REVIEW-ALL-bes-sample-130-20261126T001037Z-87b42f59/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-26T00:17:20.216Z",
+      "completed_at": "2026-11-26T00:17:34.042Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bes-sample-130/T-KATA-REVIEW-ALL-bes-sample-130-20261126T001037Z-87b42f59/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T00:17:47.679Z",
+      "completed_at": "2026-11-26T00:18:39.945Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bes-sample-130/T-KATA-REVIEW-ALL-bes-sample-130-20261126T001037Z-87b42f59/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bes-sample-130/T-KATA-REVIEW-ALL-bes-sample-130-20261126T001037Z-87b42f59/result.md"
+  }
+}

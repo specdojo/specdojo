@@ -230,17 +230,52 @@ describe("Section utility functions", () => {
         const filePath = join(root, "invalid.md");
         writeFileSync(filePath, "本文テキスト\n\n## 不正な見出し\n\n本文2", "utf8");
         expect(() => validateSectionFile(filePath)).toThrow(
-          `Section file must not contain markdown headings: ${filePath}`,
+          `must not contain markdown headings other than "###" subsection headings`,
         );
+        expect(() => validateSectionFile(filePath)).toThrow(`${filePath}:3: ## 不正な見出し`);
 
         const filePathH1 = join(root, "invalid-h1.md");
         writeFileSync(filePathH1, "# 不正なH1", "utf8");
-        expect(() => validateSectionFile(filePathH1)).toThrow(
-          `Section file must not contain markdown headings: ${filePathH1}`,
-        );
+        expect(() => validateSectionFile(filePathH1)).toThrow(`${filePathH1}:1: # 不正なH1`);
       } finally {
         rmSync(root, { recursive: true, force: true });
       }
+    });
+  });
+
+  describe("validateSectionFile の小節見出し", () => {
+    it("### の小節見出しを含むファイルは受け付ける", () => {
+      const root = mkdtempSync(join(tmpdir(), "validate-section-"));
+      try {
+        const filePath = join(root, "sub.md");
+        const content = "概要\n\n### CHANGELOG に書く事項\n\n- 区分: Fixed\n";
+        writeFileSync(filePath, content, "utf8");
+        expect(validateSectionFile(filePath)).toBe(content);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+
+    it("### と一緒に ## や #### を含むファイルは拒む", () => {
+      const root = mkdtempSync(join(tmpdir(), "validate-section-"));
+      try {
+        const mixed = join(root, "mixed.md");
+        writeFileSync(mixed, "### 小節\n\n## 章\n", "utf8");
+        expect(() => validateSectionFile(mixed)).toThrow(/must not contain markdown headings/);
+        const deep = join(root, "deep.md");
+        writeFileSync(deep, "#### 深い\n", "utf8");
+        expect(() => validateSectionFile(deep)).toThrow(/must not contain markdown headings/);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+
+    it("小節見出しを含む本文で章を差し替えられる", () => {
+      const ticket = "# T\n\n## 1. 概要\n\n旧\n\n## 2. 対応結果\n\n次\n";
+      const result = replaceTicketSection(ticket, "概要", "新\n\n### 小節\n\n本文");
+      expect(result.content).toBe(
+        "# T\n\n## 1. 概要\n\n新\n\n### 小節\n\n本文\n\n## 2. 対応結果\n\n次\n",
+      );
     });
   });
 
@@ -481,7 +516,7 @@ describe("register update --section CLI", () => {
         invalidSectionFile,
       ]);
       expect(process.exitCode).toBe(1);
-      expect(stderrLines.join("")).toContain("Section file must not contain markdown headings");
+      expect(stderrLines.join("")).toContain('only "###" is allowed');
       expect(readFileSync(ticketPath, "utf8")).toBe(ticket);
 
       // 5. 個票に存在しない章
@@ -542,7 +577,7 @@ describe("register update --section CLI", () => {
         {
           section: "完了条件",
           file: invalidSectionFile,
-          message: "Section file must not contain markdown headings",
+          message: 'only "###" is allowed',
         },
       ];
 
@@ -664,6 +699,8 @@ describe("register add --section CLI", () => {
       expect(output).toContain(`Would create ${join(registerDir, "pjr-ab34-handoff-test.md")}:`);
       expect(output).toContain("# PJR-AB34 引き継ぎ");
       expect(output).toContain(`Would create ${join(registerDir, "events", "pjr-ab34.yaml")}:`);
+      expect(output).toContain("PJR-AB34 is provisional");
+      expect(output).toContain("Refs: {id}");
       expect(existsSync(join(registerDir, "pjr-ab34-handoff-test.md"))).toBe(false);
       expect(process.exitCode).toBeUndefined();
     });

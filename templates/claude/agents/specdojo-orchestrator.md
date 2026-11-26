@@ -17,7 +17,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 
 - 回答は原則として日本語で行う。
 - 操作は「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、「承認の聞き方」に従って何をするかを日本語で示し、利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
-- 破壊的変更や `git push` は行わない。
+- 破壊的変更や `git push` は行わない。`register_sync` を有効にした project の登録簿の専用ブランチへの push は、specdojo のコマンド（`register ... --commit`・`exec run`・`register branch-push`）に任せ、`git push` を自分で打たない。
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
   - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
@@ -144,6 +144,8 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 ```
 
 `-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: <project-id>:<PJR-XXXX>`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
+
+`register add --dry-run` が出す ID は仮で、実際の起票では振り直される。dry-run の ID を `-m` に書き写さず、subject と `Refs:` には `{id}` と書く（例: `-m "Refs: <project-id>:{id}"`）。`{id}` は実際に起票・更新した項目の ID に置き換わる。起票後の ID は出力の `Created: ... (added PJR-XXXX)` から読む。
 
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
 

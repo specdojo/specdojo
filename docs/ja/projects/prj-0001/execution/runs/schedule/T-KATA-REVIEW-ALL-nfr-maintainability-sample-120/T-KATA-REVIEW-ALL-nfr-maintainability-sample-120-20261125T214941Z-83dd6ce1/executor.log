@@ -1,0 +1,17 @@
+R2（構成）の見直しとして、sample の章を 1 か所移しました。編集したのは `docs/ja/specdojo/samples/nfr-maintainability-sample.md` だけで、Prettier の整形チェックと markdownlint はこのファイルについて通っています。
+
+- **R2-1（移したもの）:** 「1. 概要（対象・目的）」にあった未決事項の段落と表を、「3. 保守性要件一覧」の要件の表の直後へ移しました。rulebook の記述ガイドでは、概要は対象・業務影響・目的を 2〜3 文で書く章です。そこに要件一覧より先に `nfr-mnt-003` の未決の扱いが出ており、前提から結論の順に読めませんでした。
+- **段落の補足:** 移した段落で、中核の要件を指す ID（`nfr-mnt-001`・`002`・`004`）を明記しました。
+- **参照の追従:** 「4. 測定・検証方法」の「概要の表の扱い」という参照を「『保守性要件一覧』の未決事項の表の扱い」に直しました。
+
+**移した先の判断:** 同じ系列の availability と performance の sample は、未決事項を独立した章 6 に置いています。保守性の rulebook は 5 章を順序固定と定めているため、章は足していません。この判断は迷ったので「要判断」としました。
+
+**R2 では扱わなかった grade の finding（2 件）:**
+- **F001（`vp-qe-kata-conformance`）:** R1・R5 で扱う観点です。指摘は `nfr-mnt-004` が `_UNDECIDED_` だという内容ですが、本文では `nfr-mnt-004` に閾値があり、未決なのは中核の要件ではない `nfr-mnt-003`（MTTR）です。指摘自体が古いか、行を取り違えている可能性があります。
+- **F002（`vp-ux-language-consistency`）:** R3 で扱う観点です。一次切り分けで絞る原因の範囲が、本文は「通信」、rulebook の用語定義は「外部」で食い違っています。
+
+rulebook など sample 以外の文書には直す点はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）として、sample の「概要（対象・目的）」にあった未決事項の段落と表を「保守性要件一覧」の要件の表の直後へ移した。「測定・検証方法」の参照も合わせて直した。grade の finding F001・F002 は R2 の観点ではないため扱わず、handoff に申し送った。","handoff":["R2-1: R2 / 1. 概要（対象・目的）→ 3. 保守性要件一覧 / 概要に未決事項の段落と表（`nfr-mnt-003` の MTTR の上限と、決まるまでの扱い）があった。rulebook の記述ガイドでは概要は対象・業務影響・目的を 2〜3 文で書く章であり、要件一覧より先に要件 ID と未決の扱いが出るため、前提から結論の順に読めなかった / 段落と表を「保守性要件一覧」の要件の表の直後へ移した。移した段落では、中核の要件を指す ID（`nfr-mnt-001`・`002`・`004`）を明記した。「測定・検証方法」の参照「概要の表の扱い」は「『保守性要件一覧』の未決事項の表の扱い」に直した / `vp-arc-document-structure`、`vp-qe-omissions-consistency`、rulebook の「本文要件」と「記述ガイド」の概要（対象・目的） / 要判断（迷った理由: 同じ系列の nfr-availability と nfr-performance の sample は、未決事項を独立した章 6 に置いている。選ばなかった案は章 6「未決事項」を足す案で、保守性の rulebook が 5 章を順序固定と定めているため採らなかった。nfr-reliability の sample のように、決まるまでの扱いを要件の表の備考へ入れる案もある）","R2-2: R2 / 3. 保守性要件一覧（grade F001） / F001 は R2 の観点（`vp-qe-kata-conformance`）ではないため、この段では扱わない。指摘は `nfr-mnt-004` が `_UNDECIDED_` だという内容だが、本文では `nfr-mnt-004` に閾値があり、未決は中核の要件ではない `nfr-mnt-003`（MTTR）である。指摘自体が古いか、行を取り違えている可能性がある / - / R1・R5 の `vp-qe-kata-conformance` で再評価する / -","R2-3: R2 / 3. 保守性要件一覧 `nfr-mnt-001`（grade F002） / 原因の範囲が、本文は「アプリ・データ・端末・通信」、rulebook の用語定義は「アプリ・データ・端末・外部」で食い違う。R2 の観点ではないため直さない / - / R3 の `vp-ux-language-consistency` で扱う。sample を「外部」に揃えるか、rulebook の用語定義を「通信」に寄せるかは R3 か R5 で判断する / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

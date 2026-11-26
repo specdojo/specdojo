@@ -83,3 +83,48 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_b7d542f5df514ab68d5d192be3f54b54
+- v: 1
+  id: reg_5c53aa4abef048fcb5ec4868d024cbce
+  ts: "2026-11-24T17:33:27Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9bf3c669024048cb9bee4d2794df414f
+- v: 1
+  id: reg_314dba43394e490ca2e43073ea5f2f2e
+  ts: "2026-11-24T17:39:30Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5c53aa4abef048fcb5ec4868d024cbce
+- v: 1
+  id: reg_81126095bdde4fbc9bbf7a25d15ef41b
+  ts: "2026-11-26T10:11:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 手元のビルドと deploy.yml の反映、公開後の表示を確かめ、indie の承認（2026-11-26）を得て close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: 公開の workflow で project/prj-0002/develop の docs/ja/projects/prj-0002/ だけを重ね、ビルドの間だけの設定で prj-0002 と specdojo-lp の repos を足して開発中の版に出す。2026-11-26 の deploy（run 45713911145）が通り、/specdojo/next/ と /next/ja/projects/prj-0002/ が 200 を返すことを確かめた
+  previous_event_id: reg_314dba43394e490ca2e43073ea5f2f2e

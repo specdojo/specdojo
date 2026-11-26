@@ -1,0 +1,21 @@
+R5（整合）の段を終えました。`opd-access-control-sample.md` を 3 か所直し、相手側の文書を直すべき点を 2 件見つけました。相手側の文書は変更していません。確かめたのは Prettier の整形だけで、markdownlint などの検査はこの後に親 runner が実行します。
+
+**直した点（`opd-access-control-sample.md`）**
+
+- **未決事項の不足**: 手順側（`opr-access-control-sample`）が「運用方針で未決」としている「`OPS` に 15 分以内に連絡がつかないときのアカウント停止」が、方針側の未決事項の表にありませんでした。同じ「決まるまでの扱い」で 1 行足しました。
+- **保守作業が終わったときの扱い**: 方針側は「保守の区分を外す」、手順側は「剥奪（停止）」と書いていました。また棚卸しは、保守作業中の記録にない `DEV` のアカウントを不合格にします。「アカウントを停止する」に揃えました。
+- **監査ログの月次確認**: 緊急権限の間に `DEV` が直す記録が「管理の区分以外の操作 0 件」に数えられ、不合格になります。この操作は緊急権限の事後の確認で扱い、件数から除くと書き足しました。
+
+**相手側を直す案（変更していません）**
+
+- **`opr-index-sample`**: 権限の行（34 行）と付与・剥奪の表（132〜135 行）が、方針側・`opd-index-sample` の RACI・`opr-sample` と食い違っています。区分を「記録・閲覧・管理者」とし、`DEV` に管理者権限を持たせ、付与を `DEV` が行う書き方になっています。4 区分に揃え、付与は `OPS` が行い、詳しい手順は `opr-access-control-sample` に任せる形に改めるとよいです。
+- **`opr-access-control-sample`**: 月次（監査ログ）の行にも、緊急権限の間の `DEV` の操作を除く条件を足すとよいです。
+
+**食い違いがなかったもの**
+
+- 同じ系列の sample（`opd-index`・監視・障害対応）: P1 の扱い、10 分の自動ログアウト、24 時間の失効、1 年の保管期間、承認者が `PO` であること。
+- 共通サンプル文脈・共通登場人物と、用語集（SpecDojo 自体の用語だけで、駄菓子屋の業務の語は載っていません）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: opd-access-control-sample の食い違い 3 件を直した（未決事項の追加、保守作業が終わったときにアカウントを停止する扱いへ揃える、緊急権限の間の操作を監査ログの件数から除く）。相手側の opr-index-sample と opr-access-control-sample を直す案 2 件は handoff に残した。","handoff":["R5-1: 段=R5 / 箇所=1. 概要（access-control）の未決事項の表 / 指摘=opr-access-control-sample が「運用方針で未決」として挙げる「`OPS` に 15 分以内に連絡がつかないときのアカウント停止」が、方針側の未決事項にない / 直した案=未決事項の表に 1 行足した（判断者は `PO`、決まるまでの扱いは opr と同じく紙の販売控えへ切り替え、`OPS` が停止するまで新しく記録しない、影響する節は付与・剥奪の契機） / 根拠=vp-qe-kata-conformance（kata 相互）。opr-access-control-sample の概要の未決事項の表 / 印=-","R5-2: 段=R5 / 箇所=2.2. 付与・剥奪の契機 / 指摘=保守作業が終わったときの扱いを、方針側は「保守の区分を外す」、opr-access-control-sample の 9.1 は「剥奪（停止）」と書いている。また 2.6 の棚卸しは、保守作業中の権限変更記録にない `DEV` のアカウントを不合格にするため、区分を外すだけではアカウントが残り不合格になる / 直した案=行うことを「アカウントを停止する」にした / 根拠=vp-qe-kata-conformance（kata 相互）、vp-dev-change-impact / 印=-","R5-3: 段=R5 / 箇所=2.5. 監査ログ / 指摘=緊急権限の間に `DEV` が直す記録（つけ残高の訂正を含む）が、月次の「管理の区分以外の操作 0 件」に数えられ、緊急権限を正しく使った月も不合格になる / 直した案=緊急権限の間の `DEV` の操作は事後の確認で扱い、件数から除くと 1 文足した / 根拠=vp-qe-kata-conformance（kata 相互）。2.4 の緊急権限の事後の確認との整合。相手側として opr-access-control-sample の 3. 日次・週次・月次点検手順の「月次（監査ログ）」の行にも同じ条件を足す案がある / 印=-","R5-4: 段=R5 / 箇所=3. 関連ドキュメント導線（`opr` 等） / 指摘=導線の先の opr-index-sample が、権限の行（34 行）と付与・剥奪の表（132〜135 行）で、区分を記録・閲覧・管理者とし、`DEV` に管理者権限を持たせ、付与を `DEV` が行う書き方になっている。本書の 4 区分と `OPS` が付与する体制、opd-index-sample の RACI（`OPS` が R、`DEV` が C）、opr-sample と食い違う / 直した案=- / 根拠=vp-qe-kata-conformance（適用先）、vp-dev-change-impact。相手側の opr-index-sample を、4 区分に揃え、付与・剥奪を `OPS` が行い、詳しい手順を opr-access-control-sample に任せる形に改める案 / 印=-"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opd-access-control-sample.md","status":"passed","summary":"対象の sample の表を整形した"}]}
+</specdojo_executor_evidence>

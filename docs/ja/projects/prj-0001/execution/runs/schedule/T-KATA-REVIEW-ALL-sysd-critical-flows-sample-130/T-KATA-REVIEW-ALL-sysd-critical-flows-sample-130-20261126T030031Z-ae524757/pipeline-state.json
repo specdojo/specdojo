@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130-20261126T030031Z-ae524757",
+  "updated_at": "2026-11-26T03:10:11.050Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T03:01:19.693Z",
+      "completed_at": "2026-11-26T03:03:14.590Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130-20261126T030031Z-ae524757/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-26T03:06:14.278Z",
+      "completed_at": "2026-11-26T03:08:20.334Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130-20261126T030031Z-ae524757/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T03:09:15.941Z",
+      "completed_at": "2026-11-26T03:10:11.050Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130-20261126T030031Z-ae524757/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-130-20261126T030031Z-ae524757/result.md"
+  }
+}

@@ -141,6 +141,25 @@ properties:
           maximum: 4
   done_criteria:
     type: object
+  size_metrics:
+    type: object
+    additionalProperties: false
+    required: [characters]
+    description: >
+      Size metrics measured without an LLM (PJR-2Q0G). Characters exclude whitespace, table
+      separator rows, and finding comments. Omitted in results recorded before the metrics and for
+      YAML documents.
+    properties:
+      characters: { type: integer, minimum: 0 }
+      sample:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-:]*$"
+      sample_characters: { type: integer, minimum: 0 }
+      sample_ratio: { type: number, minimum: 0 }
+      previous_characters: { type: integer, minimum: 0 }
+      growth_ratio: { type: number, minimum: 0 }
+      operations_characters: { type: integer, minimum: 0 }
+      operations_ratio: { type: number, minimum: 0, maximum: 1 }
 $defs:
   score:
     type: object

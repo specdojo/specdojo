@@ -1,0 +1,30 @@
+R4（正しさ）の確かめを終え、事実の誤りを 1 件直しました。変更したのは `docs/ja/specdojo/samples/otp-index-sample.md` の 2 行だけです。
+
+**直したこと（R4-1）:** 「権限/アカウント移行」の章では、アカウントの発行を「転記用の表の取り込みが済んだ後」としていました。しかし根拠の `cop-index-sample` では、取り込みの前の手順 4 で、アカウントの権限を `otp-index` のやり方で確かめます。そこで発行と権限の設定を「取り込む前」に改め、検証は「取り込みの後の動作確認で」行うと書きました。
+
+**F001:** 「関連ドキュメント」には前の段で `opr-sales`、`opr-credit`、`opr-daily-closing`、`opr-shift-handover` が足されており、すでに解消していました。この段では直していません。
+
+**確かめの表（R4）:**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | `specdojo.type: operations` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` 17 行目 | 一致 |
+| 2 | `rulebook` と `based_on` の ID | `otp-index-rulebook`、`mip-index-sample`、`cop-index-sample` の frontmatter | 一致 |
+| 3 | 11 章の構成、禁止事項 | `otp-index-rulebook` の「本文要件」と「禁止事項」 | 一致 |
+| 4 | アカウントの発行時期 | `cop-index-sample` の手順 4 と 5 | 不一致のため直した |
+| 5 | 正本切替は並行記録の 1 週間の後（GO4）、ハイパーケアは 2 週間、SLA は当日の閉店後まで | `mip-index-sample` の T+7 日の行と「移行後ハイパーケア方針」 | 一致 |
+| 6 | 復旧の条件（販売とつけを 1 件ずつ記録して取り消す） | `cop-index-sample` の GO3 | 一致 |
+| 7 | 転記用の表は正本切替の後に裁断する | `mip-index-sample` 25 行目 | 一致 |
+| 8 | 旧ノートの保管期間は `_UNDECIDED_` | `dmd-index-sample` 51 行目（こちらも未決） | 一致 |
+| 9 | 店舗運営アドバイザーの聞き取り | `mip-index-sample` 93 行目 | 一致 |
+| 10 | 分冊 `otp-hypercare` | `otp-sample` の H1 と「概要（hypercare）」 | 一致 |
+
+**R5 に回す論点:**
+- **`opr-*` の分冊名:** `opr-sales`、`opr-credit`、`opr-daily-closing`、`opr-shift-handover` は `opr-index-sample` に出てきません（そこにあるのは `opr-incident` だけです）。
+- **動作確認での取り消し:** `cop-index-sample` の手順 8 では、店主代表と家族利用者代表が記録して取り消します。一方この sample では、家族利用者代表は販売を取り消せません。誰が取り消すのかを `cop-index-sample` 側で明記するかどうか、検討が要ります。
+
+Prettier の確認は通りました。lint などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 の確かめで、アカウントの発行時期が cop-index-sample と食い違っていたため、otp-index-sample の「権限/アカウント移行」を直した。F001 は前の段で解消済み。","handoff":["R4-1: R4 / 4. 権限/アカウント移行 / アカウントの発行を「取り込みの後」としていたが、cop-index-sample では取り込みの前の手順 4 で権限を otp-index に従って確かめる / 発行と権限の設定を「取り込む前」に改め、検証は「取り込みの後の動作確認で」行うと書いた / vp-arc-technical-constraints、vp-qe-verifiability（正本: cop-index-sample の手順 4 と 5） / -","R4-2: R4 / 11. 関連ドキュメント（必須） / F001（opr-* の分冊への導線がない）は前の段で opr-sales・opr-credit・opr-daily-closing・opr-shift-handover が足されて解消済み / - / vp-qe-omissions-consistency / -","R4-3: R4 / 5. 運用手順の変更点 / 参照列の opr-sales・opr-credit・opr-daily-closing・opr-shift-handover が opr-index-sample に出てこない（そこにあるのは opr-incident だけ） / -（R5 で、opr-index-sample 側に分冊を足すか、こちらの名前を合わせるかを決める） / vp-dev-change-impact / 要判断","R4-4: R4 / 4. 権限/アカウント移行 / cop-index-sample の手順 8 では店主代表と家族利用者代表が記録して取り消すが、この sample では家族利用者代表は販売を取り消せない / -（R5 で、cop-index-sample の手順 8 に取り消すのは店主代表と明記する案を検討する） / vp-qe-verifiability / 要判断","R4 確かめの表（主張 / 正本 / 結果）: 1 specdojo.type: operations / docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml 17 行目 / 一致。2 rulebook と based_on の ID / 各 sample と rulebook の frontmatter / 一致。3 11 章の構成と禁止事項 / otp-index-rulebook の本文要件と禁止事項 / 一致。4 アカウントの発行時期 / cop-index-sample の手順 4 と 5 / 不一致のため直した。5 並行記録 1 週間の後に GO4 で正本切替、ハイパーケア 2 週間、SLA は当日の閉店後まで / mip-index-sample の T+7 日の行と移行後ハイパーケア方針 / 一致。6 復旧の条件 / cop-index-sample の GO3 / 一致。7 転記用の表は正本切替の後に裁断 / mip-index-sample 25 行目 / 一致。8 旧ノートの保管期間は _UNDECIDED_ / dmd-index-sample 51 行目 / 一致。9 店舗運営アドバイザーの聞き取り / mip-index-sample 93 行目 / 一致。10 分冊 otp-hypercare / otp-sample の H1 と概要（hypercare） / 一致。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "queue_id": "kata-blitz-7-2026-11-24",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-24T01:25:37.267Z",
+  "updated_at": "2026-11-24T01:38:02.735Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--auto",
+        "--project",
+        "prj-0001",
+        "--parallel",
+        "4",
+        "--loop",
+        "--max-rounds",
+        "300",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "wait"
+      ],
+      "started_at": "2026-11-24T01:25:37.517Z",
+      "completed_at": "2026-11-24T01:38:02.728Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

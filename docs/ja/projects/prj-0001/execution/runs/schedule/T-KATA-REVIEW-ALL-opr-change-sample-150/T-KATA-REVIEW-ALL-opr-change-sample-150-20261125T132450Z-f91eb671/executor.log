@@ -1,0 +1,23 @@
+R5（整合）の段で、`opr-change-sample.md` を同系列の sample、`based_on` の参照先、rulebook と読み比べ、食い違い 3 件を直しました。相手側を直す案は 2 件で、どちらの文書も変えていません。変更したのは `docs/ja/specdojo/samples/opr-change-sample.md` だけです。Prettier と markdownlint はこのファイルで 0 件でした。リポジトリ全体の lint は親 runner が実行します。
+
+**直したこと**
+- **アプリの版の更新の実施条件:** すべての版に事前周知を求めていましたが、[[specdojo:opr-sample]] と本書の「影響の範囲の判定」では、記録の操作が変わる版だけが対象です。「記録の操作が変わる版は前日の閉店時に事前周知した」に揃えました。
+- **必要権限:** 「適用後の確認は店番担当の記録の権限」と書いていましたが、実際に確かめるのは `DEV` です。このままでは、`opr-sample` が禁じる共有のアカウントを使う読み方ができました。適用・戻し・確認は `DEV` の管理者の権限、開店前の価格の照合は店番担当の記録の権限、と分けて書きました。あわせて「適用の手順」の 6 に、価格は翌朝に店番担当が照合すると足しました。ただし元の意図が「`DEV` が店番担当の権限を持つ試験用のアカウントで確かめる」だった可能性も残るため、要判断としています。
+- **関連ドキュメント導線:** 戻しが P1 になる行き先の [[specdojo:opr-incident-sample]] が表にありませんでした。ほかの分冊は表に載せているため、1 行足しました。
+
+**相手側を直す案（未変更）**
+- **`opr-sample.md` の「運用変更作業」:** 障害対応・バックアップ・バッチの章は本文で分冊へ渡していますが、この章だけ本文で `opr-change-sample` を指していません。「影響の判定・適用・戻しの詳細は運用手順（運用変更）に従う」の 1 文を足す案です。
+- **`opr-incident-sample.md`:** ロールバックの手順の参照先が `opr-index` の運用変更作業になっています。具体化した `opr-change-sample` へ向ける案です。
+
+**判断が要る点**
+- **編集対象の食い違い:** plan は編集対象を `opr-sample.md` としていますが、kata-guide は「直すのは対象の kata だけ」と定めています。タスク名どおり `opr-change-sample.md` だけを直しました。
+- **plan に載っていた grade の指摘（F001〜F004）:** すべて現行の `opr-sample.md` には当てはまらず、行番号とも合いません。
+  - F001 と F004 の観点は、kata のレビューでは使わないものです。
+  - F002 は R4 の観点で、該当の未決事項の行はすでにあります。
+  - F003 はすでに直っています（`opr-index-sample` があり、分冊もすべて表に載っています）。
+
+用語集に該当する語はなく、共通サンプル文脈との食い違いもありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: opr-change-sample.md の食い違い 3 件を直し（版の更新の事前周知、確認の権限、障害対応の分冊への導線）、相手側（opr-sample、opr-incident-sample）を直す案 2 件を handoff に残した。","handoff":["R5-1: R5 / 8.1. 変更種別と承認・実施条件 / アプリの版の更新の実施条件がすべての版に事前周知を求め、opr-sample の運用変更作業（記録の操作が変わる版の更新と価格の一括変更だけを周知）と、本書の影響の範囲の判定（操作が変わる場合に事前周知が要る）と食い違う / 実施条件を「閉店後。記録の操作が変わる版は前日の閉店時に事前周知した」にした / `vp-qe-kata-conformance`。根拠は opr-sample の運用変更作業の本文と本書 8.2 の表の 1 行目 / -","R5-2: R5 / 2. 手順適用範囲・前提（必要権限）、8.3. 適用の手順 / 「適用後の確認は店番担当の記録の権限で行う」とあるが、適用の手順 6 で確かめるのは `DEV` で、opr-sample の「共有のアカウントは使わない」、opr-index-sample の権限（店番担当は記録、`DEV` は管理者）と食い違う。価格の照合は店番担当が行う / 必要権限を「適用・戻し・適用後の確認は `DEV` の管理者の権限、開店前の価格の照合は店番担当の記録の権限で行う。共有のアカウントは使わない」にし、手順 6 に「価格の一括変更は、翌朝の開店前に店番担当が照合する」を足した / `vp-qe-kata-conformance`。迷った理由: 元の意図が「`DEV` が店番担当の区分の試験用アカウントで確かめる」だった可能性がある。その案は opr-access-control-sample に試験用アカウントの区分がないため選ばなかった / 要判断","R5-3: R5 / 12. 関連ドキュメント導線 / 8.4 で戻しが終わらないときや記録できないときは P1 として障害対応手順へ進むが、P1 の切替と復旧を具体化した opr-incident-sample が導線の表にない。同系列の分冊（batch、monitoring）は P1 の行き先として opr-incident-sample を表に載せている / 表に「手順 / 運用手順（障害対応） / 戻しで P1 になった場合の切替と復旧の手順を行う / 作成済」を足した / `vp-qe-kata-conformance`、`vp-dev-change-impact` / -","R5-4: R5 / 相手側 opr-sample.md の 8. 運用変更作業 / opr-sample は障害対応・バックアップ・バッチ・権限の章で本文から分冊へ渡しているが、運用変更作業の章だけ本文で opr-change-sample を指していない（導線の表にはある） / - / `vp-qe-kata-conformance`。相手側の案: opr-sample の運用変更作業の章の表の前に「影響の判定・適用・戻しの詳細は [[specdojo:opr-change-sample|運用手順（運用変更）]] に従う。」を足す / -","R5-5: R5 / 相手側 opr-incident-sample.md の障害対応手順（直近の変更をロールバックする行、その直後の段落）と運用変更作業の章 / ロールバックの手順の参照先が `opr-index` の運用変更作業で、具体化した opr-change-sample のロールバックとエスカレーションを指していない / - / `vp-dev-change-impact`。相手側の案: 該当の 3 か所の参照先を [[specdojo:opr-change-sample|運用手順（運用変更）]] のロールバックとエスカレーションに替え、導線の表に opr-change-sample の行を足す / -","申し送り（編集対象）: plan の編集対象は opr-sample.md（rulebook の sample 宣言から解決したもの）だが、kata-guide の「kata を agent でレビューする」は直すのは対象の kata だけと定めるため、タスク名の対象 opr-change-sample.md だけを直し、opr-sample は R5-4 の案に留めた。","申し送り（grade の指摘 F001〜F004）: F001〜F004 は現行の opr-sample.md の行番号・本文と合わず、古い版への指摘とみられる。F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は kata の段のレビューで使わない観点のため扱わない。F002（`vp-qe-verifiability`）は R4 の観点で、opr-sample にはすでに「監査ログ以外の証跡の保管期間」の未決事項の行がある。F003 は opr-index-sample があり、opr-sample の導線の表に分冊がすべて載っているため解消済み。次のアクション: grade の再評価で古い指摘を消す。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-change-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-change-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/opr-change-sample.md だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

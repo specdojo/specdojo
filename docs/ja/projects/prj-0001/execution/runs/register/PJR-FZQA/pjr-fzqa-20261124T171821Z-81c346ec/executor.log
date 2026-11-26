@@ -1,0 +1,40 @@
+PJR-FZQA は完了です。文書サイトのビルドが `repos` で宣言したリポジトリの `docs/ja/product/` を `/ja/product/<リポジトリ名>/` に取り込み、project の文書から `[[id]]` で辿れるようになりました。ただし本物のサイトのビルド（`docs:build`）は流していません。確認は統合の後のオーケストレーターの作業として個票に `open` で残しています。
+
+**動き**
+- 全 project の `repos` を読み、`.specdojo/specdojo.local.config.json` の差し替え・追加も反映します。パスの解決は CLI と同じ規則にしました。
+- project 自身の `/ja/product/` とは場所を分けました。project 側に同じ名前のディレクトリがあれば、project 側を優先して取り込みを飛ばします。
+- サイドバーには、リポジトリごとに「プロダクト: `<name>`」の節を出します。`index.md` が無いリポジトリには入口のページを用意します。
+- リポジトリや `docs/ja/product/` が見つからないときは、警告を出して飛ばし、ビルドは続けます。
+- `repos` が無い project（prj-0001 など）では、サイトの出力は変わりません。
+
+**doc index の扱い（決めたこと）**
+- 取り込んだ文書の id は `.specdojo/doc-index.json` に入れず、サイトのビルド時に frontmatter から読んで、サイトの中だけで補います。
+  - 理由: `.specdojo/doc-index.json` は agent や plan も使うので、サイトの都合で混ぜると影響が広いためです。checkout していないリポジトリがあっても、索引を作り直さずに済みます。
+- project 側に同じ id があれば project 側を優先し、警告を出します。衝突しても引けるよう、`:` を含まない id は `[[<リポジトリ名>:<id>]]` でも引けるようにしました。
+
+**確かめたこと**
+- 試しの workspace（`repos` に、ある・無いリポジトリを 1 つずつ宣言）で `config.mts` を読み込みました。無いほうは警告して飛ばし、節と入口は正しく出て、`[[bds-cart]]` と `[[shop:bds-cart|別名]]` は取り込んだ文書へのリンクになりました。
+- 新しい単体テスト 14 件と既存の `kata-staging` のテストは通りました。
+- docs-site 単体の型検査では、エラーは今回触っていない既存の `specdojo:channel` の行の 1 件だけでした。
+- prettier、変更した Markdown の markdownlint、`npm run validate:history-links` も通りました。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` などは親の runner が実行します。
+
+**残っていること**
+- 取り込んだ文書が `docs/ja/product/` の外を相対リンクで指していると、サイト上では 1 階層深くなるため dead link になり、ビルドが止まります。VitePress の `ignoreDeadLinks` では参照元のページで絞れないため、手を入れていません。試しのビルドで問題になれば別の項目で扱います。
+- YAML の文書は、product 側で生成した表示用のページ（git 管理外）があるときだけ引けます。CI では product のリポジトリ側で生成が必要です。
+- `dev` 中にプロダクト側を編集しても同期しません。開発サーバを起動し直すと反映されます。
+- 保護された設定、`packages/docs-site/package.json` の版、`CHANGELOG.md` は変えていません。CHANGELOG の文案は個票の「CHANGELOG に書く事項」に書きました。
+
+変更したファイル（ガイド・設定リファレンス・README には、CI の workflow の例と private のリポジトリの注意を書きました）:
+- `packages/docs-site/.vitepress/product-repos.ts`（新規）
+- `packages/docs-site/.vitepress/kata-staging.ts`
+- `packages/docs-site/.vitepress/config.mts`
+- `tests/packages/docs-site/product-repos.test.ts`（新規）
+- `docs/ja/specdojo/guides/docs-editing-guide.md`
+- `docs/ja/specdojo/references/specdojo-config-reference.md`
+- `packages/docs-site/README.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-fzqa-docs-site-product-repos.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Docs-site now copies each declared repository's `docs/ja/product/` to `/ja/product/<name>/`, applying the local config's `repos` overrides. It adds one sidebar section per repository, and wikilinks from project docs resolve by reading ids from frontmatter at build time (also as `<name>:<id>`). A missing repository is skipped with a warning and the build continues. Output is unchanged when no project declares `repos`. Unit tests, the guide, the config reference and the README are updated; the ticket records the work, decisions and CHANGELOG draft. The real site build was not run; the trial build after integration is left open for the orchestrator.","handoff":["Doc index decision: ids of imported product docs are not added to `.specdojo/doc-index.json`. Docs-site reads them from frontmatter (`specdojo.id`, or else a top-level `id`) at build time and adds them only to the site's index. Reason: `specdojo index build` is shared with agents and plans, so mixing in site-only product paths has wide impact, and repositories that are not checked out then affect only the site, with no index rebuild.","On an id collision the project's doc index wins, with a warning; between repositories the first one wins. Ids without `:` also resolve as `<repo-name>:<id>`. YAML docs resolve only when their yaml-pages generated page (`generated/<name>.md`, which is git-untracked) is present in the product repository.","Other decisions: when several projects declare the same `name`, the first in project-id order wins. If the project repository itself has `docs/ja/product/<name>/`, the project's docs win and that repository's import is skipped with a warning. `dev` does not sync product-side edits; restart the server to pick them up.","Remaining risk: an imported doc that links relatively outside `docs/ja/product/` (for example `../../projects/...`) sits one level deeper in the staging tree, becomes a dead link and fails the build. VitePress `ignoreDeadLinks` cannot filter by source page, so this is not handled. Check it in the orchestrator's trial build and open a separate item if needed.","Left for the orchestrator after integration: build the site with a trial repository that declares `repos` and confirm the `/ja/product/<name>/` pages and sidebar section appear before close (ticket work item 5 is left `open`).","No protected-configuration change is needed. `packages/docs-site/package.json` version and `CHANGELOG.md` are unchanged. The CHANGELOG category (Added, @specdojo/docs-site) and line draft are in the ticket's 'CHANGELOG に書く事項' subsection."],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/packages/docs-site/product-repos.test.ts tests/packages/docs-site/kata-staging.test.ts","status":"passed","summary":"2 files, 20 tests passed"},{"command":"npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit","status":"passed","summary":"No errors in the changed code; the only error is the pre-existing `specdojoChannel` themeConfig typing in untouched code"},{"command":"node --import ./packages/docs-site/node_modules/tsx/dist/loader.mjs tmp/fz/check.mjs","status":"passed","summary":"Loading config.mts against a trial workspace with `repos` produced the /ja/product/shop/ sidebar section and top entry, warned and skipped the missing repository, and resolved [[bds-cart]] and [[shop:bds-cart]] to the staged page"},{"command":"npx prettier --write packages/docs-site/.vitepress/product-repos.ts packages/docs-site/.vitepress/kata-staging.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/product-repos.test.ts","status":"passed","summary":"Formatted"},{"command":"npx prettier --check docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/references/specdojo-config-reference.md packages/docs-site/README.md","status":"passed","summary":"All files formatted"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-fzqa-docs-site-product-repos.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/references/specdojo-config-reference.md","status":"passed","summary":"0 issues"},{"command":"npm run -s validate:history-links","status":"passed","summary":"Exit 0; the PJR-FZQA ticket is valid"}]}
+</specdojo_executor_evidence>

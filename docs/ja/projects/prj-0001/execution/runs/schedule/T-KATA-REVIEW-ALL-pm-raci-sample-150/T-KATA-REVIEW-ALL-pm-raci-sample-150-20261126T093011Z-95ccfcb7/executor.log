@@ -1,0 +1,24 @@
+R5（整合）の段を終えました。`docs/ja/specdojo/samples/pm-raci-sample.md` に 1 行足し、他の文書は変えていません。
+
+**F001（成果物 ID との対応）:** すでに解消していたので、直していません。前の段で成果物別 RACI の表に「対象 ID」の列が入り、どの行にも成果物 ID か `kinuya-*` の記録名が書かれています。rulebook の「ファイル命名・ID規則」が求める、統合した行も一意に照合できる状態を満たしています。
+
+**直した食い違い（要判断）:** 管理計画の sample では、判断ゲート「店頭試用後の継続」の起案・整理を `BA` と `PM` が担います。一方、RACI の判断行「リリース・試用後の継続判断」では `BA` が `C`（相談先）だけでした。そこで判断行の表の後の補足に、次の 1 項目を足しました。
+
+> 試用後の継続判断では、`BA` が営業日別記録と利用者所感を整理し、`PM` が保守・引き継ぎの見込みと合わせて判断材料にまとめる。
+
+この行ではリリース判断と継続判断が 1 行にまとまっています。`BA` を `R` にすると、起案しないリリース判断まで `BA` の作業責任になるので、その案は採りませんでした。行を「リリース判断」と「試用後の継続判断」に分ける案もありますが、表が大きくなるので見送りました。採るか戻すかを決めてください。
+
+**食い違いがなかったもの:**
+- **組織定義:** 列にする 5 ロール、専門支援 3 ロールの扱い、責任領域ごとの最終判断と実行の担当が一致しています。
+- **管理計画:** `kinuya-schedule` の扱い、承認責任は RACI を正とすること、他のゲートの判断者が一致しています。
+- **品質管理計画:** 品質ゲートの確認者・承認者、`kinuya-acceptance-record` が一致しています。
+- **システム試験の sample:** `kinuya-st-report` はここで使われている名前と一致しています。
+- **人と組織の定義標準:** 「Schedule への担当展開」の章があり、参照どおりです。
+- **コミュニケーション計画:** RACI の判断行への参照が一致しています。
+- **用語集と共通サンプル文脈:** 表記と業務文脈に食い違いはありません。
+
+**検証:** prettier の書式チェックと markdownlint はどちらもエラーなしでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）を実施した。F001 は前の段で解消済みのため変更せず、管理計画の継続ゲートの起案・整理（`BA`・`PM`）との食い違いを、pm-raci-sample の判断行の補足に 1 項目足して直した。","handoff":["R5-1: R5 / 1. 適用方針から 2. 成果物別 RACI / F001（成果物別 RACI の行から成果物 ID を確かめられない） / - / `vp-qe-kata-conformance`。前の段で「対象 ID」列が入り、全行に成果物 ID または `kinuya-*` 記録名が書かれていて、rulebook「ファイル命名・ID規則」の一意照合を満たす。追加の修正は不要 / -","R5-2: R5 / 3. 判断・プロセス別 RACI / [[specdojo:pm-plan-sample|管理計画]] の判断ゲート「店頭試用後の継続」は起案・整理を `BA`、`PM` とするが、RACI の判断行「リリース・試用後の継続判断」では `BA` が `C` だけで、`BA` の整理の範囲が読めない / 表の後の補足に「試用後の継続判断では、`BA` が営業日別記録と利用者所感を整理し、`PM` が保守・引き継ぎの見込みと合わせて判断材料にまとめる。」を足した / `vp-qe-kata-conformance`、`vp-dev-change-impact`。迷った理由: この行はリリース判断と継続判断を 1 行にまとめており、`BA` を `R` にすると起案しないリリース判断まで作業責任になる。選ばなかった案: (1) `BA` を `R` にして主担当を注記する、(2) 行を「リリース判断」と「試用後の継続判断」に分ける（表が大きくなるので見送った） / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-raci-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pm-raci-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/pm-raci-sample.md だけで、pjr 個票・plan・result を変更していない"}]}
+</specdojo_executor_evidence>

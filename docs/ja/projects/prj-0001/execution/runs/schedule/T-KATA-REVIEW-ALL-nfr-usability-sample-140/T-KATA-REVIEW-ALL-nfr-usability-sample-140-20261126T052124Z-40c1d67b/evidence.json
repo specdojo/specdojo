@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-nfr-usability-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-nfr-usability-sample-140-20261126T052124Z-40c1d67b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T05:22:12.689Z",
+    "completed_at": "2026-11-26T05:25:04.558Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-usability-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-usability-sample.md | 32 ++++++++++++------------\n 1 file changed, 16 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-usability-sample.md",
+      "status": "passed",
+      "summary": "表の列幅を整形した（1 ファイル、エラーなし）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは sample 1 件だけで、plan・result・個票の履歴蓄積ファイルを変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-usability-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-usability-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 操作性要件\n\n## 1. 概要（対象・目的）\n\n本書は、店主代表と不定期に店番する家族利用者代表が、店頭のタブレットで現金会計とつけの記録・残高確認を説明書なしで終えられるように、操作品質の基準を定める。守りたいのは、操作に迷って来店客を待たせること、会計やつけの誤登録、店番の交代ごとに操作を教え直す手間の 3 つである。\n\n基準の厳しさの\n… output omitted …\n非機能要件]] | 他の非機能要件との位置づけ |\n| 根拠 | \\[\\[specdojo:prj-overview-sample\\|プロジェクト概要]] | 店番の継続とつけ残高を 1 分以内で確認する目標 |\n| 受入条件 | `sac-store-sales` | `nfr-usb-001`〜`nfr-usb-004` の合否判定（未作成） |\n| 総合テスト | \\[\\[specdojo:stc-sample\\|総合テストカタログ: 店頭の現金販売]] | `nfr-usb-005`・`nfr-usb-006` を判定する総合テストの会計の経路 |\n| 画面仕様 | \\[\\[specdojo:uis-sample\\|販売登録画面 画面仕様]] | 会計の操作手順とエラー表示の正本 |\n| 画面仕様 | `uis-credit-ledger` | つけの記録・残高確認の操作手順（未作成） |\n\n基準値を変えたときは、表の受入条件と総合テストの文書を見直す。画面の操作やエラー表示を変えたときは、`nfr-usb-005`・`nfr-usb-006` を測り直す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7628 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7628 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-usability-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) \n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1542}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  14:28:14\n   Duration  2.56s (transform 5.39s, setup 792ms, import 7.83s, tests 6.28s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nd: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-usability-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-usability-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）の確かめが終わった。参照先の sample と食い違う 2 か所を `docs/ja/specdojo/samples/nfr-usability-sample.md` で直した。1 つ目は `nfr-usb-006` の `備考` で、確定済み会計の取消を対象画面の外の業務として対象外にした。2 つ目は「総合テスト」行の目的を `stc-sample` の実際の範囲に合わせた。F001・F002 は前の段の版ですでに解消されていた。表の列幅は prettier で整えた。確かめの表（13 行）は最終応答にある。",
+  "completion_status": "complete",
+  "handoff": [
+    "[minor/vp-qe-verifiability] 「操作性要件一覧」の `nfr-usb-006` の `備考` は、破壊的操作に「確定済み会計の取消」を含めていた。`specdojo:uis-sample` の「確定後の取消は別業務とする」（21 行目）と食い違い、対象画面のどれにもこの業務がないため、測定方法の「対象画面の操作から洗い出す」では数えられない。対象を「取引中止、つけ記録の取消」とし、確定済み会計の取消は対象画面の外の業務として対象外にした。",
+    "[minor/vp-arc-technical-constraints] 「関連ドキュメント導線」の「総合テスト」行は、`specdojo:stc-sample` の目的を「会計画面でのエラー表示と確認」としていた。`stc-sample` が扱うのは確定前の取消と印刷失敗の警告だけで（16・82・96〜97 行目）、入力エラーの表示や中止確認ダイアログのケースはない。目的を「`nfr-usb-005`・`nfr-usb-006` を判定する総合テストの会計の経路」に改めた。",
+    "確かめられない主張: `nfr-usb-002` の取消理由「誤登録」と、`nfr-usb-006` のつけ記録の取消の確認には正本がない。`uis-credit-ledger` と取消業務の画面仕様が未作成のためである。共通サンプル文脈とは食い違わないので仮定として残した。画面仕様ができた後に照合し直す。",
+    "grade の finding F001・F002 は前の段の版ですでに解消されていた。F001 は `sac-store-sales` に「（未作成）」が明示済み、F002 は判定者が Role code の `BA・QE` になっている。この段では追加の修正をしていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-usability-sample-140/T-KATA-REVIEW-ALL-nfr-usability-sample-140-20261126T052124Z-40c1d67b/executor.log",
+      "bytes": 7629,
+      "truncated": false
+    }
+  ]
+}

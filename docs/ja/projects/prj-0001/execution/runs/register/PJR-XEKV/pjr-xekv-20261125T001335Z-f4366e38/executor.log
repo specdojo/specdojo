@@ -1,0 +1,17 @@
+`--section-file` の拒否メッセージを、使える見出しの深さ（`###`）と、拒んだ見出しの行を示す形に直しました。個票の対応結果に、この 2 回目の実施内容を追記しました。
+
+メッセージは次の形です。
+
+`Section file must not contain markdown headings other than "###" subsection headings (only "###" is allowed in a section body): <path>:<行>: <見出し行>`
+
+直した場所は `src/register/section.ts` で、最初に見つけた拒否対象の見出しの行番号と見出し行を出します。
+
+`tests/src/register/section.test.ts` で、メッセージの文言、`##` の見出し行（`:3: ## 不正な見出し`）、`#` の見出し行（`:1: # 不正なH1`）を確かめています。`tests/src/register/section.test.ts` は 23 件すべて通りました。`npm run typecheck` もエラーなしで終わりました。`npm run lint:ts` はエラー 0 で、警告が 43 件あります。
+
+1 回目の実行で足した 3 つの修正（EPIPE 対策、列の段への `exec resume --task`、`###` の小節見出し）は、すでに入っています。
+
+`npm run test:unit` は実行していません。親の検証として runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"--section-file の拒否メッセージを、使える見出し（###）と拒んだ見出しの行（path:行: 見出し行）を示す形に変更し、単体テストと個票の対応結果を更新した。","handoff":["判断: 拒否メッセージは英語のまま、'only \"###\" is allowed' と path:line: 見出し行を含める形にした。最初に見つけた拒否対象の見出し 1 件のみ報告する。","統合の後に、オーケストレーターが 3 つの動き（EPIPE、exec-resume の段、--section-file の ### と拒否メッセージ）を手元で確かめてから close する。","CHANGELOG に書く事項は個票の 5.2 のとおり（今回の変更は Changed の行に含まれる）。保護された設定の変更は不要。"],"validations":[{"command":"npx vitest run tests/src/register/section.test.ts","status":"passed","summary":"23 tests passed"},{"command":"npm run typecheck","status":"passed","summary":"no errors"},{"command":"npm run lint:ts","status":"passed","summary":"0 errors, 43 warnings (既存の max-lines など)"},{"command":"npm run test:unit","status":"not_applicable","reason":"親 runner が実行する検証（pipeline.parent_validations）。対象のテストは個別に実行済み。"}]}
+</specdojo_executor_evidence>

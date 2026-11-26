@@ -638,7 +638,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     configuredWorktreeBase(schedulePath),
   );
   const worktreeTaskId = `${projectId}-${preview.record.run_id}`;
-  const worktree = ensureExecWorktree({ repoRoot, worktreeBase, taskId: worktreeTaskId });
+  const worktree = await ensureExecWorktree({ repoRoot, worktreeBase, taskId: worktreeTaskId });
   // materializeJobRun resolves an omitted --scheduled-at to the manual launch time. Reuse that
   // exact slot in the child so the worktree writes the job run that the parent previewed.
   const childArgs = jobChildArgs(opts, projectId, preview.record.scheduled_at);
@@ -849,7 +849,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   }
 
   const preIntegrationCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
-  mergeWorktreeIntoCurrent({
+  await mergeWorktreeIntoCurrent({
     context: { repoRoot, schedulePath, executionPath },
     worktree,
     taskId: reviewTaskId,

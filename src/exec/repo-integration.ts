@@ -1,7 +1,9 @@
+import { gitResultAsync } from "../shared/git.js";
+import { timeWorktreeOperation } from "./worktree-process.js";
 import { productBranchRecords } from "./product-branch-records.js";
 import { appendFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { acquireSchedulerLock, releaseSchedulerLock } from "./events.js";
+import { acquireSchedulerLockAsync, releaseSchedulerLock } from "./events.js";
 import type { PipelineRepoIntegrationState } from "./pipeline-state.js";
 import { productIntegrationTarget } from "./task-repos.js";
 import {
@@ -489,11 +491,11 @@ export function projectMergeBlockers(params: {
  * commit is written with `merge-tree` / `commit-tree` and the branch is moved with a
  * compare-and-swap `update-ref`, so a concurrent update of the target is never overwritten.
  */
-export function mergeProductIntoTarget(params: {
+export async function mergeProductIntoTarget(params: {
   product: ProductWorktree;
   message: string;
   failureLogPath?: string;
-}): string {
+}): Promise<string> {
   const { product, message } = params;
   const target = productIntegrationTarget(product);
   const checkout = checkoutOfBranch(product.repoRoot, target);
@@ -511,7 +513,9 @@ export function mergeProductIntoTarget(params: {
       );
     }
     const result = checkout
-      ? gitResult(checkout, ["merge", "--ff-only", tip])
+      ? await timeWorktreeOperation("product-merge", () =>
+          gitResultAsync(checkout, ["merge", "--ff-only", tip]),
+        )
       : gitResult(product.repoRoot, [
           "update-ref",
           "-m",
@@ -528,7 +532,9 @@ export function mergeProductIntoTarget(params: {
     return tip;
   }
   if (checkout) {
-    const result = gitResult(checkout, ["merge", "--no-ff", "-m", message, product.branch]);
+    const result = await timeWorktreeOperation("product-merge", () =>
+      gitResultAsync(checkout, ["merge", "--no-ff", "-m", message, product.branch]),
+    );
     if (result.status === 0) return gitOutput(checkout, ["rev-parse", "HEAD"]).trim();
     const output = [gitText(result.stdout), gitText(result.stderr)].filter(Boolean).join("\n");
     const abort = mergeInProgress(checkout) ? abortMerge(checkout) : undefined;
@@ -634,6 +640,25 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+// 同じ process で並行するタスクの統合を 1 件ずつに保つ（PJR-P8SX）。統合の commit を非同期に
+// したため、同期だったことで暗黙に保たれていた直列が崩れ、`checkProject` から `mergeProject`
+// までの間や、統合の前後の HEAD の取得の間に、別タスクの merge が入りうる。
+let taskIntegrationQueue: Promise<void> = Promise.resolve();
+
+export async function withTaskIntegrationLock<T>(work: () => Promise<T>): Promise<T> {
+  const previous = taskIntegrationQueue;
+  let release: () => void = () => undefined;
+  taskIntegrationQueue = new Promise<void>((resolveRelease) => {
+    release = resolveRelease;
+  });
+  await previous;
+  try {
+    return await work();
+  } finally {
+    release();
+  }
+}
+
 /**
  * Integrate a task. Without product worktrees this runs `beforeProjectMerge` and `mergeProject`
  * only (the single-repository sequence, unchanged). With product worktrees:
@@ -648,25 +673,26 @@ function errorMessage(error: unknown): string {
  * `beforeProjectMerge` commits the state, because its merge commit contains the state itself;
  * a failure overwrites the record with `failed`. Failures are thrown as RepoIntegrationError.
  */
-export function integrateTaskRepositories(params: {
+export async function integrateTaskRepositories(params: {
   worktree: ExecWorktree;
   mergeMessage: string;
   // プロダクト側の merge commit の message。省略時は `mergeMessage`。プロジェクト側の記帳
   // （遷移・executor など）をプロダクトの履歴へ複製しないために分ける（PJR-30SW）。
   productMergeMessage?: string | ((product: ProductWorktree) => string);
   checkProject: () => RepoIntegrationBlocker[];
-  beforeProjectMerge: () => void;
-  mergeProject: () => void;
+  // 統合の commit の hook が event loop を止めないよう、非同期の処理を渡せる（PJR-P8SX）。
+  beforeProjectMerge: () => void | Promise<void>;
+  mergeProject: () => void | Promise<void>;
   record?: RepoIntegrationRecorder;
   failureLogPath?: string;
   // 同じプロジェクトの並行タスクがプロダクトの統合先を同時に更新しないよう、プロジェクトの
   // merge と同じ scheduler lock で直列化する（schedule path）。
   lockPath?: string;
-}): void {
+}): Promise<void> {
   const products = params.worktree.repos ?? [];
   if (products.length === 0) {
-    params.beforeProjectMerge();
-    params.mergeProject();
+    await params.beforeProjectMerge();
+    await params.mergeProject();
     return;
   }
   const record: RepoIntegrationRecorder = params.record ?? (() => undefined);
@@ -751,13 +777,13 @@ export function integrateTaskRepositories(params: {
     let commit: string;
     try {
       if (params.lockPath) {
-        lockDir = acquireSchedulerLock(params.lockPath, {
+        lockDir = await acquireSchedulerLockAsync(params.lockPath, {
           actor: `worktree-merge:${product.name}`,
           lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
           lockStaleMs: DEFAULT_LOCK_STALE_MS,
         });
       }
-      commit = mergeProductIntoTarget({
+      commit = await mergeProductIntoTarget({
         product,
         message:
           typeof params.productMergeMessage === "function"
@@ -785,8 +811,8 @@ export function integrateTaskRepositories(params: {
     merged_at: new Date().toISOString(),
   });
   try {
-    params.beforeProjectMerge();
-    params.mergeProject();
+    await params.beforeProjectMerge();
+    await params.mergeProject();
   } catch (error) {
     throw fail(PROJECT_REPO_NAME, errorMessage(error));
   }

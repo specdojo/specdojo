@@ -1,0 +1,22 @@
+R5（整合）の段を終え、`docs/ja/specdojo/samples/etc-index-sample.md` だけを直しました。直したのは 4 点です。もう 1 点は相手側の sample にある食い違いなので、こちらは変えずに直す案だけを handoff に残しています。prettier による整形と markdownlint はエラーなしで通りました。
+
+**直した点（etc-index-sample）**
+- **適用対象の範囲:** 内部結合テストで扱う範囲に「保全・復元処理」を足し、tsp-index-sample の内部結合テストの範囲に合わせました。
+- **分割の見直しの閾値:** 「15 を超える・50 行を超えた」を、rulebook と同じ「15 以上・50 行以上」にしました（F009）。
+- **ケース表の記入例のトレース列:** 説明文を ID に替え、`TR-01,TR-05` にしました。同じケースの etc-sample の値です（F007）。
+- **記入例の証跡:** etc-sample の同じケースに合わせ、テストファイル名を足しました。
+
+**相手側で直すべき点（要判断）**
+- F001・F008 は「tsp-index-sample が `PATH-04`〜`PATH-07` を外部結合テストの範囲としている」という前提でした。しかし tsp-index-sample の今の版は、`PATH-04` と `PATH-07` を内部結合テスト、`PATH-05` と `PATH-06` を外部結合テストとしています。本書はこの割り振りと合っているので、そのままにしました。
+- 食い違っているのは itc-index-sample のほうです。`PATH-04`〜`PATH-07` を外部結合テストの範囲とし、内部結合テストでは扱わないとしています。このままでは、保全の取得（`PATH-04`）と復元の回復（`PATH-07`）をどのテストも扱いません。
+- 直す案は、itc-index-sample を tsp-index-sample に合わせて `PATH-04`・`PATH-07` を内部結合テストの範囲に入れ、外部結合テストの代替先を `PATH-05`・`PATH-06` に絞ることです。tsp-index-sample のほうを直す選択肢もあり、どちらに合わせるかは判断が要ります。
+
+**この段では扱わなかった finding**
+- F002〜F004 は計画・報告の観点（`vp-pm-*`）です。kata-guide がこの観点を kata の段のレビューで使わないと定めているため、見送りました。
+- F005・F006 は、前の段の版ですでに直っていました。
+
+lint・型検査・テストなどは、このあと親 runner がまとめて実行します。result は作っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）として etc-index-sample を tsp-index-sample・etc-sample・etc-index-rulebook に合わせて修正（内部結合テストの範囲の表記、分割閾値、記入例のトレース・証跡）。相手側（itc-index-sample）の食い違いは修正案として handoff に記録。","handoff":["R5-1: R5 / 1. 本ドキュメントの目的と適用対象 / 内部結合テストで扱う範囲が「画面・記録サービス・業務記録 DB」となっており、tsp-index-sample の内部結合テストの範囲（保全・復元処理を含む）と一致しない / 「画面・記録サービス・保全・復元処理と業務記録データベース（DB）の結合は内部結合テストで扱う」に直した / vp-qe-kata-conformance（tsp-index-sample のテストレベル表の内部結合テストの行） / -","R5-2: R5 / 2. テスト対象の括り方と分割基準 / 分割を見直す閾値「観点が 15 を超える・ケース表が 50 行を超えた」が、rulebook の「観点が 15 以上、表が 50 行以上」と境界値で食い違う（F009） / 「観点が 15 以上か、ケース表が 50 行以上になった時点」に直した / vp-qe-kata-conformance（etc-index-rulebook の分割基準） / -","R5-3: R5 / 8. ケース表の共通カラム / 記入例のトレース列が説明文で、同じケース et-receipt-print-failure-handling-010 の etc-sample の値（`TR-01,TR-05`）や rulebook が求める ID と合わない（F007） / `TR-01,TR-05`（etc-receipt-print のトレース表で仕様 ID に対応付ける）に直した / vp-qe-kata-conformance（etc-index-rulebook のケース表カラムの定義、etc-rulebook のトレース章、etc-sample の 6.2.2.） / -","R5-4: R5 / 8. ケース表の共通カラム / 記入例の証跡が、etc-sample の同じケースの証跡（テストファイル名を含む）と食い違う / `tests/et/receipt-print/failure-handling.test.ts` を加え、etc-sample と同じ証跡の構成にした / vp-qe-kata-conformance（etc-sample の 6.2.2.） / -","R5-5: R5 / 2. テスト対象の括り方と分割基準（相手側: itc-index-sample） / F001・F008 は tsp-index-sample が `PATH-04`〜`PATH-07` を外部結合テストの範囲とする前提だが、今の版の tsp-index-sample は `PATH-04`・`PATH-07` を内部結合テスト、`PATH-05`・`PATH-06` を外部結合テストとしており、etc-index-sample と一致する。食い違っているのは itc-index-sample の適用対象の段落と、外部結合テストの行・対象外の表で、`PATH-04`〜`PATH-07` を外部結合テスト（etc-backup-storage）の範囲として内部結合テストでは扱わないとしている。このままでは保全の取得（`PATH-04`）と復元の回復（`PATH-07`）をどのテストも扱わない / - / vp-qe-kata-conformance、vp-dev-change-impact。相手側の案: itc-index-sample を tsp-index-sample に合わせ、`PATH-04`・`PATH-07` を内部結合テストの範囲に入れて保全の取得と復元後の記録一致の term・観点を置き、外部結合テストの代替先を `PATH-05`・`PATH-06` に絞る。選ばなかった案: etc-index-sample に `PATH-04`・`PATH-07` と復元の回復の観点を加える（tsp-index-sample の内部結合テストの範囲と保全・復元の内部結合テストでの確認の記述に反するため不採用）。tsp-index-sample を正本としたが、どちらに合わせるかは人が判断する / 要判断","R5-6: R5 / 9. メモ / 将来課題 / F002（vp-pm-plan-feasibility）・F003・F004（vp-pm-control-reporting）は計画・報告の観点で、kata-guide の「kata の観点の組」はこれらを kata の段のレビューで使わないと定めているため、この段では扱わない / - / kata-guide の kata の観点の組（外す観点の表）。必要なら登録簿の運用として別途判断する / -","R5-7: R5 / 4. 観点の立て方（共通）・5. 条件の立て方（共通） / F005（遅延の具体値）・F006（ET で扱う範囲の非機能の型）は前の段の版ですでに解消済み（遅延は 9 秒・29 秒、非機能の行あり）のため指摘を繰り返さない / - / vp-qe-verifiability、vp-qe-omissions-consistency（前の段の範囲） / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"変更した sample を整形（表の列幅を揃えた）"},{"command":"npx markdownlint docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T12:58:08Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130",
+  "by": "opus-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 46 MD038/no-space-in-code Spaces inside code span elements: \"- R3-4: R3 / 充足状況サマリ、ギャップと対応方針 / grade F001: 対象列の 2 件目以降の項目に要求文書 ID がなく、区切りの `,` と `・` が混在している（優先順の箇条書きの `BAC-03` も同じ） / 表の対象列で各項目に文書 ID を付け、区切りをマトリクスの対応テストID列と同じ `, ` にそろえた。優先順の箇条書きは `bac-sample BAC-\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "luna-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac"
+  }
+}

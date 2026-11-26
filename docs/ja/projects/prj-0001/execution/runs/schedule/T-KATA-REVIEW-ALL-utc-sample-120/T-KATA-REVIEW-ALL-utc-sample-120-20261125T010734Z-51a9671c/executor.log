@@ -1,0 +1,23 @@
+R2（構成）のレビューは終わりました。sample の構成はほぼ rulebook どおりだったので、直したのはトレース表の 1 セルだけです。lint は親 runner が実行します。私は Prettier の整形だけ実行し、通りました。
+
+**構成を照合した結果**
+- 章の順は rulebook の「本文要件」と一致しています（`## 1.` 概要（`<term>`）から `## 6.` テスト観点とケースまで）。
+- 「テスト観点とケース」の配下は `### 6.n. 観点:` → `#### 6.n.1. 意図` → `#### 6.n.2. 条件・ケース表` の順で、rulebook に沿っています。
+- ケースは代表（010）→境界（020）→重大例外（6.2）の順で、前提から結論の順に読めます。
+- template は rulebook で `undecided` のため、比べる相手がありません。
+
+**直した箇所（`docs/ja/specdojo/samples/utc-sample.md`）**
+- トレース表の TR-05 では、補足の「（UT は要求データのみ）」が「要点」の列に入り、「備考」が空でした。補足を「備考」に移して「UT は印刷要求データのみ」とし、「要点」は 1 点だけにしました。rulebook の列の定義（要点は 1 行、補足は備考）と、TR-01〜03 の書き方に合わせています。
+
+**grade の finding の扱い**
+- F005：R1 で証跡にテストコードのパスが入り、解消済みです。
+- F003・F004・F008：R1 で直っています。残りの確かめは R4 に任せます。
+- F006・F007：index との食い違いなので R5 に任せます。
+- F001・F002・F009：使った観点が、ガイドで kata のレビューから外すとされているものです。この段では扱いません。
+
+**残る提案（rulebook は変えていません）**
+- `utc-rulebook` の「全体方針」の `_UNDECIDED_` に「sample は本文要件の見出し構成へ未整合」とありますが、もう当てはまりません。この一文を消すか「整合済み」に改める案を出します。recipe・template の要否が未判断である点は残します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）で utc-sample.md の章の順・観点配下の見出し・ケースの並びが rulebook 本文要件と一致することを確認し、トレース表 TR-05 の補足を要点から備考へ移した。rulebook は変更せず改訂案を handoff に残した。","handoff":["No: 1 / 段: R2 / 箇所: docs/ja/specdojo/samples/utc-sample.md「トレース」TR-05 / 指摘: 補足「（UT は要求データのみ）」が要点の列に入り、備考が空で、表の列の分担が崩れていた / 直した案: 要点を「会計確定後にレシートを印刷する」、備考を「UT は印刷要求データのみ」にした（sample に反映済み） / 根拠: utc-rulebook「トレース」の列定義（要点はケース作成の判断に使ったポイントを1行、備考は補足）、同じ表の TR-01〜03 の書き方、観点 `vp-arc-document-structure` / 印: なし","No: 2 / 段: R2 / 箇所: docs/ja/specdojo/rulebooks/utc-rulebook.md「全体方針」の `_UNDECIDED_` / 指摘: 「sample は『本文要件』の見出し構成へ未整合」とあるが、sample は本文要件の 6 章と観点配下の見出し（`### 6.n. 観点:`・`#### 6.n.1. 意図`・`#### 6.n.2. 条件・ケース表`）にすでに沿っており、記述が古い / 直した案: rulebook の当該文を削るか「整合済み」に改める。`recipe`・`template` の要否が未判断である点は残す（rulebook は本タスクでは変更しない） / 根拠: utc-rulebook「本文要件」と sample の見出しの照合、観点 `vp-qe-omissions-consistency` / 印: 要判断","No: 3 / 段: R2 / 箇所: grade の finding の扱い / 指摘: F005（`vp-qe-omissions-consistency`、証跡のパス）は R1 で全ケースの証跡に `tests/unit/sales-checkout.test.ts` が入り解消済み。F003・F004・F008 も R1 で直っており、残りの確かめは R4 に任せる。F006・F007（index との食い違い）は R5 に任せる。F001・F002・F009 は kata-guide「kata の観点の組」で kata の段のレビューから外す観点（`vp-po-decision-readiness`・`vp-pm-dependency-risk`・`vp-ops-release-readiness`）のため、この段では扱わない / 直した案: なし / 根拠: docs/ja/specdojo/guides/kata-guide.md「kata を agent でレビューする」 / 印: なし","No: 4 / 段: R2 / 箇所: 比較に使う template / 指摘: utc-rulebook の frontmatter で `template: undecided` のため、template との構成の照合はできない / 直した案: template を作るときに本 sample の章構成を基にする（PJR-WYTX） / 根拠: utc-rulebook の frontmatter と「全体方針」 / 印: なし"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/utc-sample.md","status":"passed","summary":"整形が完了し、表の列幅をそろえた"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは docs/ja/specdojo/samples/utc-sample.md だけで、plan・result・個票などの履歴ファイルは変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

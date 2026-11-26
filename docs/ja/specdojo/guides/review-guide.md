@@ -180,7 +180,7 @@ viewpoint は継続品質評価 `specdojo grade` の正本です。review plan �
 
 文書の score は、category ごとの score（観点の level 平均 × 25）を `grade_rubric.weights` の重みで加重平均した値です。重みは kata と成果物で別に持ち、どちらも 9 category すべてに重みを置きます。文書に適用される観点が 1 つもない category は、その文書の加重平均から外します。観点の category に重みがない rubric は、grade の実行時にエラーで失敗します。verdict は blocker があれば `fail`、major があるか score が `pass_score` 未満なら `needs-work`、それ以外は `pass` です。`pass_score` は level 3（軽微な課題）の score に合わせて 75 とし、major のない文書が category の数や重みに関係なく満たす下限にしています。
 
-rubric は `grade-rubric-v2` です。v1 は 4 category（architecture / consistency / quality / usability）だけで score を計算していました。v2 は 28 観点すべてと 9 category で計算するため、v1 の grade result とは score・verdict を比較できません。同じ文書でも、目的・計画・業務価値・実装・運用の観点が加わることで score が変わります。grade result の `rubric` が `grade-rubric-v1` の結果は旧基準の値として扱い、現在品質の根拠や傾向比較に使う前に `grade list --rubric-outdated` で列挙して再評価します。`--changed-only` は rubric の違いを検出しません。
+rubric は `grade-rubric-v3` です。v3 は v2 と同じ重みと `pass_score` に、機械で測る大きさの上限（`grade_rubric.size_limits`）を加えました。上限を超えた文書は `vp-arc-conciseness` の level と verdict が v2 と変わりうるため、`rubric` が `grade-rubric-v2` の結果も `grade list --rubric-outdated` で選ばれます。v1 は 4 category（architecture / consistency / quality / usability）だけで score を計算していました。v2 は 28 観点すべてと 9 category で計算するため、v1 の grade result とは score・verdict を比較できません。同じ文書でも、目的・計画・業務価値・実装・運用の観点が加わることで score が変わります。grade result の `rubric` が `grade-rubric-v1` の結果は旧基準の値として扱い、現在品質の根拠や傾向比較に使う前に `grade list --rubric-outdated` で列挙して再評価します。`--changed-only` は rubric の違いを検出しません。
 
 grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、完成時の合意形成や最終承認を代替しません。
 
@@ -193,6 +193,14 @@ grade は継続監視の最新スナップショット、review result は完成
 review result は特定時点に誰が何を確認し、どの合意を行ったかを残す不変の履歴です。既存 review result は削除・移行せず、最新状態の判定には利用しません。090 の review タスクと `G-*-review-pass` は人の合意形成・最終承認のゲートとして維持し、継続品質の再評価は grade が担います。これにより二つの結果を同じ最新状態として同期させる必要をなくします。
 
 `vp-arc-single-responsibility` は、異なる主題を一つの文書へ同居させている状態を検出します。章を独立して参照・更新できるか、対象読者と利用時点が異なるか、別々の sample・recipe・template に対応するかを組み合わせて判断します。長さや対応する実践の型の数だけでは fail にしません。複数主題の案内自体を責務とする index、catalog、overview は `document_kinds.exclude` で対象外にし、判定文へ例外を混在させません。同じ主張の反復や正本の過剰な再掲は `vp-arc-conciseness` で扱います。
+
+`vp-arc-conciseness` は、共通の正本にある運用の記述の再掲と、同じ判断の複数の章での言い直しを冗長として扱います。判断情報を失わずに削れる量が本文の約 2 割以上なら major にできます。`grade apply` は LLM を使わずに次の大きさの指標を測り、grade result の `size_metrics` に記録します。文字数は本文の空白・表の区切り行・finding コメントを除いて数えます。
+
+- 宣言された sample に対する文字数の比（成果物だけ。rulebook が宣言する sample と比べる）。
+- 前回の grade の時点からの増え方（前回の結果に `size_metrics` がある場合だけ）。
+- 文書の運用・検証の章が本文に占める割合（行を含む最も深い見出しが `operations_headings` の語を含む節）。
+
+指標が `size_limits` の上限を超えると、`vp-arc-conciseness` に「大きさの指標:」で始まる finding を付け、程度に応じて minor か major にします。grade plan は指標を executor に示し、削れる箇所を行番号つきの finding で示させます。長さだけでは減点しないため、executor が削れる箇所を minor 以上の finding で示さなかった場合（上限を超えた分が判断に要る背景・制約・例外・完了条件である場合）は、指標の finding を note に下げます。上限はプロジェクトの観点定義の `grade_rubric` で変えられます。YAML の文書は測りません。
 
 分割が必要な場合、finding には独立する主題と境界候補、参照・カタログへの影響を記録します。grade はファイル作成や ID 採番を行わず、人が finding を確認して分割の採否と PJR 起票を判断します。起票後は新規ファイル、成果物カタログ、参照元、対応する sample・recipe・template の変更を通常の edit task として扱います。
 

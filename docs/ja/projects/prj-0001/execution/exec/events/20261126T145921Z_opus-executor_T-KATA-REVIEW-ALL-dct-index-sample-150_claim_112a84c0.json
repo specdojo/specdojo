@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-26T14:59:21Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-dct-index-sample-150",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

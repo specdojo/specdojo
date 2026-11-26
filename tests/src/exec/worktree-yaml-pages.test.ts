@@ -41,17 +41,17 @@ describe("selectStaleYamlPageSources", () => {
 });
 
 describe("refreshWorktreeYamlPages", () => {
-  it("does not run the build when no YAML page is stale", () => {
+  it("does not run the build when no YAML page is stale", async () => {
     const build = vi.fn(() => ({ exitCode: 0, output: "" }));
 
-    const actual = refreshWorktreeYamlPages("/worktree", { stale: () => [], build });
+    const actual = await refreshWorktreeYamlPages("/worktree", { stale: () => [], build });
 
     expect(actual).toEqual({ status: "skipped" });
     expect(build).not.toHaveBeenCalled();
   });
 
-  it("names the changed YAML and keeps the build output when the rebuild fails", () => {
-    const actual = refreshWorktreeYamlPages("/worktree", {
+  it("names the changed YAML and keeps the build output when the rebuild fails", async () => {
+    const actual = await refreshWorktreeYamlPages("/worktree", {
       stale: () => ["docs/ja/a/ifx-index.yaml"],
       build: () => ({
         exitCode: 1,
@@ -75,10 +75,10 @@ describe("refreshYamlPagesBeforeParentValidations", () => {
     vi.restoreAllMocks();
   });
 
-  it("records nothing when the pages were rebuilt or left as they were", () => {
+  it("records nothing when the pages were rebuilt or left as they were", async () => {
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
-    const actual = refreshYamlPagesBeforeParentValidations(
+    const actual = await refreshYamlPagesBeforeParentValidations(
       { project: "/project", repos: { app1: "/app1" } },
       (path) =>
         path === "/project"
@@ -89,8 +89,8 @@ describe("refreshYamlPagesBeforeParentValidations", () => {
     expect(actual).toEqual({ validations: [], failureOutputs: [] });
   });
 
-  it("turns a failed rebuild into a failed runner validation", () => {
-    const actual = refreshYamlPagesBeforeParentValidations({ project: "/project" }, () => ({
+  it("turns a failed rebuild into a failed runner validation", async () => {
+    const actual = await refreshYamlPagesBeforeParentValidations({ project: "/project" }, () => ({
       status: "failed",
       sources: ["docs/ja/a.yaml"],
       summary: "yaml-pages rebuild for changed YAML (docs/ja/a.yaml) exited with 1",

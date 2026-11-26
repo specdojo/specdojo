@@ -1,0 +1,21 @@
+R5（整合）を終え、sample `docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md` を 3 か所直しました。Prettier の整形は通りましたが、lint などの検査は親 runner に任せていて、この段では実行していません。frontmatter の `status` は `ready` のまま変えていません。
+
+読んで照らし合わせたもの:
+- 同じ接頭辞の sample: `prj-issues-and-approach`、`prj-scope`、`prj-assumptions-constraints-dependencies`、`prj-success-criteria-and-acceptance-criteria`、`pm-plan`、`prj-overview`
+- 用語集の `gl-*.yaml`（SpecDojo 自体の用語で、きぬやの業務用語は載っていないため衝突なし）
+- Sample 記述標準の共通サンプル文脈
+
+**直した点**
+1. **用語「両利用者」→「両代表」:** 成功基準と受入条件の sample は、店主代表と家族利用者代表をまとめて「両代表」と呼んでいます。この sample だけ「両利用者」と書いていたので、すべてそろえました。必須の 6 タスク（3 タスク × 2 人）は SC-01 と合っています。
+2. **用語「簡易一覧」→「簡易レポート」:** スコープ sample の名称に合わせました（根拠資料と ALT-04 の構成要素の 2 か所）。
+3. **決定記録へのリンク:** 文末の「決定記録」を `[[specdojo:dec-sample|決定記録]]` のリンクにしました。スコープ sample の書き方と同じです。
+
+**直さずに残した点（要判断）**
+- この sample は「期間評価の目安は準備着手の承認から2週間」と仮定しています。一方、管理計画の sample（M-02）とスコープ・概要の sample では、2 週間は「受入後の店頭試用・定着」の期間です。言葉は似ていますが指す区間が違うので、読み手が取り違えるおそれがあります。
+- この 2 週間の出典が見つからず、どちらの意図かは判断できませんでした。そのため、仮定の文に「準備期間は M-02 の店頭試用 2 週間とは別」と書き足す案に留めています。
+
+ID の対応（P-01〜P-03、A-01〜A-03、ACD-A02/C02/D01〜D04、U-01〜U-03、SC/AC）、スコープ外の範囲、ALT と A の対応、最終判断者が `PO` であることは、いずれも参照先と合っていました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）を実施し、成功基準と受入条件の sample の「両代表」とスコープ sample の「簡易レポート」に用語をそろえ、決定記録を dec-sample への wikilink にした。準備期間 2 週間の仮定と M-02 の試用 2 週間の区別は要判断として案のみ残した。","handoff":["R5-1: R5 / 3. 評価軸と評価基準、4.1. D-01、4.3. 比較試行の完了条件 / 「両利用者」が、成功基準と受入条件の sample で定義された「両代表」（店主代表と家族利用者代表）と表記が食い違う / 本文と表の「両利用者」をすべて「両代表」に置き換えた / vp-qe-kata-conformance（[[specdojo:prj-success-criteria-and-acceptance-criteria-sample]] の判定対象と範囲の段落の定義） / -","R5-2: R5 / 1. 比較目的と前提条件、2.1. D-01 / 「簡易一覧」が、スコープ sample の対象システムの名称「簡易レポート」と食い違う / 根拠資料の要約と ALT-04 の主な構成要素を「簡易レポート」にした / vp-qe-kata-conformance（[[specdojo:prj-scope-sample]] の対象システムの表） / -","R5-3: R5 / 6. 決定と見直し / 記録先の「決定記録」が素の文字列で、スコープ sample は同じ記録先を dec-sample へのリンクで示している / [[specdojo:dec-sample|決定記録]] の wikilink にした / vp-dev-change-impact（参照先を辿れるようにする。[[specdojo:prj-scope-sample]] のスコープ変更方針の記法） / -","R5-4: R5 / 1. 比較目的と前提条件（_ASSUMPTION_）、3. 評価軸と評価基準（期間） / 「期間評価の目安は準備着手の承認から2週間」が指す区間は準備期間である。pm-plan-sample の M-02 とスコープ・概要の sample では、2週間は受入後の店頭試用・定着の期間を指し、読み手が取り違えるおそれがある / - / vp-qe-kata-conformance。直す案: この sample の _ASSUMPTION_ に「準備期間の目安であり、M-02 の店頭試用2週間とは別」と付記する。または pm-plan-sample の M-02 に準備期間の目安を足して出典を一つにする。準備期間 2 週間の出典が参照先に見当たらず、どちらを正とするか判断できないため、変更を見送った / 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md","status":"passed","summary":"変更した sample を整形し、表の列幅をそろえた"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため、executor では実行しない"}]}
+</specdojo_executor_evidence>

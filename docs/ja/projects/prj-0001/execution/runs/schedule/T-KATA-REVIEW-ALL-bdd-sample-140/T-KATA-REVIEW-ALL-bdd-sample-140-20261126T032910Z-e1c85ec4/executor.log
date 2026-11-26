@@ -1,0 +1,27 @@
+R4（正しさ）のレビューで誤りを 1 件見つけ、`docs/ja/specdojo/samples/bdd-sample.yaml` を直しました。直したのは用語集へのリンクの表示名です。ほかの主張は、共通サンプル文脈による業務の値を除き、すべて正本と一致しました。直した後、schema 検査（`npm run validate:schema:file`）と Prettier の検査はどちらも通っています。
+
+**直した点**
+- 15 行目、商品の説明の wikilink の表示名が「用語集 在庫・調達」になっていました。参照先 `gl-sample.yaml` の題は「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」で、「調達」という語は入っていません。表示名をこの題に合わせました。
+
+**主張ごとの確かめの表**（result の実施内容に載せる材料）
+
+| No | 主張（箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 行目の `$schema` の相対パス | `docs/specdojo/schemas/v1/bdd.schema.yaml` | パスを解決して読む | 一致 | samples から `../../../` で `docs/specdojo/schemas/v1` に届く |
+| 2 | ルートのキー（`id`・`type: data`・`status`・`rulebook`・`supersedes`） | `bdd.schema.yaml` | schema 検査 | 一致 | `valid` |
+| 3 | フィールドの `type`（`money`・`datetime`・`enum` など） | schema の type の enum | 読み取り | 一致 | 7 値の中にすべてある |
+| 4 | `glossary_term_id`・`related_terms` の 4 つの用語 ID | `gl-sample.yaml` | grep | 一致 | 4 つとも実在する |
+| 5 | wikilink の参照先 ID（`ccd-sample`・`gl-sample`・`br-sample`・`clis-sample`・`ifx-api-sample`） | 各 sample | grep | 一致 | すべて実在する |
+| 6 | 用語集リンクの表示名 | `gl-sample.yaml` の `title` | 読み取り | 不一致 → 修正 | 上の「直した点」のとおり |
+| 7 | `schema_ref` の指す先（`CreateSaleResponse`） | `ifx-api-sample.yaml` の 145 行目 | 読み取り | 一致 | ポインタの先が存在する |
+| 8 | 本部売上受付の `sale_id`・`status` と、許容値が `ACCEPTED` のみであること | 同じ箇所の 148〜156 行目 | 読み取り | 一致 | 拒否は 4xx の応答で返す記述とも合う |
+| 9 | 本部の売上 ID は店舗の売上 ID とは別に採番されること | `ifx-api-sample.yaml` の 18・109・152 行目 | 読み取り | 一致 | 店舗は `transaction_id` を送り、本部が `sale_id` を採番する |
+| 10 | 対象は会計確定した現金販売であること | `ifx-api-sample.yaml` の `info.description` | 読み取り | 一致 | |
+| 11 | 売上明細のキーが `sale_id`・`line_number` の組であること | `ccd-sample.md` の 72・86 行目 | grep | 一致 | |
+| 12 | 発注点は定番商品に設定し、未設定はゼロではないこと | `gl-sample.yaml` の `tm-reorder-point`、`br-sample.md` の 29 行目 | 読み取り | 一致 | |
+| 13 | 税額と請求額を確認する操作 | `clis-sample.md` の 33 行目（`sales total`） | 読み取り | 一致 | |
+| 14 | 価格 100 円・合計 108 円・税抜と税込の区別 | なし | - | 確かめの対象外 | 正本のない業務の値で、共通サンプル文脈と食い違わない |
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）を実施した。bdd-sample.yaml の主張を schema・参照先の sample と突き合わせ、用語集リンクの表示名の誤り 1 件を直した。ほかの主張は、確かめの対象外とした業務の値を除き、正本と一致した。","handoff":["R4-1: R4 / entities 商品 description（15 行目） / 用語集への wikilink の表示名「用語集 在庫・調達」が、参照先 specdojo:gl-sample の title「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」と合わない（参照先に「調達」という語はない） / 表示名を参照先の title に合わせた / vp-qe-verifiability（gl-sample.yaml の 5 行目） / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/bdd-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>

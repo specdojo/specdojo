@@ -1,0 +1,11 @@
+個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` の「対応結果」の表に 1 行追記しました。変更したのはこのファイルだけです。
+
+- **追記した行:** `2026-11-27 00:43 | PJR-1TYG | sonnet-executor`。
+- **確認対象を PJR-1TYG にした理由:** 対象一覧のうち、HEAD に最後に統合された項目だからです。統合 merge commit は `21a27d974e`（2026-11-27 00:39 JST）で、直前の PJR-AEGN（`587629d5bf`）より後です。
+- **併せて更新した箇所:** 今回の確認対象の説明文と、作業内容の表のメモを PJR-1TYG に合わせました。作業内容の行の状態は `done` のままです。
+- **確認できなかったこと:** PJR-1TYG が実行時点で `review` または `done` かどうかは、登録簿を読まずに確認していません。説明文には、完了条件の文言に合わせて「`review` または `done`」と書きました。
+- **検証:** 変更したファイルに対する `npx prettier --check` は通りました。親 runner の検証は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果に PJR-1TYG の確認行（2026-11-27 00:43 JST、sonnet-executor）を追記した。変更は本個票のみ。","handoff":["確認対象は HEAD に最後に統合された PJR-1TYG（merge commit 21a27d974e）とした。実行時点で review または done かどうかは登録簿を読んで確認していない。","親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"Prettier の整形検査に通った"}]}
+</specdojo_executor_evidence>

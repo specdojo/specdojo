@@ -1,0 +1,36 @@
+これまで rulebook、sample、レビューガイドを読み、R1 の観点で突き合わせました。結論として、R1 で sample を直す箇所はありません。理由を整理して報告します。
+
+## R1（目的の過不足）のレビュー結果
+
+**結論:** sample は変更していません。リポジトリの差分はなく、作業ファイルも作っていません。
+
+**1. 要る内容が欠けていないか**
+
+rulebook の各章の記述ガイドが求める内容は、sample にすべてあります。
+
+- **目的と適用範囲:** 変更要求の ID、対象の I/F、対象外の I/F と「本書では判断しない事項」の分け書き、対象期間（受入確認の完了日まで）。
+- **変更要求の概要:** 背景・要求・狙いと、判定方法つきの成功条件 4 件。
+- **影響分析サマリ:** 3 観点の尺度、集約規則、件数、優先対応。
+- **影響詳細一覧:** 観点ごとの判断根拠と、備考の波及先の ID。
+- **対応方針:** Role code の担当、判定できる完了条件、見送り・代替の再評価条件と期限。
+- **未解決事項:** 決定期限と転記先の登録項目（`item_type` つき）。
+
+**2. 要らない内容が入っていないか**
+
+実装詳細、役割の割り当て、承認の進み具合など、Sample 記述標準と rulebook の禁止事項に当たる記述はありません。目的と関係のない章もありません。
+
+**3. grade の指摘 F001（`based_on` の値の形式）**
+
+rulebook は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めていますが、sample は `cr-2026-004` を使っています。ただ、この sample だけを直すことはしませんでした。
+
+- 同じ系列の `imp-business`・`imp-data`・`imp-test`・`imp-operations` の sample も、`based_on` と本文の両方で `cr-2026-004` を使っています。この 1 件だけ直すと、系列の中で食い違いが生じます。
+- 系列の整合を確かめるのは R5 の段です。
+- 新しい個票 ID を勝手に作ることもできません。
+
+そのため、直す案を `handoff` に残し、`要判断` の印を付けました。
+
+**検証:** 変更したファイルがないため、executor が流す検査はありません。lint などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確かめた。rulebook の各章の記述ガイドが求める内容はすべてあり、要らない内容もないため、sample は直していない。F001（`based_on` が `cr-2026-004` で、rulebook の求める個票 ID `PJR-XXXX` と違う）は、同じ系列の sample にも同じ書き方があり系列の整合（R5）にかかわるため直さず、案を要判断として申し送った。","handoff":["R1-1: R1 / 目的と適用範囲（ファイル先頭の `based_on`、本文 1 行目の変更要求 ID） / grade の指摘 F001: rulebook の「推奨 Frontmatter 項目」は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めるが、sample は `cr-2026-004` を使っている / 直した案: - （この sample だけを直すと、同じ系列の sample と食い違うため） / 根拠: `vp-qe-kata-conformance`。`imp-business-sample`・`imp-data-sample`・`imp-test-sample`・`imp-operations-sample` も `based_on` と本文で `cr-2026-004` を使っている。案A: 変更要求の個票 ID を 1 つ決め（例: `PJR-C004`。ID 自体は人が決める）、5 つの imp sample の `based_on` と本文を同時に直す（R5 で扱う）。案B: rulebook に、sample では変更要求の ID の表記を問わないという例外を足す。rulebook の求めを正とし、案A を推す / 印: 要判断","R1-2: R1 / 全章 / rulebook の記述ガイド（目的と適用範囲〜未解決事項）が求める内容（対象外 I/F の区分、対象期間の終わり、判定方法つきの成功条件、3 観点の尺度と集約規則、波及先の ID、再評価の条件と期限、転記先の `item_type`）は欠けておらず、Sample 記述標準と rulebook の禁止事項に当たる要らない記述もない / 直した案: - / 根拠: `vp-po-purpose-alignment`、`vp-arc-single-responsibility`、`vp-qe-kata-conformance`（種別の責務） / 印: -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-interface-sample.md","status":"not_applicable","summary":"ファイルを変更していないため実行しない","reason":"変更した *.md などのファイルがない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していないため実行しない","reason":"plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

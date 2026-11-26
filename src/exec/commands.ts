@@ -43,7 +43,7 @@ import {
   type LockedEventAction,
 } from "./core.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   canBlockTask,
   canCancelTask,
   canClaimTask,
@@ -93,8 +93,11 @@ import { resolveOwnerForLocalId } from "./strategy.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
 import { registerExecSmokeCommand } from "./smoke.js";
+import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
+import { registerExecStopCommand, writeStopRequestSummary } from "./stop-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
+import { registerExecWatchCommand } from "./watch-command.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
 import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
@@ -124,6 +127,8 @@ export function registerExecCommands(program: Command): void {
   registerExecHandoffCommands(exec);
   registerExecSmokeCommand(exec);
   registerExecQueueCommands(exec);
+  registerExecStopCommand(exec);
+  registerExecWatchCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -495,7 +500,11 @@ export function registerExecCommands(program: Command): void {
       const lockTimeoutMs = Number(opts.lockTimeoutMs);
       const lockStaleMs = Number(opts.lockStaleMs);
 
-      lockDir = acquireSchedulerLock(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
+      lockDir = await acquireSchedulerLockAsync(schedulePath, {
+        actor,
+        lockTimeoutMs,
+        lockStaleMs,
+      });
 
       const state = loadValidatedExecState(schedulePath);
       if (!state) return;
@@ -733,6 +742,7 @@ export function registerExecCommands(program: Command): void {
     "doing",
   );
   statusCmd.action((opts) => {
+    exitQuietlyOnClosedStdout();
     try {
       const { schedulePath, executionPath } = resolveProjectContext(opts);
 
@@ -754,6 +764,7 @@ export function registerExecCommands(program: Command): void {
         const byMsg = filterBy ? ` for ${filterBy}` : "";
         process.stdout.write(`No ${filterState} tasks${byMsg}.\n`);
         writeActiveQueueSummary(executionPath);
+        writeStopRequestSummary(executionPath);
         writeNoProductChangeWarnings(opts.project, snapshot);
         exitWithCode(true);
         return;
@@ -789,6 +800,7 @@ export function registerExecCommands(program: Command): void {
         );
       }
       writeActiveQueueSummary(executionPath);
+      writeStopRequestSummary(executionPath);
       writeNoProductChangeWarnings(opts.project, snapshot);
       exitWithCode(true);
     } catch (error) {

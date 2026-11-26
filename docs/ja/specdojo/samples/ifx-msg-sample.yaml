@@ -1,21 +1,22 @@
 # specdojo-schema: none reason=external-asyncapi
 # 構造は AsyncAPI 2.6.0 に対応した検証器（例: AsyncAPI CLI の validate）で確かめる。
 # _ASSUMPTION_: 駄菓子屋きぬやの店舗端末が在庫の変化を本部へ通知する学習用の例。
-# 一覧 ifx-index-sample には未掲載の連携で、採用するときは一覧に行を足してから spec_ref を付ける。
-# 同一覧の対象外（仕入先システム連携、キャッシュレス決済など）は題材にしない。
-# _UNDECIDED_: 本部が在庫の通知を受けるかは未合意。PO（店主代表）が採否と ready への昇格を判断する。
+# _UNDECIDED_: 本部が在庫の通知を受けるかは未合意。確認先は PO（店主代表）で、ready にする前に解消する。
 asyncapi: 2.6.0
 info:
   title: 在庫変更イベント仕様
   version: 1.0.0
   description: >-
+    対応する `ifx-index` の連携名は「本部への在庫変更通知」（一覧に未掲載）。
     店舗端末の在庫管理が、商品の在庫数が変わったことを発行し、本部の在庫集計が購読する。
-    発生の契機は販売の確定・仕入れの登録・棚卸しの訂正。
-    配信は at-least-once、順序は同じ `subject`（商品）の中だけ保証する。
-    購読者は `source` と `id` の組で重複を捨て、同じ商品で `time` が古いイベントは無視する。
-    メッセージは CloudEvents の structured モードで、`contentType` は `application/cloudevents+json`、
-    `data` の形式（`datacontenttype`）は `application/json` に固定する。`defaultContentType` は同じ既定を示す。
-    互換: 任意の `data` 項目の追加は MINOR を上げ、購読者は知らない項目を無視する。互換を壊す変更は `type` の `.v1` を上げる。
+    配信は at-least-once、順序は同じ `data.product_id`（商品）の中だけ保証する。
+    購読者は `source` と `id` の組で重複を捨て、同じ `data.product_id` で `time` が古いイベントは無視する。
+    メッセージは CloudEvents の structured モードで送る。
+    `contentType` は `application/cloudevents+json`、`data` の形式（`datacontenttype`）は `application/json` に固定する。
+    ファイル全体の既定（`defaultContentType`）も `application/cloudevents+json` にする。
+    互換: 発行者は任意の `data` 項目を足すとき `info.version` の MINOR を上げ、購読者は知らない項目を無視する。
+    互換を壊す変更では、発行者が `info.version` の MAJOR と `type` の版（`.v1`）を上げる。
+    未決事項: 本部が在庫の通知を受けるかは未合意。
 
 x-spec-meta:
   id: specdojo:ifx-msg-sample
@@ -23,6 +24,7 @@ x-spec-meta:
   status: draft
   rulebook: specdojo:ifx-msg-rulebook
   based_on:
+    # この連携は一覧 ifx-index-sample に未掲載。採用するときは、一覧に行を足してから spec_ref を付ける。
     - specdojo:ifx-index-sample
 
 defaultContentType: application/cloudevents+json
@@ -36,7 +38,8 @@ servers:
 channels:
   inventory.stock.changed:
     description: >-
-      在庫数が変わった通知。発行者: 店舗端末の在庫管理。購読者: 本部の在庫集計。
+      在庫数が変わった通知。発生の契機は販売の確定・仕入れの登録・棚卸しの訂正。
+      発行者: 店舗端末の在庫管理。購読者: 本部の在庫集計。
       `subscribe` は、発行者が送り、購読者が受け取れることを表す。
     subscribe:
       message:
@@ -72,7 +75,7 @@ components:
           enum: [com.kinuya.stock.changed.v1]
         source:
           type: string
-          example: /inventory
+          examples: [/inventory]
         id:
           type: string
           description: イベントID（`source` との組で一意）
@@ -84,8 +87,8 @@ components:
           enum: ["application/json"]
         subject:
           type: string
-          description: 対象識別子（任意）
-          example: product/PROD-0001
+          description: 対象の商品の識別子（任意）
+          examples: [product/PRD-001]
         data:
           $ref: "#/components/schemas/StockChangedData"
 
@@ -96,8 +99,8 @@ components:
       properties:
         product_id:
           type: string
-          pattern: "^PROD-[0-9]{4}$"
-          description: 商品ID（例 PROD-0001）
+          pattern: "^PRD-[0-9]{3}$"
+          description: 商品ID（業務データ辞書の `product_id`。例 PRD-001）
         delta:
           type: integer
           description: 増減量（減少は負の値）

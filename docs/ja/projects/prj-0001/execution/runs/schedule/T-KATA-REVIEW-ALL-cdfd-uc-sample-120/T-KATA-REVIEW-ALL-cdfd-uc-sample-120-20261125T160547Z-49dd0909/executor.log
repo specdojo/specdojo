@@ -1,0 +1,19 @@
+R2（構成）のレビューを終えました。sample に入れた直しは 1 か所だけで、「3. プロセス領域」の冒頭の 2 段落を 1 段落にまとめました。章の移動や分割はしていません。rulebook と template は変えていません。
+
+**直したところ**
+- **前の状態:** 「3. プロセス領域」の冒頭が 2 段落に分かれていました。1 段落目は通過順とどの文書を正本とするか、2 段落目はグループ内部を参照先に任せることを書いていました。
+- **後の状態:** rulebook の「プロセス領域」の章冒頭に書く内容と template の章冒頭（1 段落）に合わせて、1 段落にまとめました。
+- **残した内容:** 内容は削っていません。参照先を唯一の正本とすること、各グループを 1 つの代表ノードで描くことはそのまま残しています。
+- **観点:** `vp-arc-document-structure` に当たります。
+
+**直す必要がなかったところ**
+- **章の順:** 導入文から目的・適用範囲・プロセス領域・データストア・概念データフローまで、template と同じ順でした。最後の「未決事項」の章は、未決の論点がない場合に省くという決まりどおり省かれています。
+- **節の順:** 「3.1」〜「3.3」は図の通過順（在庫→仕入→販売）と同じで、表の「順序」の欄（1〜3）とも一致しています。
+- **「4. データストア」:** 区分の分け方は全体概要と同じでした。図のノードとも対応しています。
+- **各図:** 題、図の前の説明 1 文、図の後の注記（凡例への参照・同じ代表ノードを使うこと・参照先に任せる範囲）が、rulebook と template どおりに並んでいました。
+
+検査は、変更したファイルに `npx prettier --check` を実行し、問題はありませんでした。markdownlint などの検査は、この後で親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: rulebook の本文構成・template と照合し、章の順・節の順・表と本文の配置は沿っていた。3. プロセス領域の章冒頭 2 段落を template どおり 1 段落に統合した。","handoff":["R2-1: R2 / 3. プロセス領域（章冒頭） / 章冒頭が通過順・正本関係の段落と内部の正本・代表ノードの段落に分かれ、template の章冒頭 1 段落と rulebook「プロセス領域」の章冒頭の要件（ケース ID・通過順・全体概要との正本関係を簡潔に示す）より粒度が細かい / 2 段落を 1 段落に統合し、「各グループの役割は本章」「内部は役割表の参照先を唯一の正本」「1 つの代表ノードにして受け渡しの線だけを描く」は維持した / vp-arc-document-structure、[[specdojo:cdfd-uc-rulebook]] の「プロセス領域」、[[specdojo:cdfd-uc-template]] / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdfd-uc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する（parent validation）"}]}
+</specdojo_executor_evidence>

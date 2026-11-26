@@ -59,15 +59,15 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 
 ## 2. トップレベルのキー
 
-| キー                 | 必須 | 既定値                                 | 役割・利用箇所                                                                                              |
-| -------------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                                        |
-| `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                                       |
-| `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。                 |
-| `kata_authority`     | 任意 | リポジトリのディレクトリ名             | 利用者が新しく作る kata のリポジトリ単位の authority です。英小文字・数字・ハイフンで指定します。           |
-| `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。             |
-| `external_projects`  | 任意 | なし                                   | 別リポジトリの project をローカルの別名で宣言します。`register add` と `orchestrator launch` が使用します。 |
-| `references`         | 任意 | なし                                   | 読むだけのディレクトリを別名で宣言します。`orchestrator launch` が使用します。                              |
+| キー                 | 必須 | 既定値                                 | 役割・利用箇所                                                                                                       |
+| -------------------- | ---- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                                                 |
+| `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                                                |
+| `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。                          |
+| `kata_authority`     | 任意 | リポジトリのディレクトリ名             | 利用者が新しく作る kata のリポジトリ単位の authority です。英小文字・数字・ハイフンで指定します。                    |
+| `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。                      |
+| `external_projects`  | 任意 | なし                                   | 別リポジトリの project をローカルの別名で宣言します。`register add`・`orchestrator launch`・文書サイトが使用します。 |
+| `references`         | 任意 | なし                                   | 読むだけのディレクトリを別名で宣言します。`orchestrator launch` が使用します。                                       |
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
 
@@ -82,22 +82,30 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
   "external_projects": {
     "customer": {
       "path": "../customer-specdojo",
-      "project_id": "prj-0002"
+      "project_id": "prj-0002",
+      "source_url": "https://github.com/example/customer-specdojo/blob/main"
     }
   }
 }
 ```
 
-| キー         | 必須 | 役割                                                                       |
-| ------------ | ---- | -------------------------------------------------------------------------- |
-| `path`       | 必須 | このリポジトリのルートから相手のリポジトリへの相対パスです。               |
-| `project_id` | 必須 | 相手の `specdojo.config.json` の `projects` にある実際の project ID です。 |
+| キー         | 必須 | 役割                                                                                                                          |
+| ------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `path`       | 必須 | このリポジトリのルートから相手のリポジトリへの相対パスです。                                                                  |
+| `project_id` | 必須 | 相手の `specdojo.config.json` の `projects` にある実際の project ID です。                                                    |
+| `source_url` | 任意 | 相手のリポジトリ相対のパスを後ろに足すと文書の URL になる基点です。`http://` か `https://` で始めます。文書サイトが使います。 |
 
 別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
 
 linked worktree（`exec run --worktree` の作業場所など）では、`path` を worktree ではなく、その worktree を持つ主の作業ツリーのルートから解決します。相手のリポジトリは主の作業ツリーの隣にあり、task の worktree の隣にはないためです。主の作業ツリーでの解決は変わりません。
 
 相手に `node_modules/.bin/specdojo` がなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身のリポジトリを指定する場合は、相手で `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がなければ `npm run build` を案内して停止します。CLI の版はこの起動方法でも 0.4.2 以上が必要です。
+
+#### 2.1.1. リポジトリをまたぐ wikilink
+
+相手の project の文書へは、手元の文書と同じく project 修飾の doc id で `[[prj-0002:pjr-xxxx-topic|表示名]]` と書きます。別名（`customer:`）は付けません。別名は呼び出し元ごとに違ううえ、project を移しても doc id は変わらないため、移した後もリンクを書き換えずに済みます。
+
+文書サイトは、手元の doc index に無い id のうち、接頭辞が `external_projects` の `project_id` に一致するものを、相手のリポジトリの `.specdojo/doc-index.json`（無ければ相手の `projects.<project_id>.base_path` 配下の Markdown の frontmatter）で引き、`source_url` の後ろにファイルのパスを足した URL へ置き換えて新しいタブで開きます。YAML の行番号付きのエントリは `#L<行番号>` を付けます。手元の doc index にある id は手元の文書を優先します。`source_url` が無い別名、`path` に相手のリポジトリが無い場合（CI で checkout していないなど）、相手の索引に無い id は、`[[...]]` のまま表示し、文書サイトのビルドは止めません。このとき修飾付きの id（`<namespace>:<id>` の形）は、文書と id の組ごとに 1 回、id と文書のパスを含む警告（`[external-links] unresolved wikilink ...`）を出します。`path` はローカル設定の差し替えと linked worktree の規則に従います。
 
 ### 2.2. `references`のキー
 
@@ -187,7 +195,7 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 
 有効時は `integration_branch` よりこの同期先を優先します。`external_projects` 経由の起票も、相手の CLI と project の設定に従います。相手も v0.10.0 以上に更新してください。`--commit` のない register 操作は現在の worktree に書き、`--dry-run --commit` は同期しません。
 
-同期範囲は `project_register_path` と `execution_path/exec/events/` です。`exec run --register` の状態遷移と検証済みの個票編集も同期し、exec の commit から個票・イベントを除きます。run の記録・成果物は従来の実行先に残ります。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成、競合の復旧、develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+同期範囲は `project_register_path` と `execution_path/exec/events/` です。`exec run --register` の状態遷移と検証済みの個票編集も同期し、exec の commit から個票・イベントを除きます。run の記録・成果物は従来の実行先に残ります。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成と push、競合の復旧は `specdojo register branch-push --project <project-id>` で行い、push の先はこの `remote` と `branch` だけです。手順と develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 ## 5. `run`のキー
 
@@ -394,6 +402,23 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 - 宣言に無いキーがある、`integration_branch` が空文字、`integration_strategy` が `merge` / `branch-only` / `ff` 以外、`setup` の値が真偽値でない。
 
 設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
+
+### 6.1. 文書サイトへの取り込み
+
+`@specdojo/docs-site` の `build` と `dev` は、全 project の `repos` を読み、宣言したリポジトリの `docs/ja/product/` を `/ja/product/<name>/` に取り込みます。使うキーは `name` と `path` だけです。CI での checkout の例と公開時の注意は [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] の「プロダクトのリポジトリの文書を取り込む」を参照してください。
+
+- `path` は CLI と同じ規則で解決します。ローカル設定の `repos[]` の差し替えと追加を反映し、複数リポジトリの exec の project worktree では隣の `<worktree_base>/<task-id>/<name>/` を使います。
+- 同じ `name` を複数の project が宣言した場合は、project ID の順で先に出た宣言を使います。
+- 取り込んだ文書の id は `.specdojo/doc-index.json` に入れず、サイトのビルド時に取り込んだ Markdown の frontmatter から読みます。宣言どおりの id に加え、`:` を含まない id は `<name>:<id>` でも引けます。project の索引に同じ id がある場合は project 側を優先し、警告します。
+- `docs/ja/product/` に `index.md` が無いリポジトリには、節の入口のページを閲覧用ツリーにだけ置きます。
+
+次の場合は警告を出してそのリポジトリを飛ばし、ビルドは続けます。設定の読み込みの検証（前述）と違い、文書サイトは checkout していないリポジトリがあっても止めません。
+
+- `path` が指すリポジトリ、またはその `docs/ja/product/` が無い。
+- project のリポジトリ自身に `docs/ja/product/<name>/` がある。project 側の文書を優先します。
+- `name` が `[a-z0-9-]` 以外の文字を含む。
+
+`repos` を宣言した project が無い場合、サイトの出力は変わりません。
 
 ## 7. ローカル設定
 

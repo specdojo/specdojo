@@ -1,0 +1,30 @@
+R4（正しさ）の確かめでは誤りが見つからず、sample は編集していません。grade の finding 3 件は R4 の観点に当たらないため、直さずに申し送りへ回しました。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `specdojo.type: requirement`（frontmatter） | `deliverable-frontmatter.schema.yaml`、rulebook の「推奨 Frontmatter 項目」 | grep | 一致 | 列挙値に `requirement` があり、rulebook も `requirement` と指定 |
+| 2 | `rulebook: specdojo:nfr-integrity-rulebook` | rulebook の frontmatter | 読み取り | 一致 | rulebook の `id` が同じ値 |
+| 3 | `part_of: [specdojo:nfr-index-sample]` | `nfr-index-sample.md`、rulebook | 読み取り | 一致 | 親の sample の `id` が同じ値。rulebook も `part_of` に `nfr-index` を置くと定めている |
+| 4 | `based_on: []` | `common-frontmatter.schema.yaml` | 読み取り | 一致 | 型は `idRefArray` で、既定値は `[]` |
+| 5 | 判定する Role code `OPS`・`QE` | `pm-roles.schema.yaml` | 読み取り | 一致 | `code` の列挙値（PO / PM / BA / ARC / DEV / QE / UX / OPS）に含まれる |
+| 6 | 監査証跡に操作者の nickname を残す | `pm-members.schema.yaml` | grep | 一致 | メンバーの必須項目に `nickname` がある |
+| 7 | 要件 ID `nfr-int-001`〜`nfr-int-006` に欠番がない | rulebook の「ファイル命名・ID規則」 | 読み取り | 一致 | 規則は `nfr-int-<連番>` で欠番を作らない |
+| 8 | 文書 ID `nfr-security-safety`・`sac-integrity`・`stc-integrity`・`opd-integrity-check`・`opr-integrity-check`・`dec-*` | 各接頭辞の rulebook | 読み取り | 一致（`<term>` は確かめられない） | 形式は各規則に合う。`integrity` / `integrity-check` が用語集のキーにあるかは確かめていない |
+| 9 | 指標の名前（整合性違反件数・監査証跡欠落率・改ざん検知漏れ件数・重複記録件数） | rulebook の記述ガイド「完全性要件一覧」 | 読み取り | 一致 | rulebook の指標の例と同じ表記 |
+| 10 | 用語「整合性チェック」で統一している | rulebook の記述ガイド「測定・検証方法」 | 読み取り | 一致 | 言い換えの表記はない |
+| 11 | 改ざん検知（`nfr-int-006`）を試験 `stc-integrity` で判定する | rulebook の同じ記述ガイド | 読み取り | 一致 | 改ざん検知の要件を少なくとも 1 件試験で判定する、という要求を満たす |
+| 12 | 青色申告の帳簿書類の保存期間は 7 年 | 正本なし（税法の外部の事実） | 確かめていない | 確かめられない | `_ASSUMPTION_` として書かれた業務上の仮定。一般に帳簿は 7 年だが、一部の書類は 5 年 |
+
+**R4 の外として申し送る finding**
+
+- **F001**（`vp-qe-omissions-consistency`）: 前の段で、保持期間の根拠を `dec-*` に記録する導線が足されていて、指摘は解消済みです。
+- **F002**（`vp-qe-kata-conformance`）: 直す先は sample ではなく rulebook です。rulebook の `_UNDECIDED_` に「sample が 5 章に揃っていない」とありますが、sample はもう 5 章に揃っています。この記述を直し、`recipe`・`template` の要否を判断する作業が別に要ります。
+- **F003**（`vp-ops-release-readiness`）: kata ガイドが kata の段のレビューから外すと定めた観点のため、扱いません。
+
+検査は親の runner が実行するものだけで、sample を変えていないため、この段で実行するものはありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で sample の事実を schema・rulebook と突き合わせ、誤りはなかったため sample は編集していない。grade の finding 3 件は R4 の観点の外のため、申し送りに回した。","handoff":["R4 の確かめの表（result の実施内容に描く）: 1 `specdojo.type: requirement` は `deliverable-frontmatter.schema.yaml` の列挙値と rulebook の指定に一致する。2 `rulebook: specdojo:nfr-integrity-rulebook` は rulebook の `id` に一致する。3 `part_of: [specdojo:nfr-index-sample]` は親の sample の `id` と rulebook の求めに一致する。4 `based_on: []` は `common-frontmatter.schema.yaml` の `idRefArray`（既定値 `[]`）に一致する。5 Role code `OPS`・`QE` は `pm-roles.schema.yaml` の `code` の列挙値に一致する。6 監査証跡の nickname は `pm-members.schema.yaml` の必須項目 `nickname` に一致する。7 要件 ID `nfr-int-001`〜`nfr-int-006` は rulebook の `nfr-int-<連番>` の規則に合い、欠番はない。8 `nfr-security-safety`・`sac-integrity`・`stc-integrity`・`opd-integrity-check`・`opr-integrity-check`・`dec-*` は各 rulebook の ID の形式に一致する。ただし `<term>` が用語集のキーにあるかは確かめていない。9 指標の名前は rulebook の記述ガイドの例に一致する。10 用語「整合性チェック」で統一され、言い換えはない。11 改ざん検知の要件 `nfr-int-006` を試験 `stc-integrity` で判定しており、rulebook の求めに一致する。12 青色申告の保存期間 7 年は `_ASSUMPTION_` の業務上の仮定で、正本がなく確かめていない（一般に帳簿は 7 年、一部の書類は 5 年）。","F001（`vp-qe-omissions-consistency`、R2 の観点）: 前の段で保持期間の根拠を `dec-*` に記録する導線が足されており、指摘は解消済み。R4 では扱わない。","F002（`vp-qe-kata-conformance`）: 直す先は sample ではなく `docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md` である。「全体方針」の `_UNDECIDED_` が「sample は 5 章に揃っていない」と書いているが、sample はすでに 5 章に揃っている。次の作業: rulebook の記述を直し、`recipe`・`template` の要否を判断する。","F003（`vp-ops-release-readiness`）: kata ガイドの「kata の観点の組」が kata の段のレビューから外すと定めた観点のため、扱わない。"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変えていない","reason":"executor は plan・result・個票を変えていないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変えていない","reason":"変えた `*.yaml` / `*.yml` のファイルがないため"}]}
+</specdojo_executor_evidence>

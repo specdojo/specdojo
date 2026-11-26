@@ -1,0 +1,19 @@
+R1（目的の過不足）を確認し、sample の未決事項の表に足りなかった「決定後に直す条件・証跡」を足しました。変更したのは `docs/ja/specdojo/samples/pm-quality-management-plan-sample.md` の「未決事項と保留」だけです。prettier と markdownlint はこのファイルに対して通っています。frontmatter の `status: ready` はそのまま残しています。
+
+**読んだもの:** sample、rulebook、template、recipe、Sample 記述標準、kata ガイドの「kata を agent でレビューする」、成果物カタログの `done_criteria`。
+
+**直したこと:**
+- rulebook の「見直し条件と未決事項」は、未決事項ごとに「決定時に直す条件・証跡」を特定するよう求めています。recipe にも「決まったとき直す条件を添える」とあります。sample にはこれがなかったため、3 つの論点それぞれに「決定後に更新する条件・証跡」を書き足しました。
+- 表の前の 1 文がなかったので足しました（Sample 記述標準の規定）。
+- 3 行目にあった「SC-04 の合否は初期受入に含めない」は品質ゲートの章と同じ内容なので削りました。
+- 列は rulebook のとおり 2 列のままです。
+
+**finding の扱い:**
+- **F001・F002:** kata ガイドが段のレビューから外している観点（`vp-po-decision-readiness`・`vp-pm-plan-feasibility`）なので、直していません。
+- **F003（`vp-qe-kata-conformance`）:** 列の追加は見送りました。rulebook は列を「論点」「影響・未決中に保留する判定」の 2 つと定めていますが、template は担当・決定時期・判断者を含む 4 列で、二つが食い違っています。直す案として、rulebook か template のどちらかを相手に合わせることを要判断で handoff に残しました。
+
+`done_criteria` の 4 項目はどれも既存の章で満たしていたので、そのまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認した。rulebook の「見直し条件と未決事項」は未決事項ごとに決定時に直す条件・証跡を求めるが、sample の未決事項の表になかったため 3 行すべてに足した。表の前の 1 文も足した。品質ゲートの章と重なる記述は削った。F003 は rulebook と template の列の食い違いとして要判断の handoff に残した。F001・F002 は R1 で使わない観点なので扱っていない。","handoff":["No: 1 / 段: R1 / 箇所: 見直し条件と未決事項 > 未決事項と保留（表） / 指摘: rulebook の「見直し条件と未決事項」は未決事項ごとに決定時に直す条件・証跡を特定するよう求め、recipe も「決まったとき直す条件を添える」としているが、sample の 3 行にその記述がなかった / 直した案: 3 行それぞれの「影響・未決中に保留する判定」の列に、決定後に更新する条件・証跡を足した（準備着手の上限と試用日→品質ゲートの時期と `kinuya-schedule`、オフライン時の運用→初期受入の合格条件と `kinuya-acceptance-record`、人気商品の対象範囲→基準値の採取対象と `kinuya-trial-log` の引き継ぎ項目）。sample に反映済み / 根拠: rulebook の記述ガイド「見直し条件と未決事項」、recipe の「見直し条件と未決事項」のコツ / 印: なし","No: 2 / 段: R1 / 箇所: 見直し条件と未決事項 > 未決事項と保留（表の前） / 指摘: 表の前に、何を示す表かを説明する 1 文がなかった / 直した案: 「未決の論点ごとに、未決中に保留する判定と、決定後に直す条件・証跡を次に示す。」を足した。sample に反映済み / 根拠: Sample 記述標準の「記述ガイド」にある、表の前に 1 文を書く規定 / 印: なし","No: 3 / 段: R1 / 箇所: 見直し条件と未決事項 > 未決事項と保留（人気商品の行） / 指摘: 「運用後の SC-04 の合否は初期受入に含めない」は、品質ゲートの章の「SC-04〜SC-06 は初期受入の合否に含めず」と同じ内容である / 直した案: 未決事項の表の側を削った。sample に反映済み / 根拠: `vp-arc-conciseness`（同じ主張を繰り返さない） / 印: なし","No: 4 / 段: R1 / 箇所: 見直し条件と未決事項 > 未決事項と保留（列の構成。grade の F003） / 指摘: template は未決事項の表を 4 列（論点・正本と判断材料の担当・決定時期・判断者・未決中に保留する判定・作業）とするが、rulebook の記述ガイドは「論点」「影響・未決中に保留する判定」の 2 列と定めている。kata どうしが食い違っており、sample は rulebook に合わせて 2 列のままにした / 直した案: sample 以外は変えていない。案 A: rulebook の本文要件と記述ガイドに、判断材料の担当 Role code と決定時期・判断者を加え、template に合わせる。案 B: template を rulebook の 2 列に戻す。どちらかに決めた後、sample の列をそろえる。担当と時期を未決事項に持たせるかは、ドキュメントメタ情報標準の「未決事項・課題の PJR への引き継ぎ」（担当 Role code を明記する）との関係で判断が要る / 根拠: rulebook の記述ガイド「見直し条件と未決事項」、template の「未決事項と保留」、sample の構造は rulebook を正とする plan の指示 / 印: 要判断","No: 5 / 段: R1 / 箇所: 見直し条件と未決事項 > 未決事項と保留（オフライン時の運用の行。grade の F001・F002） / 指摘: 判断材料を整える担当・PO へ示す時期、未決を解く作業の担当と完了条件を求める finding である。ただし `vp-po-decision-readiness` と `vp-pm-plan-feasibility` は、kata ガイドの「kata の観点の組」が段のレビューから外している観点である / 直した案: R1 では扱わず、sample にも反映していない。担当や時期を足す場合は、No 4 の結論（案 A）に従って一緒に直す / 根拠: kata ガイドの「kata の観点の組」にある、使わない観点の表 / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-quality-management-plan-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/pm-quality-management-plan-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票は変更していないため"}]}
+</specdojo_executor_evidence>

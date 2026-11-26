@@ -1,0 +1,23 @@
+R5（整合）として `docs/ja/specdojo/samples/gl-sample.yaml` を直しました。直した版は schema 検査（`validate:schema:file`）と Prettier の整形確認を通っています。
+
+**見比べたもの:**
+- 同じ接頭辞の sample は gl-sample 1 つだけでした。
+- この sample の用語を参照・使用している sample として、bdd、br、cdt、cdfd-overview、dmd、cdr、sf-index、bes-index、otp-index、cdsd の各 sample を読みました。
+- rulebook（`gl-rulebook`）、Sample 記述標準の共通サンプル文脈、用語集（`docs/ja/product/010-business-specs/060-glossary/`）も読みました。用語集は SpecDojo 自身の用語集で、駄菓子屋の題材とは重ならず、食い違いはありませんでした。
+
+**直した点:**
+1. **発注点（`tm-reorder-point`）**: 定義を「販売可能数が下回った定番商品を発注候補とみなす基準数量」に変えました。br-sample は在庫数量ではなく、予約分を除いた販売可能数で判定しているためです。注記には「販売可能数は在庫数量から予約分を除いた数」と書き、計算の正本として br-sample へのリンクを足しました。例文も販売可能数に合わせています。
+2. **つけ限度額（`tm-sales-credit-limit`）の呼び方**: 見出しを「つけ上限」に変え、「つけ限度額」は別名に移しました。cdfd・dmd・cdr・sf-index・bes-index・otp-index・cdsd がすべて「つけ上限」と書いており、rulebook も見出しを実際の呼び方に合わせるよう求めているためです。ID は変えていません。
+3. **つけ上限を超えたときの扱い**: 注記は「超える場合は現金での支払いを案内する」と言い切っていました。一方、sf-index・bes-index・cdr ではこの扱いはまだ決まっていない（`_UNDECIDED_`）ままです。注記は「未設定なら上限を設けない（dmd・cdr と同じ）」と「超えたときを承認で受けるか断るかは未決」の 2 点に改めました。
+
+**判断してほしいこと:**
+- 2 の呼び方は「要判断」です。ほかの 7 つの sample を「つけ限度額」に直す案は、変更の範囲が広いので選びませんでした。
+
+**ほかの sample の直す案（変更はしていません）:**
+- **常連客の使い方**: 用語集では、常連客は「店主代表がつけの利用を認めた人」です。ところが bes-index-sample の `bes-credit-use-requested` は「顧客台帳に未登録の常連客が申し出た」、cdfd-overview-sample の `P-07` は「常連客がつけの利用を申し出た」と書いており、まだ認められていない人を常連客と呼んでいます。どちらも「顧客」に直す案です。
+
+result は作っていません。上の指摘は、下の `handoff` に 1 件ずつ書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合として gl-sample.yaml の 3 点を直した。発注点を br-sample の販売可能数による判定に合わせ、`tm-sales-credit-limit` の見出しをほかの sample で使われている「つけ上限」に変え、上限を超えたときの扱いを sf-index・bes-index・cdr と同じ未決に戻した。ほかの sample の常連客の使い方は、直す案だけを残した。schema 検査と Prettier の整形確認は通っている。","handoff":["R5-1: R5 / 用語 tm-reorder-point（発注点） / 定義と例文が「在庫数量が下回る」となっていた。br-sample は予約分を除いた販売可能数で判定するため食い違っていた / 定義を「販売可能数が下回った定番商品を発注候補とみなす基準数量」に変え、注記に販売可能数の意味と [[specdojo:br-sample|在庫不足判定]] への参照を足し、例文を販売可能数に直した / vp-qe-kata-conformance（br-sample「概要」・「入力」、bdd-sample の発注点の項目） / -","R5-2: R5 / 用語 tm-sales-credit-limit（つけ限度額） / 見出しが「つけ限度額」だったが、cdfd-overview・dmd・cdr・sf-index・bes-index・otp-index・cdsd の各 sample はすべて「つけ上限」と書いている / term を「つけ上限」に変え、aliases を [つけ限度額, つけ上限額] にした。ID は変えていない / vp-qe-kata-conformance、vp-dev-change-impact、gl-rulebook「用語の見出し・英語名の判断」（term は実際の呼び方に合わせる）。迷った理由は、rulebook の良い例の注記が「限度額」という語を使っているため。選ばなかった案は、7 つの sample の表記を「つけ限度額」に直すこと（変更の範囲が広い） / 要判断","R5-3: R5 / 用語 tm-sales-credit-limit の notes / 「上限を超える場合は現金での支払いを案内する」と扱いを言い切っていた。sf-index-sample の Q-02、bes-index-sample、cdr-sample では、超えたときの扱いは店主代表の承認で受けるか断るかが未決（_UNDECIDED_）のまま / notes を「未設定の常連客には上限を設けない。_UNDECIDED_: 上限を超えるつけの申し出を、店主代表の承認で受け付けるか断るか。」に直した（「未設定は上限なし」は dmd-sample・cdr-sample と同じ） / vp-qe-kata-conformance、共通サンプル文脈「前提条件」（未確定の事項は _UNDECIDED_ で示す） / -","R5-4: R5 / 用語 tm-sales-regular-customer（常連客）と相手側の sample / 用語集の常連客は「店主代表がつけの利用を認めた人」。ところが bes-index-sample の bes-credit-use-requested は「顧客台帳に未登録の常連客が、つけを使いたいと申し出た」、cdfd-overview-sample の P-07 は「常連客がつけの利用を申し出た」と書いており、まだ認められていない人を常連客と呼んでいる / - / vp-qe-kata-conformance。相手側の直す案: bes-index-sample の bes-credit-use-requested の名前・説明・主体と、cdfd-overview-sample の P-07 のきっかけを「顧客がつけの利用を申し出た」に直す / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/gl-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"executor は plan・result・個票などの履歴ファイルを変更していないため"},{"command":"markdownlint","status":"not_applicable","summary":"Markdown を変更していない","reason":"変更したのは YAML の sample だけで、*.md は変更していないため"}]}
+</specdojo_executor_evidence>

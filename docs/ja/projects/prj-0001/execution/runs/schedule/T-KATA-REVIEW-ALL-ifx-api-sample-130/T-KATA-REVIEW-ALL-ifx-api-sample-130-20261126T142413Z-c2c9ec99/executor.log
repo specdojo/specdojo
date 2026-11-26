@@ -1,0 +1,20 @@
+R3（読みやすさ）の文の直しを `docs/ja/specdojo/samples/ifx-api-sample.yaml` に入れました。前の段が R3 の対象外の指摘（F004 の仮置きの分離など）をすでに直していたので、この段では残りの R3 の指摘だけを扱っています。直した後のファイルは Prettier の検査を通り、YAML としても読み込めます。lint などのほかの検査は、このあと親 runner が実行します。
+
+| No | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- |
+| R3-1 | 先頭コメント | 詳細契約の参照元を書いたコメントが、`info.description` の連携名と同じことを言っている | コメントを削った。rulebook は連携名の記載先を `info.description` と定めている | `vp-arc-conciseness`（F002） | 要判断 |
+| R3-2 | 401・403 の応答 | 「開発担当」に Role code がなく、rulebook の「DEV（開発担当）」と表記が揃わない | 両方を「DEV（開発担当）」にした | W8、`vp-ux-language-consistency`（F006） | - |
+| R3-3 | 400・401・403・409・429・500 の応答 | 送り直しや保存を誰が行うかが書かれていない。401・403 で DEV が行う操作が加わり、主体を読み分けられない | 各応答に「店舗端末は」を足した | W1 | - |
+
+R3-1 を「要判断」にした理由は、コメントを削ったことで ifx-index-sample への wikilink がなくなったためです。参照は `based_on` と `info.description` に残っています。選ばなかった案は、説明文の側を wikilink にすることです。
+
+この段で直さず、ほかの段に回したものがあります。
+
+- **F001**（残課題の担当と期限）: 使う観点が kata のレビューでは外す `vp-pm-plan-feasibility` なので扱っていません。
+- **F003**（`ErrorResponse.details` に構造がない）: R4 に回しました。
+- **F005**（`generated/ifx-api-sample.md` が古い）: R5、または yaml-pages での作り直しに回しました。
+- **3 行目のコメントの `BA`**: W8 では初出に正式名を添えます。ただ、ifx-index-sample は「BA（開発担当）」と書き、rulebook は開発担当を DEV としていて食い違っています。正式名をどれにするかは R5 の整合で決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさの文の直しを ifx-api-sample.yaml に入れた（F002 の重複コメント削除、F006 の DEV（開発担当）統一、W1 の主語補足）。","handoff":["R3-1: R3 / 先頭コメント（2 行目） / 詳細契約の参照元のコメントが info.description の連携名と同じ主張の繰り返し / コメントを削り、連携名を info.description に一本化した / vp-arc-conciseness（F002）。rulebook の必須項目の表は連携名の記載先を `info.description` とする。迷った理由: ifx-index-sample への wikilink が消える（参照は `based_on` と description のインラインコードに残る）。選ばなかった案: description 側を wikilink にする / 要判断","R3-2: R3 / paths./v1/sales.post.responses の 401・403 / 「開発担当」に Role code がなく、rulebook の「DEV（開発担当）」と表記が揃わない / 両方を「DEV（開発担当）」にした / W8、vp-ux-language-consistency（F006） / -","R3-3: R3 / paths./v1/sales.post.responses の 400・401・403・409・429・500 / 送り直し・保存を行う主体が書かれておらず、401・403 で DEV が行う操作が加わるため読み分けられない / 各応答の description に「店舗端末は」を足した / W1 / -","R3-4: R3 / 先頭コメント（_TODO_ の BA） / 略語 BA の初出に正式名がない。ifx-index-sample は「BA（開発担当）」、rulebook は開発担当を DEV とし食い違う / - / W8。正式名と ifx-index-sample 側の直しは R5（整合）で決める / 要判断","扱わなかった grade の finding: F001 は kata の段で外す観点 `vp-pm-plan-feasibility`、F003 は R4（`vp-dev-implementation-readiness`）、F005 は R5 または yaml-pages の作り直し。F004 は前の段で解消済み。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"node -e \"require('js-yaml').load(...)\"","status":"passed","summary":"編集後の YAML が読み込める"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,21 @@
+R1（目的の過不足）のレビューを終えました。直したのは `docs/ja/specdojo/samples/nfr-usability-sample.md` の 1 か所だけで、Prettier と markdownlint はどちらも通っています。
+
+**R1 の確かめ**
+- 読んだもの：対象の sample、`specdojo:nfr-usability-rulebook`、Sample 記述標準、`dct-non-functional-requirements-template.yaml` にある `nfr-usability` の `done_criteria`。
+- 必須の 5 章はそろっていて、rulebook が各章に求める内容も満たしています。
+- 標準 5 列、率の指標の分母、全要件 ID の測定方法・判定タイミング・判定者も確認しました。`nfr-index`・`sac-*`・`stc-*`・`uis-*` への導線もあります。
+- カタログの概要が挙げる「タスク完了率・誤操作率・エラーメッセージ明確性」は、`nfr-usb-001`・`nfr-usb-002`・`nfr-usb-005` で扱われています。
+- 目的に要らない背景や、画面詳細の再掲は見当たらず、削る箇所はありませんでした。
+
+**F001（直した）**
+「関連ドキュメント導線」の表の受入条件の行で、`sac-store-sales` を wikilink にせず、目的の列に「（未作成）」を付けました。既存の受入条件 sample は `specdojo:sac-sample`（性能）だけで、`sac-store-sales` はまだありません。同じ表の `uis-credit-ledger` の行と書き方をそろえています。grade では line 71 とされていましたが、今の版では line 83 です。
+
+**F002（R3 に回した）**
+判定者の列の「利用者代表」の表記の問題です。観点の `vp-ux-language-consistency` は R3 のものなので、この段では直していません。
+
+**検査**
+Prettier と markdownlint だけを実行しました。`validate:history-links` と `validate:schema:file` は適用外です。lint 系の検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を完了。sample は rulebook の必須 5 章、各章の受入条件、カタログの `done_criteria` を満たし、削る内容はなかった。F001 は「関連ドキュメント導線」の受入条件の行（`sac-store-sales`）に（未作成）を付けて直した。F002 は R3 の観点なので R3 に回した。","handoff":["No: 1／段: R1／箇所: 関連ドキュメント導線の表、受入条件の行（line 83、grade では line 71）／指摘: `sac-store-sales` はほかの導線の行と違って wikilink でなく、未作成かどうかも書かれていない。既存の受入条件 sample は `specdojo:sac-sample`（性能）だけで、`sac-store-sales` はない／直した案: 目的の列を「`nfr-usb-001`〜`nfr-usb-004` の合否判定（未作成）」とし、同じ表の `uis-credit-ledger` の行の（未作成）と書き方をそろえた／根拠: grade F001（`vp-qe-kata-conformance`）、`specdojo:nfr-usability-rulebook` の「位置づけ」（受入は `sac-*` を正本として参照）、共通規約（未作成の文書はバッククォートで仮置き）／印: なし","No: 2／段: R1（R3 に回す）／箇所: 測定・検証方法の表、判定者の列（`nfr-usb-001`・`nfr-usb-003`・`nfr-usb-004` の「利用者代表・QE」）／指摘: grade F002（`vp-ux-language-consistency`）。「利用者代表」が Role code か役割名か分からない。観点が R3 のものなので、この段では直していない／直した案: 変更なし。R3 で、メンバー定義の Role code か、概要の「店主代表」「家族利用者代表」の書き方のどちらかにそろえる／根拠: `docs/ja/specdojo/guides/kata-guide.md` の「kata の観点の組」（`vp-ux-language-consistency` は R3）／印: 要判断","No: 3／段: R1（R5 に回す）／箇所: `nfr-index-sample` と `nfr-security-safety-sample` にある `sac-store-sales` の参照／指摘: ほかの sample も、未作成の `sac-store-sales` を（未作成）と書かずに参照している。対象外の kata なので直していない／直した案: R5 で系列全体の未作成の書き方をそろえるか、`sac-store-sales` の sample を作るかを決める／根拠: `docs/ja/specdojo/guides/kata-guide.md` の「段と渡す材料」（ほかの kata の直すべき点は指摘として残す）／印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-usability-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/nfr-usability-sample.md","status":"passed","summary":"no errors"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した `*.yaml`・`*.yml` のファイルがない"}]}
+</specdojo_executor_evidence>

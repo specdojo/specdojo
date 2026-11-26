@@ -1,0 +1,27 @@
+R2（構成）のレビューを終えました。`docs/ja/specdojo/samples/nfr-operations-sample.md` で直したのは「運用要件一覧」の表の前の 1 文だけです。
+
+**構成の確認結果**
+- 章の順と章の名前は、rulebook「本文要件」の 5 章とそろっています。
+- 各章の表と本文の置き場所も rulebook の「記述ガイド」どおりです。章の移動・分割・統合は要りませんでした。
+- template は `undecided` のため照合していません。
+
+**直した 1 文**
+元の文は、基準が `_UNDECIDED_` の要件はどれも「測定・検証方法」の暫定の扱いで判定する、と読めました。実際には暫定の扱いの置き場所が要件で違います。
+- `nfr-ops-009`: 暫定の基準を基準の欄に書いている。
+- `nfr-ops-003`: 「測定・検証方法」の未達のときの扱いに、判定しないと書いている。
+
+文を、暫定の基準があれば基準の欄に書き、なければ「測定・検証方法」の未達のときの扱いに従う、という意味に直しました。
+
+**展開された finding（F001〜F004）**
+F001〜F004 は R2 の観点に当たらないため、sample では扱っていません。
+- F001・F004 の観点は、kata のレビューでは使わないとガイドで外されています。
+- F002 は R4 の観点です。
+- F003 は rulebook 第 1 章の記述の問題で、sample は直す対象外です。rulebook を直す案を下の handoff に残しました。
+
+**検証**
+- Prettier の整形確認は通りました。
+- lint などの決められた検査は、この後 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: 章の順・章の名前・表と本文の置き場所は rulebook の「本文要件」「記述ガイド」とそろっていた。「運用要件一覧」の表の前の 1 文で、暫定の扱いの置き場所の説明が `nfr-ops-009`（基準の欄）と `nfr-ops-003`（測定・検証方法の未達のときの扱い）の実態と合っていなかったため直した。章の移動・分割・統合は行っていない。","handoff":["R2-1: R2 / 3. 運用要件一覧 / 表の前の 1 文が、基準が `_UNDECIDED_` の要件はどれも「測定・検証方法」の暫定の扱いで判定する、と読める。実際は `nfr-ops-009` の暫定の基準が基準の欄にあり、`nfr-ops-003` の扱いだけが「測定・検証方法」の未達のときの扱いにあって、暫定の扱いの置き場所の説明が表の配置と合わない / 「暫定の基準があれば基準の欄に併記し、ない要件は決まるまで「測定・検証方法」の未達のときの扱いに従う」に直した / `vp-arc-document-structure`、`vp-qe-omissions-consistency` / -","R2-2: R2 / 全章 / 章の順・章の名前・必須の 5 章は rulebook「本文要件」の表と一致する。2 章の範囲の表と段階の表、4 章の表の後の判定記録と見直しの契機の箇条書きも、rulebook「記述ガイド」の求めの順に並んでいる。5 章の行の順（判定先 → 方針 → 手順）も表の前の文と判断基準に合う。template は `undecided` のため照合していない / - / `vp-arc-document-structure` / -","R2-3: R2 / 3. 運用要件一覧（grade F003） / rulebook 第 1 章の `_UNDECIDED_` が「sample は「本文要件」の 5 章に揃っていない」と書いており、5 章にそろった今の sample と食い違う。sample 側は直さない / - / `vp-qe-kata-conformance`。相手側の `specdojo:nfr-operations-rulebook` の「全体方針」の最後の箇条書きから「sample は「本文要件」の 5 章に揃っていないため、sample を揃えることと、」を削り、「同じ構成を NFR 分冊で共通の template にできるかの判断を、本書を `ready` にする前提条件とする。」だけを残す案。kata 相互の整合は R1・R5 の観点のため、ここでは案だけを残す / 要判断（R2 の構成とも R5 の整合とも取れるため。R5 に任せる案は選ばず、案だけを残した）","R2-4: R2 / 2. 適用範囲・体制前提、3. 運用要件一覧（grade F001・F002・F004） / F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は、kata-guide の「kata の観点の組」で kata のレビューでは使わないと外されている。F002（`vp-qe-verifiability`）は R4 の観点。どれも R2 では扱わない / - / kata-guide「kata の観点の組」 / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-operations-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

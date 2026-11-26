@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9c0df24e817b4f23a6c9134c3f39ad4b
+  ts: "2026-11-25T21:58:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec stop の前に失敗したタスクがあると、列が再開できない状態で終わる
+    - field: description
+      from: ""
+      to: exec stop で止めたループの段が、止める前に失敗したタスクがあると failed になり、列が completed\_with\_failures で終わる。同じ exec queue run で止めた段から再開できない。
+    - field: input
+      from: ""
+      to: '["2026-11-25 夜、kra-night2 と kra-night3 の列で観測（止める前に止まったタスクがあり、どちらも `completed_with_failures` で終わった）。","PJR-32PN の完了条件「同じ exec queue run で止めた段から再開できる」は、失敗が無い場合は確かめ済み。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-32PN"]'
+- v: 1
+  id: reg_d92abe1277b142e9ada9d0ff2857a784
+  ts: "2026-11-26T10:41:12Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_9c0df24e817b4f23a6c9134c3f39ad4b
+- v: 1
+  id: reg_3a81d829dc1247beba29fe9dff153831
+  ts: "2026-11-26T10:41:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_d92abe1277b142e9ada9d0ff2857a784
+- v: 1
+  id: reg_458e02d17fc94878897ddb4db7c48130
+  ts: "2026-11-26T10:41:22Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_3a81d829dc1247beba29fe9dff153831
+- v: 1
+  id: reg_658dfff613de491689efe99e80fac9a1
+  ts: "2026-11-26T15:30:52Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_458e02d17fc94878897ddb4db7c48130
+- v: 1
+  id: reg_2094d4c96e4a4212adc4717c5bd3317a
+  ts: "2026-11-26T15:38:57Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_658dfff613de491689efe99e80fac9a1

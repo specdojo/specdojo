@@ -1,0 +1,16 @@
+R3（読みやすさ）の段で `docs/ja/specdojo/samples/sld-sample.md` の文を直しました。変更したのはこのファイルだけです。prettier で整形し、markdownlint-cli2 を流してエラーは 0 件でした。親 runner が流す検査（`npm run lint:md` など）はここでは流していません。
+
+**直したこと**
+- **文体（W10）:** 地の文は「である」が多いので、4.1 と 4.2 の表の前の文だけ残っていた「です・ます」を「である」にそろえました。
+- **指示語（W4）:** 4.1 の「それ」を「その記録・状態」に置き換えました。
+- **長い文（W3）:** `data/sales/` が壊れた場面の対処を、DEV の復元と、PO・QE の照合の 2 文に分けました。
+- **担当の書き方（F004）:** 概要に、担当欄の PO・OPS・DEV・QE がどのメンバーの Role code かと、「店番担当」が誰を指すかを書き足しました。そのうえで、店頭で会計を止める・ファイルを消す行為者を「店番担当」に統一し、4.2 の合格条件と合わせました。
+- **重複（F001、`vp-arc-conciseness`）:** 確認事項の 3 行で保管場所一覧の保持・削除条件を繰り返していたので、「決まったら保管場所一覧の該当行を書き換える」という変更の影響を書く形に改めました。
+- **F002・F003:** 前の段で直っていたので、繰り返していません。
+- **F005:** `vp-ops-operability` は kata の段のレビューでは使わない観点なので扱わず、申し送りにしました。
+
+**確かめてほしいこと:** F004 の直しは、表の担当を OPS から店番担当に変えているため、担当の意味が少し変わります。要判断の印を付けたので、採るか戻すかを決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）の段で sld-sample の文を直した。文体を「である」にそろえ、指示語と長い文を直し、担当の書き方を Role code の定義つきで統一し（F004）、確認事項にあった保管場所一覧の条件の再掲を変更影響の形に改めた（F001）。F002・F003 は前の段で直っており、F005 はこの段で使わない観点のため申し送りにした。","handoff":["R3-1: R3 / 4.1. 隣接仕様の記録・状態と保管場所の対応、4.2. 本書を確定する前の確認 / 表の前の文が「です・ます」で、概要と 3.1 の「である」と混ざっている / 文末を「である」にそろえた（「決める」「示す」「確かめる」「確定する」） / W10 / -","R3-2: R3 / 4.1. 隣接仕様の記録・状態と保管場所の対応 / 「本書はそれをどこに置くか」の「それ」が記録・状態のどちらか、または両方かが読み取りにくい / 「その記録・状態」に置き換えた / W4 / -","R3-3: R3 / 3.2. 場面別の対処と復旧手順（`data/sales/` が消失・破損した） / 読点で 3 つの主体（DEV・PO・QE）の行為をつないだ長い文 / 「DEV が最新世代を復元する。」と、PO・QE の照合の文の 2 文に分けた / W3 / -","R3-4: R3 / 1. 概要、3.2. 場面別の対処と復旧手順 / 担当欄が「店番担当」と Role code（OPS・PO・DEV・QE）で揺れ、4.2 の合格条件では店番担当が破損時に会計を止めるのに、表ではその行為者が OPS になっている（grade F004） / 概要に Role code と担当者（PO・OPS は店主代表、DEV は開発担当、QE は同行レビュー担当、`specdojo:pm-members-sample` による）と、店番担当の意味を書いた。店頭で会計を止める・ファイルを消す行為者を店番担当に統一し、「OPS（店主代表）」は OPS にした / `vp-ux-language-consistency`、W1、W8。迷った理由: 行為者を OPS から店番担当に変えると担当の意味が少し変わる。選ばなかった案は、4.2 の合格条件の行為者を OPS に戻し、店番担当という語を本文から外す案 / 要判断","R3-5: R3 / 5. 確認事項と変更影響 / 外部退避媒体・販売記録の保持期間・日次集計の再生成手順の 3 行が、保管場所一覧の保持・削除条件（「決まるまで全世代」「処分しない」「削除できない」）を繰り返している（grade F001） / 3 行とも「決まったら（整ったら）保管場所一覧の該当行の条件を書き換える（見直す）」という変更の影響を書く形に改め、当面の条件は一覧の行を正にした / `vp-arc-conciseness` / -","R3-6: R3 / 4.1. 隣接仕様の記録・状態と保管場所の対応（STSD 行）、2.1. 店舗内・母屋の物理保管場所（検品場所の行） / grade F002（`sold` の置き場所）と F003（検品場所の管理区分）は前の段で直っている / - / `vp-qe-omissions-consistency`、`vp-qe-kata-conformance` は R3 の観点でなく、前の段で解消済みのため繰り返さない / -","R3-7: R3 / 3.2. 場面別の対処と復旧手順 / grade F005（取引セッションの消失・破損時の対処を足す）は `vp-ops-operability` の指摘で、kata-guide の「kata の観点の組」でこの観点は kata の段のレビューでは使わない / - / `vp-ops-operability` は除外の観点。足すかどうかは人が判断する。足す場合は、3.2 に「`.session/current-tx.json` が消失・破損した」行を置き、PO・DEV が照合を終えるまで新規開始と強制初期化を止める条件を書く案 / 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"対象の sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/sld-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

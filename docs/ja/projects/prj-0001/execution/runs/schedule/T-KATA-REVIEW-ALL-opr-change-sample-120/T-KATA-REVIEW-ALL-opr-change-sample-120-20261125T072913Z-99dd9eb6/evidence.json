@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-opr-change-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-opr-change-sample-120-20261125T072913Z-99dd9eb6",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T07:29:59.416Z",
+    "completed_at": "2026-11-25T07:34:01.121Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opr-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/opr-sample.md | 4 +++-\n 1 file changed, 3 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/opr-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/opr-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:opr-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:opr-rulebook\n  based_on:\n    - specdojo:opd-index-sample\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム 運用手順\n\n## 1. 概要\n\n本書は、駄菓子屋きぬや 販売管理システムの恒常運用における共通手順と証跡規約の正本である。店番担当・運用／リリース管理（`OPS`: Operations / Release Manager）・開発（`DEV`: Developer）が行う作業の手順と残す証跡を定める。店主代表が不在の日も、家族の店番担当が同じ手順で販売・在庫・つけを記録し、異常時に同じ判断で連絡・切替できる状態を作る。\n\n判断基準と目標値\n… output omitted …\nple\\|運用手順（バックアップ確認・リストア）]] | 復元・照合・演習の操作と判定を具体化する | 作成済 |\n| 手順 | \\[\\[specdojo:opr-batch-sample\\|運用手順（バッチ再実行）]] | 再実行の前提・上限・重複防止を具体化する | 作成済 |\n| 手順 | \\[\\[specdojo:opr-change-sample\\|運用手順（運用変更）]] | 影響の判定・適用・戻しを具体化する | 作成済 |\n| 手順 | \\[\\[specdojo:opr-access-control-sample\\|運用手順（権限・アカウント）]] | アカウント付与・剥奪手順 参照 | 作成済 |\n| 手順 | \\[\\[specdojo:opr-support-sample\\|運用手順（問い合わせ一次対応）]] | 問い合わせの分類・回答・引継ぎを具体化する | 作成済 |\n| 計画 | （なし） | 移行・切替の計画は初期リリースで扱わない | - |\n\n運用方針の目標値や承認者が変わった場合は、本書の該当する章の完了条件と承認者を同時に見直す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7130 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7130 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opr-change-sample-120\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1761}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  16:38:45\n   Duration  2.61s (transform 6.21s, setup 1.69s, import 7.76s, tests 5.95s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nbook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opr-change-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opr-change-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2（構成）を実施した。opr-sample.md の運用変更作業の表の後ろの段落を、適用前（検証・承認・周知）とロールバックの 2 段落に分け、template の手順の順に並べ替えた。opr-change-sample.md の章の移動 2 件と順序の要判断 1 件は handoff に案として残した。F001〜F004 は R2 の観点ではないため扱っていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-sample.md の運用変更作業（表の直後の段落） / 指摘: 表の後ろの 1 段落が「検証 → ロールバック → 事前周知」の順で、適用前の周知がロールバックの後にある。template の運用変更作業が示す「適用前の確認、適用、ロールバックの操作」の順で読めない。 / 直した案: 段落を「検証してから承認を求める → 前日の閉店時に周知する（表示の修正は周知しない）」の適用前の段落と、「ロールバック条件に当たったら戻し、同じ確認をして理由を書く」の段落の 2 つに分け、この順にした（sample に反映済み）。 / 根拠: docs/ja/specdojo/templates/opr-template.md の運用変更作業の記入指示、[[specdojo:opr-rulebook]] の記述ガイドの運用変更作業、[[specdojo:opr-change-sample]] の適用の手順（承認 → 事前周知 → 適用 → 確認）。 / 印: なし",
+    "No: 2 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-change-sample.md の手順適用範囲・前提（表の後ろの「手順を新しく書いたときや改訂したときは…」の段落） / 指摘: 運用作業の受入確認（検証用の環境で版の更新とロールバックを模擬する）が前提の章にある。rulebook はこの確認を成果物の章ではないとし、結果を証跡の章に残すよう求めている。opr-sample.md は同じ内容を証跡の章の表の後ろに置いており、置き方が揃っていない。 / 直した案: この段落を証跡の章の表の後ろ（「戻した変更も…」の文の後ろ）へ移す。末尾の「結果は証跡の章の手順の確認の記録に残す。」は「結果は手順の確認の記録に残す。」に縮める。今回の編集対象は opr-sample.md だけのため、反映していない。 / 根拠: [[specdojo:opr-rulebook]] の「運用作業の受入確認」、[[specdojo:opr-sample]] の証跡の章の最後の段落。 / 印: なし",
+    "No: 3 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-change-sample.md の「ロールバックとエスカレーション」の最後の段落（`OPS` が月次点検で変更件数・ロールバック件数とその理由を `PO` へ報告する） / 指摘: 月次点検で行う報告が、戻しの手順の節にある。点検を扱う章は「`opr-index` 参照。」だけで、本書に固有の月次の作業が読み手から見えない。 / 直した案: この段落を日次・週次・月次点検手順の章へ移し、「`opr-index` 参照。月次点検では、`OPS` が変更記録から…`PO` へ報告する。」とする。今回の編集対象は opr-sample.md だけのため、反映していない。 / 根拠: [[specdojo:opr-rulebook]] の本文要件（分冊は差分の手順を該当する章に書く）と記述ガイドの日次/週次/月次点検手順、docs/ja/specdojo/templates/opr-template.md の章の順。 / 印: なし",
+    "No: 4 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-change-sample.md の運用変更作業（「変更種別と承認・実施条件」と「影響の範囲の判定」の順） / 指摘: 「影響の範囲の判定」は変更種別を決める節なので、前提から結論の順では「変更種別と承認・実施条件」の表より前に来る。一方で、判定の文は表の承認者を参照しており、template も運用変更作業の表を先に置いている。 / 直した案: 直さない（今の順を維持する）。前提から結論の順を優先して 2 つの節を入れ替えるかどうかを、人が判断する。 / 根拠: docs/ja/specdojo/templates/opr-template.md の運用変更作業（表が先）、kata-guide の R2 の確かめること（前提から結論の順に読めるか）。 / 印: 要判断",
+    "grade の finding F001〜F004 は、どれも R2 の観点（`vp-arc-document-structure`、`vp-qe-omissions-consistency`）に当たらない。R1 の申し送り（No 2・No 3）で扱い済みのため、ここでは繰り返していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opr-change-sample-120/T-KATA-REVIEW-ALL-opr-change-sample-120-20261125T072913Z-99dd9eb6/executor.log",
+      "bytes": 7005,
+      "truncated": false
+    }
+  ]
+}

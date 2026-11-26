@@ -1,0 +1,159 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_57828228305c4b33b4495c8045411c48
+  ts: "2026-11-25T22:40:03Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターが dry-run の仮の ID を commit メッセージの Refs に書く
+    - field: description
+      from: ""
+      to: register add の dry-run で出た ID は仮で、実際の起票では乱数で振り直される。オーケストレーターが仮の ID を commit メッセージの Refs に書き、実際の ID と食い違う。
+    - field: input
+      from: ""
+      to: '["PJR-FNB7 の実 agent の試験（2026-11-26、sonnet、5 回）のうち 2 回で観測。dry-run の PJR-2W39 に対し実際は PJR-RBET、dry-run の PJR-9077 に対し実際は PJR-PB3T で、commit の Refs は仮の ID のままだった。","直し方（CLI が実際の ID を -m に差し込む、dry-run の出力で仮の ID だと示す、オーケストレーターの本文に注意を足す、など）は executor が選び、理由を個票の対応結果に書く。本文は保護された設定のため、変更案を対応結果に書く。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-FNB7"]'
+- v: 1
+  id: reg_6b717464149f47e5ba7c68d2accf6870
+  ts: "2026-11-26T10:41:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_57828228305c4b33b4495c8045411c48
+- v: 1
+  id: reg_493f5b07bdd34dd3baaeb1d61539b07f
+  ts: "2026-11-26T10:41:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_6b717464149f47e5ba7c68d2accf6870
+- v: 1
+  id: reg_6097e7500a3a4444912168c0e39b2f9e
+  ts: "2026-11-26T10:41:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_493f5b07bdd34dd3baaeb1d61539b07f
+- v: 1
+  id: reg_06703454eeb1433d95b3d656baf84af1
+  ts: "2026-11-26T15:48:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6097e7500a3a4444912168c0e39b2f9e
+- v: 1
+  id: reg_9785aba7054a4da7b2b323bc75fc544d
+  ts: "2026-11-26T15:54:04Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_06703454eeb1433d95b3d656baf84af1
+- v: 1
+  id: reg_b0922030548642f3bdf0c201b10b35a7
+  ts: "2026-11-26T16:17:03Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_9785aba7054a4da7b2b323bc75fc544d
+- v: 1
+  id: reg_04ba8fbedd8142bda610db371973ec82
+  ts: "2026-11-26T16:21:19Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b0922030548642f3bdf0c201b10b35a7
+- v: 1
+  id: reg_145b710b5ccb44e2ba90c319c88fefab
+  ts: "2026-11-26T22:07:09Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後の dry-run で注記を、AEGN・WF8Q の close と NDM7 の起票の commit で {id} の置き換えを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: register add --dry-run の ID が仮であることを出力に示し、--commit -m の {id} を実際の項目 ID へ置き換えるようにした
+  previous_event_id: reg_04ba8fbedd8142bda610db371973ec82

@@ -63,3 +63,48 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_c09bd96d12ce4ed4875270dc2a022aa9
+- v: 1
+  id: reg_617d7ac7d07e468b97e3956756c3451c
+  ts: "2026-11-25T12:59:48Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_88a9523877be43a483f69a22ea2d0da2
+- v: 1
+  id: reg_5e80d59acc6a4c469bbb8f55ff597466
+  ts: "2026-11-25T13:18:21Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_617d7ac7d07e468b97e3956756c3451c
+- v: 1
+  id: reg_8d5ba11881314c2bb5b6457b2bc93ca4
+  ts: "2026-11-25T22:38:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: develop への merge（a4a487acfa）の後に exec smoke（PJR-JSEY）と rtn-exec-watch-scan の 1 回の実行が通ることを確かめ、indie の承認（2026-11-26）を得て close。prj-0001 で手当てを有効にする設定は保護された設定のため未反映。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: 見張りが分けた種類のうち上限・負荷の時間切れなどに、exec-defaults の watch.remedies で選んだ手当てを回数の上限つきで打てるようにした。
+  previous_event_id: reg_5e80d59acc6a4c469bbb8f55ff597466

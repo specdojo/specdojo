@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { resolveRegisterBranchTarget } from "../shared/register-branch.js";
 import { checkRegisterGuard, mergeRegisterBranch } from "../shared/register-merge.js";
+import { pushRegisterBranchForProject } from "./branch-push.js";
 import type { RegisterCommandDependencies } from "./command-types.js";
 import { checkRegisterPush, formatRegisterPushReport } from "./push-check.js";
 
@@ -116,6 +117,34 @@ export function registerBranchCommands(
       }
     },
   );
+
+  const pushCmd = reg
+    .command("branch-push")
+    .description(
+      "Create, publish or recover the register branch (register_sync); pushes only to its configured remote and branch",
+    );
+  addProjectOption(pushCmd);
+  // The push target comes only from register_sync; no argument can point at another ref.
+  pushCmd.allowExcessArguments(false);
+  pushCmd.option(
+    "--dry-run",
+    "Show the branch to create, the commits to push and the check result",
+    false,
+  );
+  pushCmd.action(async (opts: { project?: string; dryRun?: boolean }) => {
+    try {
+      const paths = resolveRegisterPaths(opts);
+      const outcome = await pushRegisterBranchForProject(
+        paths.projectId,
+        paths.registerDateTimeZone,
+        { dryRun: Boolean(opts.dryRun) },
+      );
+      process.stdout.write(`${outcome.lines.join("\n")}\n`);
+      if (outcome.wouldStop) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
 }
 
 type RegisterMergeStatus = ReturnType<typeof mergeRegisterBranch>["status"];

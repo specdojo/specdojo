@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6XG2",
+  "run_id": "pjr-6xg2-20261124T173316Z-d1db0a56",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T17:34:06.584Z",
+    "completed_at": "2026-11-24T17:36:06.248Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6xg2.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6xg2-docs-site-next-prj-0002.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6xg2-docs-site-next-prj-0002.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../pjr-6xg2-docs-site-next-prj-0002.md            | 70 ++++++++++++++++++++--\n packages/docs-site/.vitepress/config.mts           | 29 +++++++--\n 2 files changed, 90 insertions(+), 9 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "エラー 0、warning 43 件（既存の max-lines など）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-6xg2-docs-site-next-prj-0002\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: todo\n  item_status: in-progress\n  priority: medium\n  difficulty: medium\n  owner: DEV\n  registered_at: \"2026-11-24T13:59:40Z\"\n  due_on: \"2026-11-30\"\n  commit_type: ci\n  commit_scope: docs-site\n---\n\n# PJR-6XG2 文書サイトの開発中の版に prj-0002 の projec\n… output omitted …\n         npm ci\n```\n\n### 5.4. CHANGELOG に書く事項\n\n- 区分: Added（文書サイト）\n- 案: `文書サイトの開発中の版（/specdojo/next/）に prj-0002 の project の文書と specdojo-lp の product の文書を出す。上のメニューの「プロジェクト」は、文書のある project が複数あるときドロップダウンになる。`\n\n### 5.5. 残課題\n\n- 作業 4（手元ビルドの確認）と作業 5（`deploy.yml` への反映）は、オーケストレーターが利用者の承認のもとで行う。重ねた文書で wikilink の解決や登録簿の表示ページの生成が止まるかは未確認。\n- 担当 DEV・期限 2026-11-30 は利用者の確認待ち。\n- `specdojo-lp` の clone は既定ブランチを取る。`develop` の文書を出す場合は `--branch develop` を足す（要判断）。\n\n## 6. 関連ドキュメント\n\n- \\[\\[prj-0001:pjr-index]]"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6788 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6788 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (no related test found for the changed files): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6XG2\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id …",
+      "test_selection": {
+        "mode": "full",
+        "reason": "no related test found for the changed files"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6XG2/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6XG2/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6XG2\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (70 tests) 251ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\",\"duration_ms\":251}\n[p\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "メニューの project の入口を複数 project 対応にし、deploy.yml の変更案と CHANGELOG 文案を個票に記載した。手元ビルドと workflow への反映は残課題としてオーケストレーターへ引き継ぐ。",
+  "completion_status": "complete",
+  "handoff": [
+    "deploy.yml の変更案（差分）は個票 pjr-6xg2 の対応結果の「workflow の変更案」の節にある。Build the next site の cd の直後、npm ci の前に、prj-0002 のブランチから docs/ja/projects/prj-0002/ だけを git checkout で重ね、ビルド用 worktree の共有設定へ prj-0002 を足し、product-repos.ts がある版だけ specdojo-lp を token なしで git clone して repos に宣言する。",
+    "設定の足し方の決定: .specdojo/specdojo.local.config.json は使わない。CLI の local config は共有設定に無い project を足せず、docs-site の loadProductRepos と readProjectEntries も共有設定の projects だけを走査するため。代わりにビルド用の detached worktree の共有設定へ足す。この worktree は commit せず捨てる。",
+    "specdojo-assets は public でないため宣言しない。specdojo-lp は actions/checkout の path が GITHUB_WORKSPACE の下に限られるため git clone で $RUNNER_TEMP/specdojo-lp に置く。clone は既定ブランチを取るので、develop の文書を出す場合は --branch develop が要る（要判断）。",
+    "CHANGELOG に書く事項: 区分は Added（文書サイト）。案は「文書サイトの開発中の版（/specdojo/next/）に prj-0002 の project の文書と specdojo-lp の product の文書を出す。上のメニューの「プロジェクト」は、文書のある project が複数あるときドロップダウンになる。」",
+    "作業 4（手元で同じ重ね方をしたビルドで、prj-0002 のページ、wikilink の解決、登録簿の表示ページの生成を確かめる）と作業 5（deploy.yml への反映、利用者の承認のもと）は open のまま。担当 DEV・期限 2026-11-30 は利用者の確認待ち。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6XG2/pjr-6xg2-20261124T173316Z-d1db0a56/executor.log",
+      "bytes": 4809,
+      "truncated": false
+    }
+  ]
+}

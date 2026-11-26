@@ -1,0 +1,18 @@
+R2（構成）のレビューを終え、`docs/ja/specdojo/samples/imp-test-sample.md` に 2 か所の構成の直しを入れました。Prettier と markdownlint は通っています。
+
+章の順（6 章）と各表の必須の列は、rulebook の本文要件どおりでした。template は `undecided` で存在しないため、照合は rulebook だけで行いました。尺度の表が影響度別の表より前にあること、同じ影響度の中の優先順位に理由があることも満たしています。
+
+**直したこと**
+
+- **変更要求の概要**: 箇条書きを「背景 → 要求の要点 → 狙い」から「背景 → 狙い → 要求の要点」に並べ替えました。rulebook の記載順に合わせ、目的から要求へ前提から結論の順に読めるようにするためです。
+- **対応方針**: 1 項目に 3 文が入っていた箇条書きを 2 項目に分けました。回帰テストの代替と単体テストの見送りを、それぞれ「決定記録と再評価条件」として読めるようにしています。
+
+**扱わなかった finding**
+
+- **F001**: R2 で使わない観点の指摘なので扱っていません。
+- **F002・F003**: R1 が直した版で、すでに解消していました。
+- **F004・F005**: 文章の直しにあたるため R3 に回します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: imp-test-sample の章の順と必須の列は rulebook の本文要件に合っていた。変更要求の概要の箇条書きの並べ替えと、対応方針の決定記録の箇条書きの分割を sample に入れた。template は undecided で照合できなかった。","handoff":["R2-1: R2 / 2. 変更要求の概要 / 箇条書きの順（背景→要求の要点→狙い）が rulebook の本文要件の順「背景・狙い・要求の要点」と違い、目的の前に要求が来る / 「狙い」を「要求の要点」の前へ移した / `vp-arc-document-structure`（imp-test-rulebook の本文要件と、記述ガイドの「変更要求の概要」） / -","R2-2: R2 / 5. 対応方針 / 決定記録の箇条書き 1 項目に、回帰テストの代替と単体テストの見送りの決定と再評価条件の 3 文が入っており、項目ごとの再評価条件が読み取りにくい / 回帰テストの代替と単体テストの見送りの 2 項目に分け、それぞれに決定記録 `PJR-T5D1` と再評価条件を書いた / `vp-arc-document-structure`、`vp-qe-omissions-consistency`（rulebook の記述ガイド「対応方針」: 見送り・代替は再評価条件と期限を必ず記載する） / -","R2-3: R2 / 6. 未解決事項 / rulebook の記述ガイド「未解決事項」は「見送り・代替を決めた」事項を `decision` として登録簿へ転記し、転記先 ID を書くよう求める。sample は `PJR-T5D1` を対応方針にだけ書いており、未解決事項の表に行がない。決定済みのため未解決事項に載せないのは妥当とも読めるため、直していない / - / `vp-qe-omissions-consistency`。迷った理由: rulebook の転記の条件の表は未解決事項の章にあるが、決定済みの事項を未解決事項の表へ載せると章の目的（判断待ち・調査不足）と食い違う。選ばなかった案: 未解決事項の表に `PJR-T5D1`（`decision`）の行を足す。rulebook 側を直すなら、`decision` の転記先 ID は対応方針に書くと明記する案がある / 要判断","R2-4: R2 / 全体 / imp-test-rulebook の frontmatter の `template` が `undecided` で、template との章の配置の照合ができない / - / `vp-qe-omissions-consistency`。相手側: imp-test-rulebook。template を作るなら、本文要件の 6 章と必須の列をそのまま見出しと表の枠にする案がある / -","申し送り: F001（`vp-pm-plan-feasibility`）は kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点のため、R2 では扱っていない。F002（反映先の記載）と F003（成功条件のつけ残高）は R1 の版で解消済みだった。F004（受入判定日の営業日数）と F005（論点名の呼称）は文章の直しのため R3 に回す。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-test-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/imp-test-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

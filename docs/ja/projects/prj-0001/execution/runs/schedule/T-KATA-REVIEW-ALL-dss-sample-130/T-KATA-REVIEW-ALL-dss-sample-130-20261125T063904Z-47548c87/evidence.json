@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-dss-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-dss-sample-130-20261125T063904Z-47548c87",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T06:39:49.716Z",
+    "completed_at": "2026-11-25T06:43:40.919Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/dss-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/dss-sample.md | 22 +++++++++++-----------\n 1 file changed, 11 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/dss-sample.md",
+      "status": "passed",
+      "summary": "Prettier で整形し、表の列幅を直した"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:dss-sample\n  type: architecture\n  status: draft\n  rulebook: specdojo:dss-rulebook\n  part_of: []\n  based_on:\n    - specdojo:uis-sample\n---\n\n# 駄菓子屋きぬや 販売管理 GUI デザインシステム\n\n## 1. 目的・適用範囲\n\n本書は、店主と店番をする家族が商品登録と金額確認の際に操作の重要度や入力不備を見分けられるよう、店舗の販売管理 GUI に共通する表現を定める。読みやすい金額、一定の操作位置、色に頼らない状態表示を採用し、会計中の読み違いと操作の迷いを減らす。\n\n| 項目 | 適用範囲 |\n| - | - |\n| 対象 | 販売登録、商品検索、取引確認・完了に共通する GUI。販売登録の業務仕様は \\[\\[specdo\n… output omitted …\nが要る変更は change-request）に対象トークン・規則、理由、影響する部品・画面・検証を記録 | 影響を評価し、操作の意味や回復操作が変わる場合は UIS も更新する。基準版は前節の順で採用し直す |\n| 例外判断 | 同登録簿の decision に対象規則、理由、適用画面、影響、検証結果、期限を記録 | 採用前に個票で採否を決め、却下された案は適用しない |\n\n現在の例外はなし。登録簿の書き方は \\[\\[specdojo:pjr-rulebook|プロジェクト登録簿作成ルール]] に従い、例外の個票と元の登録項目を規則 ID で相互に参照する。期限切れの例外は元の規則へ戻すか、期限前に再検証して個票で判断し直す。\n\n### 8.4. 関連文書への導線\n\n`sysd-index` から本書と実装の正本へ案内する。通信・認可・再送等の共通実装は `sysd-cross-cutting-policy`、画面固有の仕様は \\[\\[specdojo:uis-sample|販売登録画面の完成例]] の責務とする。要求と受入・試験への対応は「検証」の表を入口とする。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7108 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7108 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dss-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[paren\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1826}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  15:48:48\n   Duration  2.76s (transform 6.05s, setup 2.55s, import 8.09s, tests 6.18s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dss-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dss-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3 の読みやすさの見直しとして、docs/ja/specdojo/samples/dss-sample.md に 6 件の文の直し（主語の明示、指示語の参照先、主語と述語の対応、略語の初出）を入れ、Prettier で整形した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 1. 目的・適用範囲 / 冒頭の文の「定める」の主語がない / 「本書は、店主と店番をする家族が…共通する表現を定める。」にした / W1 / -",
+    "R3-2: R3 / 1. 目的・適用範囲（表の対象外の行） / 略語 UIS の初出に正式名がない / 「画面仕様（UIS）」にした（表記は dss-rulebook の [[specdojo:uis-rulebook\\|画面仕様（UIS）]] に合わせた） / W8 / -",
+    "R3-3: R3 / 6. 状態の見せ方 / 「以下は…を定める」で指示語の参照先が曖昧で、主語と述語の対応が弱い / 「次の表は、利用者へ伝える共通表現を定める。」にした / W4、W2 / -",
+    "R3-4: R3 / 8.1. 検証 / 「合否は…で判定し、次の表には再掲しない」で主語と述語がねじれている / 2 文に分け「…で判定する。次の表には、これらの合否基準を再掲しない。」にした / W2、W3 / -",
+    "R3-5: R3 / 8.2. 検証の節目と基準版の採用（表の 1. 試作確認） / 略語 DSS を本文で導入していない / 自己参照の「本書の型」にした / W8 / -",
+    "R3-6: R3 / 8.2. 検証の節目と基準版の採用（2 つ目の表の前の文） / 「次の節目で止める」の「次の」が直後の表か次の段階か一つに決まらず、止める対象もない / 「次の表の入力・記録が未作成または未確定の場合は、検証を表に示す節目で止める。」にした / W4、W1 / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-dss-sample-130/T-KATA-REVIEW-ALL-dss-sample-130-20261125T063904Z-47548c87/executor.log",
+      "bytes": 3787,
+      "truncated": false
+    }
+  ]
+}

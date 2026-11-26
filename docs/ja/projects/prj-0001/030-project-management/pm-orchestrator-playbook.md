@@ -13,16 +13,15 @@ specdojo:
 本書は、prj-0001（SpecDojo 本体の開発）を扱う対話型オーケストレーター（`specdojo-orchestrator`）が、この環境で作業を進めるときの運用メモである。配布するオーケストレーターの本文（`.agents/specdojo-orchestrator.agent.md`）に入れない、この環境ならではの事情と、実際の運用で分かった手順・落とし穴をまとめる。
 
 - 一般的な進め方（承認の聞き方、close の前の確かめ方など）は配布する本文に従う。本書はその上で、prj-0001 に固有の事柄だけを書く。
-- 書いてある内容は 2026-10-20 から 2026-10-22 の運用（0.4.1 と 0.4.2 のリリース）で実際に起きたことに基づく。状況が変わったら書き直す。
+- 書いてある内容は 0.4.1 から 0.10.0 までの運用で実際に起きたことに基づき、2026-11-25 に今の運用へ合わせた（PJR-69ZX）。状況が変わったら書き直す。
+- どの利用者のオーケストレーターにも効く知見は配布する本文へ移し、本書には残さない。
 
 ## 2. 登録簿項目の完了条件の書き方（CHANGELOG を個票の申し送りでまとめる）
 
-PJR-EPQ3 の決定どおり、並べて流したときに `CHANGELOG.md` の統合衝突を避けるため、完了条件の書き方を次のようにする。
+prj-0001 の CHANGELOG の決まりは、PJR-EPQ3 の決定どおり、配布する本文の「完了条件の書き方」にある推奨の方式（項目では `CHANGELOG.md` を変えず、個票の対応結果の「CHANGELOG に書く事項」の小節に区分と行の文案を書き、リリースで集める）とする。見出しの形の文字列を完了条件に書かないことも本文に従う。prj-0001 では次を加える。
 
-- 登録簿項目の完了条件では「`CHANGELOG.md` は変えず、個票の対応結果に「CHANGELOG に書く事項」の小節（見出しは Markdown の連番ルールに従う）を作り、区分（追加・変更・不具合修正など）と行の文案を書く。影響がなければ『なし』と書く」と指示する。リリースでは見出しの文言「CHANGELOG に書く事項」で探して集める。
-- 完了条件の中に、見出しの形の文字列（`### 5.1. CHANGELOG に書く事項` など）をそのまま書かない。executor もオーケストレーターも、文字列で探して個票を直すときに完了条件の中の文字列を見出しと取り違え、完了条件の文の途中に対応の記録を差し込んだ（2026-11-22 の PJR-86BN・PJR-MS7X）。個票を道具で直すときは、行頭の見出し（行頭が `###` で始まる行）に合わせる。
-- 利用者に影響する変更がある項目は必ずこの節に書いておく。空欄や「_TODO_」のまま `close` しない。
-- executor は `CHANGELOG.md` を変えず、文案を個票の対応結果と報告の `handoff` に書く。result へ直接書ける実行形態では result にも書く。
+- 影響がなければ小節に『なし』と書かせる。利用者に影響する変更がある項目は必ずこの節に書いておく。空欄や「_TODO_」のまま `close` しない。
+- 個票を道具で直すときは、行頭の見出し（行頭が `###` で始まる行）に合わせる。2026-11-22 の PJR-86BN・PJR-MS7X では、完了条件の中の文字列を見出しと取り違えて記録を差し込んだ。
 - 旧方（未公開の版の節へ直接書く）で書かれた行がまだ残っている間は、その行をそのまま残してリリース時に集める。新方に切り替えた項目と旧方の行を混ぜて集めてもよい。
 
 ## 3. 実行の列の組み方
@@ -31,10 +30,10 @@ PJR-EPQ3 の決定どおり、並べて流したときに `CHANGELOG.md` の統�
 
 ```bash
 npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
-  --join --if-busy wait --on-rate-limit fallback \
-  --executor-by <executor> --fallback-executor-by <代わりの executor> \
-  --reporter-by gemma26-reporter --fallback-reporter-by sonnet-reporter
+  --join --if-busy wait --on-rate-limit fallback
 ```
+
+- executor と reporter は、指定しなければ `.specdojo/exec-defaults.yaml` の `routing` で個票の `difficulty` から決まる（第 4 節）。routing と違う agent を使うときだけ `--executor-by`・`--fallback-executor-by` を足す。reporter は routing の既定（gemma26、代わりは sonnet-reporter）のままでよい。形式のやり直しが尽きると、代わりの reporter で 1 回やり直す（PJR-Q723）。
 
 - 列は 2 本までにする（codex の列と Claude の列など）。`.specdojo/exec-defaults.yaml` の設定（`providers.codex.max_concurrency: 2`、`providers.claude.max_concurrency: 3`）で並べられる本数は決まるが、親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は `pipeline.parent_validation_concurrency: 1` により run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。エージェントの選定順は `priority` で制御する。
 - 文書サイトのビルド（`npm run docs:build`）はメモリを多く使うため、並べた run と重ねず、直列に流す。複数の run や grade、build を順に流す仕組みの整備（回避策: [[prj-0001:pjr-v0fq-exec-sequential-batch|PJR-V0FQ]]）までは、`exec queue` や単独の実行で分離する。
@@ -47,13 +46,18 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 - 統合の commit のときにも検査が走る。並行の検証と重なると、`tests/src/exec/pipeline-e2e.integration.test.ts` などの E2E が時間切れで落ちることがある。落ちた場合は、負荷が下がってから `--resume` で統合からやり直す。
 - 列は `nohup setsid specdojo exec queue run <queue-id> --project prj-0001` で流す。`npx` で流すと、統合の後の dist の作り直しの間に npx の置き場が作り直され、次の段が `MODULE_NOT_FOUND` で始まらないことがある。
 - `exec resume --task`（schedule のタスクの再開）は列の段にできない。列には `exec run` だけを並べ、再開は単独で流す。
-- 個票の入力・完了条件には、読むだけの文書をパスで書かない（例: `sample-authoring-standard` は名前で書く）。runner はパスを変更の範囲と推定し、同じパスを書いた項目どうしを順番待ちにする（2026-11-22 の第 3 波の手直し）。
 - `exec queue status` の出力を `head` で途中で切ると EPIPE で落ちる。状態を読むときは `awk` などで最後まで読む。
 - 列の終わりを待って次を流すときは、待機のスクリプトを書かず `exec queue` で予約する（[[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」）。予約ファイル（`execution/queues/<queue-id>.json`）は記帳と同じく commit する。どうしても待機を書く場合も、相手のプロセスを `pgrep -f` のパターンで探さない（`落とし穴` を参照）。
 
 ## 4. agent の使い分けと癖
 
-難しさごとの既定の振り分けは `.specdojo/exec-defaults.yaml` の `routing` にある（hard は opus で代わりは sonnet、medium は sonnet で代わりは opus、easy はローカルの qwen で代わりは sonnet、reporter は gemma26 で代わりは sonnet-reporter）。codex の sol は 2026-11-21 に routing から外した（0c12cc6f2）。2026-11-24 から再び使えるが、routing は opus のままとし、使うときは `--executor-by` で指定する。agy（Antigravity）は 2026-11-21 から使わない（PJR-5V0T。consumer plan では他社の agent や application から agy を起動することが規約で対象外のため）。表に加えて、次の癖を踏まえて選ぶ。
+難しさごとの既定の振り分けは `.specdojo/exec-defaults.yaml` の `routing` にある（hard は opus で代わりは sonnet、medium は sonnet で代わりは opus、easy はローカルの qwen で代わりは sonnet、reporter は gemma26 で代わりは sonnet-reporter）。routing に加えて、次のように選ぶ。
+
+- codex の sol（`sol-executor`）は hard、terra（`terra-executor`）は medium の作業に使える。routing には入れず、使うときは `--executor-by` で指定する（sol は 2026-11-21 に routing から外し、2026-11-24 から再び使えるようにした）。
+- agy（Antigravity）は使わない（PJR-5V0T。consumer plan では他社の agent や application から agy を起動することが規約で対象外のため）。
+- easy でも、ローカルの qwen は、検査やファイルの削除を伴わない文書の作業だけに使う。それ以外は sonnet で流す。
+
+次の癖も踏まえる。
 
 | agent                   | 癖・制約                                                                                                                                                                                                  | 対応                                                                                                                                                                                     |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -76,11 +80,9 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 | 夜間の job の中で止まった子の run を日中に再開する | job の worktree の中で wait になった                       | 夜間の job の中で作られた子の run は、日中の `--resume` で plan が見つからないことがある（PJR-50CF が直るまでの回避策: [[prj-0001:pjr-50cf-exec-resume-no-sync\|PJR-50CF]]、[[prj-0001:pjr-97ke-night-child-run-resume\|PJR-97KE]]）。本体から `exec run --register <ID> --worktree --resume` で再開できる。再開の前に job の branch から wait の記録を取り込むため、同じ夜にその前に job へ統合された他の項目の成果も、job 全体の review より先に本体へ入る。job 全体の review を待つべき夜は、job を先に統合してから再開する。統合先の新しい commit が同期されない場合は手動で merge して解決する |
 | 統合で `CONFLICT`                                  | 並行の項目が同じ行を変えた                                 | 対象ファイルの両方の行を残して worktree で手で解き、`--resume`（旧方では `CHANGELOG.md`、新方では該当の個票・実装ファイル。個別の `CHANGELOG.md` の衝突は新方で起きない）                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
-- reporter の result は、書き込む前に markdownlint で検査され、違反は書式の再試行で reporter が直す（PJR-WB78）。再試行でも直らずに waiting になったときは、worktree の result の該当行だけを直して、統合だけを流し直す。schedule のタスクは `exec resume --task <ID>`、登録簿の項目は `exec run --register <ID> --worktree --resume`。成果物は変えない。
-- executor が個票の完了条件を壊した（完了条件の中に対応の記録を差し込んだなど）ときは、worktree で完了条件を develop の版に戻し、記録を対応結果の小節へ移してから `--resume` する。
+- 追加の指示（`--resume-note`）、executor が完了条件を壊したとき、reporter の result の書式で waiting になったときの再開は、配布する本文の「止まったときの対処」に従う（reporter の書式の検査は PJR-WB78、`--resume-note` は [[prj-0001:pjr-5f1y-exec-resume-instruction-option|PJR-5F1Y]]）。
 - review の項目は `register reopen` できない（すでに有効な状態のため）。完了条件を補って流し直すときは、個票を直して commit し、そのまま `exec run` を流す。
 - 実行中の項目を止めたいときは、見張りのスクリプトだけでなく runner のプロセスが残っていないかを確かめる。commit の途中で止めると後始末が増えるため、終わり際なら最後まで流す。
-- 再開の前に追加の指示を入れたい場合は、plan を手で編集せず（worktree の plan を直すと通常の再開では統合の前に範囲外の変更として止まる）、`exec run --register <ID> --resume --resume-from executor --resume-note <text>` を使う（[[prj-0001:pjr-5f1y-exec-resume-instruction-option|PJR-5F1Y]]）。
 
 ## 6. 統合後の確認と自分で確かめること
 
@@ -103,9 +105,9 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 
 ### 6.2. executor の報告に頼らないこと
 
-- `requires_human`（人の確認が必要）と書かれた検証は、オーケストレーターが自分で流して確かめる。例: sandbox では通せない `docs:build` を手元で流し、時間と dead link の件数を確かめた（PJR-98P8）。
+`requires_human` の検証と外部の事実の確かめ方は、配布する本文の「close の前の確かめ方」に従う（例: PJR-98P8 では sandbox で通せない `docs:build` を手元で流し、PJR-2ASZ ではモデルのタグ名を Ollama の公式の一覧で確かめた）。prj-0001 では次を加える。
+
 - 利用者のリポジトリでの動きは、tarball（`npm pack`）を空のリポジトリに入れて確かめる。PJR-7H7N は統合まで通ったが、空のリポジトリでは最初の commit が markdownlint の既定の規則で止まることが分かり、完了条件を補って流し直した。
-- 外部の事実（モデルのタグ名など）は、result に確かめ方がなければ一次情報で確かめる（PJR-2ASZ では Ollama の公式の一覧で確かめた）。
 
 ### 6.3. 型（kata）の整備と評価での注意点
 
@@ -120,7 +122,6 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 
 - 待機が自分自身を数える: `while pgrep -f "register PJR-XXXX"` のような待機は、待機のコマンドの文字列にも同じ語が含まれるため、自分自身に一致して終わらない。結果の行の有無か、プロセスの番号（`kill -0 <pid>`）で待つ。
 - commit メッセージの本文は 1 行 100 文字以内（commitlint の `body-max-line-length`）。長い文は折り返す。
-- 個票の Markdown: 素の URL は MD034 で止まるため `<https://...>` と書く。説明や結論にアスタリスクを 2 つ書くと、0.4.1 までの一覧の生成では MD037 で止まった（PJR-6SQH で修正済み）。
 - orchestrator の commit・merge・add・checkout などは `npx specdojo git --project prj-0001 -- <Git の引数>` で実行し、runner の統合と同じ `exec-lifecycle` ロックに並べる。例: `npx specdojo git --project prj-0001 -- commit -m "docs: update playbook"`。`status`・`log`・`diff` はロックを待たない。ロックなしの commit を検知する pre-commit 警告の設定案は [[prj-0001:pjr-30sa-specdojo-git-serialized|PJR-30SA]] にある。
 - YAML の成果物を変えた項目は、close の前に `specdojo build --only yaml-pages` で表示のページを作り直し、`npx markdownlint-cli2 docs/**/generated/<name>.md` を流す（PJR-TF6F が入るまでの回避策）。
 - skill `specdojo-exec-in-session` の手順で自分の worktree を作ったら、commit の前に `npx tsx src/specdojo.ts build` で生成物（登録簿の一覧など）を作る。作らないと commit の hook の `index-build` が止まる。
@@ -132,7 +133,11 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 ## 8. 別の project との分担
 
 - prj-0002（LP と assets）は `../specdojo-prj-0002` の作業ツリーで、そちらのオーケストレーターが進める。prj-0001 のオーケストレーターは、prj-0002 の作業を代わりに流さない。
-- 別の project の登録簿へ起票するときは、0.4.2 以降の `register add --project <project-id> --commit` を使う。起票の元は `--from <project-id>:PJR-XXXX` で指す。close などの状態遷移は、その project の作業ツリーで行う。
+- 別の project の登録簿へ起票するときは、`register add --project <project-id> --commit` を使う。起票の元は `--from <project-id>:PJR-XXXX` で指す。close などの状態遷移は、その project の作業ツリーで行う。
+- 2026-11-25 から、prj-0001 と prj-0002 で登録簿の同期（`register_sync`）を使う（PJR-T2X5 と同じ日の利用者の判断）。`register ... --commit` と `exec run` は、個票とイベントを専用ブランチ（`project/<project-id>/register`）へ commit して push する。この push と、専用ブランチの初回の作成・止まった同期の復旧（`specdojo register branch-push --project <project-id>`、PJR-M120）は、specdojo のコマンドに任せる。自分で `git push` は打たない。
+  - prj-0001 から prj-0002 への起票は、設定の `external_projects` の `prj-0002`（`../specdojo-prj-0002`）を通る。prj-0002 から prj-0001 への起票は、prj-0002 の設定の prj-0001 の同期で、`project/prj-0001/register` へ直接記帳される。
+  - develop の作業の前に `specdojo register branch-merge --project prj-0001` で専用ブランチを取り込む。develop で個票とイベントを直接変えない（pre-commit の `register-branch-guard` が止める）。
+  - 専用ブランチの worktree（`../worktrees/register-prj-0001`）には `node_modules` のリンクを置き、commit の hook が動くようにしてある。
 - prj-0002 の作業ツリーを新しい版に合わせるときは、prj-0002 の develop に main を取り込み、その作業ツリーで `npm ci` と `npm run build` をしてから使う。
 
 ## 9. リリースの手順

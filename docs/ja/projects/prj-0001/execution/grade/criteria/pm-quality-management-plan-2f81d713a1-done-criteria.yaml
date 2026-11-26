@@ -2,12 +2,12 @@
 id: prj-0001:pm-quality-management-plan-grade-criteria
 document: prj-0001:pm-quality-management-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
-graded_at: "2026-11-16T17:06:23.764Z"
-graded_by: sol-review-executor
+graded_at: "2026-11-26T10:54:18.952Z"
+graded_by: opus-review-executor
 content_hash: 84c463a64ee7d90077d6d61aa423e4734cb134d043778c4553d9e23074ebdb3a
 summary:
-  satisfied: 3
-  unsatisfied: 0
+  satisfied: 2
+  unsatisfied: 1
   total: 3
 criteria:
   - id: DC-001
@@ -21,7 +21,8 @@ criteria:
     roles:
       - PM
     viewpoint: vp-pm-plan-feasibility
-    status: satisfied
+    status: unsatisfied
+    reason: 期限付き例外の扱いが管理計画（品質の逸脱時対応の「期限付き例外」）および成功条件の判定手順と相反し、品質管理プロセスの一部が全体計画と整合していない。
   - id: DC-003
     text: 品質メトリクス（算出方法・閾値・計測頻度）と検証・レビュー手順が判定可能な形で記述されていること
     roles:

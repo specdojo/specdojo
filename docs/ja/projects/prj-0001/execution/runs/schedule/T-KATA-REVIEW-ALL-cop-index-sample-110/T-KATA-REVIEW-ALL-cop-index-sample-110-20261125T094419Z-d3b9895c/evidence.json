@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cop-index-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-cop-index-sample-110-20261125T094419Z-d3b9895c",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T09:45:07.030Z",
+    "completed_at": "2026-11-25T09:49:05.438Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "Markdown を変更していない",
+      "reason": "sample・rulebook とも変更がなく、親 runner の検査の対象。executor が実行する差分がない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7188 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7188 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-index-sample-110/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-index-sample-110/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R1（目的の過不足）では直す点がなく、sample は変更していない。cop-index-rulebook の必須 10 章、カタログの cop-index の done_criteria、Sample 記述標準の禁止事項と照らし、要る内容の欠けも要らない内容も見つからなかった。finding F001（R4 に当たる）と F002（R2 に当たる）は plan に従い、扱う段に任せた。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/cop-index-sample.md 全体 / 指摘: 必須 10 章がすべて順に入っている。カタログの done_criteria（業務停止範囲・判定ポイント・切戻し・エスカレーション・運用体制）も満たしている。要らない内容もない / 直した案: 変更なし / 根拠: cop-index-rulebook の「本文要件」、dct-migration-planning-template.yaml の cop-index の done_criteria、Sample 記述標準の「禁止事項」 / 印: なし",
+    "No: 2 / 段: R1 / 箇所: 「ロールバック手順」の表の手順 4（登録簿への転記）/ 指摘: rulebook 6.3 は「旧系で業務を再開できたことを確かめる手順で終わること」を求める。sample では、再開を確かめるのは手順 3（ノートでの試しの記録）で、最後の手順 4 は登録簿への転記になっている。表の後の 1 文が手順 3 と 4 の両方を完了条件と定めており、手順の並びとしては自然なので sample は直していない / 直した案: sample は変えない。rulebook 6.3 を「旧系で業務を再開できたことを確かめる手順を含め、記録の転記で締めてよい」と緩める案を人が判断する（rulebook は本段では変更しない）/ 根拠: cop-index-rulebook の「ロールバック手順」の記述ガイド / 印: 要判断",
+    "No: 3 / 段: R1（R2 へ申し送り）/ 箇所: 「実施条件（事前完了条件）」の導入文 / 指摘: grade の finding F002 を R2 へ任せる。観点 vp-qe-omissions-consistency は R2 の観点。導入文の「前日の閉店時までに」が、GO1 の確認時期「前日の閉店後」・T-13:00 と食い違う / 直した案: 導入文を「前日の最終棚卸の終了時（T-13:00）までに」にそろえる（R2 で直す）/ 根拠: kata-guide の「kata の観点の組」の R2 / 印: なし",
+    "No: 4 / 段: R1（R4 へ申し送り）/ 箇所: 「切替判定ポイント（GO/NO-GO）」の GO4 の行と、タイムラインの T+7日 の行 / 指摘: grade の finding F001 を R4 へ任せる。観点 vp-qe-verifiability は R4 の観点。「理由の分からない差異がない」は判定者によって解釈が分かれる / 直した案: 「差異が 0、または差異の原因を日次締めの差異欄に書いてある」のように、判定できる状態で書く（R4 で直す）/ 根拠: kata-guide の「kata の観点の組」の R4 / 印: なし",
+    "No: 5 / 段: R1（R5 へ申し送り）/ 箇所: 「担当者、連絡系統」の「来店客の問い合わせ」の行と、「周知」の表の問い合わせ先 / 指摘: 連絡先は「店頭窓口」なのに、備考には「臨時休業中は店の固定電話で受ける」とあり、周知の問い合わせ先も臨時休業の時間を含めて店頭窓口だけになっている。臨時休業中の窓口が食い違う / 直した案: 周知の問い合わせ先を「店頭窓口（臨時休業中は店の固定電話）」にそろえる（R5 で直す）/ 根拠: kata-guide の「段と渡す材料」の R5 / 印: 要判断"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cop-index-sample-110/T-KATA-REVIEW-ALL-cop-index-sample-110-20261125T094419Z-d3b9895c/executor.log",
+      "bytes": 5370,
+      "truncated": false
+    }
+  ]
+}

@@ -294,12 +294,14 @@ specdojo register close \
 
 #### 専用ブランチへの同期（v0.10.0）
 
-[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は設定を含む develop の commit からブランチを用意してください。
+[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は、設定を含む develop の commit をリモートへ入れたあと、`register branch-push` でブランチを用意します。
 
 ```bash
-git branch project/prj-0001/register project/prj-0001/develop
-git push origin project/prj-0001/register
+specdojo register branch-push --project prj-0001 --dry-run
+specdojo register branch-push --project prj-0001
 ```
+
+`register branch-push` は、push の先を `register_sync` の `remote` と `branch` だけに絞った専用のコマンドです。手元にもリモートにもブランチが無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）のリモートの先端から作って push します。手元にしかない統合のブランチの commit は含めません。リモートに統合のブランチが無いときだけ、手元の先端から作り、その旨を案内します。リモートにだけあれば、手元のブランチと専用 worktree を作るだけにします。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えません。
 
 ほかの利用者は初回の同期時にリモートからローカルブランチと worktree を作れます。既存の専用 worktree は再利用し、無ければ Git 共通ディレクトリ配下に作成して保持します。hook が使う依存関係や、追跡外の名簿などが必要な環境では、事前に専用 worktree を用意して必要なセットアップを行ってください。元の worktree の未 commit 変更は専用ブランチへコピーしません。
 
@@ -311,11 +313,13 @@ register のブランチは develop へ一方向に取り込みます。develop�
 
 register のブランチへの push は `specdojo register branch-check --project <project-id> --commit <sha> --base <push 前の sha> --remote-ref refs/heads/<register-branch>` で検査します。register の範囲（個票・イベントの置き場）の外のファイルを含む commit と、個票とイベントの形の違反を止め、どのファイルのどこが違うかと直し方を出します。pre-push の hook（`tools/check-register-push.mjs`）が自動で流し、CI でも同じコマンドを流せます。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。
 
-失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。表示された worktree で次の順に復旧してください。
+失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。次の順に復旧してください。
 
-1. 通信・権限を直すか、衝突を解いて `git rebase --continue` を行います。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
-2. 未 commit の記帳があれば内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
-3. `git pull --rebase <remote> <branch>` と `git push <remote> HEAD:refs/heads/<branch>` で共有します。失敗した `add` を push の代わりに再実行しないでください。
+1. 通信・権限を直します。衝突で止まった場合は、表示された worktree で衝突したファイルを直して `git add` します。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
+2. 未 commit の記帳があれば、表示された worktree で内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
+3. `specdojo register branch-push --project <project-id>` で共有します。止まった rebase を続け、`pull --rebase` から push までを流し直します。衝突が残っていれば、ファイルと直し方を出して終了コード 1 で止まります。失敗した `add` を push の代わりに再実行しないでください。
+
+`register branch-push` は、push の前に `register branch-check` と同じ検査（register の範囲の外のファイル、個票とイベントの形）を流し、違反があれば push しません。同期と同じロックの中で動くため、同期中の別の記帳と取り合いません。
 
 未解消の記帳がある間は後続の同期を停止します。復旧後、worktree が clean でローカル HEAD がリモートに含まれることを次の同期が確認し、再開します。
 
@@ -573,7 +577,7 @@ merge に commit-msg hook を使うリポジトリでは、Git が hook に渡�
 
 ### 3.3. 止まった実行を見張る
 
-routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-scan` を起動し、止まったものを見つけて理由の種類に分けます。見張りは記録と報告を書くだけで、claim・再開・release・commit はしません。cron と routine だけで動き、オーケストレーターの agent の種類に頼りません。exec の実行ロックを取らない `action.kind: specdojo` のため、夜間の run の間も止まらずに見ます。見る間隔は routine の `interval` で変えます。
+routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-scan` を起動し、止まったものを見つけて理由の種類に分けます。見張りは記録と報告を書き、exec-defaults の `watch` で選んだ種類にだけ手当てを打ちます（「止まった実行に手当てを打つ」）。選ばなければ claim・再開・release はせず、どの場合も commit はしません。cron と routine だけで動き、オーケストレーターの agent の種類に頼りません。exec の実行ロックを取らない `action.kind: specdojo` のため、夜間の run の間も止まらずに見ます。見る間隔は routine の `interval` で変えます。
 
 見る対象は次のとおりです。`--stale-after`（既定 `2h`）は、実行ロックがないときに実行中の状態を中断と見なすまでの時間です。
 
@@ -596,22 +600,75 @@ routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-s
 
 見つけたことは `execution/watch/watch-events.jsonl` に 1 件 1 行の JSON で足していきます。同じ止まりは、対象の種類・ID・状態・状態に入った時刻を合わせた `key` で見分け、開いている間は足し直しません。止まりが見えなくなった回に `cleared` の行を 1 行足します。新しい event で同じ対象がまた止まれば、別の `key` として足します。
 
-| 項目          | 内容                                                                    |
-| ------------- | ----------------------------------------------------------------------- |
-| `v`           | 記録の版。`1`                                                           |
-| `ts`          | 行を足した時刻（UTC）                                                   |
-| `event`       | `stalled`（止まりを見つけた）または `cleared`（止まりが見えなくなった） |
-| `key`         | 同じ止まりを見分ける鍵                                                  |
-| `target`      | 対象の種類（`schedule-task`・`register-item`・`queue`）と ID            |
-| `state`       | 止まって見える状態（`stalled` のみ）                                    |
-| `since`       | その状態に入った記録の時刻（`stalled` のみ）                            |
-| `category`    | 理由の種類（`stalled` のみ）                                            |
-| `detail`      | 理由の詳細（`stalled` のみ）                                            |
-| `basis`       | 分けた根拠。記録のパス（`source`）と当たった行（`excerpt`）             |
-| `next_action` | 次にすべきこと（`stalled` のみ）                                        |
-| `by`          | 書いた主体。`watch-scan`                                                |
+| 項目          | 内容                                                                                                                                                                                                                          |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `v`           | 記録の版。`1`                                                                                                                                                                                                                 |
+| `ts`          | 行を足した時刻（UTC）                                                                                                                                                                                                         |
+| `event`       | `stalled`（止まりを見つけた）・`cleared`（止まりが見えなくなった）・`remedy`・`remedy_stopped`（「止まった実行に手当てを打つ」）・`paused`・`resumed`（見張りの停止と再開。「立ち上げたままのオーケストレーターと共存する」） |
+| `key`         | 同じ止まりを見分ける鍵                                                                                                                                                                                                        |
+| `target`      | 対象の種類（`schedule-task`・`register-item`・`queue`）と ID                                                                                                                                                                  |
+| `state`       | `stalled` は止まって見える状態、`cleared` は解けた後の状態（`done` など。対象が見つからなければ `gone`）                                                                                                                      |
+| `since`       | その状態に入った記録の時刻（`stalled` のみ）                                                                                                                                                                                  |
+| `category`    | 理由の種類（`stalled` のみ）                                                                                                                                                                                                  |
+| `detail`      | 理由の詳細（`stalled` のみ）                                                                                                                                                                                                  |
+| `basis`       | 分けた根拠。記録のパス（`source`）と当たった行（`excerpt`）                                                                                                                                                                   |
+| `next_action` | 次にすべきこと（`stalled` のみ）                                                                                                                                                                                              |
+| `by`          | 書いた主体。`watch-scan`、停止と再開は止めた・再開した主体                                                                                                                                                                    |
+| `reason`      | 停止と再開の理由（`paused`・`resumed` で指定したときのみ）                                                                                                                                                                    |
 
-朝報告は、夜間実行の朝報告と同じ `execution/reports/` の下の `watch-scan/watch-scan-YYYYMMDD.md` に、登録簿の日付と同じ時間帯の 1 日 1 文書として毎回書き直します。「1. 集計」に種類ごとの件数、「2. 止まっているもの」に種類ごとの対象・状態・理由・根拠・次にすべきこと・最初に見つけた時刻、「3. この日に解けたもの」、「4. 読めなかった記録」を載せます。朝は判断が要るものから読み、次にすべきことに従って再開・手直しの起票・close を決めます。見張りは記録と報告を commit しません。夜間実行の朝報告と同じく、読んだ後にオーケストレーターが実行記録とまとめて commit します。
+朝報告は、夜間実行の朝報告と同じ `execution/reports/` の下の `watch-scan/watch-scan-YYYYMMDD.md` に、登録簿の日付と同じ時間帯の 1 日 1 文書として毎回書き直します。「1. 集計」に種類ごとの件数、「2. 止まっているもの」に種類ごとの対象・状態・理由・根拠・次にすべきこと・最初に見つけた時刻、「3. 見張りの対象外」に触らなかった対象と理由、「4. 手当て」にこの日に打った手当て・止めた手当て・上限の解除を待っているもの、「5. この日に解けたもの」、「6. 読めなかった記録」を載せます。朝は判断が要るものと手当てを止めたものから読み、次にすべきことに従って再開・手直しの起票・close を決めます。見張りは記録と報告を commit しません。夜間実行の朝報告と同じく、読んだ後にオーケストレーターが実行記録とまとめて commit します。
+
+### 3.4. 止まった実行に手当てを打つ
+
+exec-defaults の `watch.remedies` で手当てを選んだ種類だけ、見張りが既存の再開のコマンドを固定の引数で起動します。設定のキーは [[specdojo:exec-config-guide|exec設定ガイド]] の「見張りの手当て」に書きます。判断が要るもの（`needs_decision`）・中断・分けられなかったもの・列には手を打ちません。
+
+| 種類                | 設定                 | schedule のタスク                                                                                                      | register 項目（`waiting`）                                                     |
+| ------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `usage_limit`       | `wait`               | 解除の時刻を過ぎたら `exec resume --task <id> --due`（自動再開の印がない pipeline の段は `--due` なし）                | 解除の時刻を過ぎたら `exec run --register <id> --worktree --resume`            |
+| `usage_limit`       | `fallback`、長い上限 | `exec resume --task <id> --executor-by … --reporter-by …`。claim を代わりの agent へ移す                               | `exec run --register <id> --worktree --resume --executor-by … --reporter-by …` |
+| `load_timeout`      | `rerun`              | `exec resume --task <id>`。止まった段から再開し、失敗した親の検証を流し直す                                            | `exec run --register <id> --worktree --resume`                                 |
+| `needs_target_sync` | `sync`               | 統合の段は `exec resume --task <id>`、ほかの段は `--resume-from executor` を足す。どちらも統合先を取り込んでから続ける | `exec run --register <id> --worktree --resume`（再開の前に取り込む）           |
+
+どのコマンドにも `--project` と `--if-busy skip` を付けます。解除の時刻は、schedule のタスクは block の meta の `limit_resume_at`、register 項目は理由の `resume_at=` を使い、読めなければ止まった時刻から `unknown_resume_wait` 後とします。`wait` で解除の時刻が `switch_after` より先にあり、代わりの agent を書いていれば、待たずに代わりの agent で流し直します。agent を替えられるのは、止まった pipeline の段を持つ schedule のタスクと register 項目だけです。統合先とぶつかった場合は再開のコマンドが止めて block または `waiting` に戻し、次の見張りが判断が要るもの（`merge_conflict`）として報告します。
+
+手当ては実行ロックを取る再開のコマンドなので、別の run が実行ロックを持っている間は何も起動せず、次の回に回します。1 回の見張りで起動するのは、止まった時刻の古いものから 1 件だけです。コマンドは見張りから切り離して起動し、出力を `execution/watch/remedies/<時刻>-<ID>.log` に書きます。見張りは終わりを待ちません。同じ対象に `attempt_window` の間に `max_attempts` 回打っても止まったままなら手当てを止め、`remedy_stopped` の行を 1 度だけ足して朝報告に載せます。worktree と branch は消しません。
+
+手当てを打つ前に、見張りの記録へ `remedy` の行を足します。schedule のタスクには、`watch-scan` を actor にした `note` の event も残すため、`exec status` でも分かります。`note` には meta を持たせず、再開に要る limit や pipeline の印を残します。
+
+| 項目       | 内容                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| `action`   | `resume_due`・`resume`・`switch_agent`・`rerun_checks`・`sync_target`（`remedy` のみ）     |
+| `summary`  | 手当ての説明（`remedy` のみ）                                                              |
+| `argv`     | 起動した `specdojo` の引数（`remedy` のみ）                                                |
+| `attempt`  | この対象に `attempt_window` の間に打った何回目か。`max_attempts` と並べる（`remedy` のみ） |
+| `log`      | コマンドの出力のパス（`remedy` のみ）                                                      |
+| `attempts` | 止めるまでに打った回数（`remedy_stopped` のみ）                                            |
+| `reason`   | 止めた理由（`remedy_stopped` のみ）                                                        |
+
+`key`・`target`・`category`・`by` は `stalled` の行と同じです。`--no-remedy` を付けると、設定があっても記録と報告だけを行います。`--dry-run` は起動する手当てを表示し、何も起動しません。
+
+### 3.5. 立ち上げたままのオーケストレーターと共存する
+
+オーケストレーターや人が手で始めた run・再開・直しの途中にある対象には、見張りも手当ても触りません。見張りは次のどれかに当たる対象を「見張りの対象外」とし、記録に足さず、開いている止まりも解かず、`watch.remedies` で選んだ種類でも手当てを打ちません。朝報告の「見張りの対象外」に理由を載せ、手を離した後の回で改めて記録し、手当ての候補にします。
+
+| 見分け方                       | 当たる対象                                                                                                                                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 見張りの対象外の印             | `orchestrator watch-pause --id <ID>` で印を付けた対象                                                                                      |
+| 人かオーケストレーターの claim | 名簿の `type: human` の人か `specdojo-orchestrator` が claim した schedule のタスク、それらが最後に動かした `in-progress` の register 項目 |
+| 動いているプロセス             | 引数で対象の ID を名指しするプロセス（`exec resume --register <ID>` など）と、対象の worktree（`<project>-<ID>`）の中で動いているプロセス  |
+| 実行ロック                     | 実行ロックが生きている間の `doing`・`in-progress`（中断と見なさない）                                                                      |
+
+`review`・`waiting` の register 項目は、人が最後に動かしていても判断を待つ止まりとして記録します。見張り自身と `exec watch` のプロセスは、対象を名指ししていても数えません。手当てとして起動した再開のコマンドも対象を名指しするため、動いている間は同じ対象に次の手当てを重ねません。
+
+見張りは `orchestrator watch-pause` でいつでも止め、`orchestrator watch-resume` で再開できます。`--id` を付けなければ全体、付ければ対象ごとです。全体を止めている間、見張りは記録も朝報告も手当ても行わずに終わります。止めた・再開したことは見張りの記録へ `paused`・`resumed` の行で残すため、記録を読めば誰がいつ止めたかが分かります。
+
+別の run が実行ロックを持っている間、手当ては何もせず次の回に回します。見張り自身は読み取りと記録だけのため、既定（`--if-busy scan`）ではロックがあっても見ます。ロックの間は見張りも止めたい場合は `--if-busy skip` を付けます。routine からの起動では busy の回を routine が次の回に流し直します（[[specdojo:routine-operation-guide|routine運用ガイド]]）。
+
+立ち上げたままのオーケストレーターは、`exec watch` で見張りのイベントを待てます。`exec watch` は見張りの記録を読むだけの CLI のため、オーケストレーターの agent の種類に頼らず、なくても見張りと手当ては動きます。
+
+- 後ろで流して通知で起きる: agent の後ろの処理として `exec watch --event stalled,cleared,remedy_stopped --timeout 8h` を流し、終わりの通知で会話を再開して出力を読む。終了コード 124 は上限まで何も起きなかったことを表す。
+- 前で流して待つ: 区切りまで待つときは `exec watch --target <ID> --event stalled,cleared --state waiting,done --timeout 2h` を前で流し、終わったら出力に従って次の手を決める。
+- 手で直すときは、先に `orchestrator watch-pause --id <ID>` で印を付け、直し終えたら `orchestrator watch-resume --id <ID>` で外す。
 
 ## 4. 例外対応と特殊な運用
 

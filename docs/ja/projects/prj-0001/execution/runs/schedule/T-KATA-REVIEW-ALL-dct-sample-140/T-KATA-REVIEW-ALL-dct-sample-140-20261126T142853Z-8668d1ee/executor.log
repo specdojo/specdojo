@@ -1,0 +1,24 @@
+R4（正しさ）の確かめでは誤りが見つからず、sample は編集していません。sample に書いてある事実 14 件を、schema・rulebook・template・参照先の実在と突き合わせ、すべて一致しました。sample の schema 検査も通っています。grade の指摘 F001 は前の段で直っており、今回は手を入れていません。
+
+確かめの表（reporter が result の実施内容へ書く材料です）:
+
+| No | 主張（sample の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 行目の schema の相対パス `../../../specdojo/schemas/v1/dct.schema.yaml` | `docs/specdojo/schemas/v1/dct.schema.yaml` | パスを解決した | 一致 | `docs/ja/specdojo/samples/` から 3 階層上がると `docs/` になる |
+| 2 | `type: project`、`status: draft` | schema の `type` と `status` の列挙値 | 読み取り | 一致 | `["template","project"]`、`["draft","ready","deprecated"]` |
+| 3 | `rulebook: specdojo:dct-rulebook` | `dct-rulebook.md` の推奨メタ項目 | 読み取り | 一致 | 表の `rulebook` 行の値と同じ |
+| 4 | `part_of: specdojo:dct-index-sample` | `docs/ja/specdojo/samples/dct-index-sample.yaml` | grep で `id` を探した | 一致 | その ID のファイルがある |
+| 5 | `project_id: prj-0001` | schema の `^prj-[0-9]{4,}$` | 読み取り | 一致 | パターンに合う |
+| 6 | `base_path` が先頭 `/` で、`020-project-definition` を指す | schema の `base_path`、rulebook の「`base_path` と `path` の解決」、`prj-0001` の `dct-project-definition.yaml` | 読み取りと grep | 一致 | 先頭 `/` が必須。実際のカタログも同じ値 |
+| 7 | サブドメインがないので、名前のない葉グループ 1 つに並べる | schema の `Section`（`anyOf` で `deliverables` を求める）、rulebook | 読み取り | 一致 | `name` は任意 |
+| 8 | 規模 small の既定は「概要・スコープ・成功基準と受入条件」で、追加した 2 件以外の medium の成果物は採用しない | `dct-project-definition-template.yaml` の `min_size` | grep | 一致 | `min_size` がないのは上の 3 件だけ。medium は `prj-stakeholder-register`・`prj-charter`・`prj-assumptions-constraints-dependencies`・`prj-issues-and-approach`・`prj-comparison-of-alternatives` |
+| 9 | `kind: work` の 5 件すべてで `brief` をアンカー（`&`／`*`）で共有する | schema の `brief`、rulebook の「`brief`・`overview` の使い分けと YAML アンカー」 | 読み取り | 一致 | 5 件すべてが `*project_baseline_brief` を参照している（F001 の指摘はここで解消済み） |
+| 10 | `work` の 5 件の `rulebook` の ID | `docs/ja/specdojo/rulebooks/` | ls | 一致 | `prj-*-rulebook.md` の 5 ファイルがある |
+| 11 | `done_criteria` の `roles` と `viewpoint` | schema の `CriteriaItem`、`pm-review-viewpoints.yaml` | grep | 一致 | 役割は列挙値の中にある。使っている 8 種の `vp-*` はすべて定義されている |
+| 12 | `prj-glossary` は `control`、`rulebook: not-needed`、`done_criteria` なし | schema の `rulebook` のパターン、rulebook の `rulebook` と完了条件の規定 | 読み取り | 一致 | `not-needed` は使える値。`control` には完了条件を書かない |
+| 13 | `generated` は `kind` から実践の型を適用しないので、`rulebook` を書かない | rulebook の `kind` の説明 | 読み取り | 一致 | 「`rulebook` が記載されていても実践の型を適用しない」 |
+| 14 | sample 全体が schema に合う | `dct.schema.yaml` | `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/specdojo/samples/dct-sample.yaml` | 一致 | `valid` |
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）では、`dct-sample.yaml` に書かれた事実 14 件を schema・rulebook・template・参照先の実在と突き合わせ、すべて一致した。誤りがなかったため sample は編集していない。grade の指摘 F001（`brief` の共有範囲）は前の段で `kind` が `work` の 5 件すべてに `brief` が付いて直っており、維持した。","handoff":[],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-sample.yaml: valid"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票を含め、変更したファイルがない"}]}
+</specdojo_executor_evidence>

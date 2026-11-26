@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-nfr-integrity-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-nfr-integrity-sample-110-20261125T120346Z-89a2f2f4",
+  "updated_at": "2026-11-25T13:15:37.604Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T13:12:14.254Z",
+      "completed_at": "2026-11-25T13:13:34.748Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-integrity-sample-110/T-KATA-REVIEW-ALL-nfr-integrity-sample-110-20261125T120346Z-89a2f2f4/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-25T13:13:51.963Z",
+      "completed_at": "2026-11-25T13:14:06.440Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-integrity-sample-110/T-KATA-REVIEW-ALL-nfr-integrity-sample-110-20261125T120346Z-89a2f2f4/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T13:14:19.872Z",
+      "completed_at": "2026-11-25T13:15:37.604Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-integrity-sample-110/T-KATA-REVIEW-ALL-nfr-integrity-sample-110-20261125T120346Z-89a2f2f4/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-integrity-sample-110/T-KATA-REVIEW-ALL-nfr-integrity-sample-110-20261125T120346Z-89a2f2f4/result.md"
+  }
+}

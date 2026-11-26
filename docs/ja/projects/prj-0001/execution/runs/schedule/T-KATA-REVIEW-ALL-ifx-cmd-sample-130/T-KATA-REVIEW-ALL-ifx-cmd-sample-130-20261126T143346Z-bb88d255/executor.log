@@ -1,0 +1,11 @@
+R3（読みやすさ）として `ifx-cmd-sample.yaml` の文を直しました。意味・制約・例外は変えていません。直した後、schema 検査と Prettier の検査はどちらも通っています。
+
+**扱った finding**
+- F002（`vp-ux-language-consistency`）を直しました。「店頭利用者」「利用者」をすべて「店番担当」にそろえました。`ifx-index-sample` と `clis-sample` の呼び方に合わせています。
+- F001（`vp-qe-omissions-consistency`）はこの段では扱っていません。R2 の観点に当たるためです。なお、現在の `log_policy` はすでに「マスクする秘密値はない」と書き、記録しない対象をレシート本文に絞っているので、指摘の内容は解消済みに見えます。
+
+**変更ファイル**: `docs/ja/specdojo/samples/ifx-cmd-sample.yaml`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさとして ifx-cmd-sample.yaml の文を直した。役割名を店番担当にそろえ（F002）、主語を補い、指示語と長い文を直した。F001 は R2 の観点のため扱わず、現在の本文で解消済みに見えることを申し送った。schema 検査と Prettier の検査は通った。","handoff":["R3-1: R3 / exit_codes（code 1 permanent_failure）・execution.idempotency.condition・error_handling.retry のコメント / 結果不明時に紙面を確かめる人を「店頭利用者」「利用者」と呼んでおり、お客様とも読める。関連する sample の「店番担当」と表記がゆれている / 3 か所を「店番担当」に統一した / vp-ux-language-consistency, W8（grade F002） / -","R3-2: R3 / exit_codes（code 1 transient_failure, permanent_failure）・code 5・error_handling.retry のコメント / 「自動再試行する」「再試行しない」「自動起動を止め」の主語がない / 主語の「呼び出し元は」と、権限を直す主体の「開発担当が」を補った / W1 / -","R3-3: R3 / exit_codes（code 1 permanent_failure） / 「上記の送信前失敗」が指す先が、配列の前の要素にしか書かれていない / 「送信前のビジー状態」に置き換えた / W4 / -","R3-4: R3 / files.inputs[0].description / パスの基準と可変部の解決を 1 文に詰めた長い文 / 「基準とする。」で 2 文に分けた / W3 / -","R3-5: R3 / exit_codes の meaning / 複数の文からなる meaning で、文末に句点があるものとないものが混ざっている / code 2・5・1（2 件）の文末に句点を付けた / W10 / 要判断（体言止めのセルとみなして直さない案もあった。ほかの meaning に句点があるため句点にそろえた）","F001（vp-qe-omissions-consistency）は R2 の観点のため、この段では扱っていない。現在の log_policy は「マスクする秘密値はない」と書き、記録しない対象をレシート本文に絞っており、解消済みに見える。再評価での確認を R2 または grade に任せる。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/ifx-cmd-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票を変更しておらず、変更は sample の YAML だけである"}]}
+</specdojo_executor_evidence>

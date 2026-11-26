@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { gitEnvironment } from "../shared/git-environment.js";
 import { selfRunArgs } from "../shared/spawn-self.js";
+import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { addProjectOptions, printCommandError, resolveProjectId } from "./core.js";
 import { runParentValidationBatch } from "./parent-validation.js";
@@ -22,18 +23,28 @@ import {
   validateQueueId,
   writeQueueRecord,
   type QueueOnFailure,
+  type QueueRecord,
   type QueueStep,
+  type QueueStopHooks,
   type QueueStepOutcome,
 } from "./queue.js";
 import { acquireExecRunLock, releaseExecRunLock } from "./run/lock.js";
+import { isLiveLock } from "../shared/cross-process-lock.js";
+import {
+  EXEC_QUEUE_ID_ENV,
+  finishStopRequest,
+  readStopRequest,
+  type StopTarget,
+} from "./stop-request.js";
 
 /** Spawn the specdojo CLI without a shell and resolve when that process exits. */
-function runSpecdojoStep(argv: string[]): Promise<QueueStepOutcome> {
+function runSpecdojoStep(argv: string[], queueId: string): Promise<QueueStepOutcome> {
   const [executable, args] = selfRunArgs(argv);
   return new Promise((resolveOutcome) => {
     const child = spawn(executable, args, {
       cwd: specdojoRootDir(),
-      env: gitEnvironment(),
+      // The queue id lets an `exec run --auto` step honor `exec stop --queue <queueId>`.
+      env: { ...gitEnvironment(), [EXEC_QUEUE_ID_ENV]: queueId },
       shell: false,
       stdio: "inherit",
     });
@@ -68,14 +79,55 @@ async function runBuildDistStep(executionPath: string): Promise<QueueStepOutcome
 }
 
 function executeQueueStep(executionPath: string) {
-  return (step: QueueStep): Promise<QueueStepOutcome> =>
-    step.kind === "post-integration" ? runBuildDistStep(executionPath) : runSpecdojoStep(step.argv);
+  return (step: QueueStep, record: QueueRecord): Promise<QueueStepOutcome> =>
+    step.kind === "post-integration"
+      ? runBuildDistStep(executionPath)
+      : runSpecdojoStep(step.argv, record.queue_id);
+}
+
+function queueStopHooks(executionPath: string, queueId: string): QueueStopHooks {
+  const target: StopTarget = { kind: "queue", queueId };
+  const current = () => {
+    try {
+      return readStopRequest(executionPath, target);
+    } catch {
+      return undefined;
+    }
+  };
+  return {
+    pending: () => current()?.message,
+    finish: (stoppedStep) => {
+      const request = current();
+      if (!request) return;
+      const path = finishStopRequest(executionPath, request, {
+        stopped_by: "queue",
+        queue_step: stoppedStep,
+      });
+      process.stdout.write(`[queue] stop recorded: ${path}\n`);
+    },
+  };
+}
+
+/** Message of an open `exec stop --queue` request, for the queue status line. */
+function queueStopMessage(executionPath: string, queueId: string): string | undefined {
+  try {
+    return readStopRequest(executionPath, { kind: "queue", queueId })?.message;
+  } catch (error) {
+    return error instanceof Error ? error.message : String(error);
+  }
+}
+
+/** Whether the runner of a queue holds its lock; used by `exec stop --queue`. */
+export function isQueueRunning(executionPath: string, queueId: string): boolean {
+  return isLiveLock(queueLockPath(executionPath, queueId));
 }
 
 export function registerExecQueueCommands(exec: Command): void {
   const queue = exec
     .command("queue")
-    .description("Reserve grade / exec run / post-integration steps and run them in order");
+    .description(
+      "Reserve grade / exec run / exec resume --task / post-integration steps and run them in order",
+    );
 
   // Shared by --step and --step-continue so the order of the options is the order of the steps.
   const collected: Array<{ spec: string; onFailure: QueueOnFailure }> = [];
@@ -127,6 +179,7 @@ export function registerExecQueueCommands(exec: Command): void {
         recordPath: queueRecordPath(executionPath, queueId),
         lockDir: queueLockPath(executionPath, queueId),
         execute: executeQueueStep(executionPath),
+        stop: queueStopHooks(executionPath, queueId),
       });
       process.exitCode = record.state === "succeeded" ? 0 : 1;
     } catch (error) {
@@ -139,13 +192,14 @@ export function registerExecQueueCommands(exec: Command): void {
     .description("Show queues, or the steps of one queue");
   addProjectOptions(status);
   status.action((queueId: string | undefined, opts: { project?: string }) => {
+    exitQuietlyOnClosedStdout();
     try {
       const { executionPath } = resolveProjectPaths({ project: opts.project });
       if (queueId) {
         validateQueueId(queueId);
         const record = loadQueueRecord(queueRecordPath(executionPath, queueId));
         process.stdout.write(
-          `${formatQueueSummary(record, queueLockPath(executionPath, queueId))}\n`,
+          `${formatQueueSummary(record, queueLockPath(executionPath, queueId), queueStopMessage(executionPath, queueId))}\n`,
         );
         for (const step of record.steps) {
           const detail = step.summary ? ` (${step.summary})` : "";
@@ -159,7 +213,7 @@ export function registerExecQueueCommands(exec: Command): void {
       if (records.length === 0) process.stdout.write("No queues.\n");
       for (const record of records) {
         process.stdout.write(
-          `${formatQueueSummary(record, queueLockPath(executionPath, record.queue_id))}\n`,
+          `${formatQueueSummary(record, queueLockPath(executionPath, record.queue_id), queueStopMessage(executionPath, record.queue_id))}\n`,
         );
       }
       for (const error of errors) process.stderr.write(`ERROR: ${error}\n`);
@@ -194,7 +248,7 @@ export function writeActiveQueueSummary(executionPath: string): void {
   process.stdout.write("\nqueues:\n");
   for (const record of active) {
     process.stdout.write(
-      `  ${formatQueueSummary(record, queueLockPath(executionPath, record.queue_id))}\n`,
+      `  ${formatQueueSummary(record, queueLockPath(executionPath, record.queue_id), queueStopMessage(executionPath, record.queue_id))}\n`,
     );
   }
 }

@@ -1,0 +1,39 @@
+R4（正しさ）の段を終えました。誤りの直しは `docs/ja/specdojo/samples/ifx-api-sample.yaml` の 1 か所（F003）だけで、ほかの主張は正本と合っていました。Redocly CLI での OpenAPI の構造検査は、直す前も後も通っています。
+
+**直した点（F003）**
+- 400 の `description` は「`details` の項目を直して送り直す」と指示しているのに、`ErrorResponse.details` は中身の決まっていない `type: object` でした。これでは店舗端末が、どの項目がなぜ不正かを機械的に判別できません。
+- `details` を、`field`（不正な項目の位置）と `reason`（`REQUIRED`・`INVALID_FORMAT`・`OUT_OF_RANGE`・`UNKNOWN_PRODUCT`）を持つ要素の配列にしました。400 の `description` も「`details` の `field` が指す項目を直して送り直す」に改めています。
+- `reason` の 4 値と `field` の形は正本のない契約の例です（下の表の 12）。
+
+**ほかの finding の扱い**
+- F002・F004・F006 は、前の段ですでに解消されていました。
+- F001 の観点 `vp-pm-plan-feasibility` は、kata-guide の「kata を agent でレビューする」で kata のレビューから外す観点です。この段では扱いません。
+- F005（生成ページが古い）は R4 の観点の外です。生成ページは git 管理外なので、ここでは作り直していません。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 行の `# specdojo-schema: none reason=external-openapi` | `src/kata/yaml-schema-modeline.ts`、rulebook の先頭メタ項目 | 正規表現の読み取りと `npm run -s validate:schema:file -- --modeline ...` の実行 | 一致 | 出力 `schema none (external-openapi)` |
+| 2 | `openapi: 3.0.3` と全体の構造 | OpenAPI 3.0.3 の仕様、rulebook の本文要件 | `npx --yes @redocly/cli@latest lint` | 一致 | `Your API description is valid`。警告は `info-license` と `no-server-example.com` の 2 件で、後者は rulebook が例示用ドメインを求めるため直さない |
+| 3 | `x-spec-meta` のキー（`id`・`type: api`・`status`・`rulebook`・`based_on`） | rulebook の先頭メタ項目、document-metadata-standard | 読み取り | 一致 | 必須の 5 キーがある。`based_on` に参照元の `specdojo:ifx-index-sample` がある |
+| 4 | `info.description` の「本部への売上登録」の詳細仕様 | `docs/ja/specdojo/samples/ifx-index-sample.yaml` | grep | 一致 | 同ファイル 42 行に `name: 本部への売上登録` と `spec_ref: specdojo:ifx-api-sample` がある |
+| 5 | 404 を返さない理由を `info.description` に書く | rulebook のエラー応答の表 | 読み取り | 一致 | 省略する場合は理由を `info.description` に書く規定どおり |
+| 6 | 400・401・403・409・429・500 の各応答と、店舗端末の扱い | rulebook のエラー応答の表 | 読み取り | 一致 | 各コードの「呼び出し側の扱い」がある |
+| 7 | 400 の「`details` の項目を直して送り直す」 | rulebook のエラー応答の表（修正して送り直す項目） | 読み取り | 不一致→修正 | `details` の構造がなかった。`field`・`reason` の配列を定義した |
+| 8 | `transaction_id` の `pattern` `^TX-[0-9]{8}-[0-9]{4}$` と `maxLength: 16` | 文字数の計算 | 手で計算 | 一致 | 3+8+1+4=16 文字 |
+| 9 | `operationId: createSale`（camelCase）、項目名が snake_case | rulebook の操作とスキーマ | 読み取り | 一致 | rulebook の例と同じ |
+| 10 | 税と合計は本部が計算する旨を `description` に書く | rulebook の操作とスキーマ | 読み取り | 一致 | `SaleLine.description` と `info.description` にある |
+| 11 | 201 の `status` の `enum` `[ACCEPTED]` と、状態コードとの使い分け | rulebook の操作とスキーマ | 読み取り | 一致 | `description` に「拒否は 4xx の応答で返し、201 では返さない」とある |
+| 12 | 429 の `Retry-After` を秒数の整数で受ける | RFC 9110（HTTP-date も許す） | 読み取り | 確かめられない | 秒数だけに絞るのは契約上の選択で、正本がない。本部との合意で確かめる |
+| 13 | 認証の `X-API-Key` ヘッダー（`apiKey`） | 正本なし（本部側の方式） | なし | 確かめられない | 駄菓子屋の業務上の仮定。本部の窓口に確かめる |
+| 14 | 「DEV（開発担当）」「BA」「PO」の表記 | sample-authoring-standard（Role code と役割名） | 読み取り | 一致 | 共通サンプル文脈の「開発担当」と Role code に合う |
+
+**実行した検査**
+- `npx --yes @redocly/cli@latest lint --format=stylish docs/ja/specdojo/samples/ifx-api-sample.yaml`：通過（警告 2 件は表の 2 のとおり）
+- `npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml`：通過
+- `npm run -s validate:schema:file -- --modeline docs/ja/specdojo/samples/ifx-api-sample.yaml`：通過。最初は `--modeline` を付けずに `--data` だけで実行し、使い方のエラーで止まりました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）を実施。sample の主張 14 件を rulebook・`src/kata/yaml-schema-modeline.ts`・ifx-index-sample・Redocly CLI と突き合わせ、不一致の 1 件（F003: `ErrorResponse.details` に構造がなく 400 の指示と合わない）を `field`・`reason` の配列として定義し、400 の `description` を合わせて直した。確かめられない主張は 2 件（`Retry-After` を秒数に絞ること、`X-API-Key` 認証）で、どちらも正本がない。Redocly lint と modeline 検査は直す前後とも通過した。変更ファイル: docs/ja/specdojo/samples/ifx-api-sample.yaml。","handoff":["[minor/vp-dev-implementation-readiness] docs/ja/specdojo/samples/ifx-api-sample.yaml の `ErrorResponse.details`（旧 172〜174 行）: 400 の `description` は「`details` の項目を直して送り直す」と指示するが、`details` は構造のない `type: object` で、店舗端末が不正な項目と理由を機械的に判別できなかった（F003）。`details` を `field`（例 `lines[0].product_code`）と `reason`（`REQUIRED`・`INVALID_FORMAT`・`OUT_OF_RANGE`・`UNKNOWN_PRODUCT`）を持つ要素の配列として定義し、400 の `description` を「`details` の `field` が指す項目を直して送り直す」に改めた。`reason` の 4 値は正本のない契約の例である。人は採るか戻すかを確かめる。","[note/vp-arc-technical-constraints] 429 の `Retry-After` を `type: integer`・`minimum: 1` の秒数だけとしている。RFC 9110 は HTTP-date の形も許すため、秒数に絞るのは契約上の選択で、正本に照らして確かめられない。本部との契約レビューで秒数だけでよいかを確かめる（直していない）。","[note/vp-qe-verifiability] Redocly CLI（`npx --yes @redocly/cli@latest lint`、recommended 設定）で構造は valid。警告は `info-license`（`license` がない）と `no-server-example.com` の 2 件。後者は rulebook が例示用ドメインを求めるため直さない。`license` を求めるかは rulebook の本文要件にないため、足していない。","[minor/vp-qe-kata-conformance・ほかの kata] docs/ja/specdojo/samples/ifx-index-sample.yaml 36 行は「BA（開発担当）」と書く。sample-authoring-standard の共通サンプル文脈では、開発担当の Role code は DEV である。ほかの kata なので直していない。ifx-index-sample の見直しで「DEV（開発担当）」へ直すか、BA の役割名に直すかを決める。","F001（`vp-pm-plan-feasibility`）は kata-guide の「kata を agent でレビューする」で kata のレビューから外す観点のため、この段で扱っていない。F002・F004・F006 は前の段ですでに解消されていた。F005（生成ページが古い）は R4 の観点の外で、`docs/ja/specdojo/samples/generated/` は git 管理外のため作り直していない。close の前に yaml-pages を作り直す。"],"validations":[{"command":"npx --yes @redocly/cli@latest lint --format=stylish docs/ja/specdojo/samples/ifx-api-sample.yaml","status":"passed","summary":"Your API description is valid（警告 2 件: info-license、no-server-example.com）"},{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run -s validate:schema:file -- --modeline docs/ja/specdojo/samples/ifx-api-sample.yaml","status":"passed","summary":"schema none (external-openapi)。メタ情報の照合を含めて通過"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは sample の YAML だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

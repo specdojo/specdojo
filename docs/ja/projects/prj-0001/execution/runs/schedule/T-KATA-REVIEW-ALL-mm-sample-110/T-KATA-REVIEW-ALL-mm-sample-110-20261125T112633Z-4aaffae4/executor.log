@@ -1,0 +1,20 @@
+R1（目的の過不足）のレビューは済み、`docs/ja/specdojo/samples/mm-sample.md` を 1 か所だけ直しました。変えたのはこの 1 ファイルで、rulebook などほかの文書と `status: draft` はそのままです。
+
+**直したこと（F001）**
+「決定事項」の表の前の文が理由を述べていたのは決定1だけで、決定2（欠品速報を毎日16:00に見る）の理由がありませんでした。rulebook の目的「決定の経緯…を防ぎ」に当たるので、R1 の欠けとして扱いました。欠品7回のうち、理由が書かれていなかった残り2回を決定2の理由として次の 1 文を足しました。
+
+「残る2回は、店番の交代で欠品速報を見る時刻がずれ、補充の指示が翌日に持ち越されたことによるものだった。」
+
+この 2 回の原因は sample のための仮定で、ほかの文書から取った事実ではありません。採るか戻すかは人が判断してください。
+
+**残したこと（要判断）**
+「会議情報」の「次回」の行は rulebook が求める項目にありません。日付も「保留事項」の次回確認日と重なっています。ただ、アクションと保留を次の会議で確かめる流れが読み取れる行なので、消さずに残しました。
+
+それ以外の必須章・必須の表・禁止事項・駄菓子屋の題材は rulebook と Sample 記述標準に合っていて、直していません。
+
+**検査**
+Prettier の確認は通りました。lint などほかの検査は、このあと親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューで mm-sample.md の「決定事項」の表の前の文に、決定2の理由を 1 文足した（F001）。ほかの必須章・必須の表・禁止事項・駄菓子屋の題材は rulebook と Sample 記述標準に合っていて直していない。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/mm-sample.md の「決定事項」の表の前の文 / 指摘: 決定2（欠品速報を毎日16:00に見る）の理由がなく、rulebook の目的「決定の経緯…を防ぎ」を満たしていない（F001。grade の観点は `vp-ba-business-value` だが、R1 では `vp-po-purpose-alignment` として扱った） / 直した案: 「残る2回は、店番の交代で欠品速報を見る時刻がずれ、補充の指示が翌日に持ち越されたことによるものだった。」を足し、欠品7回の内訳と2つの決定を対応させた / 根拠: mm-rulebook の「全体方針」の目的、Sample 記述標準の「内容充実化（薄いドキュメント防止）」 / 印: 直した（2回の原因は sample のための仮定）","No: 2 / 段: R1 / 箇所: docs/ja/specdojo/samples/mm-sample.md の「会議情報」の「次回」の行 / 指摘: rulebook の「会議情報」が求める項目（会議名、日時、参加者）にない。日付も「保留事項」の次回確認日と重なっている / 直した案: 直していない。アクションと保留を次の会議で確かめる流れが読み取れるため残した。消すかどうかを人が決める / 根拠: mm-rulebook の「本文要件」、`vp-arc-single-responsibility` / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mm-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変えていないため実行しない","reason":"変えたファイルは Markdown だけで、*.yaml / *.yml を変えていない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴の文書を変えていないため実行しない","reason":"plan / result / 個票を変えていない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,31 @@
+R5（整合）の段として `docs/ja/specdojo/samples/sf-index-sample.md` を 2 か所直しました。変えたのはこの 1 ファイルだけです。ファイルは prettier で整形し、markdownlint は 0 件でした。
+
+**直したこと**
+
+- **未決事項 `Q-01`（F004）**: 個別仕様の `specdojo:sf-sample` は、上位一覧を `sf-index`（未作成）とし、`SF-POS-01` との対応を未確定としています。その食い違いを `Q-01` に書きました。当面は本一覧の `SF-POS-01` を指すとみなし、`sf-sample` の `Q-01` が解消したときに相互参照を確定する、という扱いです。
+- **未決事項の表の後（F002）**: rulebook 6.4 が求める「再照合のきっかけと影響先」を 1 段落足しました。BPS・画面・個別仕様の作成や改訂、機能の追加・廃止・統合があれば、変わった機能 ID から次のものを再照合します。
+  - 本一覧の行と機能構成
+  - 機能分割・コンポーネント設計
+  - 画面・実装
+  - 業務データ辞書
+  - 店番の操作手順
+  - テスト対象
+
+  生成処理は、このシステムに無いので影響先から外し、その理由も書きました。
+
+**直さなかったこと**
+
+- **F003**: 機能構成表の「上限超過時の販売可否」に、`Q-02` で未決であることがすでに書かれていました。前の段で直っていたので手を入れていません。
+- **F001**（`vp-pm-control-reporting`）: kata-guide の「kata の観点の組」で、この観点は kata のレビューには使わないとされています。R5 では扱いません。
+
+**突き合わせた参照先**
+
+概念データフロー図の `P-01`〜`P-10`、補充依頼確定、販売登録画面、プロジェクト概要の「まず記録する」方針、用語集、共通サンプル文脈と照らしました。ほかに食い違いは見つかりませんでした。
+
+**相手側を直す案（今回は未変更）**
+
+`sf-sample` の 15 行目にある `sf-index`（未作成）を `[[specdojo:sf-index-sample|システム化機能一覧（全体構成）]]` に変え、同仕様の `Q-01` から sf-index の対応という論点を外す案です。`sf-sample` は `ready` なので、採るかどうかは人の判断に残します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: sf-index-sample の Q-01 に sf-sample との相互参照の未照合を明記し（F004）、rulebook 6.4 に沿う再照合のきっかけと影響先の段落を足した（F002）。F003 は既に解消済み、F001 は R5 の観点外。","handoff":["R5-1: R5 / 4. 未決事項（Q-01） / 個別仕様の specdojo:sf-sample は上位一覧を `sf-index`（未作成）とし SF-POS-01 との対応を未確定としているが、本例の Q-01 にその食い違いがなかった / Q-01 の論点に sf-sample 側の未確定を、当面の扱いに『上位一覧は本一覧の SF-POS-01 とみなし、同仕様の Q-01 の解消時に相互参照を確定する』を足した / vp-qe-kata-conformance（grade F004） / -","R5-2: R5 / 4. 未決事項 / 再照合のきっかけが BPS・画面の作成時だけで、機能の追加・廃止・統合や仕様改訂のときに機能 ID から辿る影響先がなかった / 表の後に、きっかけ（BPS・画面・個別仕様の作成・改訂、機能の追加・廃止・統合）と影響先（一覧行・機能構成、機能分割・コンポーネント設計、画面・実装、業務データ辞書、店番の操作手順、テスト対象）を 1 段落足し、生成処理は持たないため外す理由も書いた / vp-dev-change-impact（grade F002）、sf-index-rulebook の「未決事項」 / -","R5-3: R5 / 3. システム化機能一覧（個別仕様の列）と sf-sample の「目的と概要」 / 相手側の sf-sample は上位一覧を `sf-index`（未作成）と仮置きしたままで、sample の sf-index-sample と往復できない / - / 相手側 docs/ja/specdojo/samples/sf-sample.md の 15 行目を [[specdojo:sf-index-sample|システム化機能一覧（全体構成）]] への参照に変え、その Q-01 から sf-index の対応という論点を外す案。sf-sample は status ready なので人が判断する / 要判断","R5-4: R5 / 2. 機能構成（つけの行） / 上限超過時の販売可否が人の判断として確定済みと読める（grade F003） / -（前の段で『承認とするかシステムで拒否するかは Q-02 で未決』が追記済みのため変更なし） / vp-qe-omissions-consistency / -","R5-5: R5 / 4. 未決事項 / grade F001（vp-pm-control-reporting: PJR への引継ぎ先・担当）は kata-guide の「kata の観点の組」で kata の段のレビューから外す観点のため扱わない / - / kata-guide『kata の観点の組』の除外表 / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"表の列幅を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

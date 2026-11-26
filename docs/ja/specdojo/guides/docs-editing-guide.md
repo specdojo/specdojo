@@ -74,6 +74,8 @@ SpecDojo 拡張は、ワークスペースの `.specdojo/doc-index.json` を使�
 文書リンクは、本文では `[[id]]` または `[[id|表示名]]` と記述します。Markdown 表のセル内では、
 列区切りとの衝突を避けるため `[[id\|表示名]]` と記述してください。
 
+別リポジトリにある project の文書も、別名を付けず project 修飾の doc id のまま `[[prj-0002:pjr-xxxx-topic|表示名]]` と記述します。文書サイトは `external_projects` に `source_url` を宣言した project の文書を相手のリポジトリの URL へ解決し、解決できない修飾付きの id は `[[...]]` のまま表示して、id と文書のパスを警告に出します。設定と解決の規則は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「リポジトリをまたぐ wikilink」を参照してください。
+
 表整形の詳細と Prettier を併用する場合の注意点は「Markdown 表フォーマットガイド」を参照してください。
 
 ## 2. 見出しに番号を付与
@@ -438,3 +440,43 @@ client -> system.api: リクエスト
 生成だけを行う場合は `npx specdojo-docs-site d2 .` を使います。本リポジトリの構文検査は `node tools/lint-d2.mjs`、対象を絞る場合は `node tools/lint-d2.mjs '<Markdown のパスまたは glob>'` です。開始 fence の行番号とエラーを報告し、不正な図は終了コード 1 になります。D2 を含む文書がある場合、CLI が未導入・版違いでも失敗します。ブラウザは不要です。
 
 GitHub の Markdown 表示では D2 は図に変換されないため、文書サイトで確認します。npm の `lint:d2`・`check`、commit hook とこのリポジトリの親検証設定への登録、および CI の導入設定は、保護された設定の承認・反映後に有効になります。
+
+### 6.4. プロダクトのリポジトリの文書を取り込む
+
+project の `repos` でプロダクトのリポジトリを宣言している場合、`build` と `dev` は宣言したリポジトリの `docs/ja/product/` を閲覧用ツリーの `docs/ja/product/<リポジトリ名>/` へ複製し、`/ja/product/<リポジトリ名>/` で配信します。宣言の読み方・パスの解決・警告の一覧は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「文書サイトへの取り込み」を参照してください。
+
+- project のリポジトリ自身の `docs/ja/product/` は従来どおり `/ja/product/` に置き、取り込んだ文書とは URL を分けます。サイドバーもリポジトリごとの節（`/ja/product/<リポジトリ名>/`）に分かれます。
+- project の文書からは、取り込んだ文書の id を `[[id]]` と書けばリンクになります。project 側に同じ id がある場合に備えて、`[[<リポジトリ名>:<id>]]` の形でも引けます。
+- 宣言したリポジトリや `docs/ja/product/` が見つからないときは、警告を出してそのリポジトリだけを飛ばし、ビルドは続けます。
+- `dev` 中のプロダクト側の編集は同期しません。開発サーバを起動し直すと反映されます。
+
+公開のサイトを CI でビルドする場合は、project のリポジトリと、`repos[].path` が指す位置にプロダクトのリポジトリを checkout します。次の例は、共有の設定が `"repos": [{ "name": "app1", "path": "../app1" }]` を宣言している場合です。
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: project
+      # repos[].path（../app1）が指す位置へ checkout する。
+      - uses: actions/checkout@v5
+        with:
+          repository: example-org/app1
+          path: app1
+          # private のリポジトリは、読み取り権限を持つトークンを secrets に置いて渡す。
+          token: ${{ secrets.APP1_READ_TOKEN }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: project
+      - run: npx specdojo-docs-site build .
+        working-directory: project
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: project/.vitepress/dist
+```
+
+private のリポジトリを宣言すると、その `docs/ja/product/` の内容も公開のサイトに出ます。公開してよい文書だけを置いているか確かめ、公開しない場合は公開用のビルドでそのリポジトリを checkout しないでください（警告を出して飛ばします）。

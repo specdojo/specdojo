@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-scope-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-prj-scope-sample-150-20261125T044635Z-46295742",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T04:47:18.735Z",
+    "completed_at": "2026-11-25T04:50:38.229Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/prj-scope-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/prj-scope-sample.md | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/prj-scope-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは sample の1件だけで、plan・result・個票は変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-scope-sample\n  type: project\n  status: ready\n  rulebook: specdojo:prj-scope-rulebook\n  based_on:\n    - specdojo:prj-overview-sample\n  supersedes: []\n---\n\n# プロジェクトスコープ: 駄菓子屋きぬや 販売管理システム\n\n\\[\\[specdojo:prj-overview-sample|プロジェクト概要]] の期待効果は、店主不在でも販売・在庫・つけを同じ手順で扱い、欠品と在庫の無駄を減らすことである。本書はこの期待効果を受け、初期リリースで対象とする範囲と対象外の境界を、関係者が合意できるように定める。\n\n## 1. 対象業務\n\n本プロジェクトでは、単一店舗の店頭販売を継続しやすくするため、販売記録、店頭\n… output omitted …\nる |\n| 影響評価 | 店頭手順、操作時間、初期リリース時期、データ移行、再説明の必要性を確認し、成功基準と受入条件、前提・制約・依存関係、課題と解決アプローチ、スケジュールの見直し要否を示す |\n| 承認者 | 店主代表（`PO`）が最終判断する。業務分析（`BA`）は利用者影響と受入観点を整理して判断材料にする |\n| 記録先 | 決定記録（DEC）、課題一覧、または変更要求ログへ、判断理由と影響範囲を残す |\n\n記録先の書き方は \\[\\[specdojo:dec-sample|決定記録]]、\\[\\[specdojo:pm-issue-log-sample|課題一覧]]、\\[\\[specdojo:pm-change-request-log-sample|変更要求ログ]] の例に従う。\n\n初期リリース前にスコープを追加する場合は、提案者が追加対象と同時に延期または除外する対象を示し、初期リリースの目的を維持できるかを確認する。例えば、つけ残高の月次集計を追加するなら、在庫低下一覧の表示条件の拡張を次フェーズへ延期し、繁忙期前の初期リリースに間に合うかを確認する。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7056 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7056 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-scope-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1750}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  13:55:20\n   Duration  2.59s (transform 5.76s, setup 1.50s, import 7.75s, tests 5.93s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-scope-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-scope-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）を実施した。prj-scope-sample のオフライン時の扱いを、前提・制約・依存関係（ACD-D03）と成功基準と受入条件に合わせて直した。相手側を直す案を3件、handoff に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: 段 R5 / 箇所 4. スコープ外（末尾の段落） / 指摘 オフライン時の運用を初期スコープに含めるかを未決としていた。前提・制約・依存関係の ACD-D03 は「初期受入の対象外とする扱いは決定済み」とし、成功基準と受入条件の「例外条件と未解決事項」は、受入条件を初期受入の後に足して単独で判定するとしており、食い違っていた / 直した案 通信断の日の記録を初期リリースの受入の対象外とし、受入後に足す受入条件で判定すると書いた。条件と時期は成功基準と受入条件の「例外条件と未解決事項」を参照させた。記録方法は _UNDECIDED_ のままとし、初期運用の開始前に店主代表（`PO`）が決めるとした / 根拠 vp-qe-kata-conformance、vp-dev-change-impact / 印 要判断（スコープの未決を、ほかの2つの sample の決定済みの扱いにそろえた。選ばなかった案は、スコープを未決のまま残し、ACD と成功基準の側を未決に戻すこと）",
+    "R5-2: 段 R5 / 箇所 全体（用語） / 指摘 プロジェクト概要とステークホルダー登録簿は「初期公開」と書いている。共通サンプル文脈（Sample 記述標準）、憲章、成功基準と受入条件、課題と解決アプローチ、本書は「初期リリース」である / 直した案 - / 根拠 vp-qe-kata-conformance。相手側の案: prj-overview-sample と prj-stakeholder-register-sample の「初期公開」を「初期リリース」にそろえる（概要の「基本的な考え方」の定義の括弧書きも含める） / 印 -",
+    "R5-3: 段 R5 / 箇所 4. スコープ外（末尾の段落） / 指摘 プロジェクト憲章の「未決事項」は、オフライン時の扱いを「詳細計画の承認前に、スコープで対象か対象外かを決める」としている。R5-1 で決めた扱いと合わない / 直した案 - / 根拠 vp-dev-change-impact。相手側の案: prj-charter-sample の「未決事項」と「ハイレベルスコープ」の「未確定」の行を、初期受入の対象外は決定済みとし、記録方法を初期運用の開始前に決める形に書き換える / 印 -",
+    "R5-4: 段 R5 / 箇所 6. スコープ変更方針（承認者の行） / 指摘 業務分析（`BA`）を判断材料の整理役にしているが、ステークホルダー登録簿と憲章には `BA` に当たる関係者がいない（成功基準と受入条件も `BA` を使っている） / 直した案 - / 根拠 vp-qe-kata-conformance。相手側の案: prj-stakeholder-register-sample に `BA` を担う関係者を足すか、本書と成功基準と受入条件の両方で `BA` を開発担当（`DEV`）に置き換える / 印 要判断（共通サンプル文脈では Role code に `BA` を使えるため、誤りとは言い切れない）"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-scope-sample-150/T-KATA-REVIEW-ALL-prj-scope-sample-150-20261125T044635Z-46295742/executor.log",
+      "bytes": 6301,
+      "truncated": false
+    }
+  ]
+}

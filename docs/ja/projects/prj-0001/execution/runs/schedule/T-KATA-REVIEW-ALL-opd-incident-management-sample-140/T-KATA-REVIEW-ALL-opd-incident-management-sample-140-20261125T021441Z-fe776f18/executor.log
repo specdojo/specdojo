@@ -1,0 +1,32 @@
+障害対応の sample（`opd-incident-management-sample`）で、正本と食い違う箇所が 2 つ見つかったので直しました。権限の sample（`opd-access-control-sample`）は確かめた主張がすべて正本と合っていたため、変えていません。
+
+**直したところ**
+
+- **関連ドキュメント導線の表:** `opd-monitoring`・`opd-access-control`・`opr-index`・`opr-incident` の 4 件の状態が「予定」と書かれていました。実際は 4 件とも sample があり、`opd-index-sample` の導線の表でも「作成済」なので、「作成済」に直しました。あわせて ID だけの表記を wikilink に変えました。
+- **停止・切替の判断の表（P2 の日次締めの行）:** 「夜間バックアップ」を「閉店後のバックアップ」に直しました。`opd-index-sample` のバックアップ・リストア方針は、日次締めを持ち越しても閉店後にバックアップを取ると定めています。
+
+**確かめた主張**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | `opd-index` が優先度の条件を 1 行で定め、一次連絡の期限は P1 で 15 分 | `opd-index-sample` の体制・責任分界と SLO の表 | 一致 |
+| 2 | P1 の切替の判断者は `PO`。切替の期限を過ぎたときに決める | `opd-index-sample` 障害対応方針（30 分）、`opr-incident-sample` の停止・切替の表 | 一致 |
+| 3 | 来店客への周知は口頭だけを定め、外部の利用者・取引先は SLA の対象外 | `opd-index-sample` 障害対応方針と SLA の行 | 一致 |
+| 4 | 転記と照合は `opd-index` の障害対応方針に従う | `opd-index-sample` 障害対応方針（店番担当が転記し、`DEV` が照合） | 一致 |
+| 5 | 未決事項の「オフライン時の記録方法」「営業時間外の緊急連絡手段」は `opd-index` の未決事項 | `opd-index-sample` の未決事項の表 | 一致 |
+| 6 | P1 の記録の訂正は権限の sample の緊急権限に従う | `opd-access-control-sample` の緊急権限 | 一致 |
+| 7 | 関連文書の状態が「予定」 | 各 sample の有無、`opd-index-sample` の導線の表 | 不一致（直した） |
+| 8 | 日次締めの持ち越し中も「夜間バックアップ」は止めない | `opd-index-sample` のバックアップ・リストア方針 | 不一致（直した） |
+| 9 | 見出しの構成（概要（`<term>`）、差分を持つ章、関連ドキュメント導線）と frontmatter の `type`・`rulebook` | `docs/ja/specdojo/rulebooks/opd-rulebook.md` の本文構成と推奨 Frontmatter 項目 | 一致 |
+
+この sample はコマンド・オプション・schema のキーを書いていないため、schema・`src/`・`--help` と突き合わせる主張はありませんでした。権限の sample も、`opd-index` の優先度の表、付与の対象、監査ログの保管期間 1 年、月次点検ができなかった月は翌週に行うこと、導線先の `opr-*` の有無を確かめ、すべて一致しました。
+
+**別の段に回すもの**
+
+- `opd-monitoring-sample` にも、導線の表の「予定」と「夜間バックアップ」の同じずれがあります。この段では対象の kata しか直さないので、`opd-monitoring-sample` を扱う段で直す必要があります。
+
+整形（Prettier）と、変えたファイルへの markdownlint は通りました。`npm run lint:md` などの残りの検査は、このあと runner がまとめて実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: opd-incident-management-sample の 2 件の誤り（関連ドキュメント導線の状態「予定」→「作成済」と wikilink 化、「夜間バックアップ」→「閉店後のバックアップ」）を直した。opd-access-control-sample は確かめた主張がすべて一致したため変更なし。","handoff":["R4 確かめ No1: 主張=優先度の判定・概要「opd-index は優先度ごとの条件を 1 行で定める」「一次連絡の期限とエスカレーションの連絡先は opd-index を正」/ 正本=docs/ja/specdojo/samples/opd-index-sample.md の体制・責任分界（優先度の表）と SLO の障害の一次連絡 / 確かめ方=読み取り / 結果=一致 / 根拠=P1 15 分・P2 当日の閉店・P3 次の月次点検、連絡先 OPS→PO","R4 確かめ No2: 主張=停止・切替の判断 P1「判断者 PO、opd-index の切替の期限を過ぎても OPS が再開を確かめられない時点」/ 正本=opd-index-sample の障害対応方針、opr-incident-sample の停止・切替とロールバックの判断 / 確かめ方=読み取り / 結果=一致 / 根拠=「P1 に気付いてから 30 分たっても記録を再開できない場合、PO が紙の販売控えへの切替を決める」","R4 確かめ No3: 主張=周知「opd-index は来店客への口頭の周知だけを定める」「外部の利用者・取引先は SLA の対象外」/ 正本=opd-index-sample の障害対応方針と SLO・SLA・KPI の SLA 行 / 確かめ方=読み取り / 結果=一致 / 根拠=「会計の待ちが生じる場合だけ店頭で口頭で行う」「SLA 対象外」","R4 確かめ No4: 主張=「戻した後の転記と照合は opd-index の障害対応方針に従う」/ 正本=opd-index-sample の障害対応方針 / 確かめ方=読み取り / 結果=一致 / 根拠=「復旧後に店番担当が転記し、DEV が件数と金額を照合する」","R4 確かめ No5: 主張=未決事項の「オフライン時の記録方法」「営業時間外の緊急連絡手段」は opd-index の未決事項 / 正本=opd-index-sample の未決事項の表 / 確かめ方=読み取り / 結果=一致 / 根拠=同名の 2 行があり、決まるまでの扱いが紙の販売控え・翌朝の開店前の連絡で一致","R4 確かめ No6: 主張=「P1 の復旧で記録の訂正が要る場合は opd-access-control-sample の緊急権限に従う」/ 正本=docs/ja/specdojo/samples/opd-access-control-sample.md の緊急権限 / 確かめ方=読み取り / 結果=一致 / 根拠=緊急権限の使える場面が P1 の復旧で記録の変更が要る場合","R4 確かめ No7: 主張=関連ドキュメント導線の opd-monitoring・opd-access-control・opr-index・opr-incident が「予定」/ 正本=docs/ja/specdojo/samples/ の各 sample の有無、opd-index-sample の関連ドキュメント導線 / 確かめ方=ls docs/ja/specdojo/samples/ と読み取り / 結果=不一致 / 根拠=4 件とも sample があり opd-index-sample でも作成済。状態を作成済に直し、ID を wikilink にした","R4 確かめ No8: 主張=停止・切替の判断 P2 日次締めの行「止めないもの: 夜間バックアップ」/ 正本=opd-index-sample のバックアップ・リストア方針 / 確かめ方=読み取り / 結果=不一致 / 根拠=正本は「閉店後の日次締めの後に 1 回」「日次締めを翌朝へ持ち越す場合も閉店後にバックアップを取る」。閉店後のバックアップに直した","R4 確かめ No9: 主張=見出しの構成（概要（<term>）、差分を持つ章、関連ドキュメント導線（opr 等））と frontmatter の type: operations・rulebook: specdojo:opd-rulebook / 正本=docs/ja/specdojo/rulebooks/opd-rulebook.md の本文構成と推奨 Frontmatter 項目 / 確かめ方=読み取り / 結果=一致 / 根拠=末尾に opr-index と opr-incident の導線がある","R4 確かめ No10: 主張=opd-access-control-sample の opd-index 参照（体制・責任分界の優先度の表、付与の対象を店番担当と DEV に限る、監査ログの保管期間 1 年、月次点検ができなかった月は翌週）と導線（opr-index-sample・opr-access-control-sample が作成済）/ 正本=opd-index-sample の各章、docs/ja/specdojo/samples/ の一覧 / 確かめ方=読み取り / 結果=一致 / 根拠=該当する記述がすべて正本にあり、sample もある。変更なし","R4 の対象外: opd-incident-management-sample と opd-access-control-sample はコマンド・オプション・schema のキーを書いていないため、schema・src/・--help と突き合わせる主張はなかった","ほかの kata への指摘（直していない）: opd-monitoring-sample の関連ドキュメント導線の opd-incident-management・opr-index・opr-monitoring も「予定」と書かれているが、sample はあり作成済。また本文の「夜間バックアップ」は opd-index-sample の「閉店後のバックアップ」と表記が違う。opd-monitoring-sample を扱う段（R5 整合など）で直す"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

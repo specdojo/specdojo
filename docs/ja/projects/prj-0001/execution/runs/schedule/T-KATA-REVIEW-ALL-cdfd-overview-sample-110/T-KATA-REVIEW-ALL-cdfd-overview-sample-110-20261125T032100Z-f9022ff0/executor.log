@@ -1,0 +1,20 @@
+R1（目的の過不足）を終えました。sample に入れた変更は1つで、指摘 F002 は直しました。F001 は直さずに R3 へ回します。
+
+**変更したファイル**: `docs/ja/specdojo/samples/cdfd-overview-sample.md` のみです。
+
+- 「概念データフロー（概要）」の図の説明の後に、次の1文を足しました。「店主代表と家族利用者代表は領域の担当であるため、補充の判断・つけの承認・締めの確定を含め、担当から領域が直接受け取る入力は図から省く。」
+- 根拠は recipe の109行目の「参加者から直接受け取る入力を図から省いたときは、図の直後に省いたことを一文で書く」です。観点は `vp-qe-kata-conformance` です。
+
+**F001 を直さなかった理由**:
+
+- 観点 `vp-arc-conciseness` は、kata ガイドの組み合わせでは R3 が使う観点です。
+- rulebook の「詳細 CDFD 一覧」の記述ガイドは、章の冒頭に詳細化の分担と状態定義の正本を書くよう求めています。このため、この2項目は R1 で見ると要る内容に当たり、残る問題は長さだけです。
+- R3 で詰める候補は、「各領域はちょうど一つ…」の文と、6.2 の前置きと重なる「単一のグループに閉じる業務は…」の文です。
+
+**R1 で見て問題がなかった点**: rulebook の必須章、カタログの `done_criteria`、Sample 記述標準の責務の3つと突き合わせました。欠けている内容も、要らない内容も見つかりませんでした。rulebook・recipe・template は変えていません。
+
+**検証**: sample に対する `npx prettier --check` と `npx markdownlint` はどちらも通りました。lint などの残りの検査は、この後の段で runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を終えた。F002 は「概念データフロー（概要）」の図の説明の後に、担当から直接受け取る入力を図から省いたことを示す1文を足して直した。F001（`vp-arc-conciseness`）は R3 の観点のため直さずに申し送った。ほかの要る内容の欠けと要らない内容は見つからなかった。","handoff":["R1-1: 段 R1 / 箇所 5. 概念データフロー（概要） / 指摘: 店主代表と家族利用者代表（領域の担当）から直接受け取る入力を図から省いているが、図の直後に省いたことを書いた文がない（grade F002） / 直した案: 図の説明の後に「店主代表と家族利用者代表は領域の担当であるため、補充の判断・つけの承認・締めの確定を含め、担当から領域が直接受け取る入力は図から省く。」を足した / 根拠: `vp-qe-kata-conformance`。recipe（`specdojo:cdfd-overview-recipe`）の109行目「参加者から直接受け取る入力を図から省いたときは、図の直後に省いたことを一文で書く」。rulebook の「概念データフロー（概要）」の「対象範囲内の参加者は領域の担当であり、外部主体にしません」 / 印: -","R1-2: 段 R1 / 箇所 6. 詳細 CDFD 一覧（章冒頭の役割分担の2項目） / 指摘: grade F001 が、プロセスグループ別 CDFD とユースケース別 CDFD の役割分担の2項目は rulebook の分担定義の再掲であり、短い要約に詰められると指摘した / 直した案: - / 根拠: F001 の観点 `vp-arc-conciseness` は kata ガイドの組み合わせでは R3 が使う観点。rulebook の「詳細 CDFD 一覧」の記述ガイドは章冒頭に詳細化の分担と状態定義の正本を示すよう求めるため、R1 で見ると要る内容に当たる。R3 で詰める候補は、「各領域はちょうど一つのプロセスグループ別 CDFD に属する」（6.1 の表が示す受入条件）と、6.2 の前置きと重なる「単一のグループに閉じる業務はユースケース別 CDFD を作らない」。R1 で詰める案は、段の観点を越えるため選ばなかった / 印: 要判断","R1-3: 段 R1 / 箇所 全体 / 指摘: rulebook の本文要件の必須章（導入文、目的、適用範囲、プロセス領域、データストア、概念データフロー（概要）、詳細 CDFD 一覧）、成果物カタログの `done_criteria`（`dct-kata.yaml`）、Sample 記述標準の責務と突き合わせた。ほかに欠けている内容も要らない内容も見つからなかった / 直した案: - / 根拠: `vp-po-purpose-alignment`、`vp-arc-single-responsibility`、`vp-qe-kata-conformance` / 印: -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdfd-overview-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/cdfd-overview-sample.md","status":"passed","summary":"no errors"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history files unchanged","reason":"変更したファイルは sample だけで、plan・result・個票などの履歴蓄積ファイルを変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"no yaml changed","reason":"変更した `*.yaml` / `*.yml` ファイルがないため"}]}
+</specdojo_executor_evidence>

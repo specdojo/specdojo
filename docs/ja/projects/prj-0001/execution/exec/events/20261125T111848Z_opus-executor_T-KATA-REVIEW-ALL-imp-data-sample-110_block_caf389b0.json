@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T11:18:48Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-imp-data-sample-110",
+  "by": "opus-executor",
+  "msg": "parent validation failed: lint-fm-changed",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-data-sample-110/T-KATA-REVIEW-ALL-imp-data-sample-110-20261125T110249Z-7a5ee463/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-data-sample-110/T-KATA-REVIEW-ALL-imp-data-sample-110-20261125T110249Z-7a5ee463/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-imp-data-sample-110-20261125T110249Z-7a5ee463"
+  }
+}

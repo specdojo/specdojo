@@ -413,6 +413,51 @@ $defs:
             $ref: "#/$defs/CategoryWeights"
           deliverable:
             $ref: "#/$defs/CategoryWeights"
+      size_limits:
+        type: object
+        additionalProperties: false
+        description: >
+          Upper limits of the size metrics grade measures without an LLM (characters exclude
+          whitespace and table separator rows). Exceeding a limit adds a finding to
+          vp-arc-conciseness; it is downgraded to note unless the agent points out removable text
+          with a minor or higher finding, so length alone never lowers the score.
+        properties:
+          sample_ratio:
+            $ref: "#/$defs/SizeThreshold"
+            description: "Body characters divided by the declared sample's (deliverables only)."
+          growth_ratio:
+            $ref: "#/$defs/SizeThreshold"
+            description: "Body characters divided by those recorded by the previous grade."
+          operations_ratio:
+            $ref: "#/$defs/SizeThreshold"
+            description: "Share of characters under headings that name document operations."
+          operations_headings:
+            type: array
+            uniqueItems: true
+            description: >
+              Heading words that mark a chapter about operating or verifying the document. Each
+              line belongs to its innermost heading.
+            items:
+              type: string
+              minLength: 1
+
+  SizeThreshold:
+    type: object
+    additionalProperties: false
+    required: [minor, major]
+    properties:
+      minor:
+        type: number
+        exclusiveMinimum: 0
+      major:
+        type: number
+        exclusiveMinimum: 0
+      min_characters:
+        type: integer
+        minimum: 0
+        description: >
+          Smallest absolute amount that may produce a finding: the increase over the sample or the
+          previous grade, or the characters of the operations chapters.
 
   CategoryWeights:
     type: object

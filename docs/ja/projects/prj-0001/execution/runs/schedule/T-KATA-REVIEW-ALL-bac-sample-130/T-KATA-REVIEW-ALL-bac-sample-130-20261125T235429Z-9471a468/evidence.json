@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-bac-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-bac-sample-130-20261125T235429Z-9471a468",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T23:55:17.257Z",
+    "completed_at": "2026-11-25T23:57:19.581Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/bac-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/bac-sample.md | 70 ++++++++++++++++++++--------------\n 1 file changed, 41 insertions(+), 29 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/bac-sample.md",
+      "status": "passed",
+      "summary": "--write で表の列幅を整えた後、All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "変更したのは docs/ja/specdojo/samples/bac-sample.md だけで、plan・result・個票の履歴ファイルを変更していないため"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "docs/ja/projects/ 配下の変更なし",
+      "reason": "変更は docs/ja/specdojo/samples/ 配下だけで、docs/ja/projects/ に届く成果物の変更がないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:bac-sample\n  type: requirement\n  status: ready\n  rulebook: specdojo:bac-rulebook\n  based_on:\n    - specdojo:prj-success-criteria-and-acceptance-criteria-sample\n    - specdojo:bes-sample\n---\n\n# 駄菓子屋きぬや 現金販売の業務受入条件\n\n## 1. 概要\n\nBAC を初めて作成する BA と、承認・設計・受入テストへ引き継ぐ担当者に向けた完成例である。構成と品質判定・検査・確定条件は \\[\\[specdojo:bac-rulebook|業務受入条件 作成ルール]] の「本文要件」に従う。rulebook・共通文脈が変わったときの追従は \\[\\[specdojo:sample-\n… output omitted …\n の在庫差分と BAC-02・03 は仮定に拠る。接続するまで実運用の受入を確定できない | BA が販売プロセスを `based_on` に加え、DEV が契約を整備。店主代表（PO）が業務条件を承認し、同行レビュー担当（QE）が照合 | 受入実施前に、各シナリオの根拠と販売・在庫・引き継ぎの証跡をたどれ、全期待結果を判定できること | BA が受入保留への影響を PM へ渡す。登録後は実案件の PJR 個票を参照する |\n| *UNDECIDED*: 通信・記録不能時の販売継続 | BAC-01〜03 の正常稼働前提を外れる。当該経路の受入は保留し、現行シナリオの合格で代替しない | BA が影響を整理し、技術メンター（ARC）が回復案を提示、店主代表（PO）が継続可否を判断 | 当該経路を追加する前に未確定取引の照合と再開条件を承認し、QE が停止・再開の期待結果を確認する | PM へのリスク登録候補。実案件の PJR 個票は未同梱 |\n\n返品と確定後の訂正は将来の別シナリオで扱う。店主代表が必要性と業務上の扱いを決めてから追加し、現行の販売条件へ混ぜない。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7476 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7476 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bac-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[paren\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1771}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  08:58:10\n   Duration  2.81s (transform 8.87s, setup 3.40s, import 8.82s, tests 6.20s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bac-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bac-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として bac-sample.md に文の直し（主語の補い・文の分割・受け身の言い換え・表の前の 1 文・用語の統一・略語の正式名）を入れた。意味と背景・例外・制約は変えていない。展開された finding F001 は前の段で解消済みで、観点も R3 の対象外のため直していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 1. 概要 / 一文で「本文要件」と「運用ルール」の 2 つの従い先を述べている / 従い先ごとに 2 文に分けた / W3・一文一主張 / -",
+    "R3-2: R3 / 1. 概要 / 「…引き継げることを確認する」は確認の主語が一つに決まらない / 「本書は、…引き継げることを受入条件として定める」にした / W1 / -",
+    "R3-3: R3 / 1. 概要（_ASSUMPTION_） / 「これは」の指す先が仮定全体か直前の文か読み分けにくい / 「この仮定は」にした / W4 / -",
+    "R3-4: R3 / 1. 概要・2. 受入条件の各表・3. メモ / 将来課題 / 表の前に、何を示す表か・何を満たせば合格かを述べる 1 文がない（役割表、BAC-01〜03 のケース表と判定方法表、論点表） / 各表の前に 1 文を足した（判定方法表は「すべての行が期待結果と一致すれば BAC-0n を合格とする」） / Sample 記述標準の表の前の 1 文 / -",
+    "R3-5: R3 / 2. 受入条件（共通前提） / 「確認し、端末と記録の利用に支障はない」で、述語の主体が「確認する」と「支障はない」でねじれている / 2 文に分け、「端末と記録は支障なく使える状態とする」にした / W2 / -",
+    "R3-6: R3 / 2.1.3. 期待結果 / 「確認でき」の主語がなく、一文に 2 つの主張がある / 「販売記録と在庫の変化が同じ販売に対応付いている。次の店番担当は、販売済みの購入と未確定の購入を区別できる」に分けた / W1・W3 / -",
+    "R3-7: R3 / 2.2.3. 期待結果 / 「確定されず、追加されず」が受け身の連続で、一文に 2 つの行為者の主張がある / 「未確定のままで、販売記録は増えず」とし、店番担当の 2 つの行為を 2 文に分けた / W6・W3 / -",
+    "R3-8: R3 / 2.2.3.・2.3.3. 期待結果 / 「作られない」「追加されず」は受け身で、行う主体が消えている / 「販売記録は残らない」「販売記録は増えず」にした / W6 / -",
+    "R3-9: R3 / 2.3.3. 期待結果（引き継ぎ） / 「記し」の主語がない / 「店番担当は、…」を補った / W1 / -",
+    "R3-10: R3 / 全体 / 「引継ぎメモ」と「引き継ぎ」の表記が混在し、根拠の SC-06（prj-success-criteria-and-acceptance-criteria-sample）は「引き継ぎメモ」と書いている / 「引き継ぎ」に統一した / W8・ファイル内の用語の統一 / 要判断: 証跡名として「引継ぎメモ」を固有名で残す案もあったが、根拠成果物の表記に合わせた",
+    "R3-11: R3 / 3. メモ / 将来課題 / 略語「PJR」の初出に正式名がない / 「プロジェクト登録簿（PJR）」にした / W8 / -",
+    "F001（grade、vp-qe-kata-conformance）: 直していない。指摘先の行（kinuya-bps-cash-sale、`based_on` が空）は前の段で解消済みで、今の本文では `based_on` に 2 件がつながっている。観点も R1・R5 で扱うもので R3 の対象外のため、再評価の grade で解消を確認する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bac-sample-130/T-KATA-REVIEW-ALL-bac-sample-130-20261125T235429Z-9471a468/executor.log",
+      "bytes": 5399,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+`exec stop` を追加しました。走っている `exec run --auto --loop`・`exec cycle`・予約の列に、新しいタスクを claim せず、走っているタスクを統合と記帳まで終えてから抜けるよう指示するコマンドです。完了条件のうち「実際の `exec run --auto --loop` を止めて再開する確認」だけは、実 agent を起動して利用枠を使うため、まだ行っていません。close の前に人か orchestrator の確認が要ります。
+
+**使い方**
+- 対象は既定で project の auto run 全部です。`--track <track>` でその track の run だけ、`--queue <queue-id>` で予約の列に絞れます。
+- `--msg` は必須です。`--cancel` で取り消せ、まだ抜けていない run は次のタスクが終わった時点で claim を再開します。
+- 止まった run は止めた記録を `exec/stops/` に残し、終了コード 76 で終わります。止めている間にタスクが失敗した場合は、失敗が隠れないよう 1 を返します。
+- 予約の列は、その段で `stopped` になります。76 で抜けた段は失敗扱いにせず `pending` に戻すので、同じ `exec queue run <queue-id>` で止めた段から再開します。
+- `exec status` の `stop requests:` には、終わりを待っているタスクが `draining ... (<task-id>)` と出ます。`exec queue status` には `stop=requested (<理由>)` が出ます。
+- 走っていない run への指示、同じ対象への二重の指示、指示がないときの `--cancel` は、理由の分かるメッセージを出して終了コード 1 で終わります。
+
+**止められないとき**
+- `--parallel` の枠がすべて埋まっている間は、どれかのタスクが終わるまで run は指示を読みません。
+- `exec cycle` が auto の段に入る前の段（再開・index・refresh）にいる間は、指示は `Nothing to stop` で拒否されます。
+- 予約の列の runner は、止めた記録と予約ファイルを自分では commit しません。次の run の記帳の commit で入ります。
+
+**確認したこと**
+- 統合テスト（`auto-run-stop.integration.test.ts`、6 件）で、走っているタスクが統合まで終わること、新しい claim が出ないこと、待ちの表示、取り消し後に続くこと、track の指定、列の段で止まって同じ列で再開できることを確かめました。テストでは agent の起動と統合の段を置き換えています。
+- exec の単体テスト 1,870 件と、src・tests の型検査は通りました。
+- 実際の CLI で `--help` と、拒否の 2 通り（終了コード 1）を確かめました。
+- `npm run typecheck`・`lint:ts`・`test:unit`・`lint:md` などの正式な検査は、このあと親の runner が実行します。
+
+**変更したファイル**
+- 新規: `src/exec/stop-request.ts`、`src/exec/stop-command.ts`、テスト 2 件
+- 変更: ループ・`exec cycle`・予約の列・`exec status` の実装、記帳の commit の対象、記録の配置検査
+- 文書: `command-reference.md`、`exec-operation-guide.md`
+
+個票には作業内容（1〜3 行目を `done`、4 行目は理由付きで `open`）、対応結果、CHANGELOG の区分と文案、関連ドキュメントを書きました。`CHANGELOG.md` と保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`specdojo exec stop` を追加した。走っている `exec run --auto --loop`・`exec cycle`・予約の列が、新しいタスクを claim せず、走っているタスクを統合まで終えてから終了コード 76 で抜ける。`--track`・`--queue` で対象を絞り、`--cancel` で取り消せる。止めた記録は `exec/stops/` に残る。予約の列は止めた段を `pending` に戻し、同じ `exec queue run` で再開する。`exec status`・`exec queue status` に待ちの状態が出る。統合テスト・単体テスト・文書・個票を更新した。実際の run を止めて再開する確認は close の前に人が行う。","handoff":["完了条件の「close の前に、実際の `exec run --auto --loop` を止めて再開し、動作を確かめる」は、実 agent の起動と利用枠を要するため executor では行っていない（個票の作業内容の 4 行目を `open` のまま残した）。手順: `exec stop --msg ...` → `exec status` で `stop requests:` の `draining` を確かめる → run が終了コード 76 で抜ける → 起動し直す（予約の列なら同じ `exec queue run <queue-id>`）。","CHANGELOG に書く事項（区分 Added）: `exec stop` を追加しました。走っている `exec run --auto`（`--loop`）・`exec cycle`・予約の列に、新しいタスクを claim せず、走っているタスクを統合まで終えてから止まるよう指示できます（`--track`・`--queue` で対象を絞り、`--cancel` で取り消し）。止まった run は終了コード 76 で終わり、予約の列は同じ `exec queue run` で止めた段から再開します。","指示は区切りで読むため、`--parallel` の枠がすべて走っている間は、どれかのタスクが終わるまで run は指示を見ない。`exec cycle` の auto の段より前（再開・index・refresh）では、auto run の印がまだないため `Nothing to stop` で拒否される。","予約の列の runner が書く止めた記録（`exec/stops/`）と予約ファイルは列の runner 自身は commit しない。次の run の記帳の commit か、利用者・orchestrator の commit で入る。","保護された設定の変更は不要だった。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含む履歴ファイルに Markdown リンクの違反なし"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-32pn-exec-loop-drain-stop.md","status":"passed","summary":"0 issues"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/run/auto-run-stop.integration.test.ts tests/src/exec/trailing-records.integration.test.ts tests/src/exec/cycle.integration.test.ts","status":"passed","summary":"新しい統合テスト 6 件と、記帳・cycle の統合テストが通過（正式な全件は親の test-integration が実行）"},{"command":"npx tsx src/specdojo.ts exec stop --help","status":"passed","summary":"help が表示され、走っていない track への指示と指示のない取り消しが終了コード 1 と分かるメッセージで拒否されることを確かめた"}]}
+</specdojo_executor_evidence>

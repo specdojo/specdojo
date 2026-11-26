@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-atc-index-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961",
+  "updated_at": "2026-11-24T17:17:04.702Z",
+  "stages": {
+    "executor": {
+      "status": "rate_limited",
+      "actor": "sol-executor",
+      "attempts": 2,
+      "started_at": "2026-11-24T15:20:20.421Z",
+      "completed_at": "2026-11-24T17:17:04.702Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-110/T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961/evidence.json",
+      "rate_limit_events": [
+        {
+          "action": "wait",
+          "trigger": "rate_limit",
+          "from_actor": "sol-executor",
+          "to_actor": "sol-executor",
+          "resume_at": "2026-11-24T17:17:00.000Z",
+          "resumed_at": "2026-11-24T17:17:02.268Z"
+        }
+      ]
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-110/T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-110/T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961/result.md"
+  }
+}

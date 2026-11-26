@@ -1,0 +1,23 @@
+I reviewed `docs/ja/specdojo/samples/opr-monitoring-sample.md` for R1 (purpose fit) and made one fix. None of the four grade findings belonged to R1, so I left them for the stages that handle them. Prettier passes; lint and the other checks are left to the parent runner.
+
+**Which file I edited:** the plan's edit target says `docs/ja/specdojo/samples/opr-sample.md`, but I edited `opr-monitoring-sample.md`. The task is the review of `opr-monitoring-sample`, and the previous R1 run (on `opr-incident-sample`) edited its own sample. I did not touch `opr-sample.md` or the rulebook.
+
+**What I changed:**
+
+- **Fix (No.1):** the rulebook says acceptance-check results go in the "証跡" chapter, with the check date, environment, an identifier and pass/fail. The sample had the mock-run instruction under "手順適用範囲・前提" and recorded only "the result". I moved the paragraph to "証跡". It now also records the check date, environment, procedure checked, `ticket_id` and pass/fail.
+- **Kept:** the rest of the sample already had what the rulebook requires and nothing it doesn't need. That covers the overview stating it is a subset of `opr-index`, the alert flow (confirm → temporary fix → permanent fix) and false-alarm handling. It also covers the evidence table and the reason given for each chapter that defers to `opr-index`.
+
+**Findings I did not handle:**
+
+| Finding | Viewpoint | Why not here |
+| --- | --- | --- |
+| F001 | `vp-po-decision-readiness` | The kata guide excludes this viewpoint from kata reviews |
+| F004 | `vp-ops-release-readiness` | Same exclusion |
+| F002 | `vp-qe-verifiability` | Belongs to R4 |
+| F003 | `vp-qe-kata-conformance` (between katas) | Belongs to R5 |
+
+**Needs a decision:** the anchor text for F002 and F003 matches `opr-sample.md` or `opr-index-sample.md` rather than this sample. The findings may have been attached to the wrong sample. Someone should check before R4 and R5.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 review of opr-monitoring-sample done: one change to docs/ja/specdojo/samples/opr-monitoring-sample.md (moved the acceptance mock-run paragraph to the 証跡 chapter and added the recorded identifiers and pass/fail). Grade findings F001-F004 fall outside R1 and were not handled. The plan's edit target was opr-sample.md, but the review target opr-monitoring-sample.md was edited.","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/opr-monitoring-sample.md の「手順適用範囲・前提」の表の直後の段落と「証跡」章 / 指摘: rulebook の「運用作業の受入確認」は、受入確認の結果を「証跡」章に確認日・確認環境・`run_id` などの識別子と合否つきで残すよう求めている。本書では模擬の指示が「手順適用範囲・前提」に置かれ、残す識別子と合否がなかった / 直した案: 段落を「証跡」章の末尾へ移し、「模擬の結果は月次点検の記録に、確認日・確認環境・対象手順・`ticket_id`・合否を残す。」を足した（`opr-sample` の証跡章の書き方にそろえた） / 根拠: [[specdojo:opr-rulebook]] の「運用作業の受入確認」と「証跡（ログ、チケット、チェックリスト、実施記録）」、観点 `vp-qe-kata-conformance`（種別の責務） / 印: なし","No: 2 / 段: R1 / 箇所: grade finding F001・F004（未決事項の表に決定者・期限・ready 化の確認者の列を足す） / 指摘: 観点 `vp-po-decision-readiness`・`vp-ops-release-readiness` は、kata ガイドの「kata の観点の組」で kata の段のレビューから外す観点（kata の承認と ready 化は登録簿で追う）であり、R1 では扱わない。Sample 記述標準も本文に承認の進み具合を書かないとしている / 直した案: sample は変えない。次の grade で、kata にこの 2 観点を当てない設定にするかを確かめる / 根拠: docs/ja/specdojo/guides/kata-guide.md の「kata の観点の組」、[[specdojo:sample-authoring-standard]] の禁止事項 / 印: なし","No: 3 / 段: R1 / 箇所: grade finding F002（証跡の保管期間の `_UNDECIDED_`）・F003（関連導線の表と分冊の記述の食い違い） / 指摘: F002 は R4（`vp-qe-verifiability`）、F003 は kata どうしの整合で R5（`vp-qe-kata-conformance`）が扱うため、R1 では直さない。両方の anchor の文字列（「日次点検の記録 / 店内の点検ノート（紙）」、分冊は障害対応だけという記述）は本書ではなく `opr-sample` または `opr-index-sample` に当たり、finding がほかの sample に付くべきものの可能性がある / 直した案: R4・R5 の段、または `opr-sample`・`opr-index-sample` のレビューで、finding の付け先を確かめてから扱う / 根拠: docs/ja/specdojo/guides/kata-guide.md の「段と渡す材料」「kata の観点の組」、docs/ja/specdojo/samples/opr-sample.md の証跡章と関連ドキュメント導線 / 印: 要判断","No: 4 / 段: R1 / 箇所: plan の「根拠となる成果物と編集対象」 / 指摘: plan は編集対象を rulebook の sample 宣言から docs/ja/specdojo/samples/opr-sample.md と解決しているが、レビューの対象は opr-monitoring-sample である。先の R1 の run（opr-incident-sample）にならい、対象の sample だけを直し、opr-sample.md は変えていない / 直した案: kata のレビューの段の plan は、編集対象を対象の kata 自身に解決するよう plan の生成を見直す / 根拠: docs/ja/specdojo/guides/kata-guide.md の「段と渡す材料」（直すのは対象の kata だけ） / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-monitoring-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history files were changed","reason":"The only changed file is a sample under docs/ja/specdojo/samples/; no plan, result or register ticket was changed"}]}
+</specdojo_executor_evidence>

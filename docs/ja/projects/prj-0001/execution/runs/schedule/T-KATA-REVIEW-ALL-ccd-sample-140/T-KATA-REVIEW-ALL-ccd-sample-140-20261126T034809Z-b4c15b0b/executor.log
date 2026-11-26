@@ -1,0 +1,32 @@
+R4（正しさ）の照合を終えました。誤りは 1 件で、`docs/ja/specdojo/samples/ccd-sample.md` の 1 文を直しました。
+
+**直した箇所**（「図だけでは表せない整合性条件」）: 修正前は「商品と顧客は登録済みでなければならない」と書いていました。ところが業務データ辞書（`bdd-sample`）では顧客台帳が対象外で、同じ sample の「未解決事項」でも顧客の存在条件は未照合としています。そのため、登録済みが条件だと言い切るのは商品だけにし、顧客の存在条件は「未解決事項」で扱うと書き直しました。
+
+**展開された finding（F001・F002）**: どちらも Frontmatter に `based_on: [specdojo:bdd-sample]` を足すよう求める指摘です。前の段ですでに足してあり、未作成の顧客辞書は入っていません。どちらも解消済みなので、追加の変更はしていません。
+
+**確かめの表**
+
+| No  | 主張（箇所）                                                        | 正本                                         | 結果                     |
+| --- | ------------------------------------------------------------------- | -------------------------------------------- | ------------------------ |
+| 1   | `rulebook: specdojo:ccd-mermaid-rulebook`、`type: data`             | `ccd-mermaid-rulebook.md` の Frontmatter     | 一致                     |
+| 2   | `based_on` に `bdd-sample` を入れ、未作成の辞書は入れない           | rulebook「推奨 Frontmatter 項目」            | 一致                     |
+| 3   | 商品ID → `product_id`、一意                                         | `bdd-sample.yaml` の商品の `key_fields`      | 一致                     |
+| 4   | 売上ID → `sale_id`                                                  | `bdd-sample.yaml` の売上記録                 | 一致                     |
+| 5   | 売上明細は `sale_id`・`line_number` の複合キーで、明細番号は再利用できる | `bdd-sample.yaml` の売上明細                 | 一致                     |
+| 6   | 売上明細は `1..*`、確定済みのみ、入力途中・取消は対象外             | `bdd-sample.yaml` の売上記録の説明           | 一致                     |
+| 7   | 顧客ID → `customer_id`。一見客では省略でき、つけ販売では必須        | `bdd-sample.yaml` の `customer_id`           | 一致                     |
+| 8   | 顧客台帳は既存の辞書の対象外                                        | `bdd-sample.yaml` の売上記録の説明           | 一致                     |
+| 9   | 販売単価・数量は辞書側が正本                                        | `bdd-sample.yaml` の `unit_price`・`quantity` | 一致                     |
+| 10  | 会計確定までの操作は `clis-sample` にある                           | `clis-sample.md`                             | 一致                     |
+| 11  | 予定 ID `specdojo:bdd-customer` はまだない                          | `grep` で samples 配下を検索                 | 一致                     |
+| 12  | 主キーだけを `: PK` で書き、下位クラスは空ブロックにする            | rulebook の図の規則                          | 一致                     |
+| 13  | 参照先の顧客は登録済みが条件                                        | `bdd-sample.yaml`・本書の「未解決事項」      | 不一致（上記のとおり直した） |
+| 14  | 図の Mermaid がエラーなく描画できる                                 | `npm run lint:mermaid`                       | 未確認（親の runner が実行） |
+
+検査は、Prettier の書式チェックだけを sandbox で実行して通りました。ほかの lint は親の runner が実行します。
+
+**ほかの段への申し送り**: Frontmatter が `status: ready` のままですが、昇格の判断は人が行うので手を付けていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 の正しさの照合を終えた。主張 14 件のうち不一致 1 件（顧客の存在条件を言い切っていた）を ccd-sample.md で直した。F001・F002 は前の段で based_on を追記済みのため解消済み。","handoff":["R4 指摘（minor/vp-qe-verifiability）: 「図だけでは表せない整合性条件」で、商品と顧客の両方を登録済みが条件と言い切っていた。specdojo:bdd-sample では顧客台帳が対象外で、本書の「未解決事項」も顧客の参照先の存在条件を未照合としている。商品だけを言い切りに残し、顧客の存在条件は「未解決事項」で扱うと直した。","F001・F002（`based_on` に specdojo:bdd-sample を記録する）は、前の段の版で Frontmatter に `based_on: [specdojo:bdd-sample]` がすでにあり、未作成の `specdojo:bdd-customer` も含まれていないため解消済み。追加の変更はしていない。","確かめの表（主張 14 件）: 一致 12 件、不一致を直したもの 1 件、未確認 1 件。主な一致は、`product_id`・`sale_id`・`sale_id`+`line_number`・`customer_id` のキーと説明、売上明細の 1..*、顧客台帳が既存辞書の対象外であること（bdd-sample.yaml）、rulebook の PK の書き方と `based_on` の規約（ccd-mermaid-rulebook.md）、`specdojo:bdd-customer` がまだないこと（grep）。未確認は Mermaid の描画で、親 runner の `npm run lint:mermaid` で確かめる。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ccd-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history file not changed","reason":"executor が変更したのは docs/ja/specdojo/samples/ccd-sample.md だけで、plan・result・個票などの履歴蓄積ファイルを変更していない"}]}
+</specdojo_executor_evidence>

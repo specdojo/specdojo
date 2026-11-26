@@ -520,6 +520,7 @@ specdojo schedule strategy generate \
 | `register branch-merge` | register のブランチを現在のブランチへ一方向に取り込む | `specdojo register branch-merge --project prj-0001`                         |
 | `register branch-guard` | register のファイルの直接の変更を検出する             | `specdojo register branch-guard --project prj-0001 --staged`                |
 | `register branch-check` | register のブランチへ push する commit を検査する     | `specdojo register branch-check --project prj-0001 --commit <sha>`          |
+| `register branch-push`  | register のブランチを作成・push・復旧する             | `specdojo register branch-push --project prj-0001`                          |
 
 `register add` は ID を省略すると自動採番し、現在の project では現在の作業ツリーに type 別の個票を作成します。別 project を `--project` で指定して `--commit` を付けると、対象 project の統合ブランチを開いている worktree、または CLI が作る一時 worktree で起票・再生成・commit を完了します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -599,7 +600,7 @@ specdojo exec run --project prj-0001 --register <PJR-ID> --worktree
 
 `register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
 
-`register update --section <章の名前> --section-file <path>` は、個票の 1 つの章の本文を指定した Markdown ファイルの内容で差し替えます。章は見出しの番号を除いた名前（`完了条件`、`作業内容` など）で指定します。指定した章の見出し行（`## 3. 完了条件` など）はそのまま残し、次の同じ深さ（またはそれより浅い）見出しまでの本文だけを置き換えます。ほかの章や Frontmatter は変更しません。個票に存在しない章名、読み込めないファイル、または Markdown 見出しを含むファイルを指定した場合はエラーになり、個票は変更されません。変更は `action: update` の event に `field: section` として記録され、`--commit` と併用した場合は変更された個票とイベントファイルのみが commit されます。
+`register update --section <章の名前> --section-file <path>` は、個票の 1 つの章の本文を指定した Markdown ファイルの内容で差し替えます。章は見出しの番号を除いた名前（`完了条件`、`作業内容` など）で指定します。指定した章の見出し行（`## 3. 完了条件` など）はそのまま残し、次の同じ深さ（またはそれより浅い）見出しまでの本文だけを置き換えます。ほかの章や Frontmatter は変更しません。章の本文には、章より 1 段深い小節の見出し（`###`）を含められます。章の見出し（`##` 以浅）や `####` 以深の見出しを含むファイルは拒みます。個票に存在しない章名、読み込めないファイル、または `###` 以外の Markdown 見出しを含むファイルを指定した場合はエラーになり、個票は変更されません。変更は `action: update` の event に `field: section` として記録され、`--commit` と併用した場合は変更された個票とイベントファイルのみが commit されます。
 
 ```bash
 # 完了条件の章本文をファイルから差し替える
@@ -650,13 +651,15 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 
-`register_sync.enabled: true` の project では、`--commit` は既定の `project/<project-id>/register` を別 worktree で更新して push します。別 project への起票と `external_projects` 経由の起票も対象 project の設定に従います。schedule の実行イベントも同じ経路で同期し、読み取りは同期先を参照します。non-fast-forward は `pull --rebase` 後に再 push し、最大 3 回で停止します。通信・権限・衝突などの失敗時は記帳をローカルに残し、復旧先を標準エラー出力へ表示して終了コード 1 を返します。`--commit` のない register 操作と `--dry-run --commit` は同期しません。設定は [[specdojo:specdojo-config-reference|設定リファレンス]]、初期作成・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+`register_sync.enabled: true` の project では、`--commit` は既定の `project/<project-id>/register` を別 worktree で更新して push します。別 project への起票と `external_projects` 経由の起票も対象 project の設定に従います。schedule の実行イベントも同じ経路で同期し、読み取りは同期先を参照します。non-fast-forward は `pull --rebase` 後に再 push し、最大 3 回で停止します。通信・権限・衝突などの失敗時は記帳をローカルに残し、復旧先を標準エラー出力へ表示して終了コード 1 を返します。`--commit` のない register 操作と `--dry-run --commit` は同期しません。設定は [[specdojo:specdojo-config-reference|設定リファレンス]]、初期作成・復旧は `register branch-push` と [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 `register branch-merge` は、`register_sync.enabled: true` の project で、リモートの register のブランチを fetch し、現在のブランチへ `--no-ff` で merge します（件名は `chore(register): merge <register-branch> into <branch>`）。取り込み済みなら何もしません。staged の変更・進行中の merge・register のファイルの未 commit 変更があるとき、HEAD が detached のとき、register のブランチが記帳の範囲の外のファイルを変えているときは、merge せずに終了コード 1 で止まります。衝突したときは merge を中止し、develop で register のファイルを直接変えたことを原因として案内します。register のブランチ上と `register_sync` が未設定のときは何もしません。`exec run --register --worktree` も、worktree を作る前に同じ取り込みを行います。
 
 `register branch-guard` は、register のブランチの外で register のファイル（`project_register_path` と `execution_path/exec/events/` の配下）を直接変えた変更を検出し、終了コード 1 で一覧を出します。`--staged` は index を（pre-commit 向け）、`--range <range>` は範囲の commit を（pre-push・CI 向け）調べます。変更は、merge で取り込んだ親が register のブランチから受け取った内容と一致する場合だけ許します。register のブランチ自身の commit と、develop を経由して feature に入った取り込みも許します。`register_sync` が未設定の project では検査しません。
 
 `register branch-check` は、register のブランチへ push する commit を検査します。`--commit <commit>` は push する先端、`--base <commit>` は push 先の現在の先端（省略または全 0 のときはリモートにない commit だけ）、`--remote-ref <ref>` は更新する ref で、register のブランチ（`refs/heads/<register_sync.branch>`）でなければ何もしません。検査は 2 つです。1 つめは、`--base` から `--commit` までの各 commit が、`project_register_path` と `execution_path/exec/events/` の配下の外のファイルを含まないことです。2 つめは、先端の tree の個票とイベントの形（個票とイベントの対応、event の schema、ID 一意性、状態連鎖、個票の ID とファイル名の対応）が `register build` と同じ検証に通ることです。違反は、commit とファイル、内容、直し方を標準エラー出力へ出し、終了コード 1 で止まります。`register_sync` が未設定の project では検査しません。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。pre-push の hook は `tools/check-register-push.mjs`、CI は同じコマンドを `--commit "$GITHUB_SHA" --base "<push 前の sha>" --remote-ref "$GITHUB_REF"` で流します。
+
+`register branch-push` は、`register_sync` の `remote` と `branch` へだけ push します。push の先を変える引数はありません。`register_sync.enabled` が `true` でない project では、理由を出して終了コード 1 で止まります。ブランチが手元にもリモートにも無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）のリモートの先端（`<remote>/<integration_branch>`。fetch して読む）から作って push し、手元にしかない統合のブランチの commit を含めません。リモートにだけあれば手元のブランチを作るだけ、手元にだけあればそのまま push します。専用 worktree が無ければ同期と同じ置き場（Git 共通ディレクトリの `specdojo/register/<識別子>/worktree`）に作ります。両方にあるときは復旧として、止まった rebase を続け、`pull --rebase` から push までを流し直します（non-fast-forward は同期と同じく最大 3 回）。衝突が残っていればファイルと直し方を、未 commit の変更があればその一覧を出して終了コード 1 で止まります。記帳済みのファイルとローカルの commit は消しません。push の前に `register branch-check` と同じ検査を流し、違反があれば push しません。リモートに統合のブランチが無いときだけ手元の先端から作り、その旨を案内します。このときリモートに無い commit が範囲の外として止まれば、先に統合のブランチを push してください。同期と同じロックの中で動きます。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えず（ロックも取らず、fetch もしません）、本番と同じ案内を出します。実際の実行が止まる場合（検査の違反・衝突・未 commit）は終了コード 1 を返します。
 
 `register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from`、`depends_on` です。
 
@@ -670,27 +673,29 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `exec` は schedule に基づいたタスクの実行、状態追跡、plan/result 生成、worktree 隔離実行を扱います。
 
-| コマンド        | 用途                                                                                                                                             | 例                                                                                                      |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `where exec`    | execution 関連パスを表示する                                                                                                                     | `specdojo where exec --project prj-0001`                                                                |
-| `exec validate` | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可） | `specdojo exec validate --project prj-0001`                                                             |
-| `exec refresh`  | state、Ready、CPM、gantt-chart を再計算する                                                                                                      | `specdojo exec refresh --project prj-0001`                                                              |
-| `exec claim`    | タスクを `doing` にする                                                                                                                          | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
-| `exec complete` | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                                                             | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
-| `exec reopen`   | 誤って完了したタスクを `done` から `todo` に戻す                                                                                                 | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
-| `exec block`    | タスクを `blocked` にする                                                                                                                        | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
-| `exec unblock`  | `blocked` を `doing` に戻す                                                                                                                      | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
-| `exec release`  | `doing` / `blocked` を `todo` に戻す                                                                                                             | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
-| `exec cancel`   | `todo` を `cancelled` にする                                                                                                                     | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
-| `exec run`      | plan を生成してエージェントを実行する                                                                                                            | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
-| `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                             | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
-| `exec resume`   | `doing`、reporter・統合段で停止した task、または due な利用制限延期 task を既存 worktree で再開する                                              | `specdojo exec resume --project prj-0001 --due`                                                         |
-| `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                    | `specdojo exec cycle --project prj-0001 --loop`                                                         |
-| `exec status`   | 実行状態を表示する                                                                                                                               | `specdojo exec status --project prj-0001 --state blocked`                                               |
-| `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                            | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
-| `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                             | `specdojo exec scaffold --project prj-0001`                                                             |
-| `exec plan`     | plan だけを生成する                                                                                                                              | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
-| `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                              | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
+| コマンド        | 用途                                                                                                                                                 | 例                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `where exec`    | execution 関連パスを表示する                                                                                                                         | `specdojo where exec --project prj-0001`                                                                |
+| `exec validate` | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可）     | `specdojo exec validate --project prj-0001`                                                             |
+| `exec refresh`  | state、Ready、CPM、gantt-chart を再計算する                                                                                                          | `specdojo exec refresh --project prj-0001`                                                              |
+| `exec claim`    | タスクを `doing` にする                                                                                                                              | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
+| `exec complete` | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                                                                 | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
+| `exec reopen`   | 誤って完了したタスクを `done` から `todo` に戻す                                                                                                     | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
+| `exec block`    | タスクを `blocked` にする                                                                                                                            | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
+| `exec unblock`  | `blocked` を `doing` に戻す                                                                                                                          | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
+| `exec release`  | `doing` / `blocked` を `todo` に戻す                                                                                                                 | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
+| `exec cancel`   | `todo` を `cancelled` にする                                                                                                                         | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
+| `exec run`      | plan を生成してエージェントを実行する                                                                                                                | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
+| `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                                 | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
+| `exec resume`   | `doing`、reporter・統合段で停止した task、または due な利用制限延期 task を既存 worktree で再開する                                                  | `specdojo exec resume --project prj-0001 --due`                                                         |
+| `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                        | `specdojo exec cycle --project prj-0001 --loop`                                                         |
+| `exec status`   | 実行状態を表示する                                                                                                                                   | `specdojo exec status --project prj-0001 --state blocked`                                               |
+| `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                                | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
+| `exec stop`     | 走っている `exec run --auto`・`exec cycle`・予約の列を、走っているタスクを終えてから止める（「走っている run を区切りで止める（exec stop）」を参照） | `specdojo exec stop --project prj-0001 --msg "exec-defaults を変える"`                                  |
+| `exec watch`    | 見張りの記録に指定した種類のイベントが新しく足されるまで待ち、内容を出して終わる（「見張りのイベントを待つ（exec watch）」を参照）                   | `specdojo exec watch --project prj-0001 --event stalled --timeout 2h`                                   |
+| `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                                 | `specdojo exec scaffold --project prj-0001`                                                             |
+| `exec plan`     | plan だけを生成する                                                                                                                                  | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
+| `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                                  | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
 
 `exec claim`・`release`・`block`・`unblock`・`complete`・`reopen`・`cancel` などの記帳コマンドの `--by` は、名簿の人と agent に加え、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けます。予約 actor で記帳した event も `exec refresh`・`exec status` はそのまま読みます。名簿にも予約 actor にもない名前は、記帳の前にエラーで止まります。`reopen` と `--take-over` は人の actor に限ります。
 
@@ -950,11 +955,12 @@ close は人が各項目の完了条件を確認して `register close --commit`
 
 段は `--step <spec>`（失敗したら予約を止める）と `--step-continue <spec>`（失敗しても次の段へ進む）で、指定した順に並べます。`<spec>` は次の許可リストのどれかで、空白だけで区切ります。引用符とバックスラッシュは拒否し、シェルを通さず specdojo の CLI へ argv として渡します。`--project` を書かない段には予約の project を足します。
 
-| `<spec>` の形                 | 実行する内容                                                                                                                                   |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `grade run ...`               | `specdojo grade run ...`                                                                                                                       |
-| `exec run ...`                | `specdojo exec run ...`。`--register`・`--register-filter`・`--auto`・`--task` のどれかが要る。`--job`・`--plan` は拒否する                    |
-| `post-integration build-dist` | 統合の後の処理の `build-dist`（`npm run build` の固定 argv）を、project の exec のロックを待って取ってから流す。失敗時の印も統合の後と同じ扱い |
+| `<spec>` の形                      | 実行する内容                                                                                                                                   |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `grade run ...`                    | `specdojo grade run ...`                                                                                                                       |
+| `exec run ...`                     | `specdojo exec run ...`。`--register`・`--register-filter`・`--auto`・`--task` のどれかが要る。`--job`・`--plan` は拒否する                    |
+| `exec resume --task <task-id> ...` | `specdojo exec resume --task <task-id> ...`。schedule のタスクの再開を列の段に置ける。`--task` が要り、`--due`・`--dry-run` は拒否する         |
+| `post-integration build-dist`      | 統合の後の処理の `build-dist`（`npm run build` の固定 argv）を、project の exec のロックを待って取ってから流す。失敗時の印も統合の後と同じ扱い |
 
 ```bash
 specdojo exec queue add nightly --project prj-0001 \
@@ -965,7 +971,61 @@ specdojo exec queue run nightly --project prj-0001
 specdojo exec queue status nightly --project prj-0001
 ```
 
-runner は自分が起動した子プロセスの終了を待ってから次の段を始めます。プロセス名の検索で待つことはしません。各段の状態（`pending`・`running`・`succeeded`・`failed`）・開始と終了の時刻・終了コードは段ごとに予約ファイルへ書きます。予約の状態は `succeeded`・`completed_with_failures`（`--step-continue` の段だけが失敗）・`stopped`（`stopped_step` と `reason` を記録）・`cancelled` のどれかで終わり、`exec queue run` は `succeeded` のときだけ終了コード 0 を返します。同じ予約は `exec/.locks/queue-<queue-id>.lock` で 1 つの runner だけが流します。runner が落ちて `running` のまま残った予約は、`status` に `running (runner not alive)` と出て、`exec queue run` で途中の段からやり直します。終わっていない予約は `exec status` の末尾の `queues:` にも 1 行ずつ出ます。
+runner は自分が起動した子プロセスの終了を待ってから次の段を始めます。プロセス名の検索で待つことはしません。各段の状態（`pending`・`running`・`succeeded`・`failed`）・開始と終了の時刻・終了コードは段ごとに予約ファイルへ書きます。予約の状態は `succeeded`・`completed_with_failures`（`--step-continue` の段だけが失敗）・`stopped`（`stopped_step` と `reason` を記録）・`cancelled` のどれかで終わり、`exec queue run` は `succeeded` のときだけ終了コード 0 を返します。同じ予約は `exec/.locks/queue-<queue-id>.lock` で 1 つの runner だけが流します。runner が落ちて `running` のまま残った予約は、`status` に `running (runner not alive)` と出て、`exec queue run` で途中の段からやり直します。終わっていない予約は `exec status` の末尾の `queues:` にも 1 行ずつ出ます。`exec queue status` と `exec status` の出力を `head` などで途中で切っても、EPIPE の例外を出さずに終了コード 0 で終わります。
+
+`exec queue cancel` は流れている段を止めません。走っている段を区切りまで流してから止め、後で同じ予約を続けるときは `exec stop --queue <queue-id>` を使います（「走っている run を区切りで止める（exec stop）」を参照）。
+
+### 7.4. 走っている run を区切りで止める（exec stop）
+
+`exec stop` は、走っている `exec run --auto`（`--loop` を含む）・`exec cycle` に、新しいタスクを claim せず、走っているタスクを統合（reporter と記帳を含む）まで終えてから抜けるよう指示します。設定の変更・feature ブランチの統合・dist の作り直しを、タスクを途中で切らずに区切りで行うために使います。SIGTERM で止めた場合と違い、`exec resume` での手当ては要りません。
+
+| コマンド                                                     | 内容                                                                                     |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `exec stop --msg <text>`                                     | project のすべての auto run に止める指示を出す                                           |
+| `exec stop --track <track> --msg <text>`                     | `--track <track>` で起動した auto run だけに指示を出す                                   |
+| `exec stop --queue <queue-id> --msg <text>`                  | 予約の列と、その列の段として走っている auto run に指示を出す                             |
+| `exec stop --cancel [--track <track> \| --queue <queue-id>]` | 指示を取り消す。まだ抜けていない run は、次のタスクが終わった区切りから claim を再開する |
+
+- 指示は `exec/.locks/stop-requests/` に置かれ、run は各タスクが終わるたび（と、タスクを準備する前）に読みます。指示を見た run は `[run] stop requested ...` を出し、走っているタスクが終わるのを待ちます。
+- 止まった run は、止めた記録を `<execution_path>/exec/stops/<日時>-<対象>.json`（対象・理由・指示と停止の時刻）に残し、`[run] stopped by exec stop ...` を出して終了コード 76 で終わります。先に失敗したタスクがあっても終了コードは 76 で、タスクの失敗記録は残ります。`exec cycle` は要約に `auto=stopped` を出し、同じく 76 で終わります。記録は run の終わりの記帳の commit に含めます。
+- 予約の列への指示は、走っている段が終わった区切りで列を `stopped` にします（`reason` は `stopped by exec stop: <text>`）。終了コード 76 で抜けた段は失敗とせず `pending` に戻すため、`--step-continue` の段でも飛ばされません。同じ `exec queue run <queue-id>` で、止めた段から再開します。project や track への指示で段の auto run が止まった場合も、列は同じくその段で止まります。
+- `exec status` の末尾の `stop requests:` と、`exec queue status` の `stop=requested (<text>)` に、開いている指示が出ます。run が指示を見た後は `draining: no new tasks; waiting for <n> running task(s) (<task-id>...)` と、終わりを待っているタスクを示します。
+- 走っている auto run（予約の列なら列の runner）がない対象への指示は `Nothing to stop: ...` で、同じ対象への二重の指示は `A stop request ... already exists` で拒否し、どちらも終了コード 1 で終わります。指示のない対象の `--cancel` も `No stop request for ...` で終了コード 1 です。
+- `exec-defaults` は run の起動時に 1 度だけ読まれます。設定を変えたら、止まった run の後に新しく起動し直してください。
+
+```bash
+specdojo exec stop --project prj-0001 --msg "exec-defaults の providers を変える"
+specdojo exec status --project prj-0001
+# 抜ける前なら取り消せる
+specdojo exec stop --project prj-0001 --cancel
+# 予約の列を区切りで止め、作業の後に同じ列を続ける
+specdojo exec stop --project prj-0001 --queue nightly --msg "feature を統合する"
+specdojo exec queue run nightly --project prj-0001
+```
+
+### 7.5. 見張りのイベントを待つ（exec watch）
+
+`exec watch` は、見張り（`orchestrator watch-scan`）の記録 `execution/watch/watch-events.jsonl` を読み、指定した種類のイベントが新しく足されるまで待ちます。当たった行を出して終了コード 0 で終わります。記録を読むだけで、記録・状態・worktree を変えません。待ち始めた後に足された行だけを見るため、前に起きたイベントも拾う場合は `--since` を付けます。イベントは見張りが動いた回に足されるため、待つ時間の細かさは見張りの間隔で決まります。見張りの記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、オーケストレーターの使い方は同じガイドの「立ち上げたままのオーケストレーターと共存する」に従います。
+
+| オプション                | 内容                                                                                                                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--event <kinds>`         | 待つイベントの種類（`,` 区切り）。`stalled`（止まった）・`cleared`（止まりが解けた）・`remedy`・`remedy_stopped`（手当てを打った・回数の上限で止めた）・`paused`・`resumed`（見張りの停止と再開）。既定は `stalled` |
+| `--state <states>`        | 状態で絞る。`stalled` は止まった状態（`blocked`・`deferred`・`waiting`・`review`・`stopped` など）、`cleared` は解けた後の状態（`done` など）                                                                       |
+| `--category <categories>` | `stalled`・`remedy`・`remedy_stopped` の理由の種類で絞る（例: `needs_decision`）                                                                                                                                    |
+| `--target <ids>`          | タスク・register 項目・列の ID で絞る                                                                                                                                                                               |
+| `--since <time>`          | この時刻（ISO 8601）以降に足された行も対象にする                                                                                                                                                                    |
+| `--timeout <duration>`    | 待つ上限。`<正の整数><s\|m\|h\|d>`。上限まで当たらなければ終了コード 124 で終わる                                                                                                                                   |
+| `--interval <duration>`   | 記録を読む間隔。既定は `5s`                                                                                                                                                                                         |
+| `--json`                  | 当たった行を記録の JSON のまま出す                                                                                                                                                                                  |
+
+当たった行は標準出力、待ち始めと上限の知らせは標準エラー出力に出します。引数の誤りなどの異常は終了コード 1 です。
+
+```bash
+# 止まったものか、終わったものが出るまで待つ（後ろで流して終わりの通知で起きる）
+specdojo exec watch --project prj-0001 --event stalled,cleared --timeout 8h
+# 手で流した register 項目が waiting になるか、done で解けるまで前で待つ
+specdojo exec watch --project prj-0001 --event stalled,cleared --state waiting,done --target PJR-XXXX --timeout 2h
+```
 
 ## 8. grade
 
@@ -1056,7 +1116,7 @@ specdojo grade validate --target kata --project prj-0001
 
 `--dependency-changed` は成果物だけを対象に、`depends_on` 先の現在の内容が `source_hashes` の `dependency:<local_id>` と異なる文書を選びます。依存先の評価日時は判定に使わないため、依存先を再評価しただけでは選びません。`grade apply` は突き合わせ先の宣言に関係なく、成果物の依存先の hash を記録します。
 
-`--rubric-outdated` は、grade result サイドカーの `rubric` が、解決済みの観点定義にある `grade_rubric.id`（既定は `grade-rubric-v2`）と異なる文書を選びます。`rubric` が空の結果は、どの版で付けたか確かめられないため旧版として選びます。サイドカーがない文書は選ばず、`--ungraded` が扱います。そのため `--ungraded` との併用は入力エラーです。版の異なる結果は category と観点の構成が違い、score を比べられません。ルーブリックを改めたときは、この条件で旧版の結果を列挙して評価し直します。`grade list --rubric-outdated` の出力行数が、旧版の結果が残る文書の件数です。観点定義に `grade_rubric.id` がない場合は入力エラーとして終了します。
+`--rubric-outdated` は、grade result サイドカーの `rubric` が、解決済みの観点定義にある `grade_rubric.id`（既定は `grade-rubric-v3`）と異なる文書を選びます。`rubric` が空の結果は、どの版で付けたか確かめられないため旧版として選びます。サイドカーがない文書は選ばず、`--ungraded` が扱います。そのため `--ungraded` との併用は入力エラーです。版の異なる結果は category と観点の構成が違い、score を比べられません。ルーブリックを改めたときは、この条件で旧版の結果を列挙して評価し直します。`grade list --rubric-outdated` の出力行数が、旧版の結果が残る文書の件数です。観点定義に `grade_rubric.id` がない場合は入力エラーとして終了します。
 
 保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は grade result サイドカーが存在しない文書だけ、`--incomplete` は同じ本文に対する設定済み段数の評価が未完了で連続失敗上限に達していない文書だけを選びます。`--unreviewed` は schedule タスクが割り当てられていない文書のうち、未評価または grade result サイドカーの `content_hash` が現在の内容と一致しない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了、旧 rubric を別々に列挙して和集合を取ります。
 
@@ -1172,7 +1232,9 @@ exit "$grade_status"
 
 各段の status、所要秒数、verdict、score、finding 件数、executor、reporter、reference、連続失敗回数は同ディレクトリの `results.tsv` で確認できます。通常の agent / apply 失敗はその段で文書処理を止め、成功済みの前段を残して次回同じ段から再試行します。既定の連続失敗上限は3回で、`--max-stage-failures` で変更できます。上限到達文書は処理対象から外れますが、`retry_exhausted` 行として `results.tsv` に含め、reporter が人手対応を促せるようにします。
 
-`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。executor marker の機械変換では上限超過を下方向だけに補正します。手書きの GradeSubmission は補正せず検証エラーにします。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が現行 rubric の `pass_score`（`grade-rubric-v2` では 75）未満なら `needs-work`、それ以外を `pass` とします。
+`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。executor marker の機械変換では上限超過を下方向だけに補正します。手書きの GradeSubmission は補正せず検証エラーにします。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が現行 rubric の `pass_score`（`grade-rubric-v3` では 75）未満なら `needs-work`、それ以外を `pass` とします。
+
+`apply` は Markdown の文書の大きさを LLM を使わずに測り、grade result の `size_metrics` に記録します。記録するのは本文の文字数（空白・表の区切り行・finding コメントを除く）、成果物が宣言した sample との比、前回の grade の時点からの増え方、文書の運用・検証の章の割合です。前回の結果に `size_metrics` がない場合は増え方を記録しません。指標が `grade_rubric.size_limits` の上限を超えると `vp-arc-conciseness` に finding を付けます。executor が同じ観点で削れる箇所を minor 以上の finding で示さなかった場合、指標の finding は note になり減点しません。`size_metrics` を持たない旧い結果もそのまま読み込めます。
 
 現行の評価対象は Markdown です。評価結果は成果物本文へ書き込まず grade result サイドカーへ保存します。YAML / JSON の kata・成果物は Markdown と同じ Frontmatter・内容ハッシュの契約を持たないため、`--path` で指定した場合は書き込まずエラーにします。
 
@@ -1372,19 +1434,37 @@ specdojo orchestrator night --project prj-0001 \
 specdojo orchestrator integration-tests --project prj-0001
 ```
 
-`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。claim・再開・release・commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」に従います。exec の実行ロックを取らないため、実行中の run を待たずに動きます。
+`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。exec-defaults の `watch.remedies` で手当てを選んだ種類（使用量の上限・負荷による時間切れ・統合先の同期）だけ、再開のコマンドを切り離して 1 件起動します。既定は手を打たず、commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、手当ては同じガイドの「止まった実行に手当てを打つ」、見張りの対象外の見分け方と停止・再開は「立ち上げたままのオーケストレーターと共存する」に従います。見張りの対象外には記録も手当ても行いません。見張りは exec の実行ロックを取らないため、実行中の run を待たずに動きます。別の run が実行ロックを持つ間は手当てを次の回に回します。
 
 ```bash
 specdojo orchestrator watch-scan --project prj-0001
 specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
 ```
 
-| オプション                 | 内容                                                                                                                          |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h` |
-| `--dry-run`                | 記録と報告を書かずに、足す行と件数だけを表示する                                                                              |
+| オプション                 | 内容                                                                                                                                                  |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h`                         |
+| `--if-busy <policy>`       | 別の run が実行ロックを持っているとき。`scan`（既定）は読み取りと記録を続け、`skip` は何もせず `[watch-scan] skipped: exec busy` を出して次の回に回す |
+| `--exec-defaults <path>`   | 手当ての設定を読む exec-defaults。既定は `.specdojo/exec-defaults.yaml`                                                                               |
+| `--no-remedy`              | 設定があっても手当てを起動せず、記録と報告だけを行う                                                                                                  |
+| `--dry-run`                | 記録と報告を書かず、手当ても起動せずに、足す行・起動する手当て・件数だけを表示する                                                                    |
 
-読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。
+読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。見張りを止めているときと、`--if-busy skip` で別の run がロックを持っているときは、記録も手当てもせずに終わります。routine から起動したときは終了コード 75 を返し、busy の回は routine が次の回に流し直します。
+
+`orchestrator watch-pause` と `orchestrator watch-resume` は、見張りをプロジェクト全体で、または `--id` に指定した対象ごとに止め・再開します。対象ごとの停止が、手で付ける「見張りの対象外」の印です。印は `execution/watch/watch-control.json` に置き、止めた・再開したことを見張りの記録へ `paused`・`resumed` の行として残します。既に止めている対象を止める、止めていない対象を再開するときは何もしません。`orchestrator watch-status` は、全体の停止と対象外の印を表示します。
+
+```bash
+specdojo orchestrator watch-pause --project prj-0001 --reason "feature を統合する"
+specdojo orchestrator watch-pause --project prj-0001 --id PJR-XXXX --reason "型のメニューを手で直す"
+specdojo orchestrator watch-resume --project prj-0001 --id PJR-XXXX
+specdojo orchestrator watch-status --project prj-0001
+```
+
+| オプション        | 内容                                                                                |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `--id <ids>`      | 対象のタスク・register 項目・列の ID（繰り返しか `,` 区切り）。省略すると見張り全体 |
+| `--by <actor>`    | 止める・再開する主体。名簿の人と agent、予約 actor。既定は `specdojo-orchestrator`  |
+| `--reason <text>` | 理由。印と記録に残す                                                                |
 
 `orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、流している `exec queue` の列（`running`・`pending`）と前回の handoff の起票より後（handoff がなければ直近 24 時間）に止まった列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。それより前に止まった列は件数だけを 1 行で示します。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
 

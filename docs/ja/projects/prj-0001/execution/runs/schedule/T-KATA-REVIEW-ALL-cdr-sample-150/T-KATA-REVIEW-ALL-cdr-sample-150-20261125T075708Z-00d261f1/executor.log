@@ -1,0 +1,16 @@
+R5（整合）の段で `docs/ja/specdojo/samples/cdr-sample.md` を 4 か所直しました。直したのはこのファイルだけで、Prettier と markdownlint はどちらも通っています。
+
+参照先と食い違っていたので直した点:
+
+1. **断り書き（`_ASSUMPTION_`）**: [[specdojo:sysd-cross-cutting-policy-sample]] を「本書の根拠にしない」文書に加えました。この sample は単一店舗・現金販売の CLI だけを対象にしています。本書が参照する架空の文書 `kinuya-web-sysd-cross-cutting-policy` は Web アプリ向けなので、名前が似ていても別の構成です。区別しないと根拠を取り違えるおそれがあります。
+2. **エラー処理の章、Sentry の記録**: 「通知先を設定した環境だけ」と書き足しました。[[specdojo:tsd-index-sample]] で Sentry は任意（通知先を環境変数に設定した場合だけ）なのに、本書は無条件に Sentry へ記録すると読めました。
+3. **エラー処理の章、メッセージに含める番号**: 「顧客 ID」を「顧客番号」にしました。[[specdojo:dmd-sample]] の `顧客台帳.顧客番号` に合わせています。
+4. **エラー処理の章、販売の番号**: 「販売 ID」を「取引番号」にし、コード例のメッセージもそろえました。ほかの sample の多く（stc・uis・etc・clis・横断ルールなど）が「取引番号」を使っています。
+
+grade の指摘 F001・F002（DB 接続の禁止が禁止事項の表と境界の章で重複）は、前の段ですでに解消していました。境界の章の該当行は「先頭で `server-only` を import する。」の手順だけになっています。この段では直していません。
+
+つけ上限（税込の円の整数で、未設定は上限なし）は [[specdojo:dmd-sample]] と一致していました。技術スタックと CI の範囲も [[specdojo:tsd-index-sample]] と一致していました。用語集（`gl-*.yaml`）は SpecDojo 自体の用語集で、本書の業務用語とは重なっていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: cdr-sample.md の断り書きに sysd-cross-cutting-policy-sample を根拠外として追加し、Sentry の記録を tsd-index-sample の任意条件に合わせ、エラーメッセージの番号の用語を他の sample（顧客番号・取引番号）にそろえた。F001/F002 は前の段で解消済み。","handoff":["R5-1: R5 / 断り書き（_ASSUMPTION_） / 本書が参照する架空の `kinuya-web-sysd-cross-cutting-policy` と、名前の似た実在の sample [[specdojo:sysd-cross-cutting-policy-sample]]（単一店舗・現金販売の CLI だけが対象）の区別が書かれておらず、根拠を取り違えるおそれがある / 根拠にしない文書に [[specdojo:sysd-cross-cutting-policy-sample\\|販売処理の横断ルール]] を加え、clis-sample と合わせて「CLI と本部 API を使う別構成の例」とした / `vp-qe-kata-conformance`（適用先との整合）、sysd-cross-cutting-policy-sample の概要（対象は単一店舗・現金販売の CLI） / -","R5-2: R5 / 4. エラー処理 / [[specdojo:tsd-index-sample]] では Sentry は任意（通知先を環境変数に設定した場合だけ）なのに、本書は無条件に Sentry へ記録すると読める / 「Sentry（通知先を設定した環境だけ。送信先は `kinuya-web-sysd-cross-cutting-policy` が定める）」にした / `vp-qe-kata-conformance`、tsd-index-sample のエラー監視の行 / -","R5-3: R5 / 4. エラー処理 / エラーメッセージに含める顧客の識別子が「顧客 ID」になっており、[[specdojo:dmd-sample]] の `顧客台帳.顧客番号` と食い違う / 「顧客番号」にした / `vp-qe-kata-conformance`、dmd-sample の項目の対応表 / -","R5-4: R5 / 4. エラー処理 / 販売の識別子が「販売 ID」になっており、ほかの sample の多く（stc・uis・etc・clis・横断ルールなど）が使う「取引番号」と食い違う / 本文とコード例のメッセージを「取引番号」にした（変数名 `sale.id` はそのまま） / `vp-qe-kata-conformance`、`vp-dev-change-impact`。sysd-critical-flows-sample だけは「取引 ID」を使うが、そちらは別の段か別のタスクで扱う / -","申し送り: grade の F001/F002（DB 接続のクライアント import の禁止が禁止事項の表と境界の章で重複）は前の段で解消済みで、境界の章は `server-only` の import の手順だけになっている。この段では直していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdr-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cdr-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更は docs/ja/specdojo/samples/cdr-sample.md だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

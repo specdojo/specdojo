@@ -89,3 +89,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_47732540018346c7b7d9f336e05c0b9a
+- v: 1
+  id: reg_936d4189bbe04a27b5cda892c43580a2
+  ts: "2026-11-24T17:41:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で strategy を作成。完了条件を差分と対応結果で確かめた。流す順の段の依存は、利用者の判断（2026-11-24、案1）で外し、pass でない sample はオーケストレーターが先に流した（b6cea86f98）。track は実行の前に作った（ddf536ccca、515 タスク）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+  previous_event_id: reg_73359eeea316491bab97c488ed2f5eb0

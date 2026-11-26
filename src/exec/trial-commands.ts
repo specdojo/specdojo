@@ -428,7 +428,7 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
     if (findExecWorktree(repoRoot, worktreeTaskId) || execBranchExists(repoRoot, worktreeTaskId)) {
       throw new Error(`Trial worktree or branch already exists: ${trial.branch}`);
     }
-    const worktree = ensureExecWorktree({
+    const worktree = await ensureExecWorktree({
       repoRoot,
       worktreeBase,
       taskId: worktreeTaskId,

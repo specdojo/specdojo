@@ -1,0 +1,17 @@
+R3（読みやすさ）として、`docs/ja/specdojo/samples/ifx-msg-sample.yaml` の文を直しました。変えたのは文だけで、意味・制約・例外はそのままです。この段の検査は、prettier の形式確認と YAML の構文解析が通りました。
+
+**直した箇所**
+- `info.description` の長い文を 3 つに分けました。曖昧だった「`defaultContentType` は同じ既定を示す」は、値（`application/cloudevents+json`）を書いた文に直しました。
+- 互換の文には主語「発行者」と版の置き場所（`info.version`、`type` の `.v1`）を書き、文を 2 つに分けました。
+- `based_on` のコメントを 2 文に分けました。
+- `subject` の説明「対象識別子」を「対象の商品の識別子」にしました。
+
+**plan に展開された grade の finding**
+4 件とも R3 の観点ではないので、直していません。読んだ版で確かめた状態は次のとおりです。
+- F001・F002：順序と重複の判定の単位は、すでに `data.product_id` に揃っています。
+- F003：チャネルの `description` に発生の契機がすでに書いてあります。
+- F004：連携名は `info.description` にあります。ただ、一覧に行がない状態は R5（整合）で確かめる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として ifx-msg-sample.yaml の文を直した（長い文を分け、主語と版の置き場所を書き、曖昧な指示を値に置き換えた）。意味・制約は変えていない。この段では prettier と YAML 構文解析が通った。","handoff":["R3-1: R3 / info.description（メッセージ形式） / 読点の多い長い 1 文で、「`defaultContentType` は同じ既定を示す」の「同じ既定」が何を指すか読めない / 文を 3 つに分け、「ファイル全体の既定（`defaultContentType`）も `application/cloudevents+json` にする」と値を書いた / W3, W4 / -","R3-2: R3 / info.description（互換） / 「任意の `data` 項目の追加は MINOR を上げ」に主語と版の置き場所がなく、「`type` の `.v1` を上げる」が 1 文に詰まっている / 「発行者は任意の `data` 項目を足すとき `info.version` の MINOR を上げ、購読者は知らない項目を無視する」と「互換を壊す変更では、発行者が `type` の版（`.v1`）を上げる」の 2 文にした / W1, W3 / -","R3-3: R3 / x-spec-meta.based_on のコメント / 「未掲載の連携で、採用するときは〜」の 1 文に、状態と手順の 2 つの主張が入っている / 「この連携は一覧 ifx-index-sample に未掲載。採用するときは、一覧に行を足してから spec_ref を付ける。」の 2 文にした / W3, vp-ux-readability / -","R3-4: R3 / components.schemas.CloudEventStockChanged.properties.subject / 「対象識別子」では何を識別するのか読めない / 「対象の商品の識別子（任意）」にした / W7, vp-ux-readability / 要判断（「順序と重複の判定には使わない」と書き足す案は意味の追加にあたるため採らず、F001 と合わせて R5 に任せる）","R3-5: R3 / grade の finding F001〜F004 / F001・F002 は順序と重複の判定の単位がすでに `data.product_id` に揃っていて、F003 はチャネルの `description` に発生の契機がすでにある。F004 は `info.description` に連携名があるが、一覧 ifx-index-sample に行がない状態は残っている / - / R3 の観点ではないため直さない。F004 は R5（`vp-qe-kata-conformance`）で、ifx-index-sample に行を足すか rulebook に例外を書くかを決める / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-msg-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"node -e \"const y=require('yaml');y.parse(require('fs').readFileSync('docs/ja/specdojo/samples/ifx-msg-sample.yaml','utf8'))\"","status":"passed","summary":"YAML parse ok"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"schema 対象外","reason":"sample は `# specdojo-schema: none reason=external-asyncapi` と宣言していて、対応する SpecDojo schema がない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,15 @@
+R3（読みやすさ）として、sample `docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md` に文の直しを 5 件入れました（10 行追加・8 行削除）。意味や判断に要る条件は変えていません。sample の `status` も `ready` のまま触っていません。
+
+- **冒頭**: `PJR` が説明なしで出ていたので、初出を「プロジェクト登録簿（PJR）の個票 `PJR-KN01`」にしました（W8）。
+- **3. 依存関係**: 「それだけで」の指す先があいまいでした。「根拠であることだけを理由に依存先へ挙げない」に書き換え、表の前に何を示す表かの 1 文を足しました（W4、Sample 記述標準）。
+- **4. 影響評価と対応方針**: 表の前に説明文がなかったので 1 文を足しました（Sample 記述標準）。
+- **4. 影響評価と対応方針**: 「A02」「C03」「D04」のような ID の略記を「ACD-A02」などの正式な表記にそろえました（W8、`vp-ux-language-consistency`）。
+- **5. 監視・変更管理**: 読点の多い長い「見直しの契機」の文を、週次の見直しと「次のいずれかが起きた時」の 2 つに分けました（W3）。
+
+迷った点が 1 つあり、直さずに「要判断」として残しました。「見直しの契機」の文には、誰が見直すのかが書かれていません。表では開発担当が所有者ですが、sample の事実を推測で決めないため、主語は足していません。
+
+検査は prettier での整形だけ実行しました。markdownlint は承認待ちで止まって実行できませんでしたが、この後に runner が `npm run lint:md` で確かめます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として sample に文の直しを 5 件入れた。意味と判断に要る背景・制約は変えていない。","handoff":["R3-1: R3 / 冒頭 / `PJR` の略語に初出で正式名がない / 「プロジェクト登録簿（PJR）の個票 `PJR-KN01`」にした / W8 / -","R3-2: R3 / 3. 依存関係 / 「それだけで」の指す先が一つに決まらず、表の前に何の表かを示す 1 文がない / 「根拠であることだけを理由に依存先へ挙げない」に置き換え、「作業の開始・継続に要る依存先と、その受領・成立条件を次に示す。」を足した / W4、`sample-authoring-standard` の表の前の 1 文 / -","R3-3: R3 / 4. 影響評価と対応方針 / 表の前に何の表かを示す 1 文がない / 「前提・制約・依存の変化の種別ごとに、最初に確認することと一次対応・対応方針を次に示す。」を足した / `sample-authoring-standard` の表の前の 1 文 / -","R3-4: R3 / 4. 影響評価と対応方針 / 「A02」「C03」「D04」のような略記が ID の正式表記と混ざっている / 「ACD-A01・ACD-A02」「ACD-C02・ACD-C03」「ACD-D01〜ACD-D04」にそろえた / W8、`vp-ux-language-consistency` / -","R3-5: R3 / 5. 監視・変更管理 / 「見直しの契機」の文が読点 8 つ以上で長い / 週次の見直しと「次のいずれかが起きた時も見直す」に分け、契機を列挙にした / W3 / -","R3-6: R3 / 5. 監視・変更管理 / 「見直しの契機」に誰が見直すかの主語がない / - / W1。所有者の列から開発担当が見直すと読めるが、sample の事実を推測で決めないため主語を足していない。足す場合は「開発担当（`PM`）が」とする案 / 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md","status":"passed","summary":"整形に成功した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは sample だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML は変更していない","reason":"変更したファイルに `*.yaml` / `*.yml` がない"}]}
+</specdojo_executor_evidence>

@@ -48,6 +48,13 @@ properties:
       difficulty. Explicit CLI stage and recovery options override the matching route. Missing
       difficulty entries preserve the existing priority-based automatic selection.
 
+  watch:
+    $ref: "#/$defs/WatchRemedies"
+    description: >
+      Remedies that orchestrator watch-scan launches for the stall categories it classified
+      (PJR-3M4M). Every remedy defaults to none, so omitting this block keeps the watch
+      record-only. Stalls that need a decision are never remedied.
+
   providers:
     type: object
     description: >
@@ -67,6 +74,65 @@ $defs:
   AgentNickname:
     type: string
     pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+
+  WatchDuration:
+    type: string
+    pattern: "^[1-9][0-9]*[mhd]$"
+
+  WatchRemedies:
+    type: object
+    additionalProperties: false
+    properties:
+      remedies:
+        type: object
+        additionalProperties: false
+        properties:
+          usage_limit:
+            type: object
+            additionalProperties: false
+            properties:
+              action:
+                enum: [none, wait, fallback]
+                default: none
+                description: >
+                  wait resumes with the same agent once the limit resume time has passed;
+                  fallback reruns with the fallback agents at once.
+              fallback_executor_by:
+                $ref: "#/$defs/AgentNickname"
+              fallback_reporter_by:
+                $ref: "#/$defs/AgentNickname"
+              switch_after:
+                $ref: "#/$defs/WatchDuration"
+                default: 12h
+                description: >
+                  With wait, release the claim and rerun with the fallback agents when the resume
+                  time is further away than this.
+              unknown_resume_wait:
+                $ref: "#/$defs/WatchDuration"
+                default: 1h
+                description: Wait this long after the stall when the resume time cannot be read.
+          load_timeout:
+            type: object
+            additionalProperties: false
+            properties:
+              action:
+                enum: [none, rerun]
+                default: none
+          needs_target_sync:
+            type: object
+            additionalProperties: false
+            properties:
+              action:
+                enum: [none, sync]
+                default: none
+      max_attempts:
+        type: integer
+        minimum: 1
+        default: 3
+        description: Remedies per target within attempt_window before the watch stops remedying it.
+      attempt_window:
+        $ref: "#/$defs/WatchDuration"
+        default: 24h
 
   DifficultyRouting:
     type: object

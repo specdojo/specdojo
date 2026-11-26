@@ -1,0 +1,25 @@
+R1（目的の過不足）のレビューを終えました。sample は直していません。要る内容の欠けも、要らない内容も、直すべきものは見つかりませんでした。迷った指摘が 1 件あり、「要判断」の印を付けて人の判断に回します。
+
+読んだもの：
+- sample（`docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md`）
+- rulebook（`specdojo:prj-assumptions-constraints-dependencies-rulebook`）
+- Sample 記述標準
+- カタログ（`dct-project-definition-template.yaml`）の `done_criteria`
+- kata-guide の「kata を agent でレビューする」
+
+確かめた結果：
+- **必須章：** rulebook の本文要件の 5 章がそろい、順序も合っています。
+- **登録した各項目：** 影響・確認方法・トリガー・所有者・対応方針がすべて入っています。
+- **rulebook の記述ガイドの求め：** 次の 4 点を満たしています。
+  - 依存の成立条件に、確かめる人・証跡・時機が書かれています。
+  - D03 で、決まった部分と決まっていない部分を分けています。
+  - 公開情報の制約に、見つけたときの対応が添えられています。
+  - 上位文書の正本へ委譲しています。
+- **`done_criteria`（BA・PO・ARC・QE・DEV）：** どれも本文の行から確かめられます。
+- **要らない内容の候補：** 廃止した旧 ACD-C01 の注記と、架空の参照名の注記を検討しました。前者は ID を再利用しない規則を示し、後者は未同梱の記録をリンク切れと誤解させないためのもので、どちらも必要と判断して残しました。
+
+外部の検査は自分では実行していません。直したファイルがなく、該当するものがないためです。lint などは親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューを終えた。sample は rulebook の必須章・各項目の必須の列・記述ガイドの求めと、カタログの `done_criteria` を満たしていた。直すべき過不足は見つからず、sample は変更していない。迷った指摘 1 件に「要判断」の印を付けて渡す。","handoff":["R1-1: R1 / 2. 制約事項 / 制約事項に、技術の制約（選択の自由度・互換性・運用上の限界）の行がない。技術面の条件は ACD-A02（通信断の前提）と ACD-D01（タブレットの依存）で扱っており、カタログの ARC の `done_criteria`「技術的制約・外部依存が識別できること」は依存の側では満たしている / - / `vp-qe-kata-conformance`、`vp-po-purpose-alignment`。rulebook の「記述ガイド」の制約事項にある技術制約の記述は書き方の指針で、必須の行ではない。共通サンプル文脈にも、技術の制約として確定した事実はない。足す案（例: 端末 1 台と、店頭の通信環境で動く範囲に技術の選択を限る制約を ACD-C04 として足す）は事実の新規の仮定になるため、この段では選ばなかった / 要判断"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"executor は plan・result・個票を変更していないため、適用条件の「変更した履歴ファイル」に当たらない"},{"command":"npx prettier --check docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md","status":"not_applicable","summary":"変更したファイルがない","reason":"R1 では sample を変更しておらず、Prettier の適用条件である変更した *.md などのファイルがない"}]}
+</specdojo_executor_evidence>

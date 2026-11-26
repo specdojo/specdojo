@@ -1,6 +1,7 @@
+import { gitResultAsync } from "../shared/git.js";
 import { stagedMergeBlocker } from "../shared/git.js";
 import { escapeRegExp } from "../shared/text.js";
-import { acquireSchedulerLock, releaseSchedulerLock } from "./events.js";
+import { acquireSchedulerLockAsync, releaseSchedulerLock } from "./events.js";
 import { currentBranch } from "./worktree-ops-commit.js";
 import { abortMerge } from "./worktree-ops-merge.js";
 import { gitOutput, gitResult, summarizeGitHookFailure, type ExecWorktree } from "./worktree.js";
@@ -58,15 +59,15 @@ export function findForeignWaitRecords(params: {
 
 // 統合先の wait の記録を本体の現在の branch へ merge commit 1件で取り込む。取り込めない場合は
 // merge を中止して本体を元に戻し、理由を例外で返す。
-export function adoptForeignWaitRecords(params: {
+export async function adoptForeignWaitRecords(params: {
   repoRoot: string;
   schedulePath: string;
   itemId: string;
   records: ForeignWaitRecords;
-}): void {
+}): Promise<void> {
   const { repoRoot, schedulePath, itemId, records } = params;
   const targetBranch = currentBranch(repoRoot);
-  const lockDir = acquireSchedulerLock(schedulePath, {
+  const lockDir = await acquireSchedulerLockAsync(schedulePath, {
     actor: `register-adopt:${itemId}`,
     lockTimeoutMs: LOCK_TIMEOUT_MS,
     lockStaleMs: LOCK_STALE_MS,
@@ -75,7 +76,13 @@ export function adoptForeignWaitRecords(params: {
     const staged = stagedMergeBlocker(repoRoot);
     if (staged) throw new Error(staged);
     const message = `exec(register ${itemId}): merge ${records.target} records before resume`;
-    const merge = gitResult(repoRoot, ["merge", "--no-ff", "-m", message, records.commit]);
+    const merge = await gitResultAsync(repoRoot, [
+      "merge",
+      "--no-ff",
+      "-m",
+      message,
+      records.commit,
+    ]);
     if (merge.status === 0) return;
     const output = [merge.stdout, merge.stderr]
       .filter((part): part is string => typeof part === "string" && part.length > 0)

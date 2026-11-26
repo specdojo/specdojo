@@ -1,0 +1,22 @@
+R1（目的の過不足）のレビューで、`docs/ja/specdojo/samples/gl-sample.yaml` を 1 か所だけ直しました。schema 検査、用語の参照検査、Prettier の整形検査は通っています。
+
+**直したこと**
+
+- 「欠品」（`tm-inventory-stockout`）の `notes` から「欠品の回数は日ごとに記録する。」を削りました。
+- 理由: この一文は用語の意味や範囲ではなく、記録の手順です。rulebook の「位置づけ」は判定条件や操作手順を各仕様へ任せるとしており、禁止事項にある「概念の説明を条件一覧などで代用すること」にも近いためです。
+
+**直さなかったこと**
+
+- 必須の項目は欠けていません。先頭のメタ項目、ルートの `terms`、各用語の必須キーはそろっています。分類に使う用語（在庫・販売・アクター）にも定義があります。
+- 対象範囲と、共通の正本（「商品」は `gl-common`）は先頭のコメントで示しています。rulebook の「位置づけ」はこの書き方を認めています。
+- ほかに要らない記述は見つかりませんでした。人物名の使用や、文書の役割の割り当ても本文にありません。
+
+**判断を残したこと（要判断）**
+
+- 用語の `status` はすべて `official` で、rulebook が書き方を細かく定める `candidate`（`notes` に論点と影響を書く）の例がありません。任意項目なので欠けているとまでは言えず、足すと sample を厚くするため見送りました。完成例に `candidate` を 1 件入れるかは人の判断に残します。
+- 「発注点」の例文「発注点を下回ったため、追加発注を行う。」は、`notes` の「発注候補に挙がった後は店主代表が判断する」と少しずれています。正しさの確認は R4、整合の確認は R5 の扱いなので、この段では直していません。
+- 先頭コメントにある `tm-common-product` は、`docs/ja` 配下の YAML を検索してもこの sample にしか出てきませんでした。参照先があるかどうかは R5 で確かめる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューで gl-sample.yaml の「欠品」（`tm-inventory-stockout`）の `notes` から記録手順の一文（欠品の回数は日ごとに記録する。）を削除した。rulebook の位置づけ（操作手順は各仕様へ委ねる）による。必須項目、分類用語の定義、対象範囲と共通の正本の明示はそろっていた。schema 検査、用語の参照検査、Prettier 検査は成功。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/gl-sample.yaml の `tm-inventory-stockout` の `notes` / 指摘: 「欠品の回数は日ごとに記録する。」は用語の意味や範囲ではなく記録の手順で、用語集の責務の外にある / 直した案: この一文を削り、「取り扱いをやめた商品や、季節外で棚に置いていない商品は含めない。」だけを残した（sample に反映済み） / 根拠: gl-rulebook の「位置づけ」（判定条件・データ項目・操作手順・実装詳細は各仕様・設計へ委ねる）、「禁止事項」（概念の説明を実装詳細・条件一覧で代用すること）、`vp-arc-single-responsibility` / 印: なし","No: 2 / 段: R1 / 箇所: docs/ja/specdojo/samples/gl-sample.yaml の `terms` 全体の `status` / 指摘: すべて `official` で、rulebook が書き方を定める `candidate`（`notes` に論点と利用への影響を書く）の例がない。任意項目なので欠けているとまでは言えない / 直した案: sample は変えていない。完成例に `candidate` の用語を 1 件（`notes` に未合意の論点と影響を書いたもの）入れるかを人が決める / 根拠: gl-rulebook の「`terms` の項目」の `candidate` の説明、Sample 記述標準の「構成の原則」（任意の要素は理解を助ける場合に限り含める） / 印: 要判断","No: 3 / 段: R1（R4・R5 への申し送り） / 箇所: docs/ja/specdojo/samples/gl-sample.yaml の `tm-reorder-point` の `example` と先頭コメント / 指摘: 例文「発注点を下回ったため、追加発注を行う。」が `notes` の「発注候補に挙がった後の発注数量と発注先は店主代表が判断する」とずれている。先頭コメントの `tm-common-product` は docs/ja 配下の YAML を検索してもこの sample にしか出てこない / 直した案: この段では直さない。例文の正しさは R4、`tm-common-product` の参照先の有無は R5 で確かめる / 根拠: kata-guide の「段と渡す材料」の R4・R5 の範囲 / 印: なし"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/gl-sample.yaml: valid"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"エラーの出力なしで終了（ID の重複・参照先の欠落の報告なし）"},{"command":"npx prettier --check docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>

@@ -17,4 +17,17 @@ describe("registerCommitMessageFromParagraphs", () => {
     expect(registerCommitMessageFromParagraphs(["  ", ""])).toBeUndefined();
     expect(registerCommitMessageFromParagraphs(undefined)).toBeUndefined();
   });
+
+  it("replaces {id} with the actual item ID in every paragraph", () => {
+    const actual = registerCommitMessageFromParagraphs(
+      ["docs(register {id}): add", "Refs: {id}"],
+      "PJR-RBET",
+    );
+
+    expect(actual).toBe("docs(register PJR-RBET): add\n\nRefs: PJR-RBET");
+  });
+
+  it("keeps {id} untouched when no actual ID is given", () => {
+    expect(registerCommitMessageFromParagraphs(["Refs: {id}"])).toBe("Refs: {id}");
+  });
 });

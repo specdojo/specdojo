@@ -1,0 +1,14 @@
+R2（構成）を終えました。`docs/ja/specdojo/samples/cdsd-sample.md` を 1 か所だけ直し（2 行追加、1 行削除）、result は触っていません。
+
+**直したこと:** 「照合手順と受入条件」の表で、「一覧の網羅」の行が、一覧が網羅されているかと各表の対象が一致するかを 1 行で確かめていました。rulebook の「検証と受入条件」は、範囲と一覧の照合、正本区分・生成元と依存の確認、管理単位ごとの検証の順に進めると定めています。そこで「一覧の網羅」と「境界と依存」の 2 行に分けました。「境界と依存」の行では、各表の対象が一致し、生成元・担当・制約が参照先の定義と食い違わないことを合格条件にしています。
+
+**変えなかったこと:**
+- 章の順（概要 → 一覧 → 正本区分と更新責務 → 関連仕様と検証 → 確認事項と変更影響）は rulebook の 5 章構成と同じで、前提から結論の順に読めます。章の移動・統合は要りませんでした。
+- 「生成元と利用制約」という見出しは、表に担当の列もあるので内容より狭い名前です。ただし実成果物 `cdsd-execution` も同じ見出しで、登録簿の個票からも章の名前で参照されています。そのため名前は変えず、「要判断」の指摘として残しました。
+- template は rulebook で `not-needed` と宣言されているため、照合していません。
+
+**検証:** `npx prettier --check` は通りました。lint などの検査はこの後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）の見直しで、cdsd-sample の「照合手順と受入条件」の表の「一覧の網羅」の行を、rulebook の「検証と受入条件」の順に合わせて「一覧の網羅」と「境界と依存」の 2 行に分けた。章の順・粒度は rulebook の 5 章構成に沿っており、ほかに章の移動・統合はない。","handoff":["No: 1 / 段: R2 構成 / 箇所: 関連仕様と検証 > 照合手順と受入条件 の表の「一覧の網羅」の行 / 指摘: 一覧が網羅されているかと各表の対象集合が一致するかを 1 行で確かめており、rulebook が定める「範囲と一覧の照合 → 正本区分・生成元と依存の確認 → 管理単位ごとのデータ検証」の 2 段目にあたる行がない / 直した案: 「一覧の網羅」（概要の5単位と一覧の行の照合）と「境界と依存」（一覧の行を正本区分・参照対応の各表と照合し、生成元・担当を参照先の定義と比べる。合格条件は対象集合が一致し、参照先の定義と矛盾しないこと）の 2 行に分けた（sample に反映済み） / 根拠: `specdojo:cdsd-rulebook` の「検証と受入条件」の段落と表（業務範囲と用途・境界と依存・データと運用）、観点 `vp-arc-document-structure` / 印: なし","No: 2 / 段: R2 構成 / 箇所: 正本区分と更新責務 > 生成元と利用制約（見出し） / 指摘: 表に更新担当・確認担当の列があり、見出しの下の段落も更新するプロセスと参照するだけのプロセスの区別を書いているので、見出しが内容より狭い / 直した案: 見出しを「生成元・担当と利用制約」にする案。実成果物 `prj-0001:cdsd-execution` の同じ見出しと、登録簿の個票 `pjr-pejq` が章の名前でこの見出しを参照しているため、sample では直さず R5（整合）と人の判断に任せる / 根拠: `specdojo:cdsd-rulebook` の「正本区分と更新責務」（担当の Role code と、更新するプロセス・参照だけのプロセスの区別を求めている）、観点 `vp-arc-document-structure` / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdsd-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴を蓄積するファイルは変更していない","reason":"変更は docs/ja/specdojo/samples/cdsd-sample.md のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,19 @@
+R2（構成）の段を終えました。sample の `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` で、同じ回復手順を 2 か所に書き重ねていた部分を、前に置いた正本への参照に置き換えました（2 行）。章の移動・分割・統合はしていません。schema 検査と Prettier の確認は通っています。
+
+**構成の照合**
+- 最上位キーの並び（`command` → `streams` → `files` → `side_effects` → `exit_codes` → `authentication` → `execution` → `error_handling`）は、rulebook の本文要件の表と template の順に合っています。
+- `exit_codes` は成功、入力誤り、権限、一時失敗、汎用失敗の順です。前提から結論へ読めるため、並べ替えていません。
+
+**指摘と直した案**
+1. R2-1（`error_handling.timeout_action` と `malformed_output_action`）：手動再印刷の手順を、先にある `execution.idempotency.condition` と重ねて書いていました。手順の正本は先に読む `execution.idempotency.condition` の 1 か所にし、2 つの処置文は「以後の確認と手動再印刷は `execution.idempotency.condition` に従う」という参照に替えました。根拠は `vp-arc-document-structure`、`vp-arc-conciseness` と、rulebook の「実行制約と失敗処置」です。
+2. F001（`authentication.log_policy`、`vp-qe-omissions-consistency`）：今の版では「認証値を渡さないため、マスクする秘密値はない」となっており、レシート本文を実行記録に写さないことも書かれています。指摘の矛盾はもう解消しているため、手を入れていません。
+3. F002（「店頭利用者」と「店番担当」の表記ゆれ、`vp-ux-language-consistency`）：R3・R5 の観点なので、R2 では直していません。sample には「店頭利用者」が 5 か所残っています。
+
+**検証**
+- `npm run validate:schema:file`（schema `ifx-cmd.schema.yaml`）：valid
+- `npx prettier --check`（対象の sample）：整形済み
+- lint などの親 runner の検査は実行していません。runner が後で実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: sample のキーの順は rulebook の本文要件と template に合っており、章の移動はなし。error_handling の 2 つの処置文で重なっていた手動再印刷の手順を execution.idempotency.condition への参照にまとめた。F001 は解消済み、F002 は R3/R5 へ回した。","handoff":["No: R2-1 / 段: R2 / 箇所: error_handling.timeout_action・malformed_output_action / 指摘: 印字結果不明の後の確認と手動再印刷の手順が execution.idempotency.condition と重なっており、正本が 2 か所に分かれている / 直した案: 手順の正本を先に読む `execution.idempotency.condition` に置き、2 つの処置文は「以後の確認と手動再印刷は `execution.idempotency.condition` に従う」という参照に替えた / 根拠: `vp-arc-document-structure`、`vp-arc-conciseness`、ifx-cmd-rulebook「実行制約と失敗処置」 / 印: -","No: R2-2 / 段: R2 / 箇所: authentication.log_policy（F001） / 指摘: grade の F001（秘密値がないのにマスク対象を求める矛盾）を照合したが、今の版は「認証値を渡さないため、マスクする秘密値はない」となり、ログに残さない対象もレシート本文に絞られている / 直した案: 解消済みのため変更なし / 根拠: `vp-qe-omissions-consistency`、ifx-cmd-rulebook「認証注入」 / 印: -","No: R2-3 / 段: R2 / 箇所: exit_codes・execution.idempotency・error_handling の「店頭利用者」（F002） / 指摘: 用語の表記ゆれ（店番担当との不一致）は R3・R5 の観点のため、R2 では直していない / 直した案: - （R3 または R5 で、共通サンプル文脈の「店番担当」にそろえる） / 根拠: kata-guide「kata の観点の組」で `vp-ux-language-consistency` は R3 / 印: -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

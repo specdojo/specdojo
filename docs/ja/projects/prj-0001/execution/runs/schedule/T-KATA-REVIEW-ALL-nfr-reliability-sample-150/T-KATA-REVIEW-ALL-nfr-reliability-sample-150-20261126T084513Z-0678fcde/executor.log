@@ -1,0 +1,22 @@
+R5（整合）の段で `docs/ja/specdojo/samples/nfr-reliability-sample.md` だけを直しました。食い違いは 6 件で、うち 3 件はこの sample を直し、3 件は相手側の sample を直す案として残しています。整形と markdownlint は通っています。
+
+**この sample で直したこと**
+
+- **二重記録の要件を外した（要判断）**: `nfr-rel-002`「同じ取引が二重に記録されない」は、完全性要件の `nfr-int-003` と同じ内容を別の定義で持っていました。この行と測定の行を削り、`nfr-rel-003`〜`005` を `002`〜`004` に振り直しました。
+  - 概要には「記録が欠けない・二重に残らないことは完全性要件で定める」と書き足し、導線の表に完全性要件の行を足しました。
+  - 瞬断の要件の備考には「再送で二重に残らないことは `nfr-int-003` で判定する」と書き足しました。
+  - 削らずに信頼性の側に残す案もあるため、要判断にしています。
+- **総合テストの ID を合わせた**: `stc-reliability` は総合テストの索引にない ID でした。瞬断からの回復は `stc-record-recovery`、不正値の試験は `stc-sale-hold` に直しました。
+- **ACD-D03 の分類を直した**: 「前提条件 ACD-D03」と書いていましたが、前提・制約・依存の sample では依存関係の項目です。2 か所を「依存関係 ACD-D03」に直し、導線の目的も相手の記述に合わせて「方針の決定」にしました。
+
+**相手側を直す案（変更していません）**
+
+- **非機能要件インデックスのカテゴリ一覧（信頼性の行）**: 「誤った金額・数量の販売記録を作らない」は本書の中心（記録処理が失敗しない・自動で回復する）と合いません。「記録処理が失敗せず、通信の瞬断から自動で回復する」とし、代表指標を「会計処理の障害率（月次）、瞬断時の処理成功率」にする案です。
+- **非機能要件インデックスの導線（信頼性の行）**: 検証先の `stc-cash-sale` を外し、`stc-record-recovery` を足して、`sac-reliability`・`stc-record-recovery`・`stc-sale-hold` にする案です。
+- **監視の運用方針の sample**: 本書は「エラー件数・異常終了の監視方針」を参照していますが、相手の sample の監視対象にはその項目がありません。会計処理のエラー件数とアプリの異常終了を監視対象に足す案です。本書の側で導線の目的を弱める案もあり、こちらは要判断です。
+
+用語集とは食い違いがありませんでした。grade の F001（基準値が未定）は R4 の観点なので扱っていません。前の段で判断の時期を `_ASSUMPTION_` として備考に書き足してあり、手当ては済んでいます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）のレビューで nfr-reliability-sample を直した。完全性要件と重なる二重記録の要件を外して要件 ID を振り直し、総合テストの ID を stc-index-sample の ID に合わせ、ACD-D03 を依存関係と書き直した。相手側の sample を直す案は 3 件を handoff に残した。","handoff":["R5-1: R5 / 3. 信頼性要件一覧・4. 測定・検証方法・5. 関連ドキュメント導線 / `nfr-rel-002`（同じ取引が二重に記録されない）が、完全性要件の `nfr-int-003`（同一取引番号の重複記録 0 件）と同じ要求を別の定義（同じ確定操作から作られた記録 / 同一取引番号）で持っていた。nfr-index-sample の変更の入口の表でも、統合の例として「信頼性と完全性で同じ二重記録の要求を持っている」が挙がっている / 要件の行と測定の行を削り、旧 `nfr-rel-003`〜`005` を `nfr-rel-002`〜`004` に振り直した。概要に「記録が欠けない・二重に残らないことは完全性要件で定める」を書き足し、瞬断の要件の備考に `nfr-int-003` への参照を足し、導線の表に完全性要件の行を足した。業務影響の箇条書きの「つけが二重に残る」も記録の失敗に直した / `vp-qe-kata-conformance`（kata 相互）、`vp-dev-change-impact`。迷った理由: 要件の行を削り ID を振り直すのは影響が大きい。選ばなかった案は、信頼性の側に残し、完全性の側を再送に限らない重複に絞る案 / 要判断","R5-2: R5 / 4. 測定・検証方法・5. 関連ドキュメント導線 / 検証先の `stc-reliability` は stc-index-sample の対象別の ID の一覧になく、nfr-index-sample の導線（`stc-cash-sale`、`stc-sale-hold`）とも食い違っていた / 瞬断からの回復（新 `nfr-rel-002`）は `stc-record-recovery`（応答欠落・保存失敗の検知から復元）、不正値の試験（新 `nfr-rel-004`）は `stc-sale-hold`（入力不足の検知で未確定のまま止める）に直し、導線の表も 2 行に分けた / `vp-qe-kata-conformance`（適用先）。stc-index-sample の対象別の ID の一覧 / -","R5-3: R5 / 2. 適用範囲・前提条件、4. 測定・検証方法 / 「前提条件 ACD-D03」と書いていたが、prj-assumptions-constraints-dependencies-sample では ACD-D03 は依存関係の項目（店主代表によるオフライン時の運用方針の決定）で、nfr-availability-sample も「依存関係 ACD-D03」と書いている / 2 か所を「依存関係 ACD-D03」に直し、導線の目的を「オフライン時の方針の決定（ACD-D03）」にした / `vp-qe-kata-conformance`（参照先） / -","R5-4: R5 / nfr-index-sample のカテゴリ一覧（信頼性の行） / 守ること「誤った金額・数量の販売記録を作らない」と代表指標「販売記録の誤り件数、入力検証で止めた誤入力の割合」が、本書の中心（記録処理が失敗しない・瞬断から自動で回復する・異常終了しない）と合わない / -（相手側の案: nfr-index-sample の信頼性の行を「記録処理が失敗せず、通信の瞬断から自動で回復する」とし、代表指標を「会計処理の障害率（月次）、瞬断時の処理成功率」にする） / `vp-qe-kata-conformance`（kata 相互） / -","R5-5: R5 / nfr-index-sample の関連ドキュメント導線（信頼性の行） / 検証先が `sac-reliability`、`stc-cash-sale`、`stc-sale-hold` で、本書の検証先（`stc-record-recovery`、`stc-sale-hold`）と合わない。`stc-cash-sale` は二重記録の試験で、二重記録は完全性要件で扱う / -（相手側の案: 信頼性の行の検証先を `sac-reliability`、`stc-record-recovery`、`stc-sale-hold` にする） / `vp-qe-kata-conformance`、`vp-dev-change-impact` / -","R5-6: R5 / 5. 関連ドキュメント導線（運用方針の監視の行） / 本書は opd-monitoring-sample を「エラー件数・異常終了の監視方針」として参照しているが、相手の監視対象はホスティング環境の死活、閉店後のバックアップ、日次締めの差異の 3 つで、アプリのエラー件数と異常終了はない / -（相手側の案: opd-monitoring-sample の監視対象に、会計処理のエラー件数とアプリの異常終了を足す。もう一つの案は、本書の導線の目的を「監視・通知の方針」に弱める案） / `vp-qe-kata-conformance`（参照先）。迷った理由: どちらの側を直すかは、監視の範囲の判断による / 要判断","grade の F001（`vp-qe-verifiability`、基準値が未定）は R4 の観点なので R5 では扱わない。前の段で `nfr-rel-001` の備考に判断の時期（試用期間の終了時、`_ASSUMPTION_`）が書き足してあり、異常終了の要件（新 `nfr-rel-003`）も同じ時期に決めると書いてあるので、手当ては済んでいる。用語集（gl-*.yaml）とは食い違いがなかった。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-reliability-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-reliability-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

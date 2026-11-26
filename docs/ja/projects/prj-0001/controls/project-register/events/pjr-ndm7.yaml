@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_25519d300e5242078c92283603e70c9f
+  ts: "2026-11-26T21:01:00Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: imp-interface-sample の印字の波及先を ifx-cmd-sample の参照にする
+    - field: description
+      from: ""
+      to: imp-interface-sample の影響詳細一覧の確定済みレシートの印字で、波及先が一覧にない仮の ID ifx-cmd-receipt-printer になっている。ifx-index-sample は変えず、波及先を ifx-cmd-sample の参照にする。
+    - field: input
+      from: ""
+      to: '["T-KATA-REVIEW-ALL-imp-interface-sample-150 の R5-4 で、波及先 ifx-cmd-receipt-printer が ifx-index-sample にない仮の ID と指摘された（2026-11-26）","R5-4 は、ready の ifx-index-sample を変えず、本書の波及先を ifx-cmd-sample の参照に寄せる案 (b) にする（indie の判断、2026-11-26）","R5-1（照会 API 停止時の障害波及を高にした直し）は 150 の直しのまま確定し、追加の作業はしない（indie の判断、2026-11-26）","担当 BA・期限 2026-11-30 は indie の指示（2026-11-26）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_48bbc3fd1a5f42e59d289169809201e9
+  ts: "2026-11-26T21:01:41Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "概要" updated
+  changes:
+    - field: section
+      from: ""
+      to: 概要
+    - field: description
+      from: imp-interface-sample の影響詳細一覧の確定済みレシートの印字で、波及先が一覧にない仮の ID ifx-cmd-receipt-printer になっている。ifx-index-sample は変えず、波及先を ifx-cmd-sample の参照にする。
+      to: 型のレビュー T-KATA-REVIEW-ALL-imp-interface-sample-150 の R5-4 で、imp-interface-sample の「影響詳細一覧」の「確定済みレシートの印字」の備考にある波及先 `ifx-cmd-receipt-printer` が、ifx-index-sample に名前のない仮の ID と指摘された。ifx-index-sample は ready の正本のため変えず、本書の波及先を `ifx-cmd-sample` の参照に寄せる（indie の判断、2026-11-26）。
+  previous_event_id: reg_25519d300e5242078c92283603e70c9f
+- v: 1
+  id: reg_85d817581fab476ea72d5805b529f73b
+  ts: "2026-11-26T21:01:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_48bbc3fd1a5f42e59d289169809201e9
+- v: 1
+  id: reg_77f1807b51874d40960f334beac2f848
+  ts: "2026-11-26T21:01:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_85d817581fab476ea72d5805b529f73b
+- v: 1
+  id: reg_04f13e92ae6747ea8dd9ca2e1fb25812
+  ts: "2026-11-26T21:02:31Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_77f1807b51874d40960f334beac2f848
+- v: 1
+  id: reg_b7ad2b9bbd9d422496493018c8a56518
+  ts: "2026-11-26T21:04:07Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_04f13e92ae6747ea8dd9ca2e1fb25812
+- v: 1
+  id: reg_555b336f302446d293d4ba961fac735b
+  ts: "2026-11-26T22:07:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。内容の変更が 1 か所だけで、仮の ID が 0 件、ifx-index-sample は不変、統合後の lint:fm と markdownlint が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: imp-interface-sample の確定済みレシートの印字の波及先を、仮の ID から ifx-cmd-sample の wikilink に置き換えた
+  previous_event_id: reg_b7ad2b9bbd9d422496493018c8a56518

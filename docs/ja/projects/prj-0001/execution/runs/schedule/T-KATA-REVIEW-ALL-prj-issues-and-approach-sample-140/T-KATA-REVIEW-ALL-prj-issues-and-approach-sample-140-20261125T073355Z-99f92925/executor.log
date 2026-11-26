@@ -1,0 +1,28 @@
+R4（正しさ）のレビューを終え、`docs/ja/specdojo/samples/prj-issues-and-approach-sample.md` の誤り 2 件を直しました。直した表は prettier で整え、markdownlint は 0 件です。schema・lint・型チェックなどの検査は、このあと親 runner が実行します。
+
+**直した点**
+
+- **R4-1（見直しと変更管理）:** 見直しの契機を「短期指標を判定した」から「中長期指標を判定した」に直しました。正本のスコープの sample が、仕入れ数量の自動提案を「中長期指標を判定した後に再検討」としているためです。この sample の解決策候補の章とも食い違っていました。
+- **R4-2（次の検討事項）:** 機能名「顧客とつけ管理」を、スコープの「対象システム」の名前「顧客・つけ管理」に合わせました。
+
+**判断が要る点（直していません）**
+
+- **R4-3（トレードオフ/リスク）:** 「短期指標の判定後に採否を決める」は、仕入れ支援についてはスコープの「中長期指標の判定後」と食い違います。一方、会計連携と分析にはスコープ側に時期の定めがありません。行ごとに条件を分けると記述が長くなるため、直すかどうかは人の判断に残しました。
+
+**grade の指摘 F001**
+
+指摘の箇所は、すでに「P-01、P-02、P-04（記録の蓄積のみ）」と限定されていて、解消済みです。観点も R4 ではないので、扱っていません。
+
+**確かめたこと**
+
+主張ごとの確かめの表（12 行）は handoff に入れてあります。確かめられなかった主張はありませんでした。突き合わせた内容は次のとおりです。
+
+- frontmatter の `type`・`rulebook`・`based_on` が schema と rulebook の推奨どおりであること。
+- 本文の wikilink の参照先がすべて存在すること。
+- 前提・制約・依存関係の ID（ACD-D01・ACD-A01・ACD-A02）が、前提の sample の定義と合うこと。
+- 優先度・案の関係・原因区分・リスクの区分の列挙値が rulebook と合うこと。
+- 概要に出てくる数値（1分以内、1日10分以内、6か月、ベースライン1か月、頻度）が概要の sample と合うこと。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめを行い、sample の誤り 2 件（見直しの契機の指標の種類、機能名の表記）を直した。1 件は要判断として handoff に残した。F001 は既に解消済み。","handoff":["R4-1: R4 / 7. 見直しと変更管理 / 契機「短期指標を判定した、または仕入れ支援がスコープに入った」が、スコープの sample の「仕入れ数量の自動提案」の後続条件「記録が蓄積し、中長期指標を判定した後に再検討する」および本書の解決策候補の章「中長期指標の判定後に扱う」と食い違う / 「中長期指標を判定した」に直した / `docs/ja/specdojo/samples/prj-scope-sample.md` のスコープ外の章（仕入れ数量の自動提案の行） / -","R4-2: R4 / 6. 次の検討事項（ToDo） / 完了条件の機能名「顧客とつけ管理」が、スコープの「対象システム」の機能名「顧客・つけ管理」と一致しない / 「顧客・つけ管理」に直した / `docs/ja/specdojo/samples/prj-scope-sample.md` の対象システムの章（顧客・つけ管理の行） / -","R4-3: R4 / 5. トレードオフ/リスク / 1 行目の軽減策「短期指標の判定後に記録の継続を妨げないかで採否を決める」は、仕入れ支援についてはスコープの「中長期指標を判定した後に再検討」と食い違う。会計連携（既存手順で代替）と分析（記録が安定した後の次フェーズ）にはスコープ側に時期の定めがない / - / スコープの sample のスコープ外の章と境界の判断基準の章。迷った理由: 対象ごとに条件を分けると記述が長くなり、「中長期指標」へ一律に置き換えると会計連携の根拠がない。選ばなかった案: 「スコープ外の再検討条件に従い」と参照に置き換える案 / 要判断","確かめの表 1: 主張=frontmatter `type: project`・`rulebook: specdojo:prj-issues-and-approach-rulebook` / 正本=`docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md` の推奨 Frontmatter 項目の章、`docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` / 確かめ方=読み取り / 結果=一致 / 根拠=rulebook の推奨 Frontmatter 項目の章が type project と rulebook ID を指定し、schema の deliverableType の enum に project がある","確かめの表 2: 主張=frontmatter `based_on`・`supersedes` / 正本=`docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、rulebook の推奨 Frontmatter 項目の章 / 確かめ方=grep / 結果=一致 / 根拠=common schema に `based_on`・`supersedes` が定義され、rulebook は概要・スコープ・前提制約依存の ID を記載するとしている","確かめの表 3: 主張=wikilink の参照先 specdojo:prj-overview-sample・specdojo:prj-scope-sample・specdojo:prj-assumptions-constraints-dependencies-sample が存在する / 正本=`docs/ja/specdojo/samples/` 配下の各ファイルの id / 確かめ方=grep 'id: ...' / 結果=一致 / 根拠=3 ファイルと rulebook の id が見つかった","確かめの表 4: 主張=優先度 High/Medium/Low、関係 代替/補完、原因区分 事実/仮説、区分 トレードオフ/リスク / 正本=rulebook の本文構成の章と記述ガイドの章 / 確かめ方=grep / 結果=一致 / 根拠=rulebook の本文構成の章（課題一覧の行）と記述ガイドの章（課題一覧・解決策候補・トレードオフ/リスクの節）","確かめの表 5: 主張=ACD-D01（タブレット）・ACD-A02（通信断）・ACD-A01（記録継続の前提） / 正本=`docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md` / 確かめ方=grep / 結果=一致 / 根拠=ACD-D01 はタブレット1台の継続提供、ACD-A02 は通信断、ACD-A01 は現行手順に近い操作なら記録を継続できるという前提","確かめの表 6: 主張=課題一覧の影響の頻度（欠品は週1回程度、廃棄は月に数品目、残高確認は月に数件、家族の店番日は保留） / 正本=`docs/ja/specdojo/samples/prj-overview-sample.md` の背景の章 / 確かめ方=読み取り / 結果=一致 / 根拠=背景の章の表の 4 行","確かめの表 7: 主張=判断軸の順は概要の基本的な考え方の Record First と Simple Operation の順 / 正本=概要の sample の基本的な考え方の章 / 確かめ方=grep / 結果=一致 / 根拠=1. Record First、2. Simple Operation の順","確かめの表 8: 主張=つけ残高を1分以内で確認・店番の追加操作時間 1日10分以内・欠品削減の判定は運用開始後6か月 / 正本=概要の sample の期待効果の章 / 確かめ方=grep / 結果=一致 / 根拠=初期公開指標のつけ管理は1分以内、短期指標の操作負担は1日あたり合計10分以内、中長期指標の欠品削減は運用開始後6か月","確かめの表 9: 主張=ベースライン測定は運用開始前1か月 / 正本=概要の sample の背景の章 / 確かめ方=grep / 結果=一致 / 根拠=「実測値は運用開始前1か月のベースライン測定で置き換える」","確かめの表 10: 主張=初期対象は店頭販売・在庫・つけ管理、機能は販売登録・在庫管理・顧客・つけ管理 / 正本=スコープの sample の対象業務の章と対象システムの章 / 確かめ方=grep / 結果=不一致→修正（R4-2） / 根拠=スコープの機能名は「顧客・つけ管理」","確かめの表 11: 主張=仕入れ数量の自動提案はスコープ外で、中長期指標の判定後に扱う / 正本=スコープの sample のスコープ外の章 / 確かめ方=読み取り / 結果=解決策候補の章は一致、見直しと変更管理の章は不一致→修正（R4-1）、トレードオフ/リスクの章は要判断（R4-3） / 根拠=「記録が蓄積し、中長期指標を判定した後に再検討する」","確かめの表 12: 主張=オフライン時の記録方法は未決（_UNDECIDED_）、初期運用の開始前に店主代表が決める / 正本=スコープの sample のスコープ外の章の直後の段落 / 確かめ方=読み取り / 結果=一致 / 根拠=「記録方法は _UNDECIDED_: 初期運用の開始前に店主代表（`PO`）が決め」","F001（vp-qe-omissions-consistency）: 現行の A-01 の対応課題は既に「P-01、P-02、P-04（記録の蓄積のみ）」と限定され、指摘は解消済み。R4 の観点外のため扱っていない。","sample の frontmatter の status は ready のまま変更していない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-issues-and-approach-sample.md","status":"passed","summary":"変更した sample を整形した（表の列幅を調整）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-issues-and-approach-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan / result / 個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml が含まれない"}]}
+</specdojo_executor_evidence>

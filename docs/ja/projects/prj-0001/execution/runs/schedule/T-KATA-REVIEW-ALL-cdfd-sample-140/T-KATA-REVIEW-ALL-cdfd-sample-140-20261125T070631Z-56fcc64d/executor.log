@@ -1,0 +1,47 @@
+R4（正しさ）の段では、sample `docs/ja/specdojo/samples/cdfd-sample.md` に直すべき誤りは見つからず、ファイルは変えていません。plan に展開された finding 2 件も、今の版ではすでに解消済みでした。
+
+**finding の扱い**
+
+- **F001（`vp-arc-conciseness`）:** 指摘された「仕入記録の確定結果」と「確定済みの入荷数量・受入結果」の重なりは今の版にありません。6.2 の `P-02-04` の主要入力は「受入品、確定済みの入荷数量・受入結果」で、5.2 の図の線と同じ名前です。冗長さの判定は R3 の観点でもあるため、R4 では「今の版で解消済み」の確認にとどめます。
+- **F002（`vp-qe-omissions-consistency`）:** 「不一致・不良情報」はもうありません。`P-02-05` の主要入力は「返品対象商品、返品対象の検品結果」で、5.2 の図の 2 本の線（入荷検品から渡る返品対象商品と、仕入記録から渡る検品結果）と一致します。
+
+**正本と一致した主な主張**
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: flow`、`rulebook: specdojo:cdfd-rulebook` | cdfd-rulebook の「推奨 Frontmatter 項目」 | 一致 |
+| 2 | `based_on`・`supersedes` が使えるキーであること | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | 一致 |
+| 3 | 成果物 ID `cdfd-purchasing`、プロセス ID `P-<nn>-<nn>`、例外 ID `E-<nn>-<nn>` | rulebook の「ファイル命名・ID規則」、全体概要 sample の詳細 CDFD 一覧 | 一致 |
+| 4 | 委譲先 `cdfd-inventory`・`cdfd-sales`・`cdfd-uc-replenishment` | 全体概要 sample の詳細 CDFD 一覧 | 一致 |
+| 5 | `P-01`・`P-02` の担当 | 全体概要 sample のプロセス領域 | 一致 |
+| 6 | データストアの名前・区分（商品台帳はマスタ、仕入記録・在庫記録はトランザクション、売場棚は物理保管の例外） | 全体概要 sample のデータストア | 一致 |
+| 7 | 商品台帳から仕入先・発注単位を読むこと | 全体概要 sample の商品台帳の項目 | 一致 |
+| 8 | D2 の書き方（色・形・`border-radius`、`material_flow` の太線、戻りの `<-`） | 全体概要 sample の凡例、`cdfd-d2-rulebook` | 一致 |
+| 9 | 本文の各章と、状態遷移・例外・委譲の表の列 | rulebook の「本文要件」と記述ガイド | 一致 |
+| 10 | 6.1・6.2 の入出力表と 5.1・5.2 の図の線の名前（全プロセス） | 本書の図 | 一致 |
+| 11 | 状態遷移の参照先 `stsd-product` | 商品の納品から販売・返品までを扱う stsd-sample | 一致 |
+
+**確かめきれなかった主張**
+
+- `stsd-purchase` を名乗る sample や文書はありません。`stsd-<term>` の命名規則には合うので、まだない product 成果物の ID の仮置きと判断し、直していません。
+- D2 の図が実際に描けるかは、この場では確かめていません。図の構文検査（`npm run lint:d2`）はこのあと親 runner が流すので、その結果が正になります。
+
+申し送りが 1 件あります。仕入計画の起動条件の表記が、全体概要 sample では「在庫から補充依頼を受けた」、この sample では「在庫グループから補充依頼を受けた」で少し違います。食い違いの扱いは R5（整合）の段の担当なので、ここでは直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: cdfd-sample.md の書いてある事実（frontmatter、ID 規則、委譲先 ID、担当、データストアの区分と項目、D2 の書き方と凡例、本文の章と表の列、入出力表と図の線の名前、STSD の参照）を schema・cdfd-rulebook・cdfd-d2-rulebook・cdfd-overview-sample・cdfd-uc-sample・stsd-sample と突き合わせ、誤りは見つからなかった。F001・F002 は今の版で解消済み（P-02-04 の入力は『受入品、確定済みの入荷数量・受入結果』、P-02-05 の入力は『返品対象商品、返品対象の検品結果』で、5.2 の図の線と一致）。sample の変更はなし。","handoff":["R4 確かめの表（reporter が result の実施内容に 1 回だけ表として書く。列は No／主張／正本／確かめ方／結果／根拠）: 1 frontmatter の type: flow・rulebook: specdojo:cdfd-rulebook ／ docs/ja/specdojo/rulebooks/cdfd-rulebook.md の『推奨 Frontmatter 項目』 ／ 読み取り ／ 一致 ／ 『type は flow、rulebook は specdojo:cdfd-rulebook』",
+"R4 確かめの表 2: frontmatter の based_on・supersedes ／ docs/specdojo/schemas/v1/common-frontmatter.schema.yaml ／ grep ／ 一致 ／ 72 行目に based_on、75 行目に supersedes がある",
+"R4 確かめの表 3: 成果物 ID cdfd-purchasing、プロセス ID P-nn-nn、例外 ID E-nn-nn ／ cdfd-rulebook の『ファイル命名・ID規則』、cdfd-overview-sample の『プロセスグループ別 CDFD』 ／ 読み取り ／ 一致 ／ 全体概要の表に『仕入 P-01〜P-02 cdfd-purchasing』がある",
+"R4 確かめの表 4: 委譲先 cdfd-inventory・cdfd-sales・cdfd-uc-replenishment ／ cdfd-overview-sample の詳細 CDFD 一覧 ／ 読み取り ／ 一致 ／ 在庫・販売のグループ別 CDFD と C-02 のユースケース別 CDFD の ID が同じ",
+"R4 確かめの表 5: P-01 の担当が店主代表、P-02 の担当が家族利用者代表（管理責任: 店主代表） ／ cdfd-overview-sample の『仕入（P-01〜P-02）』 ／ 読み取り ／ 一致 ／ 36〜37 行目",
+"R4 確かめの表 6: データストアの区分（商品台帳はマスタ、仕入記録・在庫記録はトランザクション、売場棚は物理保管でトランザクションの表に例外として載せる） ／ cdfd-overview-sample の『データストア』 ／ 読み取り ／ 一致 ／ 75・82・91・92・96 行目",
+"R4 確かめの表 7: 商品台帳から仕入先・発注単位を読む ／ cdfd-overview-sample の商品台帳の行 ／ 読み取り ／ 一致 ／ 項目に『仕入先、発注単位』がある",
+"R4 確かめの表 8: D2 の classes（色・形・border-radius 8/20）、material_flow の太線、戻りの <- ／ cdfd-overview-sample の『凡例（本プロダクト共通）』、docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md ／ 読み取り ／ 一致 ／ 凡例の表の色コードと形が同じ。D2 rulebook の 39・40・129 行目",
+"R4 確かめの表 9: 本文の必須章と、状態遷移・主要例外・委譲の表の列 ／ cdfd-rulebook の『本文要件』と 6.6・6.7 ／ 読み取り ／ 一致 ／ 列名が rulebook と同じ。未決事項は任意の章なので、ないことは誤りではない",
+"R4 確かめの表 10: 6.1・6.2 の入出力表と 5.1・5.2 の図の線の名前（全プロセス） ／ 本書の d2 ブロック ／ 読み取り ／ 一致 ／ 照合済みの納品・検品結果は起点イベントを通って渡る。F001・F002 の指摘箇所は今の版で図と同じ名前になっている",
+"R4 確かめの表 11: 状態遷移の参照先 stsd-product ／ docs/ja/specdojo/samples/stsd-sample.md ／ 読み取り ／ 一致 ／ 商品の納品から販売・返品までを扱う",
+"R4 確かめの表 12: 状態遷移の参照先 stsd-purchase ／ docs/ja 配下全体 ／ grep -rln stsd-purchase ／ 確かめられない ／ この sample の中にしか出てこない。stsd-rulebook の命名規則 stsd-<term> には合うので、まだない product 成果物 ID の仮置きとして直していない。確かめるには発注の STSD sample が要る",
+"R4 確かめの表 13: d2 の図が描けること ／ npm run lint:d2 ／ 親 runner が実行する ／ 確かめられない（この段では未実行） ／ 親 runner の lint-d2 の結果を正とする",
+"R5 への申し送り: 仕入計画の起動条件が、cdfd-overview-sample では『在庫から補充依頼を受けた』、cdfd-sample では『在庫グループから補充依頼を受けた』で表記が少し違う。R4 の誤りではないため直していない。",
+"F001（vp-arc-conciseness）・F002（vp-qe-omissions-consistency）は今の版で解消済み。grade の行番号 245・246 は前の版のもので、今の版では 259・260 行目に当たる。sample は変更していない。"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"plan・result・個票のどれも executor が変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更がない","reason":"変更した *.yaml / *.yml ファイルがないため"}]}
+</specdojo_executor_evidence>

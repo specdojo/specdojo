@@ -1,0 +1,17 @@
+R3（読みやすさ）の段として、sample の文を 17 か所直しました。prettier と markdownlint は通っています。plan に展開された finding F001（5 章の見出しの略語）は、前の段で見出しが「関連ドキュメント導線」に変わっていたため、もう当てはまりません。この段では直していません。
+
+**変更ファイル:** `docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md`（24 行追加・24 行削除。5.2 の表は prettier による列幅の整形を含む）
+
+**判断が要る点:**
+- **R3-12（要判断）**: 「PM」はどの表でも役割名に対応付けられていませんでした。ほかの sample にあった「PM（開発担当）」を、4.1 と 2.1 に添えています。
+- **R3-6**: 「親」を「親プロセス側で記録した」と読んで書き換えました。親の意味の読み方は R4 で確かめてください。
+
+**直していない点:** frontmatter の `status: ready` は変えていません。ほかの kata を直すべき点はありませんでした。
+
+**検証:**
+- この段では `npx prettier --write` と `npx markdownlint-cli2`（対象の sample のみ）を流し、0 件でした。
+- `npm run lint:md` などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として sysd-cross-cutting-policy-sample の主語の明示、主語と述語の対応、長文の分割、役割表記の統一を 17 件直した。F001 は前の段で見出しが直され、もう当てはまらない。prettier と markdownlint はエラー 0 件。","handoff":["R3-1: R3 / 1. 概要 / _ASSUMPTION_ の文に主語がない / 「本書は、タブレット1台で…」とし、「ここでは」を「本書は」にした / W1 / -","R3-2: R3 / 2.1. 適合確認の順序と時機 / 実 ID を接続する主体がない / 「PM（開発担当）が…整備時に接続する」とした / W1 / -","R3-3: R3 / 3.1. scp-ERR-001 / 会計確定を通知・表示する主体がない / 「CLI は、本部受付とローカル販売実績の保存を確認してから会計確定を通知する。どの分類でも、CLI は…表示する」とした / W1 / -","R3-4: R3 / 3.1. scp-ERR-001 Enforcement / 「終了コードは CLI リファレンスを照合する」で主語と述語がねじれ、呼び名も References の正本の名前と違う / 「終了コードは架空正本 `kinuya-cli-reference` と照合する」とした / W2、W8 / -","R3-5: R3 / 3.1. scp-ERR-001 Exception / 保留して渡す主体がない / 「店番担当が会計を保留して店主代表へ渡す」とした / W1 / -","R3-6: R3 / 3.6. scp-TRC-001 Rule / 「親の起動・終了」の「親」が何を指すか一つに決まらない / 「親プロセス側で記録した印刷の起動・終了を取引へ関連付ける」とした。R4 で読み方を確かめてほしい / W4 / -","R3-7: R3 / 3.3. scp-TIM-001 Enforcement / 上限直前と上限到達の結果を 1 文に詰めている / 「上限直前の正常応答は採用する。上限到達時は、…」の 2 文に分けた / W3 / -","R3-8: R3 / 3.4. scp-RET-001 Enforcement / 印刷の再起動と会計登録の手動照合という主体の違う 2 つの主張が 1 文にある / 2 文に分け、「会計登録と印字結果不明は手動照合へ進むことも確認する」とした / W1、W3 / -","R3-9: R3 / 3.5. scp-LOG-001 Rule / 通知する主体がない / 「CLI は保留会計・未印字・記録保存不能を…通知し」とした / W1 / -","R3-10: R3 / 3.5. scp-LOG-001 Enforcement / 「受入は Q-K2 で行う」で主語と述語がねじれている / 「保持期間・閲覧範囲・定期確認間隔は、Q-K2 の解消後に受け入れる」とした / W2 / -","R3-11: R3 / 3.7. scp-SEC-001 Enforcement / 停止する主体がなく、条件を 2 つ含む長文になっている / 「認証が未設定なら CLI が認証設定不足として本部連携を停止することを確認する」と、模擬認証値の確認の 2 文に分けた / W1、W3 / -","R3-12: R3 / 4.1. 例外の入口 / 「PM」を初めて使う箇所で役割名を添えておらず、1.1 の表にも対応がない / 「PM（開発担当）」とした / W8 / 要判断（ほかの sample で使われている「PM（開発担当）」に合わせた。1.1 の表に PM の行を足す案は内容を足すことになり R1 の範囲になるため選ばなかった）","R3-13: R3 / 3.9. scp-MOD-001 Rule / 「印刷コマンドには控えの読取だけを許し」の主体がない / 「印刷 adapter は印刷コマンドに控えの読取だけを許し」とした / W1 / -","R3-14: R3 / 3.9. scp-MOD-001 Enforcement / K1 と K2 の確認が体言の並びで 1 文に混ざっている / 「K1 で境界の呼出しを検査する。K2 で…売上を再送信しないことを確認する」とした / W3、W9 / -","R3-15: R3 / 4.2. 報告と追跡 / 同じセルで「開発担当」と「DEV」、表の中で「同行レビュー担当」と「QE」が混ざっている / 「開発担当が調査」「同行レビュー担当が解消確認」に揃えた / W8 / -","R3-16: R3 / 5.2. 変更影響と再検証 / K1・K2 の行は役割名なのに、K3 の行だけ「OPS」「DEV」を使っている / 「店舗運営アドバイザー」「開発担当」に揃えた / W8 / -","R3-17: R3 / 5. 関連ドキュメント導線 / F001（見出しの略語 SYSD/SYSD-CF/NFR/OPD/OPR/DEC）は前の段で見出しが「関連ドキュメント導線」に変わり、もう当てはまらない / - / vp-ux-language-consistency / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md","status":"passed","summary":"対象の sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>

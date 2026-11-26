@@ -1,0 +1,17 @@
+R2（構成）のレビューを終え、sample を直しました。直したのは `docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md` の 1 ファイルだけで、7 行足して 4 行消しています。章の順・粒度・表の列は rulebook の「本文要件」と template にそろっていたので、章の移動・分割・統合はしていません。直したのは、前提から結論の順に読めなかった 3 か所です。R1 では sample の変更がなく、技術制約の行の有無（R1-1）はこの段では繰り返していません。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R2-1 | R2 | 冒頭と「依存関係」の前置き | 略称「成功条件」の定義が 3 章の前置きにあるのに、1 章の ACD-A01 で先に使われていた | 成功条件へのリンクと略称の定義を冒頭の導入文の後へ移し、3 章の前置きから消した | `vp-arc-document-structure`（前提から結論の順） | — |
+| R2-2 | R2 | 3 章の表の後 → 冒頭 | `PJR-KN01` と `kinuya-*` が架空の参照名だという注記が 3 章の表の後にあった。これらの名前は 1 章（ACD-A02）と 2 章（ACD-C02）で先に出ている | 注記を冒頭の同じ段落へ移した | `vp-arc-document-structure`、`vp-qe-omissions-consistency` | — |
+| R2-3 | R2 | 「監視・変更管理」 | 見直しの契機と変更記録の 2 つの論点が 1 段落に入っていた。template は箇条書きで、表の前の 1 文もなかった | template に合わせて「見直しの契機」「変更記録」の 2 項目の箇条書きに分け、表の前に 1 文を足した | template の「監視・変更管理」、Sample 記述標準の「表の前に 1 文」 | — |
+| R2-4 | R2 | 「監視・変更管理」 | template にある分担（PM の追従管理、ARC の技術制約確認、QE の受入確認、人の最終判断）の書き分けがない | 中身の不足なので R2 では直さず残した。足すかどうかは R1 の観点で人が決める | template の「監視・変更管理」の 3 つ目の項目 | 要判断 |
+
+確かめたこと：
+
+- `npx prettier --check` と `npx markdownlint` を sample に流し、どちらも通りました。
+- 「影響評価と対応方針」の表の前の 1 文も抜けていますが、R3 の範囲なので残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成レビューを完了した。章の順・表の列は rulebook と template に沿っており、章の移動はしていない。略称「成功条件」の定義と架空の参照名の注記を、最初に出る前の冒頭へ移した。「監視・変更管理」の段落は template に合わせて箇条書きに分け、表の前に 1 文を足した。","handoff":["No: R2-1 / 段: R2 / 箇所: 冒頭と「依存関係」の前置き / 指摘: 略称「成功条件」の定義（成功基準と受入条件へのリンク）が 3 章の前置きにあるのに、1 章の ACD-A01 で先に使われていて、前から順に読めない / 直した案: 成功条件へのリンクと「（以下「成功条件」）」の定義を冒頭の導入文の後の段落へ移し、3 章の前置きから消した / 根拠: `vp-arc-document-structure`（前提から結論の順に読めるか） / 印: なし","No: R2-2 / 段: R2 / 箇所: 3 章の表の後 → 冒頭 / 指摘: `PJR-KN01` と `kinuya-*` が未同梱の架空の参照名だという注記が 3 章の表の後にあった。これらの名前は 1 章（ACD-A02 の `kinuya-technical-dependency-log`）と 2 章（ACD-C02 の `kinuya-cost-and-effort-log`）で先に出ている / 直した案: 注記を冒頭の同じ段落へ移した / 根拠: `vp-arc-document-structure`、`vp-qe-omissions-consistency` / 印: なし","No: R2-3 / 段: R2 / 箇所: 「監視・変更管理」 / 指摘: 見直しの契機と変更記録の 2 つの論点が 1 段落に入っていた。template は箇条書きで、続く表の前に何の表かを示す 1 文もなかった / 直した案: template に合わせて「見直しの契機」「変更記録」の 2 項目の箇条書きに分け、表の前に「検知したことの種類ごとに、記録先と報告・判断の分担を次に示す。」を足した / 根拠: template の「監視・変更管理」の箇条書きの構成、`sample-authoring-standard` の「表の前に 1 文」 / 印: なし","No: R2-4 / 段: R2 / 箇所: 「監視・変更管理」 / 指摘: template の 3 つ目の項目（PM の計画・Schedule・登録簿の追従管理、ARC の参照・技術制約確認、QE の受入・検証確認と、人の最終判断の分担）にあたる書き分けがない。表の「報告・判断」の列には開発担当と店主代表の分担しかない / 直した案: 中身の不足なので R2 の構成の差分にはしなかった。足すかどうかは R1 の観点（目的の過不足）で人が決める。template の項目そのものを rulebook 6.5 にそろえる案もある / 根拠: template の「監視・変更管理」、rulebook の「本文要件」の「追従更新と報告の責任」、`vp-qe-omissions-consistency` / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

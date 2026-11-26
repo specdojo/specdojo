@@ -1,0 +1,13 @@
+R2（構成）のレビューで `docs/ja/specdojo/samples/br-sample.md` の構成を1か所直しました。ほかの章は rulebook とテンプレートに合っていたので変えていません。
+
+**直したところ:** 概要の章の項目名を、テンプレートの項目名（業務価値 / 利用者・適用場面 / 適用範囲 / 対象外）に合わせました。H1 の直後にあったはずの概要の1文が欠けていたので、「何を判定するか」を書いた1文をそこに足しました。これまで「判断」の項目にまとめて書いていた内容を、その1文と「業務価値」に分けています。
+
+**F001:** R1 で第6章の末尾に承認できる条件が書き足されていたので、解消済みと判断し、手を入れていません。
+
+**sample 以外への提案（直していません）:** テンプレートの概要の項目には「判断」がない一方、rulebook は概要の章に判断の目的を求めています。そのため判断の目的が概要の章の外（H1 直下）に出ています。テンプレートの概要に「判断」の項目を足すか、rulebook 側で H1 直下の1文を判断の目的として扱うと書くか、どちらかに決めてください。
+
+**検証:** `npx prettier --check` は通りました。markdownlint などは、この後に親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: br-sample の H1 直下に概要の1文を足し、概要の項目を br-template の項目（業務価値・利用者・適用場面・適用範囲・対象外）にそろえた。F001 は R1 で解消済みと確認し、手を入れていない。","handoff":["R2-1: R2 / 1. 概要（H1 直下） / br-template には H1 直下の概要の1文（_DELIVERABLE_OVERVIEW_）と、概要の項目「業務価値・利用者・適用場面・適用範囲・対象外」がある。sample は概要の1文がなく、項目名も「判断・利用者・場面・前提・対象外」で template と違っていた / H1 直下に判定内容の1文を足した。概要の項目名を template にそろえ、「判断」にあった価値の文を「業務価値」、「前提」を「適用範囲」に移した / vp-arc-document-structure、br-rulebook の本文要件（見出し順・記入欄の骨組みは template を正本とする） / 要判断（判断の目的が概要の章の外、H1 直下に出る。選ばなかった案: 「判断」の項目を概要の章に残し、template の項目から外れたままにする）","R2-2: R2 / 1. 概要（kata 間の食い違い） / rulebook の本文要件は、概要の章に「判断の目的」を求めている。一方で br-template の概要の項目に「判断」がなく、sample でどちらにも合わせきれない / - / vp-qe-omissions-consistency。相手側を直す案: br-template の概要の項目の先頭に「判断: _TODO_: 引き受ける判断と結果」を足す。または br-rulebook の本文要件の概要の行に「判断の目的は H1 直下の概要の1文に書く」と書く / 要判断","R2-3: R2 / 6. メモ / 将来課題 / grade F001（承認できる条件が書かれていない）は、R1 が直した版で「判定例 1〜9 の期待結果が R-01〜R-03 と E-01〜E-03 の順序から一意に導ける…時点で承認できる」と書かれていて、template の章末の記入欄に合っている / - / vp-qe-kata-conformance、br-template の章末の「承認可能となる条件」 / -","R2-4: R2 / 2. 入力 〜 5. 例外 / 異常系 / 章の順（入力→判定規則→判定例→出力→例外→メモ）と表の列が template と一致している。表の後の本文（出力の入力不備の扱い、例外の優先順）も、表を補う位置に置かれていて、前提から結論の順に読める / - / vp-arc-document-structure / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/br-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

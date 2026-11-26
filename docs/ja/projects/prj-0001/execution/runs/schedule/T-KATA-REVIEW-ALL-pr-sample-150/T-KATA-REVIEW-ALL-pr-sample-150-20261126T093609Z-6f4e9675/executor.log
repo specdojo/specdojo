@@ -1,0 +1,28 @@
+R5 整合のレビューで、`docs/ja/specdojo/samples/pr-sample.md` の 2 か所をほかの sample に合わせて直しました。議事録の sample との日付と件数の食い違いは相手側を直す案として残し、判断を求めます。検証は親 runner の lint に任せ、こちらでは何も実行していません。
+
+**見たもの:** 同じ接頭辞の sample は `pr-sample.md` だけで、本文に wikilink はなく、`based_on` もありません。ほかに次を照らし合わせました。
+
+- `pr-rulebook`
+- 共通サンプル文脈
+- 用語集（`gl-common.yaml`・`gl-register.yaml`）
+- この報告を参照している `mm-sample`（議事録）
+- コミュニケーション計画・ロール定義の各 sample
+
+**直した点:**
+1. **完了事項 No.2:** 「欠品の日次記録を開始し」を「欠品を 5 営業日すべてで日次記録した」にしました。`mm-sample` の 2026-04-19 の定例で、すでに前の週の欠品 7 回を見直しているためです。今回の期間に記録を始めたとは言えません。
+2. **リスク・課題の `PJR-KP22`:** 「2026-04-21 の定例で」を「2026-04-21 までに」にしました。議事録の定例は 04-19 と 04-26 で、コミュニケーション計画は「定例会議は置かない」としているため、04-21 の定例はどの sample にもありません。期日は次期予定 No.1 と同じです。
+
+Prettier が表の列幅をそろえ直したため、差分は 5 行です。
+
+**判断を求めること:**
+- **【要判断】議事録の欠品の数え方:** `mm-sample` は週の区切りが 2026-04-12〜04-18 で、欠品は 7 回です。この報告は 04-13〜04-19 で 9 回です。報告の期間は rulebook どおりなので、`mm-sample` の区切りを 04-13〜04-19 にそろえ、件数をどちらかに統一する案を出します。`mm-sample` は今回の対象ではないので変えていません。
+- **【要判断】定例の有無:** 議事録は定例の記録で、コミュニケーション計画は「定例会議は置かない」と書いています。この食い違いはこの報告ではなく、相手の 2 つの sample の間にあります。どちらに合わせるかを決める必要があります。
+- **【要判断】用語集の「進捗報告」:** 用語集は「関係者に報告するビュー」と定義しています。この sample は人が書く文書です。用語集は SpecDojo の製品用語なので変えていませんが、文書としての意味も入れるかは判断が要ります。
+
+**grade の指摘 F001（報告者と報告先を書く）は扱っていません。** 観点 `vp-ba-stakeholder-clarity` は kata ガイドの「kata の観点の組」で、段のレビューでは使わない観点です。rulebook も報告者・報告先を必須にしていません。必要なら rulebook の側で決めるべき点です。
+
+ロールコード（`PM`・`PO`・`BA`・`OPS`）、欠品を月間 50% 減らす目標、プロジェクト名は、共通サンプル文脈やロール定義と合っていました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合のレビューで pr-sample.md の 2 か所を直した。完了事項 No.2 は「日次記録を開始し」の表現を mm-sample と合わせ、`PJR-KP22` の「2026-04-21 の定例で」は議事録・コミュニケーション計画のどちらとも合わないため「2026-04-21 までに」にした。相手側を直す案と、扱わなかった F001 は handoff に残した。","handoff":["No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/pr-sample.md 完了事項 No.2 / 指摘: 「欠品の日次記録を開始し」とあるが、mm-sample の 2026-04-19 の定例では、すでに前の週（2026-04-12〜04-18）の欠品 7 回を見直しており、今回の期間に記録を始めたことと食い違う / 直した案: 「欠品を 5 営業日すべてで日次記録した。」に変えた（反映済み） / 根拠: specdojo:mm-sample の「議題」と「決定事項」、vp-qe-kata-conformance / 印: なし","No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/pr-sample.md リスク・課題 `PJR-KP22` の対応方針 / 指摘: 「2026-04-21 の定例で」とあるが、mm-sample の定例は 2026-04-19 と 04-26 で、pm-communication-plan-sample は「定例会議は置かない」としており、04-21 の定例はどの sample にもない / 直した案: 「2026-04-21 までに、6 品目それぞれの補充責任者を `PO` が決める。」に変えた（反映済み。次期予定 No.1 の期日と同じ） / 根拠: specdojo:mm-sample の会議情報、specdojo:pm-communication-plan-sample の冒頭、vp-qe-kata-conformance / 印: なし","No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/mm-sample.md の議題「週次の欠品状況レビュー（2026-04-12〜04-18）」と決定事項の「欠品は7回」 / 指摘: 週の区切りが pr-sample の報告期間（rulebook に従う 2026-04-13〜04-19）と 1 日ずれており、件数も 7 回と 9 回で合わない / 直す案（相手側なので変えていない）: mm-sample の区切りを 2026-04-13〜04-19 にし、件数を pr-sample の 9 回にそろえるか、pr-sample の件数を mm-sample に合わせるかを決めて、片方を直す / 根拠: specdojo:pr-rulebook の「報告期間」、vp-qe-kata-conformance、vp-dev-change-impact / 印: 要判断","No: 4 / 段: R5 / 箇所: docs/ja/specdojo/samples/mm-sample.md（定例会議）と docs/ja/specdojo/samples/pm-communication-plan-sample.md（定例会議は置かない） / 指摘: 相手の 2 つの sample の間で、定例会議があるかどうかが食い違っている / 直す案（相手側なので変えていない）: コミュニケーション計画に在庫補充フロー改善の定例を足すか、議事録の会議を判断依頼の打ち合わせとして書き直すかを決める / 根拠: 両 sample の該当箇所、vp-qe-kata-conformance / 印: 要判断","No: 5 / 段: R5 / 箇所: docs/ja/product/010-business-specs/060-glossary/gl-common.yaml の tm-progress-report / 指摘: 用語集は進捗報告を「関係者に報告するビュー」と定義しているが、pr-sample は人が書く報告文書であり、意味の範囲が合わない / 直す案（相手側なので変えていない）: 用語集の定義を、生成するビューと人が書く報告文書の両方を含むように広げるか、製品用語として今のまま区別するかを決める / 根拠: gl-common.yaml の tm-progress-report、specdojo:pr-rulebook の「全体方針」 / 印: 要判断","No: 6 / 段: R5 / 箇所: grade の F001（line=3 の導入文、vp-ba-stakeholder-clarity） / 指摘: 報告者・報告先を書くよう求める指摘だが、kata ガイドの「kata の観点の組」は vp-ba-stakeholder-clarity を段のレビューでは使わない観点としており、R5 の観点にも当たらない。rulebook も報告者・報告先を必須にしていない / 直した案: sample は変えない。必要なら rulebook の本文要件に報告者・報告先を足すかを別に判断する / 根拠: docs/ja/specdojo/guides/kata-guide.md の「kata の観点の組」、specdojo:pr-rulebook の「本文要件」 / 印: 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pr-sample.md","status":"passed","summary":"整形した。直した行のある表の列幅をそろえ直した。"}]}
+</specdojo_executor_evidence>

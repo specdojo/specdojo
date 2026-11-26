@@ -81,8 +81,8 @@ describe("YAML display pages before parent validations", () => {
   const execDefaults: ExecDefaultsConfig = {
     pipeline: { parent_validations: ["lint-md-changed"] },
   };
-  const refreshYamlPages = (path: string) =>
-    refreshWorktreeYamlPages(path, {
+  const refreshYamlPages = async (path: string) =>
+    await refreshWorktreeYamlPages(path, {
       build: (worktreePath) => {
         builds.push(worktreePath);
         buildYamlPages(join(worktreePath, "docs"), worktreePath);
@@ -146,13 +146,13 @@ describe("YAML display pages before parent validations", () => {
     },
   );
 
-  it("finds YAML changed by a merged commit after the pages were generated", () => {
+  it("finds YAML changed by a merged commit after the pages were generated", async () => {
     prepareWorktree(root);
     breakYamlComment(root);
     git(root, ["commit", "--quiet", "--no-verify", "-am", "merge integration target"]);
 
     expect(staleYamlPageSources(root)).toEqual([yamlPath]);
-    expect(refreshYamlPages(root)).toEqual({ status: "rebuilt", sources: [yamlPath] });
+    expect(await refreshYamlPages(root)).toEqual({ status: "rebuilt", sources: [yamlPath] });
     expect(staleYamlPageSources(root)).toEqual([]);
   });
 });

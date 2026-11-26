@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CSRM",
+  "run_id": "pjr-csrm-20261126T154932Z-dcdbfdba",
+  "updated_at": "2026-11-26T16:24:58.158Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T16:16:13.952Z",
+      "completed_at": "2026-11-26T16:20:11.902Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CSRM/pjr-csrm-20261126T154932Z-dcdbfdba/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-26T16:24:45.305Z",
+      "completed_at": "2026-11-26T16:24:45.305Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CSRM/pjr-csrm-20261126T154932Z-dcdbfdba/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-26T16:24:48.077Z",
+      "completed_at": "2026-11-26T16:24:58.158Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CSRM/pjr-csrm-20261126T154932Z-dcdbfdba/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CSRM/pjr-csrm-20261126T154932Z-dcdbfdba/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-26T16:16:13.938Z",
+      "notes": [
+        "前回の親の検証で typecheck と lint-ts が落ちた。同期の関数を非同期に変えた呼び出し側（register-resume.ts の 369 行、schedule-prepare.ts の 239・250・273 行、trial-commands.ts の 437 行など）を直し、npm run typecheck と npm run lint:ts を通してから終える。"
+      ]
+    }
+  ]
+}

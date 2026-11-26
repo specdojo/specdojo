@@ -1,0 +1,23 @@
+R2 では mm-sample を変更しませんでした。章の移動・分割・統合が要る箇所が見つからなかったためです。
+
+**読んだもの**
+- 対象の sample
+- `docs/ja/specdojo/guides/kata-guide.md` の「kata を agent でレビューする」
+- mm-rulebook（`template: not-needed` のため、照合の相手は rulebook の本文要件だけ）
+- Sample 記述標準の「構成の原則」「記述ガイド」
+- R1（`T-KATA-REVIEW-ALL-mm-sample-110`）の差分
+
+**構成の確認結果**
+- **章の順:** 会議情報 → 議題 → 決定事項 → アクションアイテム → 保留事項 で、rulebook の本文要件と同じです。
+- **表の列:** 決定事項は No.・決定事項・決定者、アクションは No.・内容・担当者・期限・完了条件・関連する個票 ID、保留事項は No.・保留事項・保留の理由・次回確認日で、rulebook の求めと合っています。
+- **読む順:** 決定事項の冒頭で欠品の原因（前提）を示してから決定の表（結論）を置いています。続いて、決定を受けたアクション、決まらなかった保留の順に読めます。
+- **表の前の 1 文:** 3 つの表すべてにあります。
+
+**F001 の扱い**
+F001 の観点 `vp-ba-business-value` は、kata の段のレビューでは使わない観点です。また、R1 が欠品の残り 2 回の原因の文を足しており、決定2の理由はすでに導入文に書かれています。そのため R2 では扱いませんでした。
+
+検査は実行していません。変更ファイルがないため、Prettier と markdownlint は対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）を確認した。mm-sample の章の順・表の列・表と本文の配置は mm-rulebook の本文要件（template は not-needed）と合い、前提から結論の順に読めるため、章の移動・分割・統合はせず、sample は変更していない。F001（`vp-ba-business-value`）は R2 の観点ではなく、R1 で決定2の理由の文が足されて解消済みのため扱わなかった。","handoff":["R2-1: R2 / 3. 決定事項 / grade の F001（決定2の理由が導入文にない）は `vp-ba-business-value` の指摘で、kata の段では使わない観点である。R1（`T-KATA-REVIEW-ALL-mm-sample-110`）で「残る2回は、店番の交代で欠品速報を見る時刻がずれ…」の文が足され、決定2の理由はすでに書かれている / - / kata-guide の「kata の観点の組」（`vp-ba-business-value` は外す観点）、R1 の差分 / -","R2-2: R2 / 1. 会議情報 / rulebook の必要な項目（会議名・日時・参加者）にない「次回」の行がある。構成としては会議情報に置くのが自然で、保留事項の次回確認日（2026-04-26）と対応しているため、移動も削除もしない。要る内容かどうかは R1 の観点にあたり、R1 は残している / - / `vp-arc-document-structure`。迷った理由: rulebook の項目にない行のため、保留事項の章へ移す案もあったが、会議の特定の情報として会議情報に残した / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mm-sample.md","status":"not_applicable","summary":"変更ファイルなし","reason":"executor は Markdown・TypeScript・JSON・YAML のファイルを 1 つも変更していないため、Prettier の適用条件を満たさない"},{"command":"npx markdownlint docs/ja/specdojo/samples/mm-sample.md","status":"not_applicable","summary":"変更ファイルなし","reason":"変更した `*.md` ファイルがないため、markdownlint の適用条件を満たさない"}]}
+</specdojo_executor_evidence>

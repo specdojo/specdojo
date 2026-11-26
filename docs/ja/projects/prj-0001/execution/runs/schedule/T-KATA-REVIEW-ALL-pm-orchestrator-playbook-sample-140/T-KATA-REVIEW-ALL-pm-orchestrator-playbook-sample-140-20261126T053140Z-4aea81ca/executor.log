@@ -1,0 +1,34 @@
+R4（正しさ）の段を終えました。sample の 2 か所を直し、Prettier の確認は通っています。直したのは `docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md` だけで、lint などの検査は親 runner が流します。
+
+**直したところ**
+
+1. **保護された設定の扱い（誤りの訂正）**: 書けない範囲を「`.agents/`」と書いていましたが、`src/exec/agent-protected-config.ts` で保護されているのは `.agents/rules/` と `.agents/skills/` だけでした。範囲の正本も `.specdojo/` の設定ではなく、CLI が持つ固定の定義（設定から変えられない）です。この 2 点を直しました。
+2. **リリースの手順 3（F005）**: 「全件の検査」を「`npm test` を流し、終了コードが 0 なら配布物を作る」に変え、合否を判定できるようにしました。
+
+**確かめの表**（result の実施内容に載せる分）
+
+| No | 主張 | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 列の組み方の例の各オプション（`--project`・`--register`・`--worktree`・`--join`・`--if-busy wait`・`--on-rate-limit fallback`・`--executor-by`・`--fallback-executor-by`・`--reporter-by`・`--fallback-reporter-by`） | `exec run --help` | `npx tsx src/specdojo.ts exec run --help` | 一致 | 全オプションが存在し、`--if-busy` は `skip\|wait\|fail`、`--on-rate-limit` は `stop\|wait\|fallback` |
+| 2 | `exec queue` で予約する | `exec queue --help` | 実行 | 一致 | `add` / `run` / `status` / `cancel` がある |
+| 3 | `--resume --resume-from executor` | `src/exec/run/register-command.ts`、`src/exec/evidence.ts` | 読み取り | 一致 | 受け付ける値は `executor` だけで、`--resume` が要る |
+| 4 | `--force-restart` で最初から流す | `exec run --help` | 実行 | 一致 | 項目全体を流し直し、worktree を捨てる |
+| 5 | `--resume-note` で追加の指示を入れる | `exec run --help` | 実行 | 一致 | `--resume --resume-from executor` と一緒に使い、plan に指示を足す |
+| 6 | `routing` が `.specdojo/exec-defaults.yaml` にあり、難しさは easy・medium・hard | `.specdojo/exec-defaults.yaml` | 読み取り | 一致 | `routing:` の下に `hard`・`medium`・`easy` |
+| 7 | `requires_human` という検証の状態 | `docs/specdojo/schemas/v1/exec-evidence.schema.yaml` | 読み取り | 一致 | 状態の候補に `requires_human` がある |
+| 8 | 登録簿の項目の種類 `question` | `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` | 読み取り | 一致 | 種類の候補に `question` がある |
+| 9 | 保護される範囲 | `src/exec/agent-protected-config.ts` | 読み取り | 不一致（直した） | 保護されるのは `.agents/rules/`・`.agents/skills/` だけ。正本は CLI の固定の定義 |
+| 10 | `PJR-KN*`、`kinuya-*`、agent の呼び名、営業時間などの店の値 | なし | 対象外 | 対象外 | 共通サンプル文脈の中の仮定 |
+
+**この段で扱わなかった finding**
+
+- F001〜F004、F006〜F009 は R4 の観点ではないため、ほかの段に任せました。そのうち F003・F006・F007 は、前の段がすでに直しています。
+- F008（`based_on`）は直していません。R5 で照らし直す必要があります。
+
+**要判断**
+
+- rulebook には「保護の範囲は設定の正本を参照して列挙」とありますが、実際の範囲の正本は CLI の固定の定義です。rulebook の書き方を直すかどうかを決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: sample のコマンド・オプション・キー・列挙値・パスを `exec run --help`・`exec queue --help`・schema・`src/` と照らした。保護された設定の範囲と正本の誤りを訂正し、F005 に合わせてリリースの手順 3 の検査を `npm test` と終了コード 0 に具体化した。","handoff":["確かめの表: (1) 列の組み方の例のオプション一式は `exec run --help` と一致 (2) `exec queue` の add/run/status/cancel は一致 (3) `--resume --resume-from executor` は `src/exec/run/register-command.ts`・`src/exec/evidence.ts` と一致 (4) `--force-restart` は一致 (5) `--resume-note` は `--resume --resume-from executor` と併用で一致 (6) `.specdojo/exec-defaults.yaml` の `routing` hard/medium/easy は一致 (7) `requires_human` は `exec-evidence.schema.yaml` の状態の候補と一致 (8) `question` は `register-item-frontmatter.schema.yaml` の種類の候補と一致 (9) 保護される範囲は `src/exec/agent-protected-config.ts` と不一致（`.agents/` ではなく `.agents/rules/`・`.agents/skills/`、正本は `.specdojo/` の設定ではなく CLI の固定の定義）なので訂正した (10) `PJR-KN*`・`kinuya-*`・agent の呼び名・営業時間は共通サンプル文脈の中の仮定のため対象外。","指摘（R4・`vp-arc-technical-constraints`）: 保護された設定の扱いで、書けない範囲を `.agents/` 全体、正本を `.specdojo/` の設定と書いていた。`src/exec/agent-protected-config.ts` では `.agents/rules/`・`.agents/skills/` だけが保護され、範囲は provider の設定から変えられない CLI の固定の定義である。sample を訂正した。","指摘（R4・`vp-qe-verifiability`、F005）: リリースの手順 3 の「全件の検査」では合否を判定できなかった。`npm test` を流し、終了コード 0 なら配布物を作る形に直した。","要判断: rulebook の章ごとの書き方は「保護の範囲は設定の正本を参照して列挙」とするが、実装の正本は CLI の固定の定義である。rulebook の文言を直すかを人が判断する（この段では rulebook を編集していない）。","F001・F002・F003・F004・F006・F007・F008・F009 は R4 の観点の外なので扱わず、ほかの段に任せた。F003・F006・F007 は前の段ですでに反映済み。F008（`based_on` が `pm-plan-sample` を指す）は未反映なので、R5 で照らし直す。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴の文書を変更していない","reason":"変更したのは sample だけで、plan・result・個票は変えていない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに `*.yaml` / `*.yml` がない"}]}
+</specdojo_executor_evidence>

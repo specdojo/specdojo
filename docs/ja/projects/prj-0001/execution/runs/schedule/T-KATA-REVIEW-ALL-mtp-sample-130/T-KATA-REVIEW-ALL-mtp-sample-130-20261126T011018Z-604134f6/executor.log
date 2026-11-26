@@ -1,0 +1,18 @@
+R3（読みやすさ）として `docs/ja/specdojo/samples/mtp-sample.md` の文を 3 か所直しました。意味と判断に要る背景・例外・制約は変えていません。Prettier のチェックは通っています。lint は終了後に親 runner が流します。
+
+直したのは次の 3 件です。
+
+| No | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- |
+| R3-1 | 2. リハーサル回数とスケジュール | 切替日を「確定するか延期する」のが誰か読めない | 「PO が第 2 回の結果を見て確定するか延期する」にした | W1 | - |
+| R3-2 | 5. 合否基準 | 「判定者は件数を…そろえ」で主語と述語がねじれている | 件数とつけ残高・在庫数で判定者の文を分けた | W2、W3 | - |
+| R3-3 | 8. GO/NO-GO判断プロセス | 条件付き GO の「決定記録」が他の章の `pm-decision-log` と揺れ、確かめる人と記録する人も書いていない | 「QE が…確かめられる」「PO が…`pm-decision-log` へ記録して」にした | F003、`vp-ux-language-consistency`、W1、W8 | - |
+
+grade の指摘のうち 2 件は R3 の観点に当たらないため直さず、担当の段へ回します。
+
+- **F001**（R5 で扱う）：§9 で `specdojo:dmd-sample` を参照しているのに `based_on` に宣言されていません。
+- **F002**（R4 で扱う）：所要時間の基準に時刻や分数の値がありません。§5 にはすでに臨時休業の開始時刻を後で決める `_UNDECIDED_` があるので、R4 で仮の値を添えるかを判断します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として mtp-sample.md の文を 3 件直した（W1・W2・W3・W8、F003 を反映）。F001 は R5、F002 は R4 の観点のため直さず handoff に回した。","handoff":["R3-1: R3 / 2. リハーサル回数とスケジュール / 切替日を「確定するか延期する」主体が読み取れない / 「PO が第 2 回の結果を見て確定するか延期する」に直した / W1 / -","R3-2: R3 / 5. 合否基準 / 「判定者は件数を…そろえ」で主語と述語がねじれ、2 つの判定者の決め方が 1 文に入っている / 件数の判定者とつけ残高・在庫数の判定者を別の文に分けた / W2、W3 / -","R3-3: R3 / 8. GO/NO-GO判断プロセス / 条件付き GO の「決定記録」が他の章の `pm-decision-log` と呼称が揺れ、確かめる主体と記録する主体がない / 「QE が切替日の前日の読み合わせで直したことを確かめられる」「PO が条件と確認の期限を `pm-decision-log` へ記録して切替日を確定する」に直した / F003（`vp-ux-language-consistency`）、W1、W8 / -","R3-4: R3 / 冒頭（frontmatter の `based_on`）/ F001: §9 で参照している `specdojo:dmd-sample` が `based_on` にない / - / `vp-dev-change-impact` は R5 の観点のため R5 に回す。R5 で `based_on` に足すか、参照だけに留める理由を書くかを決める / -","R3-5: R3 / 5. 合否基準 / F002: 所要時間の基準に時刻や分数の値がなく、合否を測れない / - / `vp-qe-verifiability` は R4 の観点のため R4 に回す。§5 には臨時休業の開始時刻を後で決める `_UNDECIDED_` がすでにあり、R4 で仮の値を添えるかを判断する / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mtp-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは sample の docs/ja/specdojo/samples/mtp-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更がない","reason":"変更したのは *.md だけで、*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,22 @@
+R2（構成）を終えました。`sf-sample` の構成上の変更は 1 か所です。Prettier の書式確認は通っています。lint などの検査はこの後に親 runner が実行するため、まだ結果はありません。
+
+**変更内容**
+- 変更ファイルは `docs/ja/specdojo/samples/sf-sample.md` だけです。
+- 「業務プロセス・画面との対応」の末尾にあった「利用接点は GUI とし、CLI による会計は対象外とする。」を、接点の表の前へ移しました。接点の種類と対象外という前提を先に置くためです。
+- 移した文に「画面と連携先との受け渡しと責務境界は次のとおり。」を足し、この表が何を示すかを表の前の 1 文で示しました。
+
+**変えなかった章**
+- 章の順（1〜8）と章タイトルは、rulebook の「本文要件」の章の表と一致しています。
+- 小節の分け方（入出力と前提条件、通常処理と例外・回復条件）、表と本文の置き場所、前提から結論への流れも rulebook の記述ガイドに沿っています。そのため章の移動・分割・統合はしていません。
+- rulebook に `template: not-needed` とあるため、template とは照らしていません。
+
+**grade の指摘 F001〜F006 は R2 では扱いませんでした**
+- F001・F002（`vp-pm-*`）は、kata のレビューでは使わない観点です。
+- F003・F005 は R4、F004 は R5、F006 は R1 または R5 の観点に当たります。
+- F004・F005 は、R1 が「未決事項」に足した「確定後に見直す箇所」の列で一部が解消しています。
+
+ほかの表（「目的と概要」の範囲の表、入出力、処理要件など）にも、表の前の 1 文がありません。これは文章の確かめなので R3 に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）の結果: sf-sample の章の順・粒度は sf-rulebook の本文構成と一致したため、章の移動・分割・統合はしていない。「業務プロセス・画面との対応」で、接点の種類と対象外を述べた文を接点の表の前へ移し、表の前の 1 文にした。grade の指摘 F001〜F006 は R2 の観点の外なので扱っていない。","handoff":["No: R2-1 / 段: R2 構成 / 箇所: docs/ja/specdojo/samples/sf-sample.md「業務プロセス・画面との対応」、接点の表の後の文（旧41行目） / 指摘: 利用接点の種類（GUI）と CLI 会計が対象外であることは接点の表の前提だが、表の後に置かれていて前提から結論の順に読めない。接点の表の前にも、何を示す表かの 1 文がない / 直した案: 「利用接点は GUI とし、CLI による会計は対象外とする。画面と連携先との受け渡しと責務境界は次のとおり。」を根拠領域の表と接点の表の間へ移した（sample に反映済み） / 根拠: sf-rulebook の記述ガイド「業務プロセス・画面との対応」（画面のない機能では起動接点を示す）、sample-authoring-standard「表の前に、何と何の対応を示す表かを 1 文で書く」、vp-arc-document-structure / 印: 反映済み","No: R2-2 / 段: R2 構成 / 箇所: sf-sample の全章 / 指摘: なし。章の順（1〜8）と章タイトルは sf-rulebook の「本文要件」の章の表と一致する。小節（入出力と前提条件、通常処理と例外・回復条件）と表の列も記述ガイドの推奨どおりで、移動・分割・統合は要らない。rulebook が `template: not-needed` のため、template とは照らしていない / 直した案: 変更なし / 根拠: sf-rulebook の「本文要件」と「記述ガイド」、vp-qe-omissions-consistency / 印: 確認のみ","No: R2-3 / 段: R2 構成 / 箇所: grade の指摘 F001〜F006 / 指摘: R2 の観点（vp-arc-document-structure、vp-qe-omissions-consistency）に当たる指摘はない。F001・F002（vp-pm-*）は kata-guide「kata の観点の組」で kata のレビューから外す観点。F003・F005 は R4、F004 は R5、F006 は R1 または R5 の観点。F004・F005 は R1 が「未決事項」に足した「確定後に見直す箇所」の列で一部が解消している / 直した案: R2 では直さず、該当する段に任せる / 根拠: docs/ja/specdojo/guides/kata-guide.md「kata の観点の組」 / 印: 申し送り","No: R2-4 / 段: R2 構成 / 箇所: 「目的と概要」の範囲の表、「入出力」「通常処理」「例外・回復条件」「非機能・技術制約」「操作手順・コマンド参照」の各表 / 指摘: どの表にも、何を示す表かの 1 文が前にない。これは文章の確かめ（表の前の 1 文）なので R3 に任せる / 直した案: R3 で各表の前に 1 文を足す / 根拠: sample-authoring-standard の表の前の 1 文の規定、kata-guide「文章のチェック項目」 / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sf-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴の文書を変更していない","reason":"変更は docs/ja/specdojo/samples/sf-sample.md だけで、plan・result・個票の履歴ファイルを変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml・*.yml がない"}]}
+</specdojo_executor_evidence>

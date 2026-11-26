@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120-20261125T233718Z-32d589d5",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T23:38:07.406Z",
+    "completed_at": "2026-11-25T23:41:06.687Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/sysd-critical-flows-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../specdojo/samples/sysd-critical-flows-sample.md | 42 +++++++++++-----------\n 1 file changed, 21 insertions(+), 21 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/sysd-critical-flows-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/sysd-critical-flows-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:sysd-critical-flows-sample\n  type: architecture\n  status: ready\n  owner: ARC\n  rulebook: specdojo:sysd-critical-flows-rulebook\n  part_of: []\n  based_on: []\n---\n\n# 駄菓子屋きぬや 販売管理システム重要フロー\n\n## 1. 概要\n\n*ASSUMPTION*: \\[\\[specdojo:clis-sample|販売管理 CLI 仕様]] と同じ学習用の現金販売 CLI を扱い、本部売上サービスへの送信、端末への販売控え・レシート保存、USB 直結プリンタへの同期印字を前提とする。通常のタブレット画面、つけ販売、キャッシュレス決済、オフライン販売の継続は本例の対象外。本部の受付照会・重複排除契約を未整備のまま\n… output omitted …\n整備を待つ | 会計受入を保留し、印字も実機未検証のまま受入へ進めない | 自動再送を行わず、受付不明の取引は照合待ちで保持する | SU-01 → ARC／DEV が受付・照会・重複排除と相関契約を定義 → QE が「検証への引渡し」の ITC／ETC 全件を実施 | 会計・印字の受入前に KA-01／02 の結果と検査コマンドを追跡可能にし、PO が採否判断。PM が risk、検証不足を issue へ |\n| SU-03 / scf-001・scf-002 | 照合・再印刷 OPR、通知先・応答期限が未整備。運用開始が手順と通知条件の作成を待つ | 店番交代時の復旧と運用開始を保留する | 常駐監視や無人復旧があるとは扱わず、店番担当の紙面確認と PO の照合判断で扱う | SU-01／02 の結果 → OPS／DEV が二つの OPR と通知条件を作成 → 家族利用者代表と QE が保持記録からの引継ぎを確認 | 運用開始前に照会先・紙面確認・再開条件まで到達でき、PO が運用可否を判断。PM が risk／必要な change-request を記録 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7468 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7468 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 t\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1812}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  08:43:13\n   Duration  2.81s (transform 8.48s, setup 2.56s, import 9.16s, tests 6.25s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nrage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2 構成: sysd-critical-flows-sample を rulebook の本文構成と template に合わせた（概要を 4 項目に分割、見出しと列名を template にそろえる、scf-002 の永続化点と整合性の項目を分割、5.3 を template の 6 列へ分割）。F001 は R1 で直っていることを確かめた。F002 は R3 の観点なので R3 に渡す。",
+  "completion_status": "complete",
+  "handoff": [
+    "R2-1: R2 / 1. 概要 / 段落の文章で、template の 4 項目（対象・対象外、最大5件の管理方針、設計索引・状態用語の定義先、公開範囲・除外情報）と粒度が合わない。順も rulebook と違い、公開範囲が設計索引より前にある / 前提の _ASSUMPTION_ を章の先頭に置き、残りの文を template の 4 項目に配り直した。文は変えていない / vp-arc-document-structure / -",
+    "R2-2: R2 / 1. 概要・2. 重要フロー一覧・5. 関連ドキュメント導線 / 見出しに template にない括弧書き（「（対象・運用方針）」「（最大5件）」「（SDI/テスト/運用/DEC）」）がある / 括弧書きを外し、template の章名にそろえた。ほかの文書から見出しへのアンカー参照がないことを grep で確かめた / vp-arc-document-structure / -",
+    "R2-3: R2 / 2. 重要フロー一覧・4.2. 管理記録への引渡し / 表の列名が template と違う（Flow ID・フロー名・利用者・運用者（Role code）・放置時の業務影響、担当Role code・対応方針） / 列名を template の ID・名称・対象者・業務影響と担当の対応方針にした。セルの内容は変えていない / vp-arc-document-structure / -",
+    "R2-4: R2 / 3. フロー詳細 / 項目名が template と違う（永続化点、整合性・再実行、失敗・補償、受入 KA-01）。scf-002 は「永続化点・整合性・再実行」を 1 項目にまとめていて、scf-001 と粒度がそろわない / 両フローの項目名を template の名前（永続化点・成功の確定、整合性・冪等・再実行、失敗・保持・補償・再開、受入条件: `KA-0n`）にした。scf-002 は保存の順と印字完了の判定を「永続化点・成功の確定」に、試行識別子と結果不明の扱いを「整合性・冪等・再実行」に分けた / vp-arc-document-structure、vp-qe-omissions-consistency / -",
+    "R2-5: R2 / 5.3. 未決事項と後続作業 / template の「受入や運用への影響」「当面の扱い」の列がなく、2 列目の文にまとめて書かれている（R1-5 が R2 に回した指摘）。対象の欄が「両フロー」で、フロー ID と結ばれていない / 6 列に分け、影響と当面の扱いを専用の列へ移した。対象の欄は scf-001・scf-002 にした / vp-arc-document-structure、vp-qe-omissions-consistency / 要判断: 当面の扱いは、新しい事実を足さず本文から書いた（SU-01 は 5.2 の未実施のケース、SU-02 は概要の前提「自動再送しない」、SU-03 は 4.1 の「常駐監視や無人復旧があるとは扱わない」）。SU-01 の「実装に着手しない」は完了条件「実装着手前に正本を接続」から推した言い方。選ばなかった案は、当面の扱いを「なし」とすることで、template の注記に反するため採らなかった",
+    "F001: R1 の直しで解消している。5.2 に「確認状況・不足の解消先」の列があり、全行が所在・網羅性・実行状況と SU への接続を持つことを確かめた",
+    "F002 (vp-ux-language-consistency): R3 の観点なので、この段では直していない。R1-4 の案（照合待ちの定義を「本部受付またはローカル販売実績の保存のどちらかが確認できない状態」に広げる）を R3 に渡す"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120/T-KATA-REVIEW-ALL-sysd-critical-flows-sample-120-20261125T233718Z-32d589d5/executor.log",
+      "bytes": 6277,
+      "truncated": false
+    }
+  ]
+}

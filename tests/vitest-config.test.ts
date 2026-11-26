@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import agentConfig from "../vitest.agent.config.js";
 import integrationConfig from "../vitest.integration.config.js";
 import unitConfig from "../vitest.unit.config.js";
 import { TEST_GIT_SETUP_FILE } from "./helpers/git-environment.js";
@@ -68,6 +69,17 @@ describe("vitest config", () => {
     await expect(loadConfigWithMaxWorkers("0")).rejects.toThrow(
       /VITEST_MAX_WORKERS must be a positive integer: 0/,
     );
+  });
+
+  it("keeps real-agent tests out of the unit project and runs them only from the agent config", () => {
+    expect(unitConfig.test?.exclude).toContain("tests/**/*.agent.test.ts");
+    expect(agentConfig).toMatchObject({
+      test: {
+        include: ["tests/**/*.agent.test.ts"],
+        setupFiles: [TEST_GIT_SETUP_FILE],
+        maxWorkers: 1,
+      },
+    });
   });
 
   it("keeps the integration test timeout at 30 seconds", () => {

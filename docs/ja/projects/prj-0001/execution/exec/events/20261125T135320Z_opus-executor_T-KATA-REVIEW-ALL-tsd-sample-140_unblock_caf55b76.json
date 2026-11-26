@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T13:53:20Z",
+  "type": "unblock",
+  "task_id": "T-KATA-REVIEW-ALL-tsd-sample-140",
+  "by": "opus-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsd-sample-140/T-KATA-REVIEW-ALL-tsd-sample-140-20261125T074320Z-25e7baa2/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsd-sample-140/T-KATA-REVIEW-ALL-tsd-sample-140-20261125T074320Z-25e7baa2/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-tsd-sample-140-20261125T074320Z-25e7baa2",
+    "pipeline_resume_claimed": "true"
+  }
+}

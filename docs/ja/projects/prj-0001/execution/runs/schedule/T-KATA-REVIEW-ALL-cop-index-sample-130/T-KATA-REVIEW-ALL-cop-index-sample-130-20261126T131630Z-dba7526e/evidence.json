@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cop-index-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-cop-index-sample-130-20261126T131630Z-dba7526e",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T13:17:22.634Z",
+    "completed_at": "2026-11-26T13:19:50.972Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cop-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cop-index-sample.md | 31 ++++++++++++++++------------\n 1 file changed, 18 insertions(+), 13 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/cop-index-sample.md",
+      "status": "passed",
+      "summary": "整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/cop-index-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "対象外",
+      "reason": "履歴蓄積ファイル（plan・result・個票）を変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cop-index-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:cop-index-rulebook\n---\n\n# カットオーバー計画（全体）: 駄菓子屋きぬや 販売管理システム\n\n## 1. 概要（index）\n\n切替日に、商品・顧客・つけ残高・現在庫をノートから店頭タブレットの販売管理システムへ取り込み、正午の開店から並行記録で本番利用を始める。業務を止めるのは切替日の午前の臨時休業だけとする。\n\n対象外は、転記用の表の作り方と照合方法の詳細（`dmd-index`）、開店後の並行記録の日次運用（`otp-index`）、過去の販売ノート・仕入ノートの移行、EC・会計・仕入先との連携である。\n\n*UNDECIDED*: 切替日。店主代表が移行リハーサルの結果を見て決める。本書の\n… output omitted …\n間と、つけの残高が切替の前後で変わらないこと。切替日から 1 週間は会計に少し時間がかかる | 店頭窓口 | 伝えた日を書いた告知の記録表 |\n\n計画を変えたときの再周知: 延期またはロールバックを決めたら、その日のうちに貼り紙を差し替え、新しい切替日（未定なら「決まり次第お知らせします」）を書く。差し替えた貼り紙の写真を配信の証跡として残す。\n\n## 10. 関連ドキュメント\n\n分冊: （本書のみ）\n\n本書の判定点・時刻・手順を変えたときは、次の成果物を見直す。\n\n- `mip-index`: 判定点 GO1〜GO4 の条件とロールバック方針の正本。本書と食い違えば `mip-index` を正として本書を直す。\n- `dmd-index`: 取り込み・照合の方法と所要時間。「作業手順チェックリスト」の手順 5・6 の時刻が変わったら見直す。\n- `mtp-index`: 移行リハーサルの結果。T+0:10〜T+2:30 の時刻はこの結果で確かめる。\n- `otp-index`: 開店後の並行記録の運用と問い合わせ窓口。障害時の重大度と連絡経路が変わったら見直す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7800 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7800 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-index-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 10ms\n… output omitted …\nster-plan-escape.test.ts\",\"duration_ms\":1650}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  22:20:22\n   Duration  3.04s (transform 8.33s, setup 1.07s, import 11.72s, tests 7.07s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-index-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-index-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3 として cop-index-sample の 5 か所の文を直した（W1・W2・W4・W5・W6・W8・W9）。prettier と markdownlint-cli2 は通過した。F001・F002 は R3 の観点外のため、R4・R2 の段に任せた。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 7. ロールバック手順 / 発動条件の 1 文が約 90 字あり、2 つの条件が「、または」で 1 文に詰まっている / 発動条件を「次のどちらかのときに発動する」と 2 項目の箇条書きに分け、復旧方針の文と段落を分けた / W3、W9 / -",
+    "R3-2: R3 / 7. ロールバック手順 / 手順 3 の完了条件「論点が残された」が受け身で、どこに残すのかが読めない / 「両登録簿に、再実施の条件と切替日の決め直しを論点として書いた」にした / W6 / -",
+    "R3-3: R3 / 8. 障害時判断、エスカレーション / 「SLO の逸脱と復旧見込みで示す」の「で」が「示す」にかかって読める。また SLO の初出に正式名がない / 「SLO の逸脱と復旧見込みから続行・延期・ロールバックのどれを選ぶかを示す」に語順を直し、初出を「SLO（サービスレベル目標）」にした / W5、W8 / -",
+    "R3-4: R3 / 9. 周知（ユーザ通知、停止告知） / 常連客の行の「臨時休業の時間に加え、つけの残高は…変わらない」で主語と述語がねじれている。また「1 週間」がいつからの 1 週間か読めない / 「臨時休業の時間と、つけの残高が切替の前後で変わらないこと。切替日から 1 週間は会計に少し時間がかかる」にした / W2、W4 / -",
+    "R3-5: R3 / 10. 関連ドキュメント / `dmd-index` の項の「手順 5・6」が、どの表の手順を指すか一つに決まらない / 「『作業手順チェックリスト』の手順 5・6 の時刻」にした / W4 / -",
+    "R3-6: R3 / 5. 実施条件（事前完了条件） / 人員の行の未達時の扱い「延期。開発担当が来られない場合は代わりがいないため必ず延期する」は、ほかの人が欠けた場合は延期しなくてよいとも読める / - / W7。迷った理由は、ほかの人員の代わりを認めるかどうかが判断の中身に関わり、R3 の文の直しでは決められないため。選ばなかった案は、末尾の文を削って「延期」だけにする案、またはほかの人員の代わりの扱いを書き足す案。R1 か人の判断に任せる / 要判断",
+    "R3-7: R3 / 6. 切替判定ポイント（GO/NO-GO） / 「終了報告（T+9:00）までに転記する」は、T+7日に判定する GO4 には当てはまらない / - / 時期の整合は R2・R4 の範囲のため直していない。GO4 は並行記録の最終日の日次締めまでに転記する、と書き分ける案を R4 に申し送る / 要判断",
+    "F001（`vp-qe-verifiability`）と F002（`vp-qe-omissions-consistency`）は R3 の観点外のため扱っていない。F001 は R4 で扱う。F002 は前の段の版で導入文が「確認の時期」に揃っており、食い違いは解消済みと見られる"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cop-index-sample-130/T-KATA-REVIEW-ALL-cop-index-sample-130-20261126T131630Z-dba7526e/executor.log",
+      "bytes": 4494,
+      "truncated": false
+    }
+  ]
+}

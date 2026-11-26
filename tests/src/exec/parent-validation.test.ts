@@ -19,6 +19,7 @@ import {
   resolveParentValidationDefinitions,
   runParentValidationBatch,
   runParentValidations,
+  validationExitTiming,
   type ParentValidationInvoker,
 } from "../../../src/exec/parent-validation.js";
 import {
@@ -796,5 +797,44 @@ describe("parent validation for documentation-only changes (PJR-50RQ)", () => {
     expect(() => resolveParentValidationAssignments([{ id: "lint-md", parallel: "yes" }])).toThrow(
       /\.parallel must be a boolean/,
     );
+  });
+});
+
+describe("validationExitTiming (PJR-P8SX)", () => {
+  it("splits the gate-holding time into the child's last output and the runner's detection lag", () => {
+    const timing = validationExitTiming({
+      spawnedAt: 1_000_000,
+      settledAt: 1_190_000,
+      lastWriteAt: 1_005_000,
+      eventLoopDelayMaxMs: 160_000.4,
+    });
+
+    expect(timing).toEqual({
+      duration_ms: 190_000,
+      last_output_ms: 5_000,
+      detection_lag_ms: 185_000,
+      event_loop_delay_max_ms: 160_000,
+    });
+  });
+
+  it("omits the split when the child wrote no output", () => {
+    const timing = validationExitTiming({
+      spawnedAt: 1_000,
+      settledAt: 3_000,
+      eventLoopDelayMaxMs: 0,
+    });
+
+    expect(timing).toEqual({ duration_ms: 2_000, event_loop_delay_max_ms: 0 });
+  });
+
+  it("clamps a last write outside the run window to the run itself", () => {
+    const timing = validationExitTiming({
+      spawnedAt: 1_000,
+      settledAt: 3_000,
+      lastWriteAt: 3_500,
+      eventLoopDelayMaxMs: 0,
+    });
+
+    expect(timing).toMatchObject({ last_output_ms: 2_000, detection_lag_ms: 0 });
   });
 });

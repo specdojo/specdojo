@@ -1,0 +1,14 @@
+`opd-monitoring-sample` の R2（構成）レビューが終わりました。章を 1 か所移しています。prettier と markdownlint は問題なく通りました。残りの検査は親 runner が実行します。
+
+**編集したファイルについて:** plan の「編集対象」には `opd-access-control-sample.md` が解決されています。しかしタスク名と根拠の成果物は `opd-monitoring-sample` です。レビューの対象は monitoring と判断し、`docs/ja/specdojo/samples/opd-monitoring-sample.md` だけを直しました。access-control は R1〜R5 の段をすでに終えており、手を付けていません。plan の編集対象の解決が誤っている可能性があります。
+
+**直したこと:**
+- 「測定元と通知の手段」の箇条書きにあった「営業時間外の死活の通知は初動を始めない」という扱いを、「初動の時限と完了条件」の末尾の段落へ移しました。この節は何から測り、いつ判定し、どう届けるかを書く節です。ところが中身は通知を受けた後の初動の扱いでした。
+- 移した記述とつながる未決事項の表の行で、「影響する節」に「初動の時限と完了条件」を足しました。
+
+**直していないこと:** 章の順、見出し、表と本文の配置は rulebook の本文構成どおりで、前提から結論の順に読めました。template は rulebook で `not-needed` です。見出しは `opd-index-sample` の章名と同じでした。
+- 関連ドキュメント導線の表が、存在する `opd-index-sample` などを wikilink にせずバッククォートで書いています。また備考がすべて「予定」になっています。これは R5（整合）で扱う内容なので、構成の段では直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-monitoring-sample の R2（構成）レビューを行い、「測定元と通知の手段」にあった営業時間外の初動の扱いを「初動の時限と完了条件」へ移した。未決事項の表の「影響する節」も合わせて直した。ほかの章の順・粒度・配置は rulebook の本文構成に合っていた。","handoff":["R2-1: R2 / 2.2. 測定元と通知の手段 → 2.3. 初動の時限と完了条件 / 営業時間外の死活の通知では初動を始めず 9:30 に確かめるという扱いが、測り方・判定の時刻・届け方を書く 2.2 の箇条書きに入っていた。内容は通知を受けた後の初動の扱いで、置き場所が違う / この箇条書きを 2.3 の末尾の段落へ移し、未決事項の表の該当行の「影響する節」に「初動の時限と完了条件」を足した / vp-arc-document-structure、vp-qe-omissions-consistency / -","R2-2: R2 / 全体（概要〜関連ドキュメント導線） / 章の順（概要→差分を持つ章→関連ドキュメント導線）、差分の章の見出しが opd-index-sample の「監視・アラート方針（指標・閾値・通知先・初動）」と同じこと、各節で表の前の 1 文→表→補足の順になっていることを確かめた。2.1 守る業務→2.2 測定と通知→2.3 初動→2.4 見直しの順で、前提から結論の順に読める。template は rulebook で not-needed / - / vp-arc-document-structure / -","R2-3: R2 / 3. 関連ドキュメント導線（`opr` 等） / 存在する opd-index-sample などをバッククォートで仮置きし、備考を「予定」としている。opd-access-control-sample は wikilink と「作成済」で書いており、書き方が揃っていない。構成ではなく参照先との整合の問題 / - / R5（整合）で、opd-incident-management-sample・opr-index-sample・opr-monitoring-sample があるかを確かめ、wikilink と備考を揃える案。vp-qe-kata-conformance / -","申し送り: plan の「編集対象」は rulebook の sample 宣言の先頭にある opd-access-control-sample.md に解決されていた。しかしタスク名と根拠の成果物（path）は opd-monitoring-sample なので、opd-monitoring-sample.md を編集し、opd-access-control-sample.md は変えていない。plan の生成で編集対象を解決する処理（sample が複数宣言された rulebook で先頭を取っている可能性）を確かめてほしい。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opd-monitoring-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opd-monitoring-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

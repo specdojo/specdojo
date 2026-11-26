@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130-20261125T065657Z-7cefb47d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T06:57:45.696Z",
+    "completed_at": "2026-11-25T07:01:57.361Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "...cess-criteria-and-acceptance-criteria-sample.md | 28 +++++++++++-----------\n 1 file changed, 14 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md",
+      "status": "passed",
+      "summary": "整形して表の列幅を揃えた"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "対象外",
+      "reason": "履歴蓄積ファイル（plan・result・個票）を変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-success-criteria-and-acceptance-criteria-sample\n  type: project\n  status: ready\n  rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-scope-sample\n  supersedes: []\n---\n\n# 成功基準と受入条件: 駄菓子屋きぬや 販売管理システム\n\n## 1. 判定対象と適用範囲\n\n\\[\\[specdojo:prj-scope-sample|プロジェクトスコープ]] の対象業務（店頭販売、在庫、つけ管理）を判定対象とし、同書のスコープ外\n… output omitted …\n条件の候補を整理し、店主代表（`PO`）がベースライン記録の開始前に決める。決まるまで SC-04 の判定を保留する |\n| 長期滞留の定義 | SC-05。初期受入は進められる | *UNDECIDED*: 何日売れない在庫を長期滞留とするかを、店主代表（`PO`）がベースライン記録の開始前に決める。決まるまで SC-05 の判定を保留する |\n| 繁忙期にかかるベースライン | SC-04・SC-05。初期受入は進められる | *UNDECIDED*: ベースラインの1か月が夏休み期間にかかる場合の比較の扱いを、店主代表（`PO`）がベースライン記録の終了時に季節要因の記録をもとに決める。決まるまで SC-04・SC-05 の判定を保留する |\n| オフライン時の記録方法 | 追加する受入条件（ID は起票時に採番）。初期受入は進められ、追加した条件の合格を運用開始の必須条件とする | *UNDECIDED*: 店主代表（`PO`）が運用開始前に運用方針を決め、変更要求ログへ受入条件の追加を起票し、決定記録に残す。追加した受入条件は初期受入後に単独で判定する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7116 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7116 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/sche\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1741}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  16:07:17\n   Duration  2.58s (transform 5.90s, setup 1.18s, import 8.16s, tests 6.00s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nes/prj-0001-T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として prj-success-criteria-and-acceptance-criteria-sample.md の文を 10 か所直し、Prettier で整形した。F001 は R4（vp-qe-verifiability）、F002 は表の列が解消済みで R1/R5 の観点のため、この段では扱っていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 判定対象と適用範囲 / 初期受入の必須範囲と対象外を 1 文に詰めて長い / 2 文に分けた / W3 / -",
+    "R3-2: R3 / 成功基準 / 表の前の文で誰が確かめるかが書かれていない / 「確認者が」を足した / W1 / -",
+    "R3-3: R3 / 受入条件 / 表の前の文に「確かめる」「判断する」が並び前半に主語がない / 文を分け前半に「確認者が」を足した / W1、W3 / -",
+    "R3-4: R3 / 判定手順と証跡（手順 1） / 「開始までに」が運用開始かベースライン記録の開始か決まらず、「例外表」の指す先と決める主体もない / 「ベースライン記録の開始前に」と章タイトル `例外条件と未解決事項` の参照にし、主体の店主代表（`PO`）を足して 2 文に分けた / W4、W1、W3 / -",
+    "R3-5: R3 / 判定手順と証跡（手順 3） / 誰が追記するかが書かれていない / 「確認者が」を足した / W1 / -",
+    "R3-6: R3 / 判定手順と証跡（手順 5） / 長く、前半に主語がない / 「確認者が…書く」「店主代表（`PO`）は…引き継ぐ」の 2 文に分けた / W1、W3 / -",
+    "R3-7: R3 / 判定手順と証跡（手順 6） / 「変更した条件 ID を引き継ぐ」が証跡にもかかるのか読めない / 「業務受入条件と関連テスト、その条件 ID の取得済みの証跡」に変えた / W5 / -",
+    "R3-8: R3 / 例外条件と未解決事項 / 表の前の文の「値ごとに」が表の列「論点」と食い違い、並べ方も曖昧 / 「論点ごとに」にし 3 項目を読点で並べた / W5、vp-ux-language-consistency / -",
+    "R3-9: R3 / 例外条件と未解決事項（人気商品の対象範囲） / 主語が二つ入れ子になっている / 「BA が候補を整理し、PO が決める」の順に並べ直した / W5、W1 / -",
+    "R3-10: R3 / 例外条件と未解決事項（オフライン時の記録方法） / 「初期運用開始前」がほかの箇所の「運用開始」と表記が違う / 「運用開始前」にそろえた / vp-ux-language-consistency / -",
+    "申し送り: grade F001（SC-06 の必須記録と引き継ぎの定義がない）は観点が `vp-qe-verifiability` で R4 が扱う。項目の中身を決めないと書けないため、文の直しでは決めず R4 の段へ回す。",
+    "申し送り: grade F002（例外表の列）は、表がすでに template の「論点・判定への影響・当面の扱い」の列になっており解消済みと判断した（R1/R5 の観点）。",
+    "申し送り: 「Role code」は用語集（docs/ja/product/010-business-specs/060-glossary/）にないが、ほかの sample でも同じ表記を使うため、この sample では変えていない。用語集に載せるかは R5 または用語集側で判断する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130-20261125T065657Z-7cefb47d/executor.log",
+      "bytes": 7095,
+      "truncated": false
+    }
+  ]
+}

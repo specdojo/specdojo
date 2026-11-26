@@ -5548,3 +5548,219 @@
       from: C11R・TN64 の統合後の smoke が成功した
       to: YQ32 の統合後の smoke が成功した
   previous_event_id: reg_6448ff5fb4184334a38c0bf2226eb441
+- v: 1
+  id: reg_d3e5d33a076f4e82adbe7869a7e96741
+  ts: "2026-11-25T22:21:25Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-3M4M・PJR-2Q0G の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-24"
+      to: "-"
+  previous_event_id: reg_f229aa779c514021aea163638ad752d7
+- v: 1
+  id: reg_73957b83bcab4202af49166d9a9de246
+  ts: "2026-11-25T22:22:31Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d3e5d33a076f4e82adbe7869a7e96741
+- v: 1
+  id: reg_58fb3e177e70471a891f03fb97fa4fd3
+  ts: "2026-11-25T22:24:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_73957b83bcab4202af49166d9a9de246
+- v: 1
+  id: reg_78058f5936da448d914e1a320468acff
+  ts: "2026-11-25T22:25:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke が通ったため、オーケストレーターが確かめて close。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: YQ32 の統合後の smoke が成功した
+      to: PJR-3M4M・PJR-2Q0G を統合した runner で、start → review と実体の actor（sonnet-executor）を確かめた。
+  previous_event_id: reg_58fb3e177e70471a891f03fb97fa4fd3
+- v: 1
+  id: reg_405b39905cad4e63acfa1585b929f1cc
+  ts: "2026-11-26T11:00:15Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-T4E0・PJR-FNB7 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-26"
+      to: "-"
+  previous_event_id: reg_78058f5936da448d914e1a320468acff
+- v: 1
+  id: reg_cc01fbab11e948ec94317e30b59ec577
+  ts: "2026-11-26T11:01:18Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_405b39905cad4e63acfa1585b929f1cc
+- v: 1
+  id: reg_ef421388d4744dc597ac82421b2a878a
+  ts: "2026-11-26T11:02:39Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cc01fbab11e948ec94317e30b59ec577
+- v: 1
+  id: reg_8f86a9fad1564b7db9dd9a70668bb137
+  ts: "2026-11-26T12:18:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。T4E0・FNB7 の統合後の smoke が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: PJR-3M4M・PJR-2Q0G を統合した runner で、start → review と実体の actor（sonnet-executor）を確かめた。
+      to: runner 変更後の exec run の動作を smoke で確かめた
+  previous_event_id: reg_ef421388d4744dc597ac82421b2a878a
+- v: 1
+  id: reg_73d249f72d6f4e889886b1b68fc57f0e
+  ts: "2026-11-26T15:41:50Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-AEGN・PJR-1TYG の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-26"
+      to: "-"
+  previous_event_id: reg_8f86a9fad1564b7db9dd9a70668bb137
+- v: 1
+  id: reg_b773921d79fc4628b6084e9baba51db0
+  ts: "2026-11-26T15:42:32Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_73d249f72d6f4e889886b1b68fc57f0e
+- v: 1
+  id: reg_c833bce4a5d24fe285e78736a4399d25
+  ts: "2026-11-26T15:43:54Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b773921d79fc4628b6084e9baba51db0
+- v: 1
+  id: reg_76c4dfa46e694095a336b237097c05d5
+  ts: "2026-11-26T15:44:44Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_c833bce4a5d24fe285e78736a4399d25
+- v: 1
+  id: reg_60d04c494b7f415ebb0aea34b16d7548
+  ts: "2026-11-26T15:47:22Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sonnet-executor -> sol-executor at 2026-11-26T15:45:24.763Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_76c4dfa46e694095a336b237097c05d5
+- v: 1
+  id: reg_1410095e5c0b44ed81cb79c4da19cb02
+  ts: "2026-11-26T22:28:55Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_60d04c494b7f415ebb0aea34b16d7548
+- v: 1
+  id: reg_9e5d5906301a49e19a5dd28eccce11ce
+  ts: "2026-11-26T22:31:33Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1410095e5c0b44ed81cb79c4da19cb02

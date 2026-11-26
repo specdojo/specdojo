@@ -1,0 +1,33 @@
+R4（正しさ）のレビューを終えました。誤りは見つからず、`docs/ja/specdojo/samples/opr-sample.md` は変更していません。ファイルの変更はありません（`pipeline-state.json` は runner が作ったもので、私は触っていません）。
+
+**確かめた主張**（照合先は schema、template、`pm-roles-sample.yaml`、OPD の各 sample）
+
+| No | 主張（本文の箇所） | 照合先 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter `type: operations` | `deliverable-frontmatter.schema.yaml` の列挙値、rulebook の「設定内容」 | 一致 |
+| 2 | frontmatter の `rulebook`・`based_on`・`supersedes` | `common-frontmatter.schema.yaml`、`opr-rulebook.md` | 一致 |
+| 3 | 参照先の id（frontmatter と本文 wikilink の計 10 件） | 各 sample の frontmatter の `id` | すべて実在 |
+| 4 | 1〜12 章の見出しと各表の列名 | `opr-template.md` | 一致 |
+| 5 | ロールコード `OPS`・`DEV`・`PO` とその正式名 | `pm-roles-sample.yaml` | 一致 |
+| 6 | 営業時間 10:00〜18:00、P1 の 15 分・30 分での紙への切替、P2・P3 の期限 | `opd-index-sample.md` | 一致 |
+| 7 | 監視の閾値（死活 5 分、夜間バックアップ 9:30）、誤検知 月 3 件 | `opd-index-sample.md`、`opd-monitoring-sample.md` | 一致 |
+| 8 | RTO・RPO の仮の扱い、監査ログの保管 1 年、取得は閉店後に 1 日 1 回 | `opd-index-sample.md` | 一致 |
+| 9 | 変更種別ごとの承認者・時間帯・戻す条件 | `opd-index-sample.md` | 一致 |
+| 10 | 再実行の上限（1 日 2 回、手動は 1 回まで） | `opr-batch-sample.md` | 一致（分冊同士の照合。OPD に正本となる値はない） |
+| 11 | 剥奪の時期（店番をやめた日、保守作業が終わった日のうち） | `opd-access-control-sample.md` | 一致 |
+| 12 | 月次点検の日と実施漏れの扱い、問い合わせの応答目標 | `opd-index-sample.md` | 一致 |
+| 13 | `closing_date`・`run_id`・`ticket_id` などの業務上の識別子 | 正本なし | 確かめの対象外（共通サンプル文脈と食い違わない業務上の仮定） |
+
+**grade の finding 4 件の扱い**
+
+- **F001・F004**：観点 `vp-po-decision-readiness` と `vp-ops-release-readiness` は、kata-guide の「kata の観点の組」で kata の段のレビューから外すと決められています。理由は、kata の承認と ready 化を登録簿で追うためです。そのため直していません。
+- **F002**：概要の未決事項の表に「監査ログ以外の証跡の保管期間」の行がすでにあり、解消済みです。
+- **F003**：関連ドキュメント導線の表に分冊 8 件が載り、`opr-incident-sample` も「作成済」になっています。解消済みで、観点としては R5 の担当です。
+
+**R5 への申し送り**：P1 の一次対応の「つけの新規記録を止め」は、OPD の「つけ残高を確認できない間は受けない」より範囲が広く読めます。たとえば販売だけが記録できない P1 にもつけを止めるかどうかです。正しさの誤りではなく整合の問題なので、ここでは直していません。
+
+親 runner が実行する検査（`lint:md` など）は重ねて実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: opr-sample.md の事実（frontmatter の type・キー、参照 id、章見出し・表の列、ロールコード、OPD 由来の数値と条件）を schema・template・pm-roles-sample・opd-*-sample と照合し、誤りは見つからなかったため差分なし。F001/F004 は kata の段のレビューで外す観点、F002/F003 は解消済み。","handoff":["R4 確かめの表: 1) frontmatter `type: operations` — 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml の deliverableType enum と opr-rulebook の「設定内容」— 一致。","R4 確かめの表: 2) frontmatter の `rulebook`・`based_on`・`supersedes` — 正本 docs/specdojo/schemas/v1/common-frontmatter.schema.yaml（`based_on` 72 行・`supersedes` 75 行）と opr-rulebook — 一致。","R4 確かめの表: 3) frontmatter と本文 wikilink の参照 id（opd-index-sample、opr-index-sample、opd-incident-management-sample、opr-incident/monitoring/backup-restore/batch/change/access-control/support-sample）— 正本 各 sample の frontmatter `id` — すべて実在で一致。","R4 確かめの表: 4) 章見出し 1〜12 と各表の列名 — 正本 docs/ja/specdojo/templates/opr-template.md — 一致。","R4 確かめの表: 5) ロールコード `OPS`（Operations / Release Manager）・`DEV`（Developer）・`PO`（Project Owner）— 正本 docs/ja/specdojo/samples/pm-roles-sample.yaml — 一致。","R4 確かめの表: 6) 営業時間 10:00〜18:00、P1 15 分以内・30 分で紙の販売控えへ切替（判断は `PO`）、P2 当日閉店まで、P3 次の月次点検 — 正本 opd-index-sample.md の運用の範囲・前提、体制・責任分界、障害対応方針 — 一致。","R4 確かめの表: 7) 死活 営業時間中 5 分無応答、夜間バックアップ 9:30 判定、死活の誤検知 月 3 件以上で閾値見直し — 正本 opd-index-sample.md の監視・アラート方針と opd-monitoring-sample.md 46・49・71 行 — 一致。","R4 確かめの表: 8) RTO/RPO の仮扱い（翌営業日開店までに前日閉店時点へ）、監査ログ保管 1 年、閉店後 1 日 1 回取得 — 正本 opd-index-sample.md のバックアップ・リストア方針と権限・アカウント運用 — 一致。","R4 確かめの表: 9) 変更種別ごとの承認者・時間帯・ロールバック条件（版の更新・価格一括変更は `PO`・閉店後、表示修正は `OPS`）— 正本 opd-index-sample.md の変更管理 — 一致。","R4 確かめの表: 10) 再実行の上限（自動を含め 1 日 2 回、手動は 1 回まで）— 正本 opr-batch-sample.md 113 行 — 一致（OPD に値の正本はなく、分冊との照合）。","R4 確かめの表: 11) 剥奪の時期（店番をやめた日、保守作業が終わった日のうち）— 正本 opd-access-control-sample.md 48・52 行 — 一致。","R4 確かめの表: 12) 月次点検は最初の休業日、実施漏れは翌週、問い合わせの応答目標 — 正本 opd-index-sample.md の定期運用方針と問い合わせ運用方針 — 一致。","R4 確かめの表: 13) `closing_date`・`run_id`・`ticket_id` などの業務上の識別子 — 正本なし（共通サンプル文脈の業務上の仮定）— 確かめの対象外。","finding の扱い: F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は kata-guide の「kata の観点の組」で kata の段のレビューから外す観点（kata の承認と ready 化は登録簿で追う）のため対応しない。F002 は概要の未決事項の表に「監査ログ以外の証跡の保管期間」の行があり解消済み。F003 は関連ドキュメント導線の表に分冊 8 件があり `opr-incident-sample` も作成済のため解消済み（観点は R5 の担当）。","R5 への申し送り: 障害対応手順 P1 の一次対応「つけの新規記録を止め」は、OPD の「つけ残高を確認できない間は受けない」より範囲が広く読める（販売だけ記録できない P1 の場合）。正しさの誤りではなく整合の論点として R5 で確認する。"],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"},{"command":"npx prettier --check docs/ja/specdojo/samples/opr-sample.md","status":"not_applicable","summary":"ファイルの変更なし","reason":"変更した *.md / *.ts / *.js / *.json / *.yaml / *.yml ファイルがない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"executor は plan / result / 個票を変更していない"}]}
+</specdojo_executor_evidence>

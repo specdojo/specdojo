@@ -587,12 +587,14 @@ describe("generateWorktreeArtifacts", () => {
     return worktree;
   }
 
-  it("builds generated artifacts in the worktree when it holds a SpecDojo config", () => {
+  it("builds generated artifacts in the worktree when it holds a SpecDojo config", async () => {
     const worktree = createWorktreeDirectory(true);
     const built: string[] = [];
 
     try {
-      generateWorktreeArtifacts(worktree, (worktreePath) => built.push(worktreePath));
+      await generateWorktreeArtifacts(worktree, (worktreePath) => {
+        built.push(worktreePath);
+      });
 
       expect(built).toEqual([resolve(worktree)]);
     } finally {
@@ -600,12 +602,14 @@ describe("generateWorktreeArtifacts", () => {
     }
   });
 
-  it("skips the build when the worktree has no SpecDojo config", () => {
+  it("skips the build when the worktree has no SpecDojo config", async () => {
     const worktree = createWorktreeDirectory(false);
     const built: string[] = [];
 
     try {
-      generateWorktreeArtifacts(worktree, (worktreePath) => built.push(worktreePath));
+      await generateWorktreeArtifacts(worktree, (worktreePath) => {
+        built.push(worktreePath);
+      });
 
       expect(built).toEqual([]);
     } finally {

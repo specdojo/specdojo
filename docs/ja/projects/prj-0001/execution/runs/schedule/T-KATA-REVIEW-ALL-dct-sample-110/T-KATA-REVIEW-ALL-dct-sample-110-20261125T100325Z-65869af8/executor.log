@@ -1,0 +1,23 @@
+R1（目的の過不足）のレビューが終わりました。sample `docs/ja/specdojo/samples/dct-sample.yaml` に 1 行足し、ほかの記述は変えていません。schema 検査と Prettier の整形チェックはどちらも通っています。
+
+**直した箇所:** `prj-issues-and-approach` に `brief: *project_baseline_brief` を追加しました。
+- この成果物だけ、共通の前提を持っていませんでした。前提とは、初期リリースの対象外の範囲、タブレット 1 台、段階的な記録移行です。
+- 30 行目のコメントは「定義系の成果物すべて」に前提を渡すと書いています。rulebook も、複数の成果物で前提を共有するならアンカーで参照する、と定めています。
+- 課題と方針を整理する成果物にもこの前提が要ると判断し、コメントを書き換える案ではなく、前提を足す案を採りました。
+
+grade の finding F001 は観点が `vp-ux-readability`（R3 の担当）です。ただ、R1 の観点（`vp-qe-kata-conformance`：要る内容の欠け）にも当たると見て、この段で直しました。担当の段をまたいでいるため「要判断」の印を付けています。前提を足す案をやめるなら、R3 でコメントを「前提を必要とするもの」と直す案に戻せます。
+
+**維持した記述:** 次は rulebook の目的と合っており、要らない内容も見つからなかったので、そのままにしています。
+- `kind` の 3 種
+- `depends_on: []`
+- rulebook の完全 ID と `not-needed`
+- `generated` の成果物に rulebook と `done_criteria` を書かないこと
+- `overview` と `brief` の分け方
+- `done_criteria` の書き方
+- 単一の葉グループにまとめた構成
+
+`instance_id_pattern` と `evidence_refs` は、このドメインに使い道がない任意項目なので、足していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施。`prj-issues-and-approach` に共有アンカー `brief: *project_baseline_brief` を追加し、アンカーのコメントと rulebook の `brief` 共有方針に合わせた。ほかの記述は rulebook の目的と整合しており維持した。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/dct-sample.yaml の `prj-issues-and-approach`（113〜131 行目） / 指摘: アンカーのコメントは「定義系の成果物すべてに渡す前提」としているが、work の定義系成果物のうちこの 1 件だけが `brief` を持たず、対象外の範囲・端末・段階移行の前提が課題と方針の plan へ渡らない（grade F001 と同じ箇所） / 直した案: `brief: *project_baseline_brief` を追加した / 根拠: dct-rulebook の「`brief`・`overview` の使い分けと YAML アンカー」（複数成果物で前提を共有する場合はアンカーとエイリアスで参照する）、vp-qe-kata-conformance / 印: 要判断（F001 の観点は `vp-ux-readability` で R3 の担当。前提を足す案をやめるなら、R3 でコメントを「前提を必要とするもの」と直す案に戻せる）","No: 2 / 段: R1 / 箇所: sample 全体 / 指摘: 要る内容の欠け・要らない内容の混入はほかに見つからなかった。`kind` の 3 種、`depends_on: []`、rulebook の完全 ID と `not-needed`、`control`・`generated` に `done_criteria` を書かないこと、`overview` と `brief` の分け方、単一の葉グループの構成を確認した。`instance_id_pattern`・`evidence_refs` はこのドメインに使い道がない任意項目なので足さない / 直した案: なし（維持） / 根拠: dct-rulebook の「本文構成（標準テンプレ）」「記述ガイド」、Sample 記述標準の「構成の原則」（最小の記述量で完成例として成立させる） / 印: なし"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample の YAML だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

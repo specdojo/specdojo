@@ -1,0 +1,19 @@
+R3（読みやすさ）として、`docs/ja/specdojo/samples/prj-stakeholder-register-sample.md` の文を 4 か所直しました。意味、判断に要る背景、例外、制約は変えていません。
+
+検証は Prettier の整形と `npx prettier --check` だけを実行し、通りました。markdownlint などの lint は親 runner が後で実行するため、ここでは回していません。frontmatter の `status`（ready）は変えていません。この段に回ってきた grade と condense の指摘はありませんでした。
+
+直した 4 か所は次のとおりです。
+
+- **見直し条件の冒頭（W1・W3）**: 主語がなく、条件も重なって長い文でした。「見直し責任者は…更新する。」と、計画への反映の文の 2 文に分けました。
+- **エンゲージメント方針の常連顧客の「現状」（W6）**: 「ノートで管理され」という受け身で、誰が管理しているかが消えていました。「店主代表がつけ残高をノートで管理しており」にしました。
+- **関係者一覧の家族利用者の「備考」（W4・W1）**: 「代表者」が「店主代表」と取り違えられるおそれがありました。「家族利用者の代表者」にしました。
+- **影響度/関心度分析の表の前の文（W7・`vp-ux-readability`）**: 「先へ進むために」では何を進めるのかが読めませんでした。「プロジェクトを進めるために」にしました。
+
+ほかに次の 2 点を確かめ、直していません。
+
+- 「Role code」の表記は rulebook と同じなので、そのままにしました。
+- 文体は「である」でそろっていました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさとして prj-stakeholder-register-sample.md の文を 4 か所直した（W1・W3・W4・W6・W7）。意味・背景・制約は変えておらず、Prettier の check は通った。","handoff":["R3-1: R3 / 見直し条件 / 冒頭の文に主語がなく、条件が重なって長い / 「見直し責任者は…更新する。」と計画への反映の文の 2 文に分けた / W1, W3 / -","R3-2: R3 / エンゲージメント方針（STH-REGULAR-CUSTOMER の現状） / 「ノートで管理され」という受け身で、管理する主体が消えている / 「店主代表がつけ残高をノートで管理しており」にした / W6 / -","R3-3: R3 / 関係者一覧（STH-FAMILY-USER の備考） / 「代表者」が「店主代表」と取り違えられるおそれがある / 「家族利用者の代表者」にした / W4, W1 / -","R3-4: R3 / 影響度/関心度分析（表の前の 1 文） / 「先へ進むために」では何を進めるのかが読めない / 「プロジェクトを進めるために」にした / W7, vp-ux-readability / -","R3-5: R3 / 関係者一覧（表の前の文） / 「Role code」の表記は rulebook と一致するため直さない / - / W8 / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-stakeholder-register-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する（parent validation）"}]}
+</specdojo_executor_evidence>

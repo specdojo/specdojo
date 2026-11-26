@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130-20261126T020626Z-88ac3c4b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T02:07:13.568Z",
+    "completed_at": "2026-11-26T02:09:37.117Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../samples/pm-orchestrator-playbook-sample.md         | 18 +++++++++---------\n 1 file changed, 9 insertions(+), 9 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pm-orchestrator-playbook-sample\n  type: project\n  status: draft\n  rulebook: specdojo:pm-orchestrator-playbook-rulebook\n  based_on:\n    - specdojo:pm-plan-sample\n---\n\n# 駄菓子屋きぬや 販売管理システムのオーケストレーター運用メモ\n\n## 1. 目的と適用範囲\n\n本書は、駄菓子屋きぬや 販売管理システム構築を扱う対話型オーケストレーターが、このプロジェクトで実行を組み、止まった実行を再開し、項目を close するときの運用メモである。\n\n- 承認の聞き方や close の前の一般的な確かめ方は、配布するオーケストレーターの指示の本文に従う。本書は、店頭の端末 1 台と営業時間の制約から生じる事柄だ\n… output omitted …\nにまとめる。集めた件数が範囲の項目の件数と一致したら次へ進む。\n3. 開発用の PC で全件の検査を流し、すべて通ったら配布物を作る。\n4. 閉店後にタブレットへ入れ替え、`kinuya-test-data` で販売・在庫・つけの記録を 1 件ずつ試す。どれかが通らなければ、前の版へ戻す。\n5. 翌朝の開店前に、店主代表と販売の画面を確かめ、結果を `kinuya-acceptance-record` に残してリリースの項目を close する。\n\n## 9. 店頭の端末との分担\n\n- 営業時間中（10:00〜18:00）は、店頭のタブレットへ接続する検証を流さない。販売の画面が止まると店番が記録できなくなる。\n- 夜間に長い列を流すときは、閉店後の入れ替えの作業と重ならないかを先に確かめる。\n- *UNDECIDED*: 営業時間外にタブレットが通信できないときの検証の扱い（登録簿の `question` の `PJR-KN15` で店主代表の回答を待つ）。決まるまでは、タブレットに接続する検証を `requires_human` として残し、翌朝の開店前に流す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7540 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7540 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts \n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1473}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  11:09:48\n   Duration  2.49s (transform 5.55s, setup 1.20s, import 7.34s, tests 6.01s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として、W1〜W10 に沿った文の直しを docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md に 9 か所入れた。意味・背景・例外・制約は変えていない。grade の finding のうち R3 の観点（vp-ux-readability・vp-ux-language-consistency・vp-arc-conciseness）に当たるものは残っていない。F005 は R4、F008 は R5・R1 に任せた。",
+  "completion_status": "complete",
+  "handoff": [
+    "1: R3 / 目的と適用範囲 / 「`PJR-KN12` などの項目 ID」の「など」が指す範囲が読み取れない。また「記録先は…に従う」で主語と述語がねじれている / 「`PJR-KN12`〜`PJR-KN15` の項目 ID と `kinuya-*` の記録は、未同梱の架空の参照名である。記録先は [[specdojo:pm-plan-sample|プロジェクト管理計画]] が定める。」に直した / W7・W2 / -",
+    "2: R3 / agent の使い分けと癖 / 「表に加えて、次の癖を踏まえて選ぶ」の「表」の指す先（`routing` か次の表か）と、選ぶ主語が一つに決まらない / 「オーケストレーターは、`routing` に加えて次の表の癖を踏まえて agent を選ぶ。」に直した / W4・W1 / -",
+    "3: R3 / 実行の運び方 / 「並べると時間切れで落ちた」で、何が落ちたかが分からない / 「並べると、統合テストが時間切れで落ちた」に直した / W1 / -",
+    "4: R3 / 止まったときの再開 / 「統合の前に範囲外の変更として止まる」で、止める主体が受け身のように消えている / 「runner が範囲外の変更とみなして統合の前に止める」に直した / W6・W1 / -",
+    "5: R3 / 保護された設定の扱い / 「範囲は `.specdojo/` の設定を正本とする」の「範囲」が何の範囲か一つに決まらない / 「書けない範囲の正本は `.specdojo/` の設定とする。」に直した / W4 / -",
+    "6: R3 / 保護された設定の扱い / 「変更が要る項目は、executor に…書かせる」に、何の変更かと書かせる主語がない / 「保護された設定の変更が要る項目では、オーケストレーターが executor に…書かせる。その後、オーケストレーターが…反映する。」に直した / W1 / -",
+    "7: R3 / リリースの手順 / 版の範囲を決める文の読点が 3 つあり、修飾が長い / 「版の範囲は店主代表（`PO`）が決める。店主代表は、入れ替えの日の前日までに…選ぶ。」に分けた / W3・W5 / -",
+    "8: R3 / リリースの手順 / 手順 1 で、略語の `PO` を初出の後にもう一度添えている / 手順 1 の「店主代表（`PO`）」を「店主代表」に直した / W8 / -",
+    "9: R3 / リリースの手順 / 手順 2 の「範囲の close の件数」の係りが読みにくい / 「集めた件数が範囲の項目の件数と一致したら次へ進む。」に直した / W5 / -",
+    "10: R3 / 全体 / grade の F002・F003・F006・F007・F009 は前の段の版で既に直っていた。F001・F004 が指していた `pgrep -f` の行も消えていた / - / vp-pm-control-reporting・vp-ba-requirements-completeness・vp-qe-omissions-consistency・vp-qe-kata-conformance・vp-pm-dependency-risk・vp-arc-conciseness / -",
+    "11: R3 / リリースの手順 / F005「全件の検査」で流す検査が特定されていない。これは R4（vp-qe-verifiability）が扱うため、R3 では直さない / - / vp-qe-verifiability。R4 の段で、正本のコマンドを確かめて具体的に書く / -",
+    "12: R3 / Frontmatter / F008 `based_on` が decision の個票ではなく pm-plan-sample を指している。これは R5・R1（vp-qe-kata-conformance）が扱うため、R3 では直さない / - / vp-qe-kata-conformance。R5 の段で、rulebook の推奨 Frontmatter 項目と照らす / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130-20261126T020626Z-88ac3c4b/executor.log",
+      "bytes": 5362,
+      "truncated": false
+    }
+  ]
+}

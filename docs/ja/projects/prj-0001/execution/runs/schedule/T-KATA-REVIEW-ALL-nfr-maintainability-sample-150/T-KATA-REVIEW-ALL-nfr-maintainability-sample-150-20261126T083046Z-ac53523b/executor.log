@@ -1,0 +1,14 @@
+R5（整合）を終えて、`docs/ja/specdojo/samples/nfr-maintainability-sample.md` を直しました。関連する sample と 2 件食い違っていたので本文を直し、リンクの表示名も 3 件そろえました。直したファイルに prettier と markdownlint をかけ、どちらも問題は出ていません。
+
+読んだもの：
+- 同じ系列の sample：`nfr-index-sample`
+- 参照先：`based_on` の `opd-index-sample`、リンク先の `nfr-availability-sample`・`opr-incident-sample`・`opr-change-sample`
+- 規範：`nfr-maintainability-rulebook`、用語集、Sample 記述標準の `共通サンプル文脈`
+
+用語集は SpecDojo 自体の用語集で駄菓子屋の業務用語を持たないため、照合の結果、食い違いはありませんでした。
+
+grade の指摘 F001・F002 は、前の段が直した版ではすでに解消していました（F002 の「外部」への統一、F001 の `nfr-mnt-004` の閾値）。そのため、この段では繰り返していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）で nfr-maintainability-sample を opd-index・opr-incident・opr-change と突き合わせ、営業時間中の P1 復旧のための切り戻しの扱い、切り分けの実行と責任の分担、関連ドキュメント導線のリンク表示名（参照先の H1 に合わせた）の 3 点を直した。nfr-index-sample の側を直す案を 2 件 handoff に残した。grade の F001・F002 は前の段で解消済みのため、この段では扱っていない。","handoff":["R5-1: 段 R5 / 箇所 適用範囲・前提条件（対象時間帯） / 指摘: 「変更と切り戻しは閉店後から翌営業日の開店まで」と言い切っており、opd-index-sample の変更管理（営業時間中の変更は P1 の復旧に必要な場合だけ PO の承認で行う）と opr-incident-sample（ロールバックは営業時間中でも P1 の復旧に必要な変更として扱う）に食い違う / 直した案: 「P1 の復旧に要る変更と切り戻しは営業時間中も行う」を足した / 根拠: vp-qe-kata-conformance（適用先・相互の整合） / 印: -","R5-2: 段 R5 / 箇所 適用範囲・前提条件（保守作業を担う役割） / 指摘: 「切り分けの判断は OPS」だけで、切り分けを行う役割がない。opd-index-sample の RACI（障害の切り分けと復旧: OPS=A、DEV=R）と opr-incident-sample の障害対応手順の「切り分け（DEV）」列に合わない。rulebook は切り分け・修正・切り戻しを担う役割を書くことを求めている / 直した案: 「切り分けは DEV が行い OPS が判断の責任を持つ」にした / 根拠: vp-qe-kata-conformance / 印: -","R5-3: 段 R5 / 箇所 関連ドキュメント導線 / 指摘: wikilink の表示名「非機能要件 / 可用性」「障害対応手順」「運用変更手順」が、参照先の H1（可用性要件、運用手順（障害対応）、運用手順（運用変更））やほかの sample の多数の表記と違う / 直した案: 3 件の表示名を参照先の H1 に合わせた / 根拠: vp-qe-kata-conformance（相互の表記） / 印: -","R5-4: 段 R5 / 箇所 関連ドキュメント導線 / 指摘: nfr-index-sample の「関連ドキュメント導線」の保守性の行は、運用（OPD/OPR）の列が `opd-index`、`opr-change` だけである。本書が一次切り分けの手順の導線とする `opr-incident` が入っていない / 直した案: - / 根拠: vp-qe-kata-conformance。相手側の nfr-index-sample の保守性の行の運用（OPD/OPR）の列に `opr-incident` を足す案 / 印: -","R5-5: 段 R5 / 箇所 保守性要件一覧 / 指摘: nfr-index-sample のカテゴリ一覧は保守性の代表指標を「変更の依頼から適用までの日数」と書くが、本書と rulebook の用語は「変更リードタイム（要求を受けてから本番へ反映するまで）」で、測る単位も翌営業日の 10:00 という時刻である / 直した案: - / 根拠: vp-qe-kata-conformance。相手側の nfr-index-sample の代表指標を「変更リードタイム（要求から反映まで）」に直す案。index の要約としての言い換えとして許すかは迷ったため要判断。選ばなかった案は、そのまま維持すること / 印: 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"整形を適用（表の列幅だけが変わった）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変えていないため"}]}
+</specdojo_executor_evidence>

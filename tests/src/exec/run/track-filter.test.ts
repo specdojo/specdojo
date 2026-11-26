@@ -9,6 +9,20 @@ import { prepareSingleTask, type PreparedTask } from "../../../../src/exec/run/s
 import { runPreparedTaskSafely } from "../../../../src/exec/run/schedule-task.js";
 import { spawnIndexBuild, spawnRefresh } from "../../../../src/exec/run/mode-shared.js";
 import type { ReadyTaskView } from "../../../../src/exec/types.js";
+import {
+  createQueueRecord,
+  queueLockPath,
+  queueRecordPath,
+  runQueue,
+  writeQueueRecord,
+} from "../../../../src/exec/queue.js";
+import {
+  EXEC_QUEUE_ID_ENV,
+  EXEC_STOP_EXIT_CODE,
+  finishStopRequest,
+  readStopRequest,
+  requestStop,
+} from "../../../../src/exec/stop-request.js";
 
 vi.mock(import("../../../../src/exec/run/schedule-prepare.js"), async (importOriginal) => ({
   ...(await importOriginal()),
@@ -127,6 +141,66 @@ afterEach(() => {
 });
 
 describe("exec run --auto --track", () => {
+  it("resumes a stopped queue after a failed task without rerunning it", async () => {
+    const executionPath = join(repo, "execution");
+    const recordPath = queueRecordPath(executionPath, "nightly");
+    writeQueueRecord(
+      recordPath,
+      createQueueRecord({
+        queueId: "nightly",
+        projectId: "test",
+        steps: [{ spec: "exec run --auto --loop", onFailure: "continue" }],
+      }),
+    );
+    writeReady([first, second, other]);
+    const calls: string[] = [];
+    vi.mocked(runPreparedTaskSafely).mockImplementation(async (p) => {
+      calls.push(p.task.id);
+      if (p.task.id === first.id) {
+        writeReady([second, other]);
+        return { prepared: p, result: "failure" };
+      }
+      if (p.task.id === second.id) {
+        requestStop({
+          executionPath,
+          target: { kind: "queue", queueId: "nightly" },
+          message: "pause",
+        });
+        writeReady([other]);
+      } else writeReady([]);
+      return { prepared: p, result: "success" };
+    });
+    const stop = {
+      pending: () => readStopRequest(executionPath, { kind: "queue", queueId: "nightly" })?.message,
+      finish: (step: number) => {
+        const request = readStopRequest(executionPath, { kind: "queue", queueId: "nightly" });
+        if (request)
+          finishStopRequest(executionPath, request, { stopped_by: "queue", queue_step: step });
+      },
+    };
+    const execute = async () => {
+      vi.stubEnv(EXEC_QUEUE_ID_ENV, "nightly");
+      process.exitCode = undefined;
+      await runBatchMode({ project: "test", loop: true, parallel: "1" });
+      const exitCode = Number(process.exitCode ?? 0);
+      process.exitCode = undefined;
+      return { exitCode, summary: `exit code ${exitCode}` };
+    };
+    const params = {
+      recordPath,
+      lockDir: queueLockPath(executionPath, "nightly"),
+      execute,
+      stop,
+      log: () => undefined,
+    };
+    const stopped = await runQueue(params);
+    expect(stopped.state).toBe("stopped");
+    expect(stopped.steps[0]).toMatchObject({ status: "pending", exit_code: EXEC_STOP_EXIT_CODE });
+    expect(calls).toEqual([first.id, second.id]);
+    const resumed = await runQueue(params);
+    expect(resumed.state).toBe("succeeded");
+    expect(calls).toEqual([first.id, second.id, other.id]);
+  });
   it("prepares overlapping schedule targets only after the first integration", async () => {
     const one = { ...first, local_id: "shared" };
     const two = { ...second, local_id: "shared" };
