@@ -1,0 +1,29 @@
+R4（正しさ）のレビューを終え、`docs/ja/specdojo/samples/bps-sample.md` の誤り 1 件を直しました。もう 1 件は R4 で決める範囲を超えるため、直さずに申し送りへ回しています。result は、この段では書いていません。
+
+**直したこと:** 「出力」表の後続処理に `H-01` という ID がありましたが、sample 本文、rulebook、template、recipe、CDFD 系の sample のどこにも定義がありません。rulebook が決めている ID の形式も `T-`・`S-`・`E-` だけです。そこで「`P-01-01` 発注内容確定へ」に直しました。diff が 5 行あるのは、prettier が表の列幅をそろえ直したためで、内容の変更はこの 1 か所だけです。
+
+**確かめの表:**
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: flow` | `deliverable-frontmatter.schema.yaml` の enum、rulebook の「推奨 Frontmatter 項目」 | 一致 |
+| 2 | frontmatter の `rulebook: specdojo:bps-rulebook` | rulebook の id | 一致 |
+| 3 | `T-01`・`S-01`〜`S-04`・`E-01`〜`E-05` の ID 形式 | rulebook の「ファイル命名・ID規則」 | 一致 |
+| 4 | `P-05` 在庫確認、`P-06` 補充判断（「概要」） | `cdfd-overview-sample` | 一致 |
+| 5 | `cdfd-inventory`・`cdfd-purchasing`・`cdfd-uc-replenishment` | `cdfd-overview-sample` と `cdfd-sample` | 一致 |
+| 6 | `P-01-01` 発注内容確定（「入力」「出力」「例外」） | `cdfd-sample` | 一致 |
+| 7 | 商品台帳（補充基準・発注単位）と在庫記録（現在庫） | `cdfd-overview-sample` のデータストアの表 | 一致 |
+| 8 | 「出力」の後続処理の `H-01` | sample 本文、rulebook、template、recipe、CDFD 系の sample | 不一致（定義なし）→ 直した |
+| 9 | 補充依頼を「入力」と「出力」の「正本」列に置いていること | `cdfd-overview-sample` | 確かめられない（データストアの表になく、データフローとして描かれている） |
+| 10 | `br-reorder-point` が補充必要数を判定すること（「処理」） | `br-sample`（在庫不足判定） | 確かめられない（product ID の宣言がなく、発注量は対象外としている） |
+
+**申し送り:**
+
+- **`br-reorder-point` の食い違い（R5 向け）:** `br-sample` は発注量を対象外としており、補充必要数を返しません。BPS の `S-02` の「補充必要数」の主張と合わないので、BPS の書き方を直すか、`br-sample` に product ID と補充必要数を足すかを R5 で決めてください。
+- **補充依頼の正本:** 補充依頼は CDFD のデータストアにありません。rulebook は BPS だけでデータストアを足すことを禁じているので、「正本」列の扱いを R5 で CDFD と照らしてください。
+
+**検証:** prettier と markdownlint を対象ファイルだけに流し、どちらもエラーなしです。lint、frontmatter、schema の検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）のレビューを終えた。bps-sample の「出力」表にあった、どこにも定義のない後続処理の ID `H-01` を「`P-01-01` 発注内容確定へ」に直した。frontmatter の `type`・`rulebook`、ID の形式、CDFD のプロセス ID とデータストア名は正本と一致した。確かめの表は 10 行で、一致 7・不一致 1（直した）・確かめられない 2。確かめられない 2 件は R5 への申し送りに回した。","handoff":["R4 確かめの表: No 1 frontmatter の `type: flow` / 正本 `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` と rulebook の「推奨 Frontmatter 項目」 / 確かめ方 enum の読み取り / 結果 一致。No 2 `rulebook: specdojo:bps-rulebook` / 正本 `docs/ja/specdojo/rulebooks/bps-rulebook.md` の id / 結果 一致。No 3 ID の形式 `T-01`・`S-01`〜`S-04`・`E-01`〜`E-05` / 正本 rulebook の「ファイル命名・ID規則」 / 結果 一致。No 4 `P-05` 在庫確認・`P-06` 補充判断 / 正本 `cdfd-overview-sample` の在庫（P-05〜P-06）の表 / 結果 一致。No 5 `cdfd-inventory`・`cdfd-purchasing`・`cdfd-uc-replenishment` / 正本 `cdfd-overview-sample` と `cdfd-sample` / 結果 一致。No 6 `P-01-01` 発注内容確定 / 正本 `cdfd-sample` の仕入計画（P-01）の表 / 結果 一致。No 7 商品台帳（補充基準・発注単位）と在庫記録（現在庫） / 正本 `cdfd-overview-sample` のデータストアの表 / 結果 一致。No 8 「出力」の後続処理の `H-01` / 正本 sample 本文、rulebook、template、recipe、CDFD 系の sample / 確かめ方 grep / 結果 不一致（どこにも定義がなく、rulebook の ID 規則も `T-`・`S-`・`E-` だけ）。「`P-01-01` 発注内容確定へ」に直した。No 9 補充依頼を「入力」と「出力」の「正本」列に置いていること / 正本 `cdfd-overview-sample` のデータストアの表 / 結果 確かめられない（補充依頼はデータストアになく、データフローとして描かれている）。No 10 `br-reorder-point` が補充必要数を判定すること（「処理」の `S-02` と表の下の文） / 正本 `br-sample` / 結果 確かめられない（`br-sample` は在庫不足判定で product ID の宣言がなく、発注量を対象外としている）。","指摘（R5 へ申し送り）: bps-sample の「処理」は `br-reorder-point` が補充必要数を判定するとしているが、`br-sample` は不足かどうかの判定だけを行い、発注量を対象外としている。BPS の書き方を直すか、`br-sample` に product ID と補充必要数を足すかを R5 で決める。","指摘（R5 へ申し送り）: bps-sample は補充依頼を「入力」と「出力」の「正本」列に置いているが、CDFD のデータストアの表に補充依頼はない。rulebook の禁止事項は BPS だけでデータストアを足すことを禁じているので、「正本」列の扱いを R5 で CDFD と照らして判断する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bps-sample.md","status":"passed","summary":"対象の sample を整形した。表の列幅だけが変わった"},{"command":"npx markdownlint docs/ja/specdojo/samples/bps-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
