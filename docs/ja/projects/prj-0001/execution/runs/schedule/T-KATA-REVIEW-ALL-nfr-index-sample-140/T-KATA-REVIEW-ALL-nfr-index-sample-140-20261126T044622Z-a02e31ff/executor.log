@@ -1,0 +1,37 @@
+R4 のレビューを終え、sample に誤りの直しを 1 件入れました。Prettier の検査は通っています。変更したのは `docs/ja/specdojo/samples/nfr-index-sample.md` の 1 文だけです。
+
+**直したところ（分冊ドキュメント一覧の表の後の 1 文）:** 「目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、測った値だけを記録する」と書いていましたが、同じ表の性能の備考（仮置き基準で測る）と食い違っていました。分冊側とも食い違っています。
+
+- 性能の分冊は、会計確定の応答時間（P95）を仮置き基準の 2 秒以内で判定しています。
+- 可用性の分冊は、RTO と RPO に暫定の判定を定めています。
+
+そこで「分冊が暫定の判定を定めていればそれで判定し、定めていなければ測った値だけを記録する」に改めました。
+
+**展開された grade の指摘 2 件:** どちらも前の段で直っていて、今の版にはもうありません。
+
+- F001: 営業時間外の緊急連絡手段の `_UNDECIDED_` はなくなっています。この指摘の観点 `vp-po-decision-readiness` は、kata のレビューでは使わない観点でもあります。
+- F002: 監査ログの保管期間の値（1 年）は備考から消え、「`opd-index` と揃える」だけになっています。
+
+**ほかの sample の側で直すべき点（直さずに handoff へ残しました）:**
+
+- 完全性の分冊（`nfr-integrity-sample`）は、検証先として `sac-integrity`・`stc-integrity` を挙げています。この 2 つの ID は他の sample のどこにもありません。本書は実在する `sac-store-sales`・`stc-cash-sale`・`stc-record-recovery` を挙げているため、どちらに揃えるかは判断が要ります（`要判断`）。
+- 本書が挙げる判断記録 `dec-offline-recording` は、他の sample に ID がなく、実在を確かめられませんでした。決定待ちの記録として書いてあり、運用手順（障害対応）にもオフライン時の記録方法が未決として載っているので、矛盾はないと見て残しました。
+
+**照合して一致した主な事実:**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | `type: requirement`、`rulebook`、`based_on` | rulebook と schema（`common-frontmatter`・`deliverable-frontmatter`） | 一致 |
+| 2 | 配置先 `docs/ja/product/060-non-functional-requirements/` | `docs-structure-guide.md` | 一致 |
+| 3 | 8 カテゴリと分冊 ID | rulebook と各 `nfr-*-sample` | 一致 |
+| 4 | 各分冊が `part_of` に `nfr-index` を持つ | 各分冊 sample の frontmatter | 一致 |
+| 5 | 導線表の `sac-*`・`stc-*`・`opd-*`・`opr-*` の ID | 該当する sample | 実在する |
+| 6 | 営業時間 10:00〜18:00 | `opd-index-sample` | 一致 |
+| 7 | つけ残高の 1 分以内の確認 | `prj-overview-sample` | 一致 |
+| 8 | 代表指標（MTTR、重複記録件数、タスク完了率、夜間バックアップの成功率など） | 各分冊 sample | 一致 |
+| 9 | 監査ログの保管期間は `opd-index` と揃える | `opd-access-control-sample` | 一致 |
+| 10 | `dec-offline-recording` | なし | 確かめられない |
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: nfr-index-sample の事実を schema・rulebook・関連 sample と照合した。分冊一覧の後の「目標値が `_UNDECIDED_` の分冊は合否を判定しない」が、性能・可用性の分冊が持つ暫定の判定と食い違っていたため、暫定の判定があればそれで判定する形に直した。展開された F001・F002 は前の段で解消済みだった。","handoff":["R4-1: R4 / 3. 分冊ドキュメント一覧（ID/参照先） / 「目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、測った値だけを記録する」が、同じ表の性能の備考（仮置き基準で測る）と、`nfr-performance-sample` の `nfr-perf-001`（仮置き 2 秒以内で判定）、`nfr-availability-sample` の `nfr-avl-002`・`nfr-avl-003`（暫定の判定あり）と食い違う / 「目標値が `_UNDECIDED_` の指標は、分冊が暫定の判定を定めていればそれで合否を判定し、定めていなければ測った値だけを記録する」に直した / vp-qe-verifiability、vp-dev-testability / -","R4-2: R4 / 5. 関連ドキュメント導線（SAC/STC/OPD/OPR/DEC） / 完全性の分冊 `nfr-integrity-sample` は検証先に `sac-integrity`・`stc-integrity` を挙げるが、この 2 つの ID は他の sample のどこにもない（`stc-index-sample` にもない）。本書は実在する `sac-store-sales`・`stc-cash-sale`・`stc-record-recovery` を挙げている / - / 相手側の `nfr-integrity-sample` の「測定・検証方法」と関連文書の表の `sac-integrity`・`stc-integrity` を、`stc-index-sample` にある term へ置き換えるか、`stc-index-sample` に `stc-integrity` を足す案。どちらにするかは R5 か人が判断する / 要判断（直す先が本書ではなく、2 つの案のどちらを採るか決められない）","R4-3: R4 / 5. 関連ドキュメント導線（SAC/STC/OPD/OPR/DEC） / 可用性の判断記録 `dec-offline-recording` は、他の sample に ID がなく実在を確かめられない。本文は決定待ちと明示しており、`opr-incident-sample` の「_UNDECIDED_: オフライン時の記録方法」とも矛盾しない / - / 確かめには `dec-sample` の系列にこの判断記録を置くかどうかの決定が要る。現状は維持した / -","R4-4: R4 / 3. 分冊ドキュメント一覧（ID/参照先） / 展開された grade の F001（緊急連絡手段の `_UNDECIDED_`）と F002（監査ログの保管期間 1 年の再掲）は、前の段の修正でもう本文にない。F001 の観点 `vp-po-decision-readiness` は、kata の段のレビューでは使わない観点でもある / - / kata-guide「kata の観点の組」、現行の 45〜49 行 / -","R4 確かめの表（runner が描く表の後に置く想定。表の列: No / 主張 / 正本 / 確かめ方 / 結果 / 根拠）: C1 `type: requirement`・`rulebook: specdojo:nfr-index-rulebook` / nfr-index-rulebook の「推奨 Frontmatter 項目」、common-frontmatter.schema.yaml / 読み取り / 一致 / schema 55 行の enum に requirement がある。C2 `based_on` の 3 つの id / 各 sample の frontmatter / ls・grep / 一致 / prj-overview・sysd-cross-cutting-policy・opd-index の sample が存在する。C3 参照先 `docs/ja/product/060-non-functional-requirements/` / docs-structure-guide.md / grep / 一致 / 370 行。C4 8 カテゴリと分冊 ID / rulebook の冒頭と各 nfr-*-sample / ls / 一致 / 8 つの分冊 sample が存在する。C5 各分冊が `part_of` に `nfr-index` を持つ / nfr-reliability・nfr-availability の sample / grep / 一致 / `part_of: specdojo:nfr-index-sample`。C6 営業時間 10:00〜18:00 / opd-index-sample / grep / 一致 / 34 行。C7 つけ残高の 1 分以内の確認 / prj-overview-sample / grep / 一致 / 70 行。C8 可用性の稼働率・RTO・RPO の目標値が未決 / nfr-availability-sample、opd-index-sample / grep / 一致 / 51〜53 行、23 行。C9 性能の目標値が未決で、仮置き基準で測る / nfr-performance-sample / grep / 一致 / 52 行（仮置き 2 秒以内）。C10 「目標値が `_UNDECIDED_` の分冊は合否を判定しない」 / nfr-performance・nfr-availability の sample / grep / 不一致 / 暫定の判定がある（R4-1 で直した）。C11 監査ログの保管期間は `opd-index` と揃える / opd-access-control-sample / grep / 一致 / 80 行（`opd-index` が 1 年とする）。C12 代表指標（MTTR、変更の適用までの日数、差額、重複記録件数、権限外の操作の成功件数、タスク完了率、誤操作による取消、夜間バックアップの成功率） / 各 nfr-*-sample / grep / 一致 / mnt-003、int-003、sec-003、usb-001・002、ops-003。C13 導線の `sac-store-sales`・`stc-cash-sale`・`stc-sale-hold`・`stc-record-recovery`・`opd-*`・`opr-*` / samples 配下 / grep -w / 一致 / いずれも他の sample で使われている。C14 `dec-offline-recording` / samples 配下 / grep / 確かめられない / ID が見当たらない（R4-3）。C15 `_UNDECIDED_` の目印 / document-metadata-standard / grep / 一致 / 146 行。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更がない","reason":"変更は docs/ja/specdojo/samples/nfr-index-sample.md だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>
