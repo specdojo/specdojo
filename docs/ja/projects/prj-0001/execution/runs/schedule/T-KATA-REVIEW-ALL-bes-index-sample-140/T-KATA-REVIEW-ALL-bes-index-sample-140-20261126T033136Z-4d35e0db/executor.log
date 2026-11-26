@@ -1,0 +1,31 @@
+R4（正しさ）の確認を終えました。誤りは 1 件見つかり、`docs/ja/specdojo/samples/bes-index-sample.md` を 1 か所直しました。ほかの事実はすべて正本と一致しています。この sample は概念上の業務の文書で、コマンドやオプションは出てこないため、正本との照合はすべてファイルの読み取りで行いました。
+
+**直した箇所:** 冒頭の概要で、金額計算の委ね先として `[[specdojo:br-sample|販売金額計算の業務ルール]]` を挙げていました。ところが `br-sample` の H1 は「駄菓子屋きぬや 在庫不足判定」で、金額計算は扱っていません。そこでリンクを外し、「金額計算は業務ルール（BR）」と委ね先の種類だけを書く形にしました。
+
+**正本と一致した主張:**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | 上位 CDFD の 5 グループ・10 領域（`P-01`〜`P-10`） | `cdfd-overview-sample` の「プロセス領域」 | 一致 |
+| 2 | 8 行のイベント名が起点イベントの文言と同じ | 同上 | 一致 |
+| 3 | `P-03`・`P-05` だけ起点イベントの文言とイベント名が異なる | 同上 | 一致 |
+| 4 | 事実データの出典とした記録（商品台帳の補充基準、顧客台帳、販売記録・在庫記録・つけ台帳）が実在する | 同書の「データストア」 | 一致 |
+| 5 | イベント ID が形式 `^bes-[a-z0-9][a-z0-9-]*$` に合い、重複がない | rulebook の ID 規則 | 一致 |
+| 6 | 列の順序と frontmatter の項目 | rulebook | 一致 |
+| 7 | 個別 BES が一覧と `bes-cash-sale-confirmed` の行を参照している | `bes-sample` 17 行 | 一致 |
+| 8 | `bes-cash-sale-confirmed` の個別 BES のリンク表示名 | `bes-sample` の H1 | 一致 |
+| 9 | `bes-credit-sale-over-limit` がまだ作られていない | リポジトリ内の検索 | 一致（どこにも見当たらない） |
+| 10 | 必須の 8 列に空欄がない | 本文の目視 | 一致 |
+
+**grade の finding の扱い:**
+
+- F001 と F002 は `vp-pm-plan-feasibility`・`vp-pm-control-reporting` の指摘です。kata-guide はこの 2 観点を kata の段のレビューで使わないと定めているため、この段では扱っていません。
+- F003 は、「照合の結果と確定入力として扱う条件」の表がすでに確認結果と未実施を分けて記録しているため、解消済みと判断しました。
+
+**他の kata に残る同じ誤り:** `bes-sample.md` の 52 行も `br-sample` を「販売金額計算の業務ルールサンプル」と表示しています。対象外の kata なので直さず、handoff に残しました。
+
+検査は Prettier の check だけを実行し、通りました。markdownlint 系は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: bes-index-sample の事実を cdfd-overview-sample・bes-index-rulebook・bes-sample・br-sample と照合。br-sample への誤った表示名つきリンク（販売金額計算の業務ルール、実体は在庫不足判定）を外し「業務ルール（BR）」へ直した。そのほかの主張（10 領域・起点イベント文言・P-03/P-05 の差・データストア・ID 形式・列順・相互参照・未作成 BES）は一致。確かめの表: 1 冒頭「10 領域・領域 ID」正本 cdfd-overview-sample 3 章 読み取り 一致。2 一覧の 8 行のイベント名＝起点イベント 同上 一致。3 照合表「P-03・P-05 は文言が異なる」 同上 一致（「顧客が売場の商品を持って会計を申し出た」「販売が記録された」）。4 事実データの記録名・商品台帳の補充基準 cdfd-overview-sample 4 章 一致。5 ID 形式 bes-<event>・重複 0 bes-index-rulebook ID 規則 正規表現で読み取り 一致。6 列順・frontmatter 項目 bes-index-rulebook 4・5.1 章 一致。7 個別 BES からの参照 bes-sample 17 行 一致。8 詳細化表のリンク表示名 bes-sample H1 一致。9 bes-credit-sale-over-limit 未作成 grep 一致。10 金額計算の委譲先リンク br-sample H1「在庫不足判定」 不一致→直した。11 必須列空欄 0 件 目視 一致。","handoff":["bes-sample.md 52 行の [[specdojo:br-sample|販売金額計算の業務ルールサンプル]] は、br-sample の実体（駄菓子屋きぬや 在庫不足判定）と食い違う。bes-sample 側の手直しで表示名とリンク先を直す（金額計算の BR sample がなければリンクを外し「業務ルール（BR）」とする）。","grade F001（vp-pm-plan-feasibility）と F002（vp-pm-control-reporting）は kata-guide の「kata の観点の組」で kata の段のレビューでは使わない観点のため、本段では扱わず見送った。","grade F003（vp-qe-kata-conformance、照合結果の記録）は「照合の結果と確定入力として扱う条件」の表が確認結果と未実施を区別して記録済みのため解消済みと判断した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bes-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_run","summary":"parent runner が実行する検査のため executor では実行しない"}]}
+</specdojo_executor_evidence>
