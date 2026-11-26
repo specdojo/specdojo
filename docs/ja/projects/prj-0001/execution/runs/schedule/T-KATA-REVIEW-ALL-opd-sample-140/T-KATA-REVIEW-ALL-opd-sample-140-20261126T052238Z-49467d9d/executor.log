@@ -1,0 +1,32 @@
+R4（正しさ）では誤りが見つからなかったため、`docs/ja/specdojo/samples/opd-access-control-sample.md` は変更していません。result も編集していません（reporter と runner が扱います）。
+
+この sample にはコマンドやオプションがなく、確かめた主張は frontmatter、章の見出し、差分元の `opd-index` から引いた統制、参照先の文書の内容です。
+
+確かめの表（result の実施内容に載せる材料）:
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: operations`・`rulebook: specdojo:opd-rulebook` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`opd-rulebook.md` | 読み取り | 一致 | schema の列挙値に `operations` がある。rulebook の推奨 Frontmatter 項目でこの 2 値を指定 |
+| 2 | `based_on: []`・`supersedes: []` | `common-frontmatter.schema.yaml` | 読み取り | 一致 | 72・75 行でキーを定義。空の配列でも rulebook の `based_on` 規定に反しない |
+| 3 | 章の見出し「概要（access-control）」「権限・アカウント運用（棚卸し・監査ログ）」「関連ドキュメント導線（`opr` 等）」 | `opd-rulebook.md`（本文構成）、`opd-index-sample.md` の 9 章 | 読み取り | 一致 | 差分を持つ章は `opd-index` と同じ見出しにする規定どおり |
+| 4 | 共有のアカウントは作らない／付与の対象は店番担当と `DEV` | `opd-index-sample.md` の 132 行 | 読み取り | 一致 | 「アカウントは店番担当と `DEV` に限り、共有のアカウントは作らない」 |
+| 5 | 承認者は `PO`、操作は `OPS` | `opd-index-sample.md` の 138 行・71 行（RACI） | 読み取り | 一致 | 承認者は `PO`。RACI は `PO`=A、`OPS`=R |
+| 6 | 店番をやめたら、やめた日のうちに停止する | `opd-index-sample.md` の 139 行 | 読み取り | 一致 | 「店番をやめた日のうちに剥奪する」 |
+| 7 | 監査ログの記録対象（ログイン・つけ残高・価格）と保管期間 1 年 | `opd-index-sample.md` の 141 行 | 読み取り | 一致 | 同じ文言 |
+| 8 | P1 は体制・責任分界の優先度の表で定める | `opd-index-sample.md` の 4 章（75〜79 行） | 読み取り | 一致 | 4 章に優先度の表があり、P1 を定義 |
+| 9 | 棚卸しは月次点検で `OPS` が行い、できなければ翌週に行う（定期運用方針） | `opd-index-sample.md` の 140・151 行 | 読み取り | 一致 | 月次点検の担当は `OPS`。権限の棚卸しができなければ翌週 |
+| 10 | 権限は 4 区分、自動ログアウトは 10 分、期限付きの権限変更、棚卸しは 5 項目、監査ログで見つかった差異は当日中に `PO` へ報告 | `opr-access-control-sample.md` の 38・45・54・55 行 | 読み取り | 一致 | 手順側の記述と食い違いなし |
+| 11 | 障害対応の分冊に、P1 の判定と、復旧で記録を訂正する場面がある | `opd-incident-management-sample.md` の 33〜35・60 行 | 読み取り | 一致 | P1 の判定表があり、60 行で本書の緊急権限を参照 |
+| 12 | wikilink の参照先 5 件（`opd-index-sample`・`prj-overview-sample`・`opd-incident-management-sample`・`opr-index-sample`・`opr-access-control-sample`）が存在し「作成済」 | `docs/ja/specdojo/samples/` | `grep` で `id` を検索 | 一致 | 5 件ともファイルと `id` がある |
+| 13 | 月次点検の手順の入口が `opr-index` にある | `opr-index-sample.md` の 20・49 行 | 読み取り | 一致 | 3 章が「日次/週次/月次点検手順」 |
+| 14 | 販売管理システムが利用者ごとのログイン、権限区分ごとの操作の制限、自動ログアウト、期限付きの権限変更を備える（`_ASSUMPTION_`） | 正本なし | - | 確かめられない | 製品の仕様書がない仮定。手順側の `_ASSUMPTION_` とは一致。確かめるには製品の機能仕様が要る |
+
+24 時間・3 か月・15 分などの業務の値は、正本のない仮定です。共通サンプル文脈とも食い違わないため、確かめの対象から外しました。
+
+R4 の指摘はないため、`handoff` は空です。
+
+検査は親 runner が実行するもの（`lint:md`・`lint:fm`・`validate:schema` など）だけが該当し、私は実行していません。schema の単体検証と Prettier・markdownlint・履歴リンク検査は、対象のファイルを変更していないので非適用です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: opd-access-control-sample の主張 14 件を schema・opd-rulebook・opd-index-sample・opr-access-control-sample・opd-incident-management-sample・opr-index-sample と突き合わせた。13 件が一致し、1 件（販売管理システムの機能の `_ASSUMPTION_`）は正本がなく確かめられなかった。誤りがないため sample は変更していない。確かめの表は最終応答に記載した。","handoff":[],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"変更した YAML ファイルがない","reason":"変更した `*.yaml` / `*.yml` ファイルがない"},{"command":"npx prettier --check","status":"not_applicable","summary":"変更したファイルがない","reason":"sample を変更しておらず、Prettier の対象になる変更ファイルがない"},{"command":"npx markdownlint","status":"not_applicable","summary":"変更した Markdown がない","reason":"変更した `*.md` ファイルがない（Markdown の検査は親 runner の `lint:md` が正）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票を自分で変更していない"}]}
+</specdojo_executor_evidence>
