@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-26T12:39:02Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T20:31:48Z"
+  conclusion: schema を変えず、5 つの imp 系 rulebook の based_on の説明を小文字の pjr-xxxx（本文は PJR-XXXX）にそろえ、4 つの sample の cr-2026-004 を pjr-c4a1・PJR-C4A1 に直した
 ---
 
 # PJR-WF8Q 型の ID 表記の食い違いを直す（rulebook の大文字と schema の小文字、imp 系 sample の古い ID）

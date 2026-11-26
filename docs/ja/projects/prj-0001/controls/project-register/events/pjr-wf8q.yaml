@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_83a32d4d19f34fd38f634d26da22fe96
+- v: 1
+  id: reg_1d43bd46d9c8479292f07ff8552c99b4
+  ts: "2026-11-26T20:31:48Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後に lint:fm（全体）と変更ファイルの markdownlint が通り、cr-2026-004 は 0 件。流し直した imp-interface-140 が lint-fm-changed を通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: schema を変えず、5 つの imp 系 rulebook の based_on の説明を小文字の pjr-xxxx（本文は PJR-XXXX）にそろえ、4 つの sample の cr-2026-004 を pjr-c4a1・PJR-C4A1 に直した
+  previous_event_id: reg_d0ed71d4cc654f2288adf8368e995fd3
