@@ -7,12 +7,12 @@
 # _ASSUMPTION_: 以下は、宣言した全ドメインのカタログを整備した学習用プロジェクトの完成時点を表す。
 # 同梱の [[specdojo:dct-sample|成果物カタログ（ドメイン別）]] は project-definition の記述例に対応する。
 # 他ドメインのカタログ一式は未同梱であり、samples ディレクトリ全体を実在カタログの集合とはみなさない。
-# `project_id` は dct-sample と同じ例示値で、SpecDojo 本体の prj-0001 のドメイン集合を表さない。
 id: specdojo:dct-index-sample
 type: project
 status: ready
 title: 成果物カタログ
 rulebook: specdojo:dct-index-rulebook
+# `project_id` は dct-sample と同じ例示値で、SpecDojo 本体の prj-0001 のドメイン集合を表さない。
 project_id: prj-0001
 # 店主代表と開発担当が最小限の成果物セットで導入するため small とする。
 # 品質確認や障害時対応のドメインを含めても、scaffold の規模を拡大する判断はしていない。
