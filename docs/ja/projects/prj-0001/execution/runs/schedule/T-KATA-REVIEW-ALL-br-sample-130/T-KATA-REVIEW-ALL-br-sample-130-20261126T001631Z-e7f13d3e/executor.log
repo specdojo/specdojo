@@ -1,0 +1,18 @@
+R3（読みやすさ）として `docs/ja/specdojo/samples/br-sample.md` の文を 8 か所直しました。意味、判定規則、例外の順序は変えていません。Prettier と markdownlint はこのファイルで通っています。frontmatter の `status` も変えていません。
+
+**直した箇所**
+
+1. 「入力」「判定例」「出力」「例外 / 異常系」の 4 つの表の前に、何を示す表かを述べる 1 文を足しました。Sample 記述標準の「表の前に 1 文を書く」に合わせたものです（W9 / `vp-ux-readability`）。
+2. 「判定例」の「`E-` の行」は、指す先を「期待結果が `E-` で始まる例」に言い換えました（W4）。
+3. R-01 の「『例外 / 異常系』の順で」は、「『例外 / 異常系』に示す順で」に直しました（W4）。
+4. 直す人を指す語が「在庫確認担当」と「入力した担当者」の 2 通りあったので、「出力」の表に合わせて「入力した担当者」にそろえました（W8 / `vp-ux-language-consistency`）。
+5. 「いずれも判定せず」は、何が「いずれも」なのかを示す「いずれの例外でも判定せず」にしました（W4）。
+6. 呼出元についての文は、「推測して呼び出さない」が「呼び出さないこと」を否定しているようにも読めるため、「値を推測で補って本ルールを呼び出すことはしない」にしました（W5）。
+7. 「メモ / 将来課題」では、承認の条件の文に誰が確かめるかが書かれていませんでした。Sample 記述標準は本文に承認の役割を書くことを禁じているので、人を出さずに「本ルールの承認の条件は…である」という形にしました（W1 / W6）。この直しには「要判断」の印を付けます。
+
+**扱わなかった指摘**
+F001（承認できる条件の追記）は R3 ではなく、適合性の観点（`vp-qe-kata-conformance`）が扱う指摘です。第 6 章には前の段で承認の条件がすでに入っているので、改めて直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 として br-sample の文を 8 か所直した。表の前の 1 文を 4 か所に足し、指示語、修飾の係り、担当者の語の不統一、承認の条件の文を直した。意味と判断の情報は変えていない。","handoff":["1: R3 / 入力 / 表の前に何の表かを示す 1 文がない / 「次の表は、判定に使う入力と、欠けたときの扱いを示す。」を足した / W9・sample-authoring-standard（表の前の 1 文）・vp-ux-readability / -","2: R3 / 判定例 / 表の前の 1 文がなく、「`E-` の行」が何を指すか曖昧 / 表の前に 1 文を足し、「期待結果が `E-` で始まる例は判定値を返さない」にした / W4・W9・vp-ux-readability / -","3: R3 / 出力 / 表の前に何の表かを示す 1 文がない / 「次の表は、本ルールが返す項目と利用先を示す。」を足した / W9・vp-ux-readability / -","4: R3 / 例外 / 異常系 / 表の前に何の表かを示す 1 文がない / 「次の表は、入力不備の種類ごとの扱いと利用者の次の手を示す。」を足した / W9・vp-ux-readability / -","5: R3 / ルール（判定/計算）R-01 / 「『例外 / 異常系』の順で」がどの順か一つに決まらない / 「『例外 / 異常系』に示す順で」にした / W4 / -","6: R3 / 例外 / 異常系 / 直す人を指す語が「在庫確認担当」と「入力した担当者」（出力の表）で食い違い、「いずれも」も何を指すか曖昧 / 「いずれの例外でも判定せず、入力した担当者が直して再判定する。」にした / W4・W8・vp-ux-language-consistency / -","7: R3 / 例外 / 異常系 / 「値を推測して本ルールを呼び出さない」は、否定が「呼び出さないこと」にかかっているようにも読める / 「呼出元は、入力を取得できない場合に値を推測で補って本ルールを呼び出すことはしない。」にした / W5 / -","8: R3 / メモ / 将来課題 / 承認の条件の文で、誰が確かめるかが書かれていない / 人を出さずに「本ルールの承認の条件は、判定例 1〜9 の期待結果が…から一意に導けることである。」にした / W1・W6。迷った理由: W1 に従えば主語を書くことになるが、sample-authoring-standard は本文に承認の役割を書くことを禁じている。主語として「店主代表が確かめた時点で」を足す案は選ばなかった / 要判断","9: R3 / メモ / 将来課題（grade F001） / F001（承認できる条件の追記）は vp-qe-kata-conformance の指摘で、R3 の観点ではない。第 6 章には前の段で承認の条件がすでに入っている / - / vp-qe-kata-conformance（R1・R5 が扱う） / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/br-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/br-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/br-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
