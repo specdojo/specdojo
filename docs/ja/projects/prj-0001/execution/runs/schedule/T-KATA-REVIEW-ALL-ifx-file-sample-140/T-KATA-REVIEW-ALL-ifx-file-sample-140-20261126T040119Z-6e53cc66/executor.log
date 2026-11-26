@@ -1,0 +1,41 @@
+R4（正しさ）の段は完了しました。sample に書かれた事実を正本と突き合わせ、誤りが 4 種見つかったので `docs/ja/specdojo/samples/ifx-file-sample.md` を直しました。変更したのはこの 1 ファイルだけです。Prettier と markdownlint はこのファイルで通りました。lint・schema 検証などの残りの検査は親 runner が実行します。
+
+**確かめの表（主張ごと）**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | modeline `# specdojo-schema: none reason=no-ifx-file-schema` | `src/kata/yaml-schema-modeline.ts`、rulebook の「スキーマ宣言とメタ情報」 | 正規表現を読んだ | 一致 | `none` と `reason=` の書式が正規表現に合う |
+| 2 | `x-spec-meta` の項目と `type: api` | rulebook の「メタ情報の各フィールド定義」 | 読み取り | 一致 | 必須の 5 項目がそろっている |
+| 3 | トップレベルのキー、`direction`・`format`・`transport.method` の値 | rulebook の「トップレベル構造」「受け渡し方法」 | 読み取り | 一致 | 値はすべて列挙の中にある |
+| 4 | `schema.csv` / `schema.json` のキー、`fields` の項目、`constraints`・`mapping.csv.column` | rulebook の「構造定義と正本参照」 | 読み取り | 一致 | — |
+| 5 | `bidirectional` のとき `writer` / `reader` が必須 | rulebook の「ファイル基本情報」 | 読み取り | 一致 | `files` の両要素に書かれている |
+| 6 | `based_on` の `specdojo:prj-overview-sample` と `specdojo:clis-sample` | 各 sample の frontmatter | grep | 一致 | どちらの文書も実在する |
+| 7 | I/F 一覧とプロジェクト概要が仕入れ先との連携を対象外にしている | `ifx-index-sample.yaml` 12 行目、`prj-overview-sample.md` 100 行目 | 読み取り | 一致 | — |
+| 8 | CLI 内部の取引記録は I/F 一覧の登録対象外 | `ifx-index-sample.yaml` 13 行目 | 読み取り | 一致 | — |
+| 9 | CLI の入出力表から本契約へ辿れる | `clis-sample.md` 62・74・77 行目 | 読み取り | 不一致（直した） | 表が参照しているのはスキーマ ID だけで、本契約は指していない |
+| 10 | 売上登録 API の重複排除が未整備 | `ifx-api-sample.yaml` 17・18 行目 | grep | 不一致（直した） | 取引 ID による重複排除（409）は定義済みで、未整備なのは受付照会だけ |
+| 11 | サブコマンド 5 種と `current-tx.json` の書き手（start・add・complete・cancel） | `clis-sample.md` 45〜49・74 行目 | 読み取り | 一致 | — |
+| 12 | 取引未開始・取引記録破損は exit code 2、保存失敗は 4、API 失敗は 3 | `clis-sample.md` の「終了時の判断」 | 読み取り | 一致 | — |
+| 13 | 事象名「売上登録結果不明（exit code 3）」 | `clis-sample.md` の「代表的な表示と利用者の次の手」 | 読み取り | 不一致（直した） | CLI sample にある事象は「売上登録失敗」で、受付結果不明かどうかはその表示に含まれる |
+| 14 | `sales start` が `data/sales/` の未解決の控えを調べて exit code 3 で止まる | `clis-sample.md` 59・62 行目 | 読み取り | 確かめられない | CLI sample の入力に `data/sales/` がない。R5 で双方の扱いを決める必要がある |
+| 15 | `receipt-print` と `receipts/receipt-YYYYMMDD-NNNN.txt` | `ifx-cmd-sample.yaml` 16・50 行目 | 読み取り | 一致 | — |
+| 16 | 正本スキーマが JSON Schema 2020-12 で、`additionalProperties: false`、`enum`・`if/then` の制約を持つ | 架空の店舗アプリの `schemas/` | — | 確かめられない | 正本がリポジトリにない。学習用の仮定として残した |
+| 17 | `PO` / `UX` / `DEV` / `QE` のロールと担当名 | `pm-members-sample.yaml` | 読み取り | 一致 | — |
+
+**sample の直し**
+
+- **CLI 仕様からの参照（No 9）:** 「本契約へ辿る」をやめ、「入出力表が参照する正本スキーマを本契約の `schema_ref` と共有する」に改めました。
+- **重複排除（No 10）:** `_UNDECIDED_` を「重複排除は定めるが、結果不明時の受付照会は未整備」に改めました。
+- **事象名（No 13）:** 「売上登録結果不明（exit code 3）」の 4 か所を「売上登録失敗（exit code 3、受付結果不明）」に揃えました。
+- **F002:** 「異常時の判断と利用者の次の手」の「取引状態の欠落」の行を、次の 2 行に分けました。
+  - 取引未開始（exit code 2）: 店番担当が `sales start` で始め直す。
+  - `sales start` で未解決の控えがある（exit code 3）: 店主代表と開発担当が本部受付と照合して解決し、店番担当が `sales start` をやり直す。
+
+**grade の指摘の扱い**
+
+- **F001・F003・F005〜F008:** 前の段までに直っていて、繰り返していません。
+- **F004（md から yaml への再構成、major）:** R1・R2 が扱う観点なので、この段では扱っていません。今の版でも直っていないため、申し送りに残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: ifx-file-sample の事実（modeline・キー・列挙値・終了コード・事象名・参照先・パス・ロール）を rulebook、src/kata/yaml-schema-modeline.ts、clis-sample、ifx-index-sample、ifx-api-sample、ifx-cmd-sample、pm-members-sample と突き合わせた。不一致 3 件を直した。(1) CLI 仕様の入出力表から本契約へ辿るとした記述を、正本スキーマを `schema_ref` と共有する記述に改めた。(2) 重複排除が未整備とした `_UNDECIDED_` を、未整備なのは受付照会だけとする記述に改めた。(3) 事象名「売上登録結果不明（exit code 3）」の 4 か所を「売上登録失敗（exit code 3、受付結果不明）」に揃えた。F002 は「取引状態の欠落」の行を、取引未開始（exit code 2）と sales start 時の未解決の控え（exit code 3）の 2 行に分けて直した。確かめの表 17 行（一致 12、不一致で直した 3、確かめられない 2）は最終応答に記した。変更ファイルは docs/ja/specdojo/samples/ifx-file-sample.md の 1 件。","handoff":["R4 の確かめで「確かめられない」とした主張（No 14）: ifx-file-sample は、`sales start` が `data/sales/` の未解決の控え（`api_sync_status` が `pending` / `unknown` / `rejected`）を調べ、1 件でもあれば exit code 3 で止まると書く。clis-sample の入力表（59・62 行目）には `sales start` の入力として `data/sales/` がなく、この停止も定義されていない。R5 で、clis-sample に入力と事象を足すか、ifx-file-sample のこの振る舞いを外すかを決める。","R4 の確かめで「確かめられない」とした主張（No 16）: 正本スキーマ `schemas/kinuya-session.schema.json` と `schemas/kinuya-sales-record.schema.json` の性質（JSON Schema 2020-12、`additionalProperties: false`、`enum`・`if/then` の制約）は、正本が架空の店舗アプリにありリポジトリに実体がないため確かめられない。学習用の仮定として残した。","F004（major/vp-qe-kata-conformance、md 形式から YAML sample への再構成、または rulebook に md とする例外を宣言）は R1・R2 の観点なので、この段では扱っていない。今の版でも直っていないため、人が rulebook 側の例外の宣言と sample の再構成のどちらを採るかを決める。","F001・F003・F005・F006・F007・F008 は前の段までの版で直っていることを確かめ、指摘を繰り返さなかった。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/ifx-file-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/ifx-file-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
