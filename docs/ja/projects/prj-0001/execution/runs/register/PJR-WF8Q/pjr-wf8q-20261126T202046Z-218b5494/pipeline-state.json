@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-WF8Q",
   "run_id": "pjr-wf8q-20261126T202046Z-218b5494",
-  "updated_at": "2026-11-26T20:23:11.448Z",
+  "updated_at": "2026-11-26T20:23:22.293Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-WF8Q/pjr-wf8q-20261126T202046Z-218b5494/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-26T20:23:11.448Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T20:23:22.293Z",
       "artifact_ref": null
     }
   },
