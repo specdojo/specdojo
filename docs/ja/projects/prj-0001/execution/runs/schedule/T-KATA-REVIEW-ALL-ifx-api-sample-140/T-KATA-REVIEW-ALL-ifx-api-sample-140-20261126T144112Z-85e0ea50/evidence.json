@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-ifx-api-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-ifx-api-sample-140-20261126T144112Z-85e0ea50",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T14:42:02.579Z",
+    "completed_at": "2026-11-26T14:44:07.087Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/ifx-api-sample.yaml | 18 +++++++++++++++---\n 1 file changed, 15 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --yes @redocly/cli@latest lint --format=stylish docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "passed",
+      "summary": "Your API description is valid（警告 2 件: info-license、no-server-example.com）"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:schema:file -- --modeline docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "passed",
+      "summary": "schema none (external-openapi)。メタ情報の照合を含めて通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "変更したのは sample の YAML だけで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7840 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7840 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-api-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[p\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1555}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  23:44:37\n   Duration  2.69s (transform 6.24s, setup 984ms, import 9.12s, tests 5.83s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\ns-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-api-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-api-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）を実施。sample の主張 14 件を rulebook・`src/kata/yaml-schema-modeline.ts`・ifx-index-sample・Redocly CLI と突き合わせ、不一致の 1 件（F003: `ErrorResponse.details` に構造がなく 400 の指示と合わない）を `field`・`reason` の配列として定義し、400 の `description` を合わせて直した。確かめられない主張は 2 件（`Retry-After` を秒数に絞ること、`X-API-Key` 認証）で、どちらも正本がない。Redocly lint と modeline 検査は直す前後とも通過した。変更ファイル: docs/ja/specdojo/samples/ifx-api-sample.yaml。",
+  "completion_status": "complete",
+  "handoff": [
+    "[minor/vp-dev-implementation-readiness] docs/ja/specdojo/samples/ifx-api-sample.yaml の `ErrorResponse.details`（旧 172〜174 行）: 400 の `description` は「`details` の項目を直して送り直す」と指示するが、`details` は構造のない `type: object` で、店舗端末が不正な項目と理由を機械的に判別できなかった（F003）。`details` を `field`（例 `lines[0].product_code`）と `reason`（`REQUIRED`・`INVALID_FORMAT`・`OUT_OF_RANGE`・`UNKNOWN_PRODUCT`）を持つ要素の配列として定義し、400 の `description` を「`details` の `field` が指す項目を直して送り直す」に改めた。`reason` の 4 値は正本のない契約の例である。人は採るか戻すかを確かめる。",
+    "[note/vp-arc-technical-constraints] 429 の `Retry-After` を `type: integer`・`minimum: 1` の秒数だけとしている。RFC 9110 は HTTP-date の形も許すため、秒数に絞るのは契約上の選択で、正本に照らして確かめられない。本部との契約レビューで秒数だけでよいかを確かめる（直していない）。",
+    "[note/vp-qe-verifiability] Redocly CLI（`npx --yes @redocly/cli@latest lint`、recommended 設定）で構造は valid。警告は `info-license`（`license` がない）と `no-server-example.com` の 2 件。後者は rulebook が例示用ドメインを求めるため直さない。`license` を求めるかは rulebook の本文要件にないため、足していない。",
+    "[minor/vp-qe-kata-conformance・ほかの kata] docs/ja/specdojo/samples/ifx-index-sample.yaml 36 行は「BA（開発担当）」と書く。sample-authoring-standard の共通サンプル文脈では、開発担当の Role code は DEV である。ほかの kata なので直していない。ifx-index-sample の見直しで「DEV（開発担当）」へ直すか、BA の役割名に直すかを決める。",
+    "F001（`vp-pm-plan-feasibility`）は kata-guide の「kata を agent でレビューする」で kata のレビューから外す観点のため、この段で扱っていない。F002・F004・F006 は前の段ですでに解消されていた。F005（生成ページが古い）は R4 の観点の外で、`docs/ja/specdojo/samples/generated/` は git 管理外のため作り直していない。close の前に yaml-pages を作り直す。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-ifx-api-sample-140/T-KATA-REVIEW-ALL-ifx-api-sample-140-20261126T144112Z-85e0ea50/executor.log",
+      "bytes": 9221,
+      "truncated": false
+    }
+  ]
+}

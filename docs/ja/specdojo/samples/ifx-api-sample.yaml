@@ -51,7 +51,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CreateSaleResponse"
         "400":
-          description: 入力不正（商品コードの未登録を含む）。店舗端末は `details` の項目を直して送り直す。
+          description: 入力不正（商品コードの未登録を含む）。店舗端末は `details` の `field` が指す項目を直して送り直す。
           content:
             application/json:
               schema:
@@ -170,8 +170,20 @@ components:
         message:
           type: string
         details:
-          type: object
-          description: 任意の追加情報（入力不正の項目名など）
+          type: array
+          description: 入力不正の項目と理由（400 のときに返す）
+          items:
+            type: object
+            additionalProperties: false
+            required: [field, reason]
+            properties:
+              field:
+                type: string
+                description: 不正な項目の位置（例 lines[0].product_code）
+              reason:
+                type: string
+                enum: [REQUIRED, INVALID_FORMAT, OUT_OF_RANGE, UNKNOWN_PRODUCT]
+                description: 不正の理由。UNKNOWN_PRODUCT は商品コードの未登録
 
   securitySchemes:
     ApiKeyAuth:
