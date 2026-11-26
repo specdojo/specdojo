@@ -811,7 +811,10 @@ function schedulerLockDir(projectPath: string): string {
   return join(executionRootForProject(projectPath), "exec", ".locks", "scheduler.lock");
 }
 
-export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOptions): string {
+function* schedulerLockAttempts(
+  projectPath: string,
+  opts: SchedulerLockOptions,
+): Generator<void, string> {
   const lockDir = schedulerLockDir(projectPath);
   const lockParent = resolve(lockDir, "..");
   ensureDir(lockParent);
@@ -855,9 +858,33 @@ export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOpt
         );
       }
 
-      sleepMs(200);
+      yield;
     }
   }
+}
+
+// Both entry points use the same acquisition, stale-lock and timeout policy.
+export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOptions): string {
+  const attempts = schedulerLockAttempts(projectPath, opts);
+  let step = attempts.next();
+  while (!step.done) {
+    sleepMs(200);
+    step = attempts.next();
+  }
+  return step.value;
+}
+
+export async function acquireSchedulerLockAsync(
+  projectPath: string,
+  opts: SchedulerLockOptions,
+): Promise<string> {
+  const attempts = schedulerLockAttempts(projectPath, opts);
+  let step = attempts.next();
+  while (!step.done) {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    step = attempts.next();
+  }
+  return step.value;
 }
 
 export function releaseSchedulerLock(lockDir: string): void {

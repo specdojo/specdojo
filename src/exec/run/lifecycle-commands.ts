@@ -10,7 +10,7 @@ import {
   type ExecDefaultsConfig,
 } from "../agent-config.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   buildEvent,
   claimOwnerOf,
   foldEventsToState,
@@ -650,7 +650,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
   if (opts.due) {
     let lockDir = "";
     try {
-      lockDir = acquireSchedulerLock(schedulePath, {
+      lockDir = await acquireSchedulerLockAsync(schedulePath, {
         actor: opts.by ?? "exec-limit-resume",
         lockTimeoutMs: 10_000,
         lockStaleMs: 300_000,

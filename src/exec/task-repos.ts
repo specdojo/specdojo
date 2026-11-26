@@ -300,15 +300,16 @@ export function reserveProductBranches(products: readonly ProductRepo[], taskId:
  * exec branch starts from the declared `integration_branch` (or the repository's current branch)
  * because the checkpoint commit belongs to the project repository only.
  */
-export function ensureProductWorktrees(opts: {
+export async function ensureProductWorktrees(opts: {
   products: readonly ProductRepo[];
   worktreeBase: string;
   taskId: string;
-  installDependencies?: (worktreePath: string) => void;
-  generateArtifacts?: (worktreePath: string) => void;
-}): ProductWorktree[] {
+  installDependencies?: (worktreePath: string) => void | Promise<void>;
+  generateArtifacts?: (worktreePath: string) => void | Promise<void>;
+}): Promise<ProductWorktree[]> {
   reserveProductBranches(opts.products, opts.taskId);
-  return opts.products.map((product) => {
+  const worktrees: ProductWorktree[] = [];
+  for (const product of opts.products) {
     if (!existsSync(product.repoRoot)) {
       throw new Error(
         `Product repository "${product.name}" does not exist: ${product.repoRoot} (check repos[].path)`,
@@ -319,10 +320,11 @@ export function ensureProductWorktrees(opts: {
     const existing = findExecWorktree(product.repoRoot, opts.taskId, branch);
     if (existing) {
       // Same as the project worktree on reuse: dependencies stay, generated files are rebuilt.
-      generate(existing.path);
-      return toProductWorktree(product, existing);
+      await generate(existing.path);
+      worktrees.push(toProductWorktree(product, existing));
+      continue;
     }
-    const worktree = ensureExecWorktree({
+    const worktree = await ensureExecWorktree({
       repoRoot: product.repoRoot,
       worktreeBase: opts.worktreeBase,
       taskId: opts.taskId,
@@ -334,8 +336,9 @@ export function ensureProductWorktrees(opts: {
         : skip,
       generateArtifacts: generate,
     });
-    return toProductWorktree(product, worktree);
-  });
+    worktrees.push(toProductWorktree(product, worktree));
+  }
+  return worktrees;
 }
 
 function toProductWorktree(product: ProductRepo, worktree: ExecWorktree): ProductWorktree {

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-25T21:59:34Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: lint-ts, typecheck"
   derived_from:
     - PJR-P8SX
 ---
@@ -71,6 +70,7 @@ P8SX で統合の commit を非同期にした後も、親の検証の終わり�
 | 非同期化と呼び出し元の更新           | done | 準備、checkpoint、統合、親検証前の YAML ページ再生成を順に待つ。lock の取得待ちも非同期化。                                                                       |
 | 順序・排他・終了検出の回帰テスト追加 | done | 単体・統合テストを追加し、既存テストを Promise に対応。実行は親 runner が担当。                                                                                   |
 | sandbox での検証                     | done | ソースのビルドと再現計測を実行。整形・文書検査の結果は executor evidence に記録する。                                                                             |
+| 親検証の失敗箇所の修正               | done | テストの `import()` 型注釈を型専用 import に変更し、`mergeProject` のコールバックが数値を返さないよう修正。型検査・lint の再実行は親 runner が担当する。          |
 | 統合後の実際の並列実行               | open | オーケストレーターが agent CLI を起動して使用量を消費する検査のため executor は行わない。`--parallel 3` の数件で目標値と統合失敗の有無を確認してから close する。 |
 
 ### 6.2. 計測と原因
@@ -95,6 +95,8 @@ P8SX で統合の commit を非同期にした後も、親の検証の終わり�
 - scheduler lock の同期版と非同期版は、取得・stale 判定・timeout の判断を共有する。runner の取得待ちを非同期版に揃え、merge が lock を持つ間に別タスクの同期待ちが event loop を止めることを避けた。
 
 単体テストは依存導入・生成の順序、失敗後の打ち切り、非同期 merge が終わるまでの統合の排他、失敗後の排他解放、scheduler lock の競合と timeout を確かめる。統合テストは遅い子プロセスの実行中の検証終了検出、merge hook 実行中の lock 保持を確かめる。既存の準備・複数リポジトリ・競合復旧のテストも呼び出しを `await` に更新した。指定された単体・統合テスト、型検査と lint は親 runner が実行する。
+
+再開時に前回の親検証を確認し、単体・統合テストは成功、`lint:ts` と `typecheck` はテスト内の上記 2 点で失敗していた。両方を修正し、`register-resume.ts`・`schedule-prepare.ts`・`trial-commands.ts` を含む非同期化した関数の呼び出し元が、Promise を待つか呼び出し元へ返すことを確認した。修正後の親検証の成否は runner の再実行結果を正とする。
 
 ### 6.4. 判断と申し送り
 

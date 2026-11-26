@@ -153,11 +153,11 @@ describe("exec worktree", () => {
     }
   });
 
-  it("creates and reuses a task worktree", () => {
+  it("creates and reuses a task worktree", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     try {
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
@@ -178,7 +178,7 @@ describe("exec worktree", () => {
         branch: created.branch,
       });
 
-      const reused = ensureExecWorktree({
+      const reused = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
@@ -190,7 +190,7 @@ describe("exec worktree", () => {
     }
   });
 
-  it("creates a new worktree from an explicit start point", () => {
+  it("creates a new worktree from an explicit start point", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     try {
@@ -199,7 +199,7 @@ describe("exec worktree", () => {
       git(repo, "add", "later.txt");
       git(repo, "commit", "-m", "later");
 
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:trial:cmp-001:agent-a",
@@ -214,12 +214,12 @@ describe("exec worktree", () => {
     }
   });
 
-  it("continues when worktree add reports a transient failure after completing", () => {
+  it("continues when worktree add reports a transient failure after completing", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const restoreGit = simulateOneShotWorktreeAddFailure("complete");
     try {
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "PJR-DT3Q-complete",
@@ -237,12 +237,12 @@ describe("exec worktree", () => {
     }
   });
 
-  it("removes a same-commit branch-only partial state before retrying worktree add", () => {
+  it("removes a same-commit branch-only partial state before retrying worktree add", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const restoreGit = simulateOneShotWorktreeAddFailure("branch-only");
     try {
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "PJR-DT3Q-branch-only",
@@ -260,7 +260,7 @@ describe("exec worktree", () => {
     }
   });
 
-  it("preserves an existing branch that differs from the requested start point", () => {
+  it("preserves an existing branch that differs from the requested start point", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const taskId = "PJR-DT3Q-mismatched-branch";
@@ -273,9 +273,9 @@ describe("exec worktree", () => {
       const existingTip = git(repo, "rev-parse", "HEAD");
       git(repo, "branch", branch, existingTip);
 
-      expect(() =>
+      await expect(
         ensureExecWorktree({ repoRoot: repo, worktreeBase: base, taskId, startPoint }),
-      ).toThrow("Refusing to delete or reuse it");
+      ).rejects.toThrow("Refusing to delete or reuse it");
       expect(git(repo, "rev-parse", branch)).toBe(existingTip);
       expect(findExecWorktree(repo, taskId)).toBeNull();
     } finally {
@@ -284,7 +284,7 @@ describe("exec worktree", () => {
     }
   });
 
-  it("installs root and package-local dependencies inside a newly created worktree", () => {
+  it("installs root and package-local dependencies inside a newly created worktree", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     try {
@@ -293,12 +293,12 @@ describe("exec worktree", () => {
       git(repo, "commit", "-m", "add packages");
       const installed: string[] = [];
 
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
-        installDependencies: (worktreePath) =>
-          installWorktreeDependencies(worktreePath, (packageDir) => {
+        installDependencies: async (worktreePath) =>
+          await installWorktreeDependencies(worktreePath, (packageDir) => {
             installed.push(relative(worktreePath, packageDir) || ".");
             mkdirSync(join(packageDir, "node_modules"));
             writeFileSync(join(packageDir, "node_modules", "marker.txt"), "ok\n", "utf8");
@@ -318,13 +318,13 @@ describe("exec worktree", () => {
     }
   });
 
-  it("replaces a legacy node_modules symlink without modifying its source", () => {
+  it("replaces a legacy node_modules symlink without modifying its source", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     try {
       addNpmPackage(repo);
       git(repo, "commit", "-m", "add package");
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
@@ -336,12 +336,12 @@ describe("exec worktree", () => {
       writeFileSync(join(sourceNodeModules, "source-marker.txt"), "keep\n", "utf8");
       symlinkSync(sourceNodeModules, join(created.path, "node_modules"), "dir");
 
-      const reused = ensureExecWorktree({
+      const reused = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
-        installDependencies: (worktreePath) =>
-          installWorktreeDependencies(worktreePath, (packageDir) => {
+        installDependencies: async (worktreePath) =>
+          await installWorktreeDependencies(worktreePath, (packageDir) => {
             expect(existsSync(join(packageDir, "node_modules"))).toBe(false);
             mkdirSync(join(packageDir, "node_modules"));
             writeFileSync(join(packageDir, "node_modules", "local-marker.txt"), "ok\n", "utf8");
@@ -360,11 +360,11 @@ describe("exec worktree", () => {
     }
   });
 
-  it("does not install dependencies when the worktree has no tracked package-lock", () => {
+  it("does not install dependencies when the worktree has no tracked package-lock", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     try {
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
@@ -377,7 +377,7 @@ describe("exec worktree", () => {
     }
   });
 
-  it("generates worktree artifacts after installing dependencies, for new and reused worktrees", () => {
+  it("generates worktree artifacts after installing dependencies, for new and reused worktrees", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const taskId = "prj-0001:T-LAUNCH-pm-plan-010";
@@ -387,12 +387,16 @@ describe("exec worktree", () => {
         repoRoot: repo,
         worktreeBase: base,
         taskId,
-        installDependencies: () => steps.push("install"),
-        generateArtifacts: () => steps.push("generate"),
+        installDependencies: () => {
+          steps.push("install");
+        },
+        generateArtifacts: () => {
+          steps.push("generate");
+        },
       };
 
-      const created = ensureExecWorktree(options);
-      const reused = ensureExecWorktree(options);
+      const created = await ensureExecWorktree(options);
+      const reused = await ensureExecWorktree(options);
 
       expect(created.created).toBe(true);
       expect(reused.created).toBe(false);
@@ -403,12 +407,12 @@ describe("exec worktree", () => {
     }
   });
 
-  it("keeps a newly created worktree when artifact generation fails", () => {
+  it("keeps a newly created worktree when artifact generation fails", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const taskId = "prj-0001:T-LAUNCH-pm-plan-010";
     try {
-      expect(() =>
+      await expect(
         ensureExecWorktree({
           repoRoot: repo,
           worktreeBase: base,
@@ -418,7 +422,7 @@ describe("exec worktree", () => {
             throw new Error("Worktree preparation failed: specdojo build exited with 1");
           },
         }),
-      ).toThrow("Worktree preparation failed");
+      ).rejects.toThrow("Worktree preparation failed");
 
       const worktree = findExecWorktree(repo, taskId);
       expect(worktree).not.toBeNull();
@@ -429,7 +433,7 @@ describe("exec worktree", () => {
     }
   });
 
-  it("keeps a newly created worktree when dependency installation fails", () => {
+  it("keeps a newly created worktree when dependency installation fails", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const taskId = "prj-0001:T-LAUNCH-pm-plan-010";
@@ -437,7 +441,7 @@ describe("exec worktree", () => {
       addNpmPackage(repo);
       git(repo, "commit", "-m", "add package");
 
-      expect(() =>
+      await expect(
         ensureExecWorktree({
           repoRoot: repo,
           worktreeBase: base,
@@ -446,7 +450,7 @@ describe("exec worktree", () => {
             throw new Error("npm ci failed");
           },
         }),
-      ).toThrow("npm ci failed");
+      ).rejects.toThrow("npm ci failed");
 
       const worktree = findExecWorktree(repo, taskId);
       expect(worktree).not.toBeNull();
@@ -457,13 +461,13 @@ describe("exec worktree", () => {
     }
   });
 
-  it("ignores repository-local Git environment inherited from hooks", () => {
+  it("ignores repository-local Git environment inherited from hooks", async () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     const originalIndexFile = process.env.GIT_INDEX_FILE;
     try {
       process.env.GIT_INDEX_FILE = ".git/index";
-      const created = ensureExecWorktree({
+      const created = await ensureExecWorktree({
         repoRoot: repo,
         worktreeBase: base,
         taskId: "prj-0001:T-LAUNCH-pm-plan-010",
@@ -485,16 +489,16 @@ describe("exec worktree", () => {
     expect(() => worktreeNameFromTaskId("***")).toThrow("Task ID");
   });
 
-  it("rejects a worktree base inside the repository", () => {
+  it("rejects a worktree base inside the repository", async () => {
     const repo = createGitRepository();
     try {
-      expect(() =>
+      await expect(
         ensureExecWorktree({
           repoRoot: repo,
           worktreeBase: join(repo, "worktrees"),
           taskId: "T-LAUNCH-pm-plan-010",
         }),
-      ).toThrow("outside the repository");
+      ).rejects.toThrow("outside the repository");
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

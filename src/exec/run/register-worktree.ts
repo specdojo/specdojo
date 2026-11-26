@@ -861,7 +861,7 @@ export async function runSingleRegisterItemWorktree(
         )
       : undefined;
     try {
-      const worktree = checkpointAndEnsureWorktree({
+      const worktree = await checkpointAndEnsureWorktree({
         context: wtContext,
         worktreeTaskId,
         base: worktreeBase,
