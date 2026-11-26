@@ -1,0 +1,19 @@
+R5（整合）のレビューを終えました。本文で食い違っていたのは1点（適用範囲）で、`docs/ja/specdojo/samples/br-sample.md` を直しました。ほかに相手側の文書を直すべき点が2件あり、こちらは変更せず直す案だけを残しています。確認として実行したのは prettier の整形確認だけで、通りました。markdownlint などは親 runner が実行します。
+
+**直した点（br-sample）**
+- 冒頭の1文と概要の適用範囲で、対象を「商品」から「定番商品」に絞りました。用語集（gl-sample の「発注点」）、データ辞書（bdd-sample）、cdt-sample はどれも、発注点を定番商品だけに設定するとしています。
+- 同じ理由で、対象外に「定番商品以外の補充判断」を加えました。
+
+**F001（承認条件の不足）は対応不要でした**
+- 6章にはすでに承認の条件（判定例1〜9が規則から一意に導けること）が書かれており、指摘は前の版の行74を指したものでした。
+- 指摘が例に挙げた「人間の PO による承認」は書き足していません。Sample 記述標準が本文に承認の役割を書くことを禁じているためです。
+
+**相手側を直す案（変更していません）**
+- **gl-sample.yaml の `tm-reorder-point`**：定義が「在庫数量がこの値を下回ったとき」で、予約を除いた販売可能数と比べる br-sample と合いません。notes に「不足の判定では予約分を除いた販売可能数と比べる（在庫不足判定に従う）」と添える案です。印は「要判断」で、用語集の定義を一般的な語義のままにしておくのも筋が通るため迷いました。
+- **bdd-sample.yaml**：商品の発注点はありますが、br-sample が入力にする在庫数と予約数の項目がありません。在庫と予約の項目（個数・整数・必須）を加える案です。印は「要判断」で、bdd-sample は最小の例なので、意図して省いている可能性があります。
+
+wikilink と `based_on` は br-sample の本文に参照がありませんでした。共通サンプル文脈にある役割名（店主代表・家族利用者代表）や単一店舗の前提とは合っています。同じ接頭辞の sample はほかにありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: br-sample の適用範囲を定番商品に絞り、gl・bdd・cdt-sample と揃えた。F001 は前の版の行を指した指摘で、6章に承認条件がすでにあるため対応不要。相手側（gl-sample・bdd-sample）を直す案を2件 handoff に残した。","handoff":["R5-1: R5 / 冒頭の1文と 1. 概要（適用範囲・対象外） / 発注点を設定するのは定番商品だけなのに、本文の対象が「商品」一般になっていた / 冒頭の1文と適用範囲を「定番商品」に絞り、対象外に「定番商品以外の補充判断」を加えた / vp-qe-kata-conformance。gl-sample の `tm-reorder-point` の notes「定番商品だけに設定し」、bdd-sample の発注点の説明「定番商品で在庫不足判定に使う」、cdt-sample の定番商品の定義「発注点を設定する対象」に合わせた / -","R5-2: R5 / 6. メモ / 将来課題 / grade の F001（承認条件の不足）は前の版の行74を指していた。今の版の6章にはすでに承認の条件（判定例1〜9が規則から一意に導けること）がある / - / vp-qe-kata-conformance。指摘の例にある「人間の PO による承認」は書き足さなかった。Sample 記述標準の記述ガイドと禁止事項が、本文に承認の役割を書くことを禁じているため / -","R5-3: R5 / 2. 入力（相手側: gl-sample.yaml の `tm-reorder-point`） / 用語集の定義は「在庫数量がこの値を下回ったとき」だが、br-sample は予約を除いた販売可能数と発注点を比べる / -（相手側の案: gl-sample の `tm-reorder-point` の notes に「不足の判定では予約分を除いた販売可能数と比べる（在庫不足判定に従う）」と添える） / vp-qe-kata-conformance、vp-dev-change-impact。迷った理由: 用語集の定義は一般的な語義のままにして、具体の比較はルールに任せる案もあり、選ばなかった / 要判断","R5-4: R5 / 2. 入力（相手側: bdd-sample.yaml） / データ辞書の商品には発注点があるが、br-sample が必須入力とする在庫数と予約数の項目がない / -（相手側の案: bdd-sample に在庫と予約の項目（個数・整数・必須）を加え、在庫不足判定への参照を付ける） / vp-qe-kata-conformance、vp-dev-change-impact。迷った理由: bdd-sample は最小の例で、意図して省いている可能性がある。省いたままにする案は選ばなかった / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/br-sample.md","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは docs/ja/specdojo/samples/br-sample.md だけで、plan・result・個票の履歴ファイルは変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML は変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
