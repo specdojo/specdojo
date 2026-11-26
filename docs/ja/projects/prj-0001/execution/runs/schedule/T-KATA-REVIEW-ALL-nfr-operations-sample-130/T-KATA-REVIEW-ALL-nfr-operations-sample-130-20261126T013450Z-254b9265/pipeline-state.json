@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-nfr-operations-sample-130",
   "run_id": "T-KATA-REVIEW-ALL-nfr-operations-sample-130-20261126T013450Z-254b9265",
-  "updated_at": "2026-11-26T01:41:22.739Z",
+  "updated_at": "2026-11-26T01:42:17.429Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-operations-sample-130/T-KATA-REVIEW-ALL-nfr-operations-sample-130-20261126T013450Z-254b9265/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T01:41:22.739Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T01:42:17.429Z",
       "artifact_ref": null
     }
   },
