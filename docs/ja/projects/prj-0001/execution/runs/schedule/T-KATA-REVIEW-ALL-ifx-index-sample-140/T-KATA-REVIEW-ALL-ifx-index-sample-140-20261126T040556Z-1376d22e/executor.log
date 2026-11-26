@@ -1,0 +1,31 @@
+sample `docs/ja/specdojo/samples/ifx-index-sample.yaml` の事実を確かめた結果、R4（正しさ）の観点で誤りは見つからず、sample は編集していません。schema 検査は通っています。ただし、確かめきれない主張が 1 件残りました（No 9）。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1 行目の `$schema` パス | `docs/specdojo/schemas/v1/ifx-index.schema.yaml` | 相対パスをたどる | 一致 | samples から `../../../` で `docs/` に着く |
+| 2 | `id`・`type: api`・`status`・`rulebook`・`supersedes: []` | ifx-index schema | 読み取りと `npm run validate:schema:file` | 一致 | pattern・const・enum を満たし、出力は `valid` |
+| 3 | 3 連携の `direction`・`kind`・`format` の値 | ifx-index schema の enum | 読み取り | 一致 | `bidirectional`、`API` と `コマンド`、`JSON` と `その他` はいずれも enum にある |
+| 4 | `spec_ref`（`TBD`・`specdojo:ifx-api-sample`・`specdojo:ifx-cmd-sample`） | schema の pattern と各 sample の id | grep | 一致 | 両 sample とも id が実在する |
+| 5 | 14〜16 行のリンク先（clis・pm-roles・pm-members） | 各 sample の id | grep | 一致 | 3 件とも実在する |
+| 6 | Role と兼務（BA・PM は開発担当、QE は同行レビュー担当） | `pm-members-sample.yaml` | grep | 一致 | 開発担当は [PM, BA, DEV]、同行レビュー担当は [QE] |
+| 7 | 商品照会の取得項目と失敗時の扱い（21・31 行） | `clis-sample.md` の 61・75 行 | 読み取り | 一致 | 商品名・単価・税区分を取得し、失敗時は明細を追加しない |
+| 8 | 売上登録の重複排除と応答コードの委譲（54〜55 行） | `ifx-api-sample.yaml` の 18 行と 50〜96 行 | 読み取り | 一致 | `transaction_id` で冪等、応答コードごとの扱いを定義している |
+| 9 | 56 行の `_UNDECIDED_`（受付照会と保存失敗後の回復が未決） | ifx-api-sample の 4〜8 行と 22 行 | 読み取り | 確かめられない | 受付照会は未決と一致する。保存失敗後の回復は契約側の未決に載っていない（clis-sample の 124 行にはある）。確かめるには本部側の合意が要る |
+| 10 | 印字の失敗分類・USB 直結・認証不要・OS 権限・起動制約（74・78 行） | `ifx-cmd-sample.yaml` | 読み取り | 一致 | 11〜12 行、64〜94 行、96〜104 行、110〜114 行 |
+| 11 | 印字失敗時も会計を維持し、保存済みレシートだけを再印刷する（73・75 行） | ifx-cmd-sample の 21 行と 117〜120 行 | 読み取り | 一致 | 同じ内容が書かれている |
+| 12 | `format: その他`（テキスト入力に結果 JSON と診断が混在） | ifx-cmd-sample の streams と files | 読み取り | 一致 | 入力は text、stdout は json、stderr は text |
+
+**ほかの段に任せたもの**
+
+- **F001（売上登録の契約参照が clis-sample とそろっていない）:** 型どうしの整合を見る観点（`vp-qe-kata-conformance`）の指摘なので、R4 では扱わず担当の段に回しました。
+
+**検査**
+
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml`：`valid`。
+- それ以外の lint などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で ifx-index-sample.yaml の事実 12 件を schema・ifx-api-sample・ifx-cmd-sample・clis-sample・pm-members-sample と突き合わせた。11 件は一致し、1 件（No 9）は確かめられなかった。誤りがないため sample は編集していない。確かめの表は executor の最終応答にある。schema 検査は valid。","handoff":["[R4/minor] ifx-index-sample.yaml の 56 行の `_UNDECIDED_` は「結果不明時の受付照会と保存失敗後の回復方式が未決」と書いている。一方、詳細契約 specdojo:ifx-api-sample の未決（4〜8 行・22 行）は受付照会と税区分などの送信だけで、保存失敗後の回復は載っていない（clis-sample の 124 行には載っている）。正本どうしで未決の範囲が食い違うため、R4 では推測で直さず残した。次のアクション: ifx-api-sample の未決に保存失敗後の回復を足すか、409 による回復で決着済みとして index と clis の記述から外すかを、ARC が DEV と決める。","F001（`vp-qe-kata-conformance`、57 行の `spec_ref` と clis-sample の `ifx-api-kinuya-sales.yaml` 参照の食い違い）は R4 の観点ではないため扱っていない。型どうしの整合を見る段で扱う。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/ifx-index-sample.yaml: valid"}]}
+</specdojo_executor_evidence>
