@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-dct-sample-120
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-dct-sample-120/T-KATA-REVIEW-ALL-dct-sample-120-20261125T162801Z-81d35099/plan.md
   started_at: "2026-11-25T16:28:10.580Z"
+  completed_at: "2026-11-26T13:36:30.594Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance

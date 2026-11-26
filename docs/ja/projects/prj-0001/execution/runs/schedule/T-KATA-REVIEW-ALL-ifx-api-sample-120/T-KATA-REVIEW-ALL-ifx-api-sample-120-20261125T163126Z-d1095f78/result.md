@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-ifx-api-sample-120
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-ifx-api-sample-120/T-KATA-REVIEW-ALL-ifx-api-sample-120-20261125T163126Z-d1095f78/plan.md
   started_at: "2026-11-25T16:31:35.497Z"
+  completed_at: "2026-11-26T14:14:43.732Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
