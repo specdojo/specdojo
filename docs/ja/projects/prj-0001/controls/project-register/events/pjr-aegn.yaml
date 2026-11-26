@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3436585aa6694f1aa3a98b04a40355ac
+- v: 1
+  id: reg_35506e07725b4a7c810c241483fd8d1f
+  ts: "2026-11-26T20:22:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後に上限を真似た claude で JSEY を流し、sonnet-executor から sol-executor への切り替えを確かめた。reporter の段は agent を呼ばずに終わったため、実際の切り替えは通していない（判定は executor と同じ関数）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: claude の 5 時間の利用枠の上限を CLI の組み込みの検出で session limit として扱い、--on-rate-limit fallback で代わりの agent に切り替えるようにした。見張りの分類も usage_limit に足した
+  previous_event_id: reg_e2af0e1a3b7d4f25afbe1a87638ab42e

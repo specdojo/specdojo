@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-aegn-claude-five-hour-limit-detection
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-25T22:34:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T20:22:40Z"
+  conclusion: claude の 5 時間の利用枠の上限を CLI の組み込みの検出で session limit として扱い、--on-rate-limit fallback で代わりの agent に切り替えるようにした。見張りの分類も usage_limit に足した
   derived_from:
     - PJR-0BGE
 ---
