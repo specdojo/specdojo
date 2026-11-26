@@ -70,15 +70,15 @@ NFR の根拠は、プロジェクト概要の期待効果（記録の継続、�
 
 次の表は、カテゴリごとに合否を確かめる検証、守るための運用、例外の判断記録をどの文書で辿るかを示す。導線がないものは `（なし）` とする。
 
-| カテゴリ       | 検証（SAC/STC）                                           | 運用（OPD/OPR）                                                              | 判断記録（DEC）         |
-| -------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------- |
-| 信頼性         | `sac-store-sales`、`stc-cash-sale`、`stc-sale-hold`       | （なし）                                                                     | （なし）                |
-| 可用性         | `sac-store-sales`、`stc-record-recovery`                  | `opd-index`、`opr-backup-restore`、`opr-incident`                            | `dec-offline-recording` |
-| 保守性         | （なし）                                                  | `opd-index`、`opr-change`                                                    | （なし）                |
-| 完全性         | `sac-store-sales`、`stc-cash-sale`、`stc-record-recovery` | `opr-index`                                                                  | （なし）                |
-| 機密性・安全性 | `sac-store-sales`                                         | `opd-access-control`、`opr-access-control`                                   | （なし）                |
-| 性能           | `stc-cash-sale`                                           | `opd-monitoring`                                                             | （なし）                |
-| 運用           | （なし）                                                  | `opd-monitoring`、`opd-incident-management`、`opr-monitoring`、`opr-support` | （なし）                |
-| 操作性         | `sac-store-sales`                                         | （なし）                                                                     | （なし）                |
+| カテゴリ       | 検証（SAC/STC）                                                             | 運用（OPD/OPR）                                                                                                                 | 判断記録（DEC）            |
+| -------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| 信頼性         | `sac-reliability`、`stc-cash-sale`、`stc-sale-hold`                         | `opd-monitoring`、`opd-incident-management`、`opr-incident`                                                                     | `dec-reliability-criteria` |
+| 可用性         | `sac-availability`、`stc-record-recovery`                                   | `opd-index`、`opr-backup-restore`、`opr-incident`                                                                               | `dec-offline-recording`    |
+| 保守性         | （なし）                                                                    | `opd-index`、`opr-incident`、`opr-change`                                                                                       | （なし）                   |
+| 完全性         | `sac-integrity`、`stc-cash-sale`、`stc-record-recovery`                     | `opd-integrity-check`、`opr-integrity-check`                                                                                    | （なし）                   |
+| 機密性・安全性 | `sac-store-sales`                                                           | `opd-access-control`、`opr-access-control`                                                                                      | （なし）                   |
+| 性能           | `sac-performance`、`stc-cash-sale`、`stc-credit-balance`、`stc-daily-close` | `opd-monitoring`                                                                                                                | （なし）                   |
+| 運用           | `sac-operations`                                                            | `opd-index`、`opd-monitoring`、`opd-incident-management`、`opr-monitoring`、`opr-backup-restore`、`opr-incident`、`opr-support` | （なし）                   |
+| 操作性         | `sac-store-sales`                                                           | （なし）                                                                                                                        | （なし）                   |
 
-保守性と運用の検証は、総合テストで条件を作れないため `（なし）` とし、月次点検の記録で確かめる。`dec-offline-recording` は紙の販売控えへの切替を判断する記録で、オフライン時の記録方法が決まるまで決定待ちとする。
+保守性は受入条件も総合テストも置かず、月次点検の記録で確かめる。運用は総合テストで条件を作れないため、受入条件だけで確かめる。`dec-offline-recording` は紙の販売控えへの切替を判断する記録で、オフライン時の記録方法が決まるまで決定待ちとする。
