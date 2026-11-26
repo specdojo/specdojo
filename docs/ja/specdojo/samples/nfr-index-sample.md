@@ -50,7 +50,7 @@ NFR の根拠は、プロジェクト概要の期待効果（記録の継続、�
 | 運用           | `nfr-operations`      | `nfr-operations.md`      | -                                                                               |
 | 操作性         | `nfr-usability`       | `nfr-usability.md`       | -                                                                               |
 
-各分冊は `part_of` に `nfr-index` を持つ。目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、測った値だけを記録する。
+各分冊は `part_of` に `nfr-index` を持つ。目標値が `_UNDECIDED_` の指標は、分冊が暫定の判定を定めていればそれで合否を判定し、定めていなければ測った値だけを記録する。
 
 ## 4. 変更の入口（追加・統廃合・改定）
 
