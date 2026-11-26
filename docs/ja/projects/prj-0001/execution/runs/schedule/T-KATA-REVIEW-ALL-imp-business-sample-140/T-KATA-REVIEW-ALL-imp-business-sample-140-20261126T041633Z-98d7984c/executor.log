@@ -1,0 +1,25 @@
+R4（正しさ）の段では、sample に誤りが見つからなかったため何も直していません。`docs/ja/specdojo/samples/imp-business-sample.md` は変更なしです。手元で実行した検査はありません。lint は親 runner が実行します。
+
+**F001 は前の段で直っていました。** 指摘の時点では 1 つ目の成功条件の現状値が `_UNDECIDED_` で、未解決事項にも計測の論点がありませんでした。今の版では、現状値の欄が未解決事項「会計時間の現状値の計測」を指しています。未解決事項の表にもその行があり、計測期間 2026-05-07〜2026-05-13、決定期限 2026-05-13、担当 `BA`、転記先 `PJR-B4Q4`（`question`）が入っています。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: project` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、rulebook の「推奨 Frontmatter 項目」 | 読み取り | 一致 | schema の列挙値に `project` があり、rulebook も `type` は `project` と定めている |
+| 2 | frontmatter の `rulebook: specdojo:imp-business-rulebook` | rulebook の frontmatter、`common-frontmatter.schema.yaml` の `rulebookRef` | 読み取り | 一致 | rulebook の id と一致し、`rulebookRef` の書式にも合う |
+| 3 | `based_on: [cr-2026-004]`、`part_of: [prj-0001]` | `common-frontmatter.schema.yaml` の `idRef` | 読み取り | 一致 | 書式 `^[a-z0-9][a-z0-9-:]*$` に合う。`cr-2026-004` は `imp-test-sample` の `based_on` と同じ |
+| 4 | 本文の 6 章の見出しと順序 | rulebook の「本文要件」 | 読み取り | 一致 | 見出し 6 つが同じ順序で並んでいる |
+| 5 | 4 つの表の列名 | rulebook の必須の列の表 | 読み取り | 一致 | 4 つの表とも列名が過不足なく、別名もない |
+| 6 | 変更要否・優先対応の `要` / `否`、影響度の `高` / `中` / `低`、対応方針の `実施` / `代替` / `見送り` | rulebook の「影響詳細一覧」の記述ガイド | 読み取り | 一致 | 列挙値の外の値はない |
+| 7 | 影響度ごとの件数（高 2・中 1・低 1）と集約規則 | 本文の「影響詳細一覧」 | 行を数える、観点ごとの最大値を取り直す | 一致 | 店頭販売（中・高・中）→高、日次締め→高、在庫補充→中、つけ管理→低 |
+| 8 | 担当の `BA` / `PO` | `people-and-organization-definition-standard.md` の Role code 表、`sample-authoring-standard.md` | 読み取り | 一致 | どちらも定義済みの Role code |
+| 9 | 転記先の ID `PJR-B4D1`・`PJR-B4Q1`〜`PJR-B4Q4`・`PJR-B4R1` の書式 | `register-item-frontmatter.schema.yaml` の表示 ID の pattern | 読み取り | 一致 | 使えない文字（I/L/O/U）が入っていない |
+| 10 | 転記先の種別（`question` / `risk` / `decision`） | schema の `ItemType`、rulebook の転記条件の表 | 読み取り | 一致 | 見送り・代替の記録は `decision`、未確定の論点は `question`、遅れのおそれは `risk` |
+| 11 | リリース予定日 2026-06-01 は `imp-test` と同じ | `imp-test-sample.md` の 22 行目、`imp-data-sample.md` の 24 行目 | 読み取り | 一致 | 両方とも 2026-06-01 |
+| 12 | 登場人物の役割名（店主代表、家族利用者代表） | `sample-authoring-standard.md` の共通登場人物 | 読み取り | 一致 | 共通サンプル文脈の役割名を使っている |
+| 13 | 個票 `PJR-B4D1` などが実在すること | なし（sample の中の架空の ID） | — | 確かめの対象外 | 正本のない仮定で、共通サンプル文脈と食い違わない |
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: imp-business-sample の主張 13 件を schema・rulebook・標準・関連 sample と突き合わせ、不一致はなかった。F001 は前の段で未解決事項『会計時間の現状値の計測』（PJR-B4Q4）を足したことで解消済みと確認した。sample は変更していない。","handoff":[],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票のどれも変更しておらず、適用条件の履歴ファイルの変更がない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>
