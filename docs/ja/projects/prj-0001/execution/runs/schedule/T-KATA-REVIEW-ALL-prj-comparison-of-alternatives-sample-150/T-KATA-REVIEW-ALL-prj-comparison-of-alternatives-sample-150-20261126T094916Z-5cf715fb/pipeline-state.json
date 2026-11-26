@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-150",
   "run_id": "T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-150-20261126T094916Z-5cf715fb",
-  "updated_at": "2026-11-26T09:59:46.222Z",
+  "updated_at": "2026-11-26T10:01:00.228Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-150/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-150-20261126T094916Z-5cf715fb/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T09:59:46.222Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T10:01:00.228Z",
       "artifact_ref": null
     }
   },
