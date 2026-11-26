@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-26T10:43:42Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-imp-interface-sample-140",
+  "by": "opus-executor",
+  "msg": "resumed executor target coverage has duplicate entries: specdojo:imp-interface-sample; specdojo exec resume --task T-KATA-REVIEW-ALL-imp-interface-sample-140 --resume-from executor (add --executor-by <nickname> to switch the executor agent)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-140/T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-140/T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f"
+  }
+}
