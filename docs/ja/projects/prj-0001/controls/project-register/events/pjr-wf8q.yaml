@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_89f01add130c47a9a5a471d4dbe4bfeb
+  ts: "2026-11-26T12:39:04Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の ID 表記の食い違いを直す（rulebook の大文字と schema の小文字、imp 系 sample の古い ID）
+    - field: description
+      from: ""
+      to: rulebook は based\_on などに大文字の PJR-XXXX を求めるが schema は小文字しか許さず、imp-interface-140 の検査が落ちた。imp-business・imp-test・imp-operations の sample は古い ID の cr-2026-004 のまま。
+    - field: input
+      from: ""
+      to: '["T-KATA-REVIEW-ALL-imp-interface-sample-140 で lint-fm-changed が `based_on` の大文字の PJR-C4A1 で落ちた（2026-11-26）","imp-business・imp-test・imp-operations の sample が cr-2026-004 を参照している","担当 DEV・期限 2026-11-30 は indie の指示（2026-11-26）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
