@@ -1,0 +1,22 @@
+R4（正しさ）の段を終えました。誤りが1件見つかり、`docs/ja/specdojo/samples/mm-sample.md` を直しました。確かめられなかった主張も1件あります。
+
+**直したもの**: 冒頭の進捗報告の ID を `prj-0001:pr-2026-04-24` から `prj-0001:pr-2026-04-24-01` にしました。pr-rulebook の 36〜37 行目では、ID の形式は `<project-id>:pr-<yyyy-mm-dd>-<nn>` で、末尾に2桁の連番が付きます。
+
+確かめの表（result の実施内容に載せる材料です）:
+
+| No | 主張 | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `specdojo.type: project` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、mm-rulebook | 読み取り | 一致 | `deliverableType` に `project` があり、rulebook も `specdojo.type` は `project` としている |
+| 2 | `rulebook: specdojo:mm-rulebook` | mm-rulebook の frontmatter | 読み取り | 一致 | rulebook の `sample: specdojo:mm-sample` と互いに対応している |
+| 3 | 進捗報告の ID `prj-0001:pr-2026-04-24` | `docs/ja/specdojo/rulebooks/pr-rulebook.md` 36〜37 行目 | 読み取り | 不一致（直した） | 末尾の2桁連番が抜けていた。日付の 2026-04-24 は金曜で、報告期間の終了日として無理はない |
+| 4 | 在庫管理の要件 `prj-0001:req-inventory` | `req-` の命名を決める rulebook | `rulebooks/` と `standards/` を grep | 確かめられない | `req-` の ID 規則を決めた正本が見つからない。trc の sample は `req-2026-r1` 形式で書いている |
+| 5 | 個票 ID `PJR-A3K7`・`PJR-B8M2` | `src/register/item.ts` 131 行目 `PJR_ID_ALPHABET` | 読み取り | 一致 | どちらも使える文字（`0123456789ABCDEFGHJKMNPQRSTVWXYZ`）だけでできた4文字 |
+| 6 | 本文の章・表の列・期限の書式 | mm-rulebook の「本文要件」「記述ガイド」 | 読み取り | 一致 | 必須の4章と任意の保留事項がそろい、列名も一致する。期限は `yyyy-mm-dd` で書かれている |
+
+grade の指摘 F001（`vp-ba-business-value`）は、この段では扱っていません。kata-guide はこの観点を kata の段のレビューから外しています。また、指摘が引用している文は前の段で書き換わっていて、決定2の理由はすでに決定事項の導入文に入っています。
+
+検証: 直した sample に markdownlint と `prettier --check` をかけ、どちらも通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で mm-sample の事実を schema・rulebook・src と突き合わせ、進捗報告の ID の誤り（連番の抜け）を `prj-0001:pr-2026-04-24-01` に直した。","handoff":["[R4 不一致・修正済み] 冒頭の進捗報告の ID `prj-0001:pr-2026-04-24` は pr-rulebook の「ファイル命名・ID規則」（`<project-id>:pr-<yyyy-mm-dd>-<nn>`）と合わず、末尾の2桁連番が抜けていたため `prj-0001:pr-2026-04-24-01` に直した。","[R4 確かめられない] アクション1の完了条件にある `prj-0001:req-inventory` は、`req-` の命名を決める rulebook・標準が見つからず、正しさを確かめられない。trc の sample は `req-2026-r1` 形式で書いている。R5（整合）で trc の sample と表記をそろえるか、要求一覧の ID 規則の正本を決めるか判断が要る。","[F001 対象外] grade の指摘 F001（`vp-ba-business-value`）は kata-guide の「kata の観点の組」で kata の段のレビューから外す観点なので、R4 では扱わない。指摘が引用している文は前の段で書き換わり、決定2の理由（店番の交代で確認時刻がずれ、補充が翌日に持ち越された2回）はすでに決定事項の導入文に入っているため、解消済みと見てよい。","[確かめの表] 一致したもの: `specdojo.type: project`（schema の `deliverableType` と rulebook）、`rulebook: specdojo:mm-rulebook`（rulebook の `sample` 宣言と互いに対応）、`PJR-A3K7`・`PJR-B8M2`（`src/register/item.ts` の `PJR_ID_ALPHABET` で使える文字の4文字）、本文の章・表の列・期限の書式（mm-rulebook の本文要件・記述ガイド）。不一致は進捗報告の ID の1件（直した）。確かめられないものは `prj-0001:req-inventory` の1件。"],"validations":[{"command":"npx markdownlint docs/ja/specdojo/samples/mm-sample.md","status":"passed","summary":"エラーなし"},{"command":"npx prettier --check docs/ja/specdojo/samples/mm-sample.md","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>
