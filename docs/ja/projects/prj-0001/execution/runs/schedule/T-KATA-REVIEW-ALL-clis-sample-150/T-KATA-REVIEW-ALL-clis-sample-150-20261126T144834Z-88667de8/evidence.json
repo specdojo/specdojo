@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-clis-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-clis-sample-150-20261126T144834Z-88667de8",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T14:49:23.612Z",
+    "completed_at": "2026-11-26T14:51:47.577Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/clis-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/clis-sample.md | 16 ++++++++--------\n 1 file changed, 8 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/clis-sample.md",
+      "status": "passed",
+      "summary": "変えた sample の表を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため、executor では実行していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:clis-sample\n  type: ui\n  status: draft\n  rulebook: specdojo:clis-rulebook\n  part_of: []\n  based_on: []\n---\n\n# 駄菓子屋きぬや 販売管理 CLI 仕様\n\n## 1. 概要\n\n店番担当が現金販売を記録し、釣銭とレシートを渡すための CLI コマンド群である。会計と印字の結果を区別して残し、店番の交代時に未完了の取引を引き継げるようにする。\n\n## 2. 利用目的と対象ユーザー\n\n次の表は、対象者ごとに本 CLI で解決する課題と、本書で確認・合意する内容を示す。\n\n| 対象者 | 解決する課題・達成する結果 | 確認・合意する内容 |\n| - | - | - |\n| 店主代表 | 暗算や転記に頼らず売上を記録する | 会計の確定条件、取消できる範囲、障害時の\n… output omitted …\n\n\n## 7. メモ / 将来課題\n\n次の表は、未決の論点ごとに影響と当面の扱いを示す。\n\n| 論点 | 影響と当面の扱い |\n| - | - |\n| 上位の操作体系が未作成 | `kinuya-clis-index` と CLI 用のシステム化機能がなく、`part_of`・`based_on` は未接続。GUI の機能仕様を根拠に流用しない |\n| 構文・設定・記録の正本 | `kinuya-cli-reference` と各 schema は未同梱の架空参照名 |\n| 本部との契約・障害回復 | `ifx-api-kinuya-*.yaml` は未同梱。契約例は取引 ID による重複排除までを示す。受付照会と保存失敗後の回復が決まるまで、結果不明の取引は自動再送せず、当該経路の受入を保留する |\n| 印字経路の実機確認 | 印字結果不明・二重印字は実機で未確認。確認するまで再印刷は保存済みレシートに限る |\n| 将来の拡張候補 | オフライン同期 `sales sync`、連続スキャン `sales scan`、キャッシュレス決済は現行の回復操作に使わない |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7844 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7844 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-clis-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dur\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1557}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  23:52:46\n   Duration  2.70s (transform 6.76s, setup 801ms, import 9.32s, tests 6.45s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-clis-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-clis-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）の段を終えた。clis-sample に売上登録の契約例 `ifx-api-sample` への参照を足し、「7. メモ / 将来課題」の重複排除を未決から外して契約例の内容に合わせた。F003・F004 は前の段で直っていた。F001・F002 は kata レビューで使わない観点のため見送った。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 5. 入力と出力の要点 / I/F 一覧（`ifx-index-sample`）は `ifx-api-sample` を `ifx-api-kinuya-sales.yaml` の完成例としているが、clis-sample は印字の契約例 `ifx-cmd-sample` しか参照していなかった / 冒頭の文に、売上登録の契約例として `[[specdojo:ifx-api-sample|本部売上登録API]]` を足した / `vp-qe-kata-conformance`（kata 相互）。`ifx-index-sample.yaml` の「本部への売上登録」の `spec_ref` とコメント / -",
+    "R5-2: R5 / 7. メモ / 将来課題 / 「本部との契約・障害回復」の行が重複排除を未決の論点に入れていたが、`ifx-api-sample` は取引 ID（`transaction_id`）による重複排除（再送に 409）を決めていた / 「契約例は取引 ID による重複排除までを示す」と書き、未決を受付照会と保存失敗後の回復に絞った / `vp-qe-kata-conformance`、`vp-dev-change-impact`。`ifx-api-sample.yaml` の `info.description` の冪等性と未決事項 / -",
+    "R5-3: R5 / 6.2. 代表的な表示と利用者の次の手（取引セッション保存失敗）/ grade の F003・F004（開始の保存失敗では取引未開始を確かめて `sales start` をやり直す手順と回復の条件）は、前の段が行を「開始」と「追加・取消」に分けて直していた / - / 前の段の指摘を繰り返さない（kata ガイドの「段と渡す材料」）。現行の本文で解消を確かめた / -",
+    "R5-4: R5 / 7. メモ / 将来課題 / grade の F001・F002（担当役割・確認の時期・管理先を足す）は `vp-pm-plan-feasibility`・`vp-pm-control-reporting` の指摘で、kata ガイドの「kata の観点の組」では kata の段のレビューに使わない。Sample 記述標準も、文書を確かめる役割の割り当てを本文に書かないとしている / - / 担当や管理先を足すと記述標準の禁止に触れる。追跡が要るなら、本文ではなく登録簿の個票で扱う案を残す / 要判断",
+    "照合して食い違いがなかったもの: `ifx-cmd-sample`（印字失敗時の会計維持、保存済みレシートだけの再印刷、送信前ビジーに限る自動再試行）、`sysd-index-sample`・`sysd-critical-flows-sample`・`sysd-cross-cutting-policy-sample`（`KINUYA_API_KEY`、`config/store-config.yaml`、各 schema の参照名、紙面確認の後の再印刷）、共通サンプル文脈（単一店舗・端末 1 台、役割名の使い方）。用語集（`docs/ja/product/010-business-specs/060-glossary/`）には駄菓子屋の業務の用語がなく、照らす対象がなかった。相手側を直す案はない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-clis-sample-150/T-KATA-REVIEW-ALL-clis-sample-150-20261126T144834Z-88667de8/executor.log",
+      "bytes": 6365,
+      "truncated": false
+    }
+  ]
+}
