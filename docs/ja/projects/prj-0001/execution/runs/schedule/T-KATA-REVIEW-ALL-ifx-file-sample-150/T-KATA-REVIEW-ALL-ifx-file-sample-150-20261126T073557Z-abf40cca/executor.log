@@ -1,0 +1,35 @@
+R5（整合）を終えました。sample 側の食い違いを 2 点直し、相手側の 2 文書に直す案があります。変更したファイルは `docs/ja/specdojo/samples/ifx-file-sample.md` だけで、2 行の差し替えです。
+
+**sample 側で直したもの**
+
+1. **No 1・段 R5・箇所「概要」の `_ASSUMPTION_` 段落**
+   - 指摘: 外部システムI/F一覧が初期リリースの対象を「店頭販売・在庫・つけ管理」としている、と書いていました。しかし `ifx-index-sample.yaml` はつけ販売を対象外としています。
+   - 直した案: 範囲の根拠を分けました。プロジェクト概要は「初期公開を単一店舗の店頭運用に絞り、仕入れ支援を後続の拡張とする」、I/F一覧は「仕入先システム連携を対象外とする」と書きます。
+   - 根拠: `prj-overview-sample.md` の 44 行目、`ifx-index-sample.yaml` の対象外のコメント。
+2. **No 2・段 R5・箇所「異常時の判断と利用者の次の手」の表の前の 1 文**
+   - 指摘: 表で使う「店番担当」の指す人が本書の中で決まっていませんでした。
+   - 直した案: 「店番担当は、販売管理 CLI 仕様と同じく店主代表か家族利用者代表を指す」を書き足しました。
+   - 根拠: `clis-sample.md` の 31 行目、`pm-members-sample.yaml`。
+
+**相手側を直す案（相手側は変更していません）**
+
+3. **No 3・段 R5・相手 `clis-sample.md` の「代表的な表示と利用者の次の手」**
+   - 指摘: 本書では、未解決の控え（`pending` / `unknown` / `rejected`）があると `sales start` が新規取引を始めず exit code 3 で止まります。CLI 仕様の入力表は「欠落時に作成」とだけ書いており、この停止の行がありません。
+   - 直す案: CLI 仕様に「未解決の控えがあるときの取引開始拒否（exit code 3）」の行を足します。
+4. **No 4・段 R5・相手 `ifx-api-sample.yaml` の 500 応答の説明（92 行目）・要判断**
+   - 指摘: 500 応答では「結果不明として保持し、同じ取引 ID で送り直す」と自動再送を認めています。本書と CLI 仕様は、結果不明の取引は受付照会の方式が決まるまで自動再送しないとしています。
+   - 直す案: ifx-api 側を「再送せずに保留する」に揃えるか、取引 ID による重複排除を理由に再送を認めて本書と CLI 仕様を直すかを決めます。
+
+**plan に展開された grade の finding**
+
+- F001・F002・F003・F005・F006・F007・F008 は、前の段までで直っていることを本文で確かめました。
+- F004（rulebook の `target_format` は `yaml` だが本 sample は `.md`）は R1・R2 が扱う指摘で、まだ解消していません。R5 では扱わず、申し送りに残します。
+
+**検証**
+
+- `npx prettier --check` は通りました。
+- lint などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: ifx-file-sample の概要 ASSUMPTION の範囲の根拠（ifx-index はつけ販売を対象外とする）と、異常時の表の「店番担当」の指す人を相手の sample に揃えた。相手側（clis-sample、ifx-api-sample）への直す案を handoff に残した。","handoff":["No: 1 / 段: R5 / 箇所: 概要の `_ASSUMPTION_` 段落 / 指摘: 外部システムI/F一覧が初期リリースの対象を店頭販売・在庫・つけ管理とするかのように書いていたが、ifx-index-sample.yaml はつけ販売を対象外としている / 直した案: 範囲の根拠を「プロジェクト概要は初期公開を単一店舗の店頭運用に絞り、仕入れ支援を後続の拡張とする」「外部システムI/F一覧は仕入先システム連携を対象外とする」に分けて書き直した（sample に反映済み） / 根拠: docs/ja/specdojo/samples/prj-overview-sample.md の 44 行目、docs/ja/specdojo/samples/ifx-index-sample.yaml の対象外のコメント / 印: なし","No: 2 / 段: R5 / 箇所: 「異常時の判断と利用者の次の手」の表の前の 1 文 / 指摘: 表で使う「店番担当」の指す人が本書の中で決まっていなかった / 直した案: 「店番担当は、販売管理 CLI 仕様と同じく店主代表か家族利用者代表を指す」を書き足した（sample に反映済み） / 根拠: docs/ja/specdojo/samples/clis-sample.md の 31 行目、docs/ja/specdojo/samples/pm-members-sample.yaml / 印: なし","No: 3 / 段: R5 / 箇所: 相手側 docs/ja/specdojo/samples/clis-sample.md の「入力情報」の `current-tx.json` の行と「代表的な表示と利用者の次の手」 / 指摘: 本書では未解決の控え（`api_sync_status` が `pending` / `unknown` / `rejected`）があると `sales start` が新規取引を始めず exit code 3 で止まるが、CLI 仕様は「`start` は欠落時に作成」とだけ書いており、この停止の行がない / 直した案: clis-sample の代表的な表示の表に「未解決の控えがあるときの取引開始拒否（exit code 3）」の行を足し、入力表の扱いの列にも同じ条件を書く（相手側は未変更） / 根拠: ifx-file-sample の `error_handling.missing.current_tx_json`、clis-sample の 62 行目と 110 行目 / 印: なし","No: 4 / 段: R5 / 箇所: 相手側 docs/ja/specdojo/samples/ifx-api-sample.yaml の 92 行目（500 応答） / 指摘: 500 応答では「結果不明として保持し、同じ取引 ID で送り直す」と自動再送を認めているが、ifx-file-sample と clis-sample は、結果不明の取引は受付照会の方式が決まるまで自動再送しないとしている / 直した案: ifx-api 側を「再送せずに保留する」に揃えるか、取引 ID による重複排除を理由に再送を認めて ifx-file-sample・clis-sample を直すかを決める（相手側は未変更） / 根拠: ifx-api-sample の 92 行目、ifx-file-sample の 2 つめの YAML の `_UNDECIDED_` のコメント、clis-sample の 124 行目 / 印: 要判断","grade の finding のうち F001・F002・F003・F005・F006・F007・F008 は、前の段までで直っていることを本文で確かめた。F004（rulebook の `target_format` は yaml だが本 sample は .md で、ほかの ifx sample とも形式が違う）は R1・R2 の観点で未解消のため、YAML の sample に組み直すか、rulebook に md とする例外を宣言するかを人が判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-file-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
