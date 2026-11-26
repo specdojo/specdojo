@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-nfr-operations-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-nfr-operations-sample-140-20261126T050310Z-d9fa3ac4",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T05:03:57.756Z",
+    "completed_at": "2026-11-26T05:07:39.868Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-operations-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-operations-sample.md | 6 +++---\n 1 file changed, 3 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-operations-sample.md",
+      "status": "passed",
+      "summary": "整形を適用した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-operations-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変えていない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-operations-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-operations-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-assumptions-constraints-dependencies-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 運用要件\n\n## 1. 概要（対象・目的）\n\n本書は、監視・バックアップ・手順・体制の達成基準を定める。目的は、店主代表が不在の日も店番担当が販売・在庫・つけの記録を続け、異常に気付いたら同じ手順で連絡・切替でき\n… output omitted …\n\\|運用方針・設計（監視）]] | `nfr-ops-001`・`nfr-ops-002` の測定元・閾値・通知の手段 |\n| 運用方針 | \\[\\[specdojo:opd-incident-management-sample\\|運用方針・設計（障害対応）]] | `nfr-ops-006` の対象とする優先度の判定と停止の判断 |\n| 運用手順 | \\[\\[specdojo:opr-monitoring-sample\\|運用手順（アラート対応）]] | `nfr-ops-001`・`nfr-ops-009` の通知を受けた後の確認 |\n| 運用手順 | \\[\\[specdojo:opr-backup-restore-sample\\|運用手順（バックアップ確認・リストア）]] | `nfr-ops-004`・`nfr-ops-005` の再取得と復元演習 |\n| 運用手順 | \\[\\[specdojo:opr-incident-sample\\|運用手順（障害対応）]] | `nfr-ops-007`・`nfr-ops-008` の紙の販売控えへの切替と一次連絡 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7620 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7620 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-operations-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests)\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1606}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  14:08:59\n   Duration  2.76s (transform 7.20s, setup 2.24s, import 8.35s, tests 6.51s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-operations-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-operations-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4 正しさ: 主張 14 件のうち 13 件が正本と一致した。nfr-ops-003 の基準が `_UNDECIDED_` のままで判定できない点（F002）を、暫定の基準（`_ASSUMPTION_`: 月次で 95% 以上）を足し、表の前の 1 文と未達のときの扱いをそろえて直した。F001・F004 は kata の段のレビューで使わない観点、F003 は rulebook 側の指摘のため、この段では扱わなかった。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4-1: R4 / 3. 運用要件一覧・4. 測定・検証方法（`nfr-ops-003`）/ 基準が `_UNDECIDED_`: ○○% のままで pass / fail を判定できない（F002）/ 基準の欄に「暫定は `_ASSUMPTION_`: 月次で 95% 以上」を足し、表の前の 1 文を「値が決まるまで暫定の基準で判定する」にそろえ、未達のときの扱いを「失敗した日の原因を障害記録で確かめ、同じ原因が続けば `DEV` が直す」に変えた / `vp-qe-verifiability` / 要判断（95% は正本のない業務上の仮定で、暦月に失敗 1 日までを許す値として置いた。選ばなかった案は、暫定値を置かずに決定期限だけを書く案。期限だけでは決まるまで判定できないので採らなかった）",
+    "R4-2: R4 / 3. 運用要件一覧（F001・F004）/ 未決事項の決定者と時期、ready 化の条件がないという指摘 / - / kata-guide の「kata の観点の組」で `vp-po-decision-readiness`・`vp-ops-release-readiness` は kata の段のレビューで使わない（kata の承認と ready 化は登録簿で追う）ため、この段では直していない / -",
+    "R4-3: R4 / rulebook 1. 全体方針（F003）/ 「sample は本文要件の 5 章に揃っていない」が、5 章に揃った現在の sample と食い違う / - / 相手側 `docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md` の `_UNDECIDED_` の行を「sample は本文要件の 5 章に揃った。同じ構成を NFR 分冊で共通の template にできるかの判断を ready の前提条件とする」に直す案。kata の相互整合は R5 の `vp-qe-kata-conformance` で扱う / -",
+    "R4-4: R4 / 3. 運用要件一覧（`nfr-ops-004` の備考）/ バックアップを確かめる時刻が、opd-monitoring-sample の 9:30 と opr-backup-restore-sample の開店前点検（9:45 から）で食い違う。sample 本文は 9:30 で opd-monitoring と一致している / - / opd と opr の食い違いなので、R5 で opr-backup-restore-sample 側を 9:30 に合わせるか判断する案 / 要判断（どちらが正かは opd-index の定期運用で決まる。この段では確定できなかった）",
+    "確かめ-1: 主張: frontmatter の type `requirement`・`part_of`・`based_on` / 正本: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml と rulebook の推奨 Frontmatter 項目 / 確かめ方: grep / 結果: 一致 / 根拠: schema の 8 行目に requirement がある",
+    "確かめ-2: 主張: 営業日の 90% 以上の記録の目標 / 正本: prj-overview-sample.md / 確かめ方: grep 90% / 結果: 一致 / 根拠: 78 行目「営業日の90%以上」",
+    "確かめ-3: 主張: ACD-A02（通信断の頻度が未確認）・ACD-D01（タブレット 1 台）/ 正本: prj-assumptions-constraints-dependencies-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: 26 行目と 43 行目",
+    "確かめ-4: 主張: 監視の時間帯 10:00〜18:00、死活を 1 分ごとに確かめる（`_ASSUMPTION_`）、死活の通知はメール / 正本: opd-monitoring-sample.md / 確かめ方: 表の読み取り / 結果: 一致 / 根拠: 45 行目",
+    "確かめ-5: 主張: バックアップを開店 30 分前の 9:30 に確かめる / 正本: opd-monitoring-sample.md と opr-backup-restore-sample.md / 確かめ方: grep / 結果: 一部不一致 / 根拠: opd-monitoring の 46 行目は 9:30、opr-backup-restore の 36 行目は 9:45 から（R4-4）",
+    "確かめ-6: 主張: 段階 1 は 5 分続く無応答、15 分応答がなければ次の段へ上げる / 正本: opd-index-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: 77・81・89 行目",
+    "確かめ-7: 主張: 優先度の判定は 5 種類（P1・P2）、監視対象は 3 件 / 正本: opd-incident-management-sample.md の 2.1 と opd-monitoring-sample.md の 2.1 / 確かめ方: 表の行を数えた / 結果: 一致 / 根拠: P1 が 3 行・P2 が 2 行・P3 が 1 行。監視対象は死活・バックアップ・日次締めの 3 行",
+    "確かめ-8: 主張: 誤検知が月 3 件以上なら閾値を見直す / 正本: opd-monitoring-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: 71 行目",
+    "確かめ-9: 主張: P1 の一次連絡は 15 分以内（`nfr-ops-008`）/ 正本: opd-index-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: 52 行目「P1 は 15 分以内」",
+    "確かめ-10: 主張: 夜間バックアップを前提とし、前日分を検証用の環境へ戻して販売件数を比べる / 正本: nfr-availability-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: 53 行目と 64 行目",
+    "確かめ-11: 主張: 再取得と復元演習は opr-backup-restore で行い、演習は月次 / 正本: opr-backup-restore-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: 17 行目と 48 行目",
+    "確かめ-12: 主張: 関連ドキュメント導線の wikilink の参照先（nfr-index・prj-overview・前提・制約・依存・nfr-availability・opd-index・opd-monitoring・opd-incident-management・opr-monitoring・opr-backup-restore・opr-incident）/ 正本: docs/ja/specdojo/samples/ / 確かめ方: ls / 結果: 一致 / 根拠: すべての `*-sample.md` がある",
+    "確かめ-13: 主張: Role code の `OPS`・`PO`・`DEV` / 正本: sample-authoring-standard.md と opr-backup-restore-sample.md / 確かめ方: grep / 結果: 一致 / 根拠: opr-backup-restore の 17 行目で OPS・DEV・PO の役割を定義している",
+    "確かめ-14: 主張: 要件 ID が `nfr-ops-<連番>` で欠番がない / 正本: nfr-operations-rulebook.md のファイル命名・ID規則 / 確かめ方: 読み取り / 結果: 一致 / 根拠: 001〜009 が連番"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-operations-sample-140/T-KATA-REVIEW-ALL-nfr-operations-sample-140-20261126T050310Z-d9fa3ac4/executor.log",
+      "bytes": 8724,
+      "truncated": false
+    }
+  ]
+}
