@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-bds-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-bds-sample-130-20261126T000008Z-14128298",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T00:01:05.226Z",
+    "completed_at": "2026-11-26T00:02:50.265Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/bds-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/bds-sample.md | 62 +++++++++++++++++++++-------------\n 1 file changed, 38 insertions(+), 24 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/bds-sample.md",
+      "status": "passed",
+      "summary": "整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/bds-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:bds-sample\n  type: ui\n  status: ready\n  rulebook: specdojo:bds-rulebook\n  based_on:\n    - specdojo:bes-sample\n    - specdojo:cdsd-sample\n---\n\n# 帳票仕様（週次販売・欠品報告）\n\n## 1. 概要\n\n駄菓子屋きぬやの 1 週間分の販売記録と在庫記録から、商品別の販売数・欠品の発生・翌週の補充候補をまとめた報告である。店主代表はこの報告で欠品の傾向を確かめ、翌週の仕入れ数量を判断する。欠品回数の削減の測定にも使う。\n\n## 2. 読み手と利用目的\n\n次の表は、読み手ごとに本報告を使う目的と、報告から判断することを示す。\n\n| 読み手 | 利用目的 | 帳票から判断すること |\n| - | - | - |\n| 店主代表 | 翌\n… output omitted …\n に接続していない。業務イベントの境界を確かめるまで本報告を全面受入とせず、限定受入の間は欠品回数と補充候補を参考表示とし、仕入れ数量の根拠にしない。BA が `pm-issue-log` の課題で作成を追う |\n| 補充候補の基準 | `_UNDECIDED_`: 1 回でも候補とするか 2 回以上に絞るか。初回の報告を見て PO が決め、決まるまでは 1 回以上とする。決定は `pm-decision-log` へ記録する |\n| 欠品削減の測定 | 欠品回数の月間 50% 削減の判定に要る月間の集計は含めない。月次報告の帳票仕様で本報告を元にする記録とする |\n| 上位の索引 | `bds-index` が未作成で、時刻の基準や閲覧範囲などの共通事項を本書に書いている。索引を作ったら本書は差分だけにする。BA が `pm-issue-log` の課題で作成を追う |\n| 本書の変更 | 表示項目・算出ルール・契機を変えると、定期処理、過去の週の再出力（「出力の時期と契機」）、前週比、綴じた報告との比較に影響する。反映後に直近の週を再出力し、前週比を照合する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7478 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7478 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bds-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[paren\n… output omitted …\nster-plan-escape.test.ts\",\"duration_ms\":1537}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  09:04:21\n   Duration  2.79s (transform 7.48s, setup 841ms, import 10.39s, tests 6.22s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bds-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-bds-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として bds-sample.md の文を直した（表の前の 1 文の追加、長文の分割、指示語と主語の明確化、用語の統一）。F001 は kata の段で使わない観点のため扱わなかった。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 2. 読み手と利用目的・5. 対象範囲と元にする記録・6. 表示項目・8. 例外と注意事項・9. メモ / 将来課題 / 表の前に何の表かを示す 1 文がない / 各表の前に、何と何の対応を示す表かを示す 1 文を足した / Sample 記述標準の表の前の 1 文、W9 / -",
+    "R3-2: R3 / 3. 出力の時期と契機 / 再出力の 1 文に条件・連鎖・止めどころ・完了条件が詰まり、「販売数（印を含む）か販売件数の不一致の日が変わり」の係りが読めない / 「再出力」と「翌週への連鎖」の 2 項目に分け、印を「不完全」「不明」と書き、連鎖の止めどころを別の文にした / W3、W5 / -",
+    "R3-3: R3 / 4. 出力形式と提供方法 / 「印刷は仕入れノートに綴じる」の主語と目的語がねじれている / 「印刷した報告は仕入れノートに綴じる」にした / W2 / -",
+    "R3-4: R3 / 7. 集計・算出ルール（営業日） / 「どちらも数えない」の数える先が読めない / 「どちらも営業日数に数えない」にした / W4 / -",
+    "R3-5: R3 / 7. 集計・算出ルール（販売数） / 「その週の合計に「不完全」と付け」の対象が、週の合計か各商品の販売数かが決まらない / 「その週の各商品の販売数に「不完全」と付ける。その週に販売記録がない商品の販売数は「不明」とする」と 2 文に分けた / W4、W3。迷った理由: 表示項目 No4 の販売数の定義と 6 章の並び順（不完全は数値で並べる）から各商品の販売数に付く印と読んだが、元の文は週の合計 1 つに付くとも読める。選ばなかった案: 「合計」を残して集計行に印を付ける / 要判断",
+    "R3-6: R3 / 7. 集計・算出ルール（締めの版） / 確定する人が「PO」で、8. 例外と注意事項の「店主代表が新しい確認版を確定し」と表記がそろっていない。「基準時点」がどの時点か読めない / 「店主代表が確定した」「その版の基準時点」にした / W8、W4、vp-ux-language-consistency / -",
+    "R3-7: R3 / 7. 集計・算出ルール（前週比） / 「比較不可」の 3 つの条件が 1 文に並び、条件の切れ目が読めない / 「次のどれかに当たる商品は「比較不可」」とし、3 条件を入れ子の箇条書きにした / W3、W9 / -",
+    "R3-8: R3 / 8. 例外と注意事項（販売記録が 1 件もない） / 「なければ」が何のないことか、「不明」とする対象が何か読めない / 「欠品もなければ「明細なし」とする。販売件数が 1 以上の日があれば販売数を「不明」とする」にした / W4、W1 / -",
+    "R3-9: R3 / 9. メモ / 将来課題（根拠の業務イベント） / 「境界」「全面受入」の対象が読めない / 「業務イベントの境界を確かめるまで本報告を全面受入とせず、限定受入の間は」にした / W4、W1 / -",
+    "R3-10: R3 / 5. 対象範囲と元にする記録 / 「報告から読めない」は、報告が控えを読めないのか、控えが報告に載らないのかが読めない / 「報告の元にできないため」にした / W4 / -",
+    "F001（grade, vp-pm-control-reporting, 9. メモ / 将来課題の根拠の業務イベント）: 直していない。kata-guide の kata の観点の組で、vp-pm-control-reporting は kata の段のレビューで使わない観点とされているため。また該当の行には、すでに BA と `pm-issue-log` の転送先が書いてある。次のアクション: 再評価の grade で同じ指摘が出る場合は、kata の grade の観点の組から外すかを人が決める"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bds-sample-130/T-KATA-REVIEW-ALL-bds-sample-130-20261126T000008Z-14128298/executor.log",
+      "bytes": 5991,
+      "truncated": false
+    }
+  ]
+}
