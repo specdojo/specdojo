@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-nfr-integrity-sample-130",
   "run_id": "T-KATA-REVIEW-ALL-nfr-integrity-sample-130-20261126T012256Z-72757f2f",
-  "updated_at": "2026-11-26T01:31:35.581Z",
+  "updated_at": "2026-11-26T01:32:29.734Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-integrity-sample-130/T-KATA-REVIEW-ALL-nfr-integrity-sample-130-20261126T012256Z-72757f2f/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-26T01:31:35.581Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T01:32:29.734Z",
       "artifact_ref": null
     }
   },
