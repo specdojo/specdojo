@@ -1,0 +1,19 @@
+R3（読みやすさ）として、`docs/ja/specdojo/samples/pr-sample.md` の文を 4 か所直しました。意味・数値・判断に要る背景は変えていません。prettier と markdownlint はこのファイルでエラーなしです。
+
+grade の指摘 F001（報告者と報告先が書かれていない）は直していません。根拠の観点 `vp-ba-stakeholder-clarity` は、kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点とされているためです。この件は R1 と R5 の `vp-qe-kata-conformance` に任せました（R3-5）。
+
+| No | 箇所 | 指摘 | 直した案 | 根拠 |
+| --- | --- | --- | --- | --- |
+| R3-1 | 導入文 | 2 文目の「要約し、参照する」に主語がない | 「本報告は期間内の結果を要約し、」にした | W1 |
+| R3-2 | 3. 進行中事項 | 表の前の 1 文で「確かめられる量で示した」が「進み具合」と後の項目のどちらにかかるか読めない | 「未完了の作業ごとに、進み具合（確かめられる量で示す）・遅れの有無・完了見込みを示す」にした | W5 |
+| R3-3 | 4. リスク・課題 | 影響度の基準の文は読点が 4 つあり、3 段階の基準を 1 文に詰めている | 「影響度は次の 3 段階で判定した。」と、`高`・`中`・`低` の箇条書きに分けた | W3, W9 |
+| R3-4 | 4. リスク・課題（リスクの対応方針） | 「遅れる場合は当日中に `PM` へ連絡する」で、誰が連絡するかが読めない | 「入力が遅れる担当は当日中に `PM` へ連絡する」にした | W1 |
+| R3-5 | 導入文（F001） | 報告者と報告先が書かれていない | -（直していない） | 根拠の観点は kata の段のレビューに使わないため、R1・R5 に任せた |
+
+次の点は直していません。
+- 「登録簿」は用語集（`gl-common.yaml`）にある語なので、W8 の初出で正式名を添える直しは要りません。
+- 進行中事項の 2 行目のセルは長めですが、W3 は目安であり合否にしないため、そのままにしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として pr-sample.md の文を 4 か所直した（W1・W3・W5・W9）。grade の指摘 F001（vp-ba-stakeholder-clarity）は kata-guide の『kata の観点の組』で kata の段のレビューに使わない観点とされているため、R3 では直さず、R1・R5 の vp-qe-kata-conformance に任せた。","handoff":["R3-1: R3 / 導入文 / 2 文目の「要約し、参照する」に主語がない / 「本報告は期間内の結果を要約し、」にした / W1 / -","R3-2: R3 / 3. 進行中事項 / 表の前の 1 文で「確かめられる量で示した」が「進み具合」と後の項目のどちらにかかるか読めない / 「未完了の作業ごとに、進み具合（確かめられる量で示す）・遅れの有無・完了見込みを示す」にした / W5 / -","R3-3: R3 / 4. リスク・課題 / 影響度の基準の文は読点が 4 つあり、3 段階の基準を 1 文に詰めている / 「影響度は次の 3 段階で判定した。」と、`高`・`中`・`低` の箇条書きに分けた / W3, W9 / -","R3-4: R3 / 4. リスク・課題（リスクの対応方針） / 「遅れる場合は当日中に `PM` へ連絡する」で、誰が連絡するかが読めない / 「入力が遅れる担当は当日中に `PM` へ連絡する」にした / W1 / -","R3-5: R3 / 導入文（grade F001） / 報告者と報告先（定期レビューの参加者）が書かれていない / - / 根拠の観点 `vp-ba-stakeholder-clarity` は kata-guide の『kata の観点の組』で kata の段のレビューに使わない観点とされている。sample の業務の中身として R1 と R5 の `vp-qe-kata-conformance` に任せ、要るかどうかは pr-rulebook の求めで判断する / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pr-sample.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pr-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>
