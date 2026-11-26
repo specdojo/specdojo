@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fnb7-orchestrator-test-minimal-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:18:16Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T12:17:27Z"
+  conclusion: 対話型オーケストレーターのテストを Vitest で最小限確かめる仕組み（test:agent）を作った
   derived_from:
     - PJR-3R8F
   commit_type: test
