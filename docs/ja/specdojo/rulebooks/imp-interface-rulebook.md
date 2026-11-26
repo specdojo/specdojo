@@ -35,7 +35,7 @@ Impact Analysis (Interface) Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、`npm run lint:fm` で検証する。`type` は `project`、`rulebook` は `specdojo:imp-interface-rulebook` とする。`based_on` には入力の変更要求の個票 ID（`PJR-XXXX`）と、作成済みの `<project-id>:imp-business` を記載する。
+共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、`npm run lint:fm` で検証する。`type` は `project`、`rulebook` は `specdojo:imp-interface-rulebook` とする。`based_on` には入力の変更要求の個票 ID（小文字の `pjr-xxxx`。本文では `PJR-XXXX` と書く）と、作成済みの `<project-id>:imp-business` を記載する。
 
 ## 5. 本文要件
 

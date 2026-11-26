@@ -51,13 +51,21 @@ sample も、imp-data だけが直してある（`based_on` は `pjr-c4a1`、本
 
 | No  | 作業                                                              | 担当 | 状態 | メモ                         |
 | --- | ----------------------------------------------------------------- | ---- | ---- | ---------------------------- |
-| 1   | 5 つの imp 系 rulebook の `based_on` の説明を小文字の形にそろえる | DEV  | open | 本文の `PJR-XXXX` は変えない |
-| 2   | 4 つの sample の `cr-2026-004` を `pjr-c4a1`・`PJR-C4A1` に直す   | DEV  | open | imp-data と同じ形            |
-| 3   | grep と検査を流し、対応結果に書く                                 | DEV  | open | -                            |
+| 1   | 5 つの imp 系 rulebook の `based_on` の説明を小文字の形にそろえる | DEV  | done | 本文の `PJR-XXXX` は変えない |
+| 2   | 4 つの sample の `cr-2026-004` を `pjr-c4a1`・`PJR-C4A1` に直す   | DEV  | done | imp-data と同じ形            |
+| 3   | grep と検査を流し、対応結果に書く                                 | DEV  | done | 親 runner の検査は別途       |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 5 つの imp 系 rulebook（business・data・interface・test・operations）の `based_on` の説明を「変更要求の個票 ID（小文字の `pjr-xxxx`。本文では `PJR-XXXX` と書く）」にそろえた。business と test の「変更要求 ID」「変更要求」の書き方も同じ表現にした。転記先の登録項目 ID（`PJR-XXXX`）の記述は変えていない。
+- 4 つの sample（business・interface・test・operations）の `based_on` を `pjr-c4a1`、本文を `PJR-C4A1` に直した。
+- schema と template は変更していない。
+- 検査結果:
+  - `grep -rn cr-2026-004 docs/ja/specdojo/samples/` は 0 件。
+  - 変更ファイルへの prettier は通った。
+  - `npm run validate:history-links` は通った。
+  - `npm run lint:fm`・`npm run lint:md` は親 runner が実行する。
+- 残課題: なし。
 
 ## 6. 関連ドキュメント
 

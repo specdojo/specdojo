@@ -34,7 +34,7 @@ Impact Analysis (Data) Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は `specdojo:imp-data-rulebook` とする。`based_on` には作成済みの `<project-id>:imp-business` と、入力の変更要求の個票 ID（`PJR-XXXX`）を記載する。
+共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は `specdojo:imp-data-rulebook` とする。`based_on` には作成済みの `<project-id>:imp-business` と、入力の変更要求の個票 ID（小文字の `pjr-xxxx`。本文では `PJR-XXXX` と書く）を記載する。
 
 ## 5. 本文要件
 
