@@ -277,7 +277,7 @@ export async function runCycleMode(opts: RunOpts): Promise<void> {
     if (process.exitCode === EXEC_STOP_EXIT_CODE) {
       stepOutcomes.push("auto=stopped");
       process.stdout.write(`[cycle] summary: ${stepOutcomes.join(", ")}\n`);
-      process.exitCode = anyFailure ? 1 : EXEC_STOP_EXIT_CODE;
+      process.exitCode = EXEC_STOP_EXIT_CODE;
       return;
     }
     if (takeStepFailure()) {

@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-1TYG",
+  "run_id": "pjr-1tyg-20261126T153048Z-5977e4fb",
+  "stage": {
+    "role": "executor",
+    "actor": "terra-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T15:31:38.512Z",
+    "completed_at": "2026-11-26T15:33:56.521Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1tyg.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1tyg-queue-stop-after-failure-resume.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/track-filter.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1tyg-queue-stop-after-failure-resume.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/track-filter.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-1tyg-queue-stop-after-failure-resume.md    | 10 ++-\n docs/ja/specdojo/references/command-reference.md   |  2 +-\n src/exec/run/lifecycle-commands.ts                 |  2 +-\n src/exec/run/schedule-mode.ts                      |  7 +-\n tests/src/exec/run/track-filter.test.ts            | 74 ++++++++++++++++++++++\n 5 files changed, 86 insertions(+), 9 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "./node_modules/.bin/vitest run --config vitest.unit.config.ts tests/src/exec/run/track-filter.test.ts tests/src/exec/queue.test.ts",
+      "status": "passed",
+      "summary": "2 ファイル、41 テスト成功。失敗後の停止と再開、および停止しない失敗の扱いを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "./node_modules/.bin/prettier --write src/exec/run/schedule-mode.ts src/exec/run/lifecycle-commands.ts tests/src/exec/run/track-filter.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-1tyg-queue-stop-after-failure-resume.md",
+      "status": "passed",
+      "summary": "変更ファイルを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-1tyg-queue-stop-after-failure-resume.md",
+      "status": "passed",
+      "summary": "変更した Markdown を検査。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog 検査成功。既存の警告あり。通常の npm コマンドは sandbox の IPC 制限で失敗したため、規約の代替コマンドを使用。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG/src/shared/specdojo-config.ts\n  1257:1  warning  File has too many lines (1127). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7866 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7866 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] \n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1823}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  00:35:37\n   Duration  2.61s (transform 5.29s, setup 713ms, import 7.76s, tests 6.42s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "related tests only (20 of 50 test files depend on the changed files): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts tests/src/commands/git.integration.test.ts tests/src/commands/where.integration.test.ts tests/src/exec/catalogless-register.integration.test.ts tests/src/exec/cycle.integration.test.ts tests/src/exec/job-sequence.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/plan-markdownlint.integration.test.ts tests/src/exec/register-multiple-ids.integration.test.ts tests/\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match f…",
+      "test_selection": {
+        "mode": "related",
+        "reason": "20 of 50 test files depend on the changed files",
+        "selected_tests": [
+          "tests/src/commands/git.integration.test.ts",
+          "tests/src/commands/where.integration.test.ts",
+          "tests/src/exec/catalogless-register.integration.test.ts",
+          "tests/src/exec/cycle.integration.test.ts",
+          "tests/src/exec/job-sequence.integration.test.ts",
+          "tests/src/exec/pipeline-e2e.integration.test.ts",
+          "tests/src/exec/plan-markdownlint.integration.test.ts",
+          "tests/src/exec/register-multiple-ids.integration.test.ts",
+          "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+          "tests/src/exec/register-resume.integration.test.ts",
+          "tests/src/exec/register-worktree.integration.test.ts",
+          "tests/src/exec/release-reset-worktree.integration.test.ts",
+          "tests/src/exec/run/auto-run-stop.integration.test.ts",
+          "tests/src/exec/worktree-command.integration.test.ts",
+          "tests/src/exec/worktree-ops.integration.test.ts",
+          "tests/src/exec/worktree.integration.test.ts",
+          "tests/src/grade/yaml.integration.test.ts",
+          "tests/src/register/external-project.integration.test.ts",
+          "tests/src/register/register-branch.integration.test.ts",
+          "tests/src/shared/local-config.integration.test.ts"
+        ],
+        "omitted_tests": [
+          "tests/src/commands/build.integration.test.ts",
+          "tests/src/commands/init-agent-roster.integration.test.ts",
+          "tests/src/commands/watch-scan.integration.test.ts",
+          "tests/src/deliverable/trash.integration.test.ts",
+          "tests/src/devcontainer/scaffold.integration.test.ts",
+          "tests/src/exec/agent-git-state.integration.test.ts",
+          "tests/src/exec/job-worktree.integration.test.ts",
+          "tests/src/exec/kata-authoring.integration.test.ts",
+          "tests/src/exec/kata-review-stage.integration.test.ts",
+          "tests/src/exec/parent-validation-output.integration.test.ts",
+          "tests/src/exec/parent-validation-timeout.integration.test.ts",
+          "tests/src/exec/run/agent-timeout.integration.test.ts",
+          "tests/src/exec/run/change-scope.integration.test.ts",
+          "tests/src/exec/task-repos.integration.test.ts",
+          "tests/src/exec/trailing-records.integration.test.ts",
+          "tests/src/exec/validate-records-commit.integration.test.ts",
+          "tests/src/exec/watch-coexist.integration.test.ts",
+          "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+          "tests/src/project/move-check.integration.test.ts",
+          "tests/src/register/commit.integration.test.ts",
+          "tests/src/register/cross-project.integration.test.ts",
+          "tests/src/register/register-branch-merge.integration.test.ts",
+          "tests/src/register/register-branch-push.integration.test.ts",
+          "tests/src/shared/lefthook-scaffold.integration.test.ts",
+          "tests/test-environment.integration.test.ts",
+          "tests/tools/check-evidence-secrets.integration.test.ts",
+          "tests/tools/commit-msg-merge.integration.test.ts",
+          "tests/tools/d2-cli.integration.test.ts",
+          "tests/tools/open-agent-worktree.integration.test.ts",
+          "tests/tools/src-move-codemod.integration.test.ts"
+        ]
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1TYG\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/reporter.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/exec/reporter.test.ts (136 tests) 68ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/exec/reporter.test.ts\",\"duration_ms\":6\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "停止要求の終了コードを先行する失敗より優先し、列の停止・再開を修正した。個票とコマンドリファレンスを更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "終了コードは停止と失敗を同時に表せないため、列の再開を可能にする停止を優先した。失敗の詳細は各タスクの記録で確認する。",
+    "統合後、オーケストレーターが実際の run で動作を確認してから close する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1TYG/pjr-1tyg-20261126T153048Z-5977e4fb/executor.log",
+      "bytes": 2466,
+      "truncated": false
+    }
+  ]
+}
