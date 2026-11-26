@@ -1,0 +1,24 @@
+R2（構成）のレビューを終えました。`docs/ja/specdojo/samples/dct-index-sample.yaml` で、コメント 1 行を移動しただけです。章の移動・分割・統合は要りませんでした。
+
+**sample の変更**
+- `project_id` の値の説明（例示値であり、SpecDojo 本体の prj-0001 のドメイン集合を表さないこと）が、ファイル先頭の注記の中にありました。これを `project_id:` の行の直前へ移しました。直後の `size` のコメントと同じく、値の判断がそのキーの隣で読めるようにするためです。
+- 先頭の `_ASSUMPTION_` 注記には、索引全体の前提だけを残しました。
+
+**変えずに残した構成**
+- ルート項目の並び（`id` → `type` → `status` → `title` → `rulebook` → `project_id` → `size` → `groups`）は schema の `required` の順に沿っています。
+- プロダクト側の 4 つのサブグループ（業務仕様群・アーキテクチャ・システム設計・品質保証・運用）は、`docs/ja/specdojo/guides/docs-structure-guide.md` の文書構成図の枠と順に合っています。
+- 1 ドメインだけのサブグループには分ける理由のコメントがあります。2 つの分類にまたがるドメインには、置き場所を決めた理由のコメントがあります。いずれも rulebook の「グループ分類の決め方」を満たしています。
+
+**判断していただきたい点（要判断）**
+プロジェクト成果物の中のドメインの順が、構成ガイドの中で 2 通りに読めます。
+
+- 本文の「プロジェクトドキュメント」の節は「目的・スコープ → 現状 → プロジェクトマネジメント」の順に並べています。
+- ディレクトリの番号は `030-project-management` が `040-current-state` より前です。
+
+sample はディレクトリの番号に沿っており、そのままにしました。前提から結論の順を優先するなら、`current-state` を `project-management` の前へ移します。
+
+検査の結果、schema 検査は valid、Prettier も問題ありませんでした。lint などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成レビュー完了。dct-index-sample.yaml の `project_id` 注記を先頭コメントから `project_id` キー直前へ移動。章の移動・分割・統合は不要と判定し、プロジェクト成果物の配列順 1 件を要判断として残した。schema 検査と Prettier は passed。","handoff":["No: 1 / 段: R2 / 箇所: docs/ja/specdojo/samples/dct-index-sample.yaml の先頭コメントの「`project_id` は dct-sample と同じ例示値…」の行 / 指摘: `project_id` の値を説明するコメントがファイル先頭の索引全体の前提の中にあり、キーから離れている。隣の `size` はキー直前にコメントを置いており、配置がそろっていない / 直した案: このコメントを `project_id: prj-0001` の直前へ移した（sample に反映済み） / 根拠: `vp-arc-document-structure`（値の判断をそのキーの隣で読めるようにする） / 印: 反映済み","No: 2 / 段: R2 / 箇所: docs/ja/specdojo/samples/dct-index-sample.yaml の groups[0]「プロジェクト成果物」の domains の並び（project-definition → project-management → current-state） / 指摘: docs-structure-guide の「プロジェクトドキュメント」の節は「業務要求（目的・スコープ）→ 現状 → プロジェクトマネジメント」の順だが、ディレクトリ番号は `030-project-management` → `040-current-state` の順で、正本の中で 2 通りに読める。sample はディレクトリ番号の順に従っている / 直した案: 前提から結論の順を優先する場合は `current-state` を `project-management` の前へ移す。ディレクトリ番号を正とする場合は現状のまま維持する。sample は変更していない / 根拠: `vp-arc-document-structure`、rulebook「グループ分類の決め方」（分類の正本は構成ガイド） / 印: 要判断","No: 3 / 段: R2 / 箇所: docs/ja/specdojo/samples/dct-index-sample.yaml のルート項目とプロダクト側サブグループの構成 / 指摘: なし。ルート項目は schema の `required` の順、サブグループは構成ガイドの文書構成図（業務仕様群・アーキテクチャ・品質保証・運用）の枠と順に沿う。1 ドメインのサブグループと 2 分類にまたがるドメインにも理由のコメントがあり、rulebook「グループ分類の決め方」を満たす / 直した案: 維持 / 根拠: `vp-arc-document-structure`、`vp-qe-omissions-consistency`、docs/specdojo/schemas/v1/dct-index.schema.yaml / 印: 維持"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-index-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
