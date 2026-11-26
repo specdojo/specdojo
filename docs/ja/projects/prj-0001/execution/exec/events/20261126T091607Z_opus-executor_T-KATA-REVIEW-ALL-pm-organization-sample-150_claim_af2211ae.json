@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-26T09:16:07Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-pm-organization-sample-150",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
