@@ -13,12 +13,12 @@ project_id: prj-0001
 # 単一店舗・タブレット1台での初期リリースと店頭試用に用いる、採用済み8ロールの一覧。
 # 採用判断・Schedule の owner 使用可否・見直し条件の正本: [[specdojo:pm-organization-sample|組織定義]]。
 # 人間の実行主体と兼務: [[specdojo:pm-members-sample|メンバー定義]]。agent は利用先の .specdojo/agent-members.yaml で管理する。
-# 成果物・主要判断の責任分担: [[specdojo:pm-raci-sample|RACI]]。共通責務は based_on の上位標準を参照する。
+# 成果物・主要判断の責任分担: [[specdojo:pm-raci-sample|RACI]]。共通責務の正本: based_on の上位標準。
 
 roles:
   - code: PO
     name: Project Owner
-    project_note: 店頭運用を大きく変えない範囲で販売・在庫・つけの記録を優先し、人間が範囲・費用・参加時間の上限、受入、公開・継続を最終判断する。
+    project_note: 店頭運用を大きく変えない範囲で販売・在庫・つけの記録を優先する。範囲・費用・参加時間の上限、受入、公開・継続は人間が最終判断する。
   - code: PM
     name: Project Manager
     project_note: 店頭試用までの作業順序と参加負荷を週次で確認する。兼務による期限超過は課題化し、分担変更と追従タスクを整理して、上限変更は PO に判断を求める。
