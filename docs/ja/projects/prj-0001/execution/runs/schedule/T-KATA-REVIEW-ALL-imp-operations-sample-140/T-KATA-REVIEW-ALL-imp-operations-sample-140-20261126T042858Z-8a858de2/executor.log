@@ -1,0 +1,31 @@
+R4（正しさ）の段を終えました。誤りを 2 か所直し、その差分を `docs/ja/specdojo/samples/imp-operations-sample.md` に入れています。prettier で整形し、この 1 ファイルを markdownlint にかけて 0 件でした。
+
+**直したこと**
+
+- **登録項目の ID**: schema では表示用の ID が `^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$` で、`O` は使えません。sample にあった `PJR-O4Q1`・`PJR-O4R1`・`PJR-O4D1` はこの形に合わないため、ほかの sample で使われていない `PJR-P4Q1`・`PJR-P4R1`・`PJR-P4D1` に置き換えました。
+- **F001（成功条件 2 が判定できない）**: 判定方法の欄に「上限が決まるまでは、警告を表示した日の閉店までに初動の記録があること」を足しました。影響分析サマリにすでにある下限の扱いと同じ内容です。
+
+**直さなかったこと**
+
+- **F002（対応方針の「完了条件」列）**: 種別の構成に沿うかの観点なので、R1 と R5 の段に任せました。
+
+**確かめの表**
+
+| No | 主張（箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `PJR-O4Q1` などの ID（2〜6 章） | `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` | 表示用の ID の `pattern` を読んだ | 不一致（直した） | `pattern` の文字の並びに `O` がない |
+| 2 | `question`・`risk`・`decision`（未解決事項） | 同じ schema の `ItemType` | 列挙値を読んだ | 一致 | 列挙値に `question`・`risk`・`decision` がある |
+| 3 | 担当 `DEV`・`OPS`・`BA`・`PO`（対応方針・未解決事項） | `docs/ja/specdojo/samples/pm-roles-sample.yaml` | `code:` を grep した | 一致 | 8 つの Role code にすべて含まれる |
+| 4 | 前提の期限 2026-05-22、切替日 2026-06-01（1 章・対応方針） | `imp-data-sample` | 該当の行を grep した | 一致 | `imp-data-sample` の 24 行目と 79 行目に同じ日付がある |
+| 5 | 判定期間 2026-06-01〜2026-06-28 を 4 週間とする（対応方針） | 暦 | 日数を数えた | 一致 | 28 日 |
+| 6 | 委譲先 `opd-monitoring`・`opd-incident-management`・`opd-integrity-check` | 駄菓子屋の sample 群 | `opd-*` の sample を一覧し、`imp-data-sample` を grep した | 確かめられない | 仮定の成果物 ID で正本がない。`opd-integrity-check` は `imp-data-sample` と揃っている |
+| 7 | `based_on` の `cr-2026-004`（Frontmatter・1 章） | rulebook の「推奨 Frontmatter 項目」 | rulebook と同じ系列の sample を読んだ | 不一致（直していない） | rulebook は `PJR-XXXX` を求める。業務・I/F・テストの sample は `cr-2026-004`、データの sample は `pjr-c4a1` |
+
+**判断がほしいこと**
+
+- No 7 は系列の sample どうしで書き方が割れています。運用の sample だけを直すと業務・I/F・テストとずれるので、R5 の段でまとめて決めてもらう必要があります。
+- `opd-index-sample` が分冊として挙げているのは監視・障害対応・権限の 3 冊だけです。日次締めの委譲先を `opd-integrity-check` のままにするか、`opd-index` か `opr-*` にするかも R5 で判断が要ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）を終えた。PJR の表示用 ID は schema の形（O を使わない）に合わないため、PJR-O4Q1・O4R1・O4D1 を PJR-P4Q1・P4R1・P4D1 に直した。F001 は成功条件 2 の判定方法に、上限が決まるまでの判定基準（警告を表示した日の閉店までに初動の記録）を足して直した。F002 は種別の構成への準拠の観点なので R1 と R5 に任せた。確かめた主張は 7 件で、一致 4・不一致で直した 1・不一致で要判断 1・確かめられない 1。確かめの表：(1) `PJR-O4*` の ID。正本は `register-item-frontmatter.schema.yaml` の pattern `^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$` で、不一致のため直した。(2) `question`・`risk`・`decision` は `ItemType` の列挙値で一致。(3) `DEV`・`OPS`・`BA`・`PO` は `pm-roles-sample.yaml` の `code:` で一致。(4) 前提の期限 2026-05-22 と切替日 2026-06-01 は `imp-data-sample` の 24・79 行目と一致。(5) 2026-06-01〜2026-06-28 は 28 日で 4 週間と一致。(6) 委譲先の `opd-*` の 3 つの ID は仮定で正本がなく確かめられない（`opd-integrity-check` は `imp-data-sample` と揃っている）。(7) `based_on` の `cr-2026-004` は rulebook が求める `PJR-XXXX` と合わず要判断。","handoff":["R4-1: R4 / 2. 変更要求の概要・3. 影響分析サマリ・4. 影響詳細一覧・5. 対応方針・6. 未解決事項 / 登録項目 ID `PJR-O4Q1`・`PJR-O4R1`・`PJR-O4D1` が、表示用の ID の形 `^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$` に合わない（O は使えない） / 各 sample で使われていない `PJR-P4Q1`・`PJR-P4R1`・`PJR-P4D1` に置き換えた / `vp-arc-technical-constraints`（`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の 149・450 行目） / -","R4-2: R4 / 2. 変更要求の概要 / 成功条件 2 は上限時間が決まらないと判定できない（grade F001） / 判定方法の欄に「上限が決まるまでは、警告を表示した日の閉店までに初動の記録があること」を足した（影響分析サマリの境界値にある下限と同じ内容） / `vp-qe-verifiability` / -","R4-3: R4 / Frontmatter・1. 目的と適用範囲 / `based_on` と本文の変更要求 `cr-2026-004` は、rulebook の「推奨 Frontmatter 項目」が求める変更要求の個票 ID（`PJR-XXXX`）と合わない。同じ系列では業務・I/F・テストの sample が `cr-2026-004`、データの sample が `pjr-c4a1`（本文は `PJR-C4A1`）と割れている / - / `vp-arc-technical-constraints`。この sample だけを直すとほかの影響調査の sample とずれるため直していない。R5 で系列の全 sample を `PJR-C4A1` に揃える案と、rulebook 側を直す案を比べてほしい / 要判断","R4-4: R4 / 4. 影響詳細一覧 / 委譲先の `opd-monitoring`・`opd-incident-management`・`opd-integrity-check` は、駄菓子屋の仮定の成果物 ID で正本がなく確かめられない。`opd-index-sample` が分冊として挙げるのは監視・障害対応・権限の 3 冊だけで、`opd-integrity-check` はない（`imp-data-sample` も同じ ID を使っている） / - / `vp-dev-implementation-readiness`。R5 で `opd-index-sample` の分冊、または `opr-*` との整合を判断してほしい / 要判断","R4-5: R4 / 5. 対応方針 / grade F002（対応方針の「完了条件」列が rulebook の必須列にない）は種別の構成への準拠の観点なので、この段では扱わない / - / `vp-qe-kata-conformance` は R1 と R5 の観点 / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/imp-operations-sample.md","status":"passed","summary":"整形して書き戻した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/imp-operations-sample.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>
