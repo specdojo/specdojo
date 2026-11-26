@@ -1,0 +1,11 @@
+`register add` の dry-run に仮 ID の注記を足し、`--commit -m` の `{id}` を実際の項目 ID に置き換えるようにしました。対象 2 ファイルの単体テスト（27 件）は通りました。`lint:ts` はエラー 0 件、`typecheck` も通りました。`npm run test:unit` 全体はこの環境では流していないため、親 runner の実行結果が正になります。
+
+- **dry-run の出力:** 末尾に「この ID は仮で、実際の起票では振り直される。`-m` には `{id}` と書く」という注記を出します。`--dry-run` のヘルプにも仮の ID と明記しました。
+- **差し込み記号:** `-m` の全段落の `{id}` を、実際に起票・更新した項目の ID に置き換えます。`{id}` を書かない従来の本文は変わりません。コードは `src/register/register.ts` の `registerCommitMessageFromParagraphs` の第 2 引数と `commitRegisterMutation` です。
+- **この手段を選んだ理由:** 食い違う ID を検出して止める方式は採りませんでした。`Refs:` には `derived_from` 元など他の項目も正当に書けるため、誤検知が避けられないからです。`{id}` なら仮の ID を書き写す余地そのものがなくなります。
+- **テスト:** `tests/src/register/commit-message.test.ts` に置換の 2 件、`tests/src/register/section.test.ts` の dry-run テストに注記の確認を足しました。
+- **個票:** 対応結果に解決内容・確認結果・オーケストレーター本文への変更案・CHANGELOG に書く事項（区分 Fixed と文案）・残作業を書きました。`CHANGELOG.md` と保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"register add の dry-run に仮 ID の注記を足し、--commit -m の {id} を実際の項目 ID に置換するようにした。単体テストを追加し、個票の対応結果を記入した。","handoff":["手段は {id} 差し込み記号を選択。Refs には他項目も正当に書けるため、食い違い検出は誤検知が避けられないと判断した。","オーケストレーター本文（保護）への変更案: register add の commit メッセージ手順に「dry-run の ID は仮。Refs には実際の ID か {id} を書く。起票後の出力 Created: ... (added PJR-XXXX) から ID を読む」を足す。反映は利用者の承認のもとで行う。","CHANGELOG に書く事項: 区分 Fixed。register add --dry-run の ID が仮であることを出力で示し、--commit -m の {id} を実際の項目 ID へ置き換えるようにした（PJR-V8ND）。個票の対応結果に記載済み。","統合の後に、オーケストレーターが実際の run を流して動きを確かめてから close する。"],"validations":[{"command":"npx vitest run tests/src/register/commit-message.test.ts tests/src/register/section.test.ts","status":"passed","summary":"2 ファイル 27 件通過"},{"command":"npx prettier --write src/register/register.ts src/register/create-commands.ts tests/src/register/commit-message.test.ts","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>

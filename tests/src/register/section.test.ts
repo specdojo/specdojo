@@ -699,6 +699,8 @@ describe("register add --section CLI", () => {
       expect(output).toContain(`Would create ${join(registerDir, "pjr-ab34-handoff-test.md")}:`);
       expect(output).toContain("# PJR-AB34 引き継ぎ");
       expect(output).toContain(`Would create ${join(registerDir, "events", "pjr-ab34.yaml")}:`);
+      expect(output).toContain("PJR-AB34 is provisional");
+      expect(output).toContain("Refs: {id}");
       expect(existsSync(join(registerDir, "pjr-ab34-handoff-test.md"))).toBe(false);
       expect(process.exitCode).toBeUndefined();
     });

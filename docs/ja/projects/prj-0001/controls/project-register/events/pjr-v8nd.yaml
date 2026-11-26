@@ -109,3 +109,19 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_06703454eeb1433d95b3d656baf84af1
+- v: 1
+  id: reg_b0922030548642f3bdf0c201b10b35a7
+  ts: "2026-11-26T16:17:03Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_9785aba7054a4da7b2b323bc75fc544d
