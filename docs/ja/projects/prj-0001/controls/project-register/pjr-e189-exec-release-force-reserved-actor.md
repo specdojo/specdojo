@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-22T04:46:40Z"
+  completed_at: "2026-11-26T22:13:34Z"
+  conclusion: "候補 A: specdojo-orchestrator の --force は claim を持つ run が動いていないと確かめられるときだけ許す。--reset-worktree と --all-blocked は利用者の承認を得て使う"
   derived_from:
     - PJR-ESE7
 ---
