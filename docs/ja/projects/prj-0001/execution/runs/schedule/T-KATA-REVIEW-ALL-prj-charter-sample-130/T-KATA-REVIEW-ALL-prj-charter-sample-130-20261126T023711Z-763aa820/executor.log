@@ -1,0 +1,16 @@
+R3（読みやすさ）の段を終えました。編集したのは `docs/ja/specdojo/samples/prj-charter-sample.md` だけで、意味や判断に要る背景・例外・制約は変えていません。Prettier の整形確認と markdownlint はどちらも問題なしでした（markdownlint は 0 件）。
+
+**sample に入れた直し**
+
+- **R3-1（4. 初期ステークホルダー）:** 開発担当の責任欄の「店主」を「店主代表」に直しました。F004 への対応です（根拠: `vp-ux-language-consistency`、W8）。
+- **R3-2（1・3・4・5・6・8・9 章）:** 表の前に、何を示す表かを書く 1 文がなかったので足しました（根拠: Sample 記述標準の「表の前に 1 文を書く」規定）。
+- **R3-3（5. 権限委譲）:** 店主代表が留保する判断は、読点で 5 項目をつないだ 1 文でした。これを導入文と箇条書きに分けました（根拠: W3、W9）。
+
+**この段では扱わなかった finding**
+
+- **F001・F002:** `vp-pm-*` の観点は、kata の段のレビューでは使わないとガイドで決められています。
+- **F003:** template の列が欠けているという指摘で、R1・R5 の `vp-qe-kata-conformance` に当たります。直す相手もこの sample ではなく template です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として prj-charter-sample.md の文を直した（F004 の表記統一、表の前の 1 文、留保する判断の箇条書き化）。R3 の観点に当たらない F001〜F003 は扱う段に任せた。","handoff":["R3-1: R3 / 4. 初期ステークホルダー / 開発担当の責任欄の「店主」が、ほかの箇所の「店主代表」と表記がずれている（F004） / 「変更影響を店主代表に示す」にした / vp-ux-language-consistency、W8 / -","R3-2: R3 / 1. 認可対象、3. ハイレベルスコープ、4. 初期ステークホルダー、5. 権限委譲、6. 主要前提・制約、8. 承認、9. 未決事項 / 表の前に、何を示す表かを書く 1 文がない / 各表の前に「次の表は、…を示す。」の 1 文を足した / Sample 記述標準の表の前の 1 文の規定、vp-ux-readability / -","R3-3: R3 / 5. 権限委譲 / 店主代表が留保する判断が、読点で 5 項目をつないだ 1 文になっていて読みにくい / 導入文と 5 項目の箇条書きに分けた / W3、W9 / -","R3-4: R3 / 9. 未決事項 / F001（未決事項に担当がない）と F002（引き継ぎ先の管理記録がない）は vp-pm-plan-feasibility・vp-pm-control-reporting の指摘で、kata-guide の観点の組では kata の段のレビューに使わない観点に当たる / - / kata-guide の「kata の観点の組」で外す観点（計画・報告は個々の成果物で問われるため） / 要判断（成果物の手本として担当の列や引き継ぎ先を足す案もあるが、ガイドに従って直さなかった）","R3-5: R3 / 7. 本格実行開始の GO / Not GO 判断 / F003 は template に「合格条件」の列がないという指摘で、R1・R5 の vp-qe-kata-conformance に当たり、直す相手も template になる / - / vp-qe-kata-conformance。直す案: prj-charter の template の GO / Not GO の表に「合格条件」の列を足し、rulebook・sample と列をそろえる（R5 か template の見直しで扱う） / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-charter-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-charter-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は sample だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
