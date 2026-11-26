@@ -1,5 +1,4 @@
 # specdojo-schema: none reason=external-openapi
-# 詳細契約の参照元: [[specdojo:ifx-index-sample|駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧]] の「本部への売上登録」。
 # _TODO_: 本部側の問い合わせ窓口は未特定。BA が契約レビューの前に特定する。
 # _UNDECIDED_: 結果不明のときの受付照会の操作（照会 API の有無）を、ready の前に本部と決める。
 # _ASSUMPTION_: 通貨は日本円（整数の円）のみとし、税区分・税額・合計・預かり金は送らず本部が商品マスタから計算する。ready の前に本部へ確認する。
@@ -52,31 +51,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/CreateSaleResponse"
         "400":
-          description: 入力不正（商品コードの未登録を含む）。`details` の項目を直して送り直す。
+          description: 入力不正（商品コードの未登録を含む）。店舗端末は `details` の項目を直して送り直す。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "401":
-          description: 認証失敗。送り直さず、開発担当が API キーを確認する。
+          description: 認証失敗。店舗端末は送り直さず、DEV（開発担当）が API キーを確認する。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "403":
-          description: 認可失敗。送り直さず、開発担当が店舗の登録権限を本部に確認する。
+          description: 認可失敗。店舗端末は送り直さず、DEV（開発担当）が店舗の登録権限を本部に確認する。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "409":
-          description: 同じ取引 ID の売上が登録済み。応答の `sale_id` を既存の登録として保存し、受付済みとして扱う。
+          description: 同じ取引 ID の売上が登録済み。店舗端末は応答の `sale_id` を既存の登録として保存し、受付済みとして扱う。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DuplicateSaleResponse"
         "429":
-          description: 利用制限。`Retry-After` の秒数を待ち、同じ取引 ID で送り直す。
+          description: 利用制限。店舗端末は `Retry-After` の秒数を待ち、同じ取引 ID で送り直す。
           headers:
             Retry-After:
               schema:
@@ -87,7 +86,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: 内部エラー。受付の有無が分からないため結果不明として保持し、同じ取引 ID で送り直す。
+          description: 内部エラー。受付の有無が分からないため、店舗端末は結果不明として保持し、同じ取引 ID で送り直す。
           content:
             application/json:
               schema:
