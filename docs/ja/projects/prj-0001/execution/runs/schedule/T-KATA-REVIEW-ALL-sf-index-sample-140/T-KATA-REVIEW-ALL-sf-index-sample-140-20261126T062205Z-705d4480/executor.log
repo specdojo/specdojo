@@ -1,0 +1,36 @@
+R4（正しさ）のレビューを終えました。誤りを 1 件見つけ、`docs/ja/specdojo/samples/sf-index-sample.md` の 1 か所（54 行目）を直しました。変更したファイルはこれだけです。
+
+**直した誤り**: 「システム化機能一覧」の表の後の注記が、販売とつけ販売の両方について回復条件の正本を `[[specdojo:sf-sample]]` としていました。しかし `sf-sample` はつけ販売（`P-04`）を対象外としています（同ファイル 22 行目）。そこで、正本とするのは店頭商品販売の回復条件だけに改め、つけ販売の回復条件は未定として `Q-03` を参照するようにしました。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: requirement`・`rulebook: specdojo:sf-index-rulebook` | `docs/ja/specdojo/rulebooks/sf-index-rulebook.md`「推奨 Frontmatter 項目」、`docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` | 読み取り・grep | 一致 | rulebook が `type` と `rulebook` を指定。schema の8行目に `requirement` がある |
+| 2 | 章の構成（冒頭の概要、目的と対象範囲、機能構成、システム化機能一覧、未決事項）、機能構成の5列、一覧の6列 | rulebook の「本文要件」と「記述ガイド」 | 読み取り | 一致 | 章と列が rulebook どおり |
+| 3 | 業務プロセス領域 `P-01`〜`P-10` の名前と責務（`P-01` 仕入計画・発注、`P-02` 入荷、`P-09` 日次締め、`P-10` 月次見直しなど） | `docs/ja/specdojo/samples/cdfd-overview-sample.md` | grep | 一致 | 同ファイルの36〜69行目 |
+| 4 | `P-02` を在庫の領域に含めるという区分の変更 | `cdfd-overview-sample.md` | 読み取り | 一致（理由つきの意図的な変更） | 正本では `P-02` は仕入グループにあり、在庫記録も更新する。本文は変更の理由を書いている |
+| 5 | 「まず記録する」方針 | `docs/ja/specdojo/samples/prj-overview-sample.md` | grep | 一致 | 42行目「Record First（まず記録する）」 |
+| 6 | 対象外（キャッシュレス決済、本格会計、EC、複数店舗、仕入先とのシステム連携）とオフライン販売を保証しないこと | `prj-overview-sample.md`、`prj-scope-sample.md`、`sample-authoring-standard.md` の共通サンプル文脈 | grep | 一致 | prj-overview の100・117行目、prj-scope の64〜66行目、standard の76・78行目 |
+| 7 | 補充・つけ上限・売価の最終判断は人間に残す | `prj-overview-sample.md` | grep | 一致 | 113行目 |
+| 8 | `SF-POS-01` の BPS が `bps-sales-order-flow`、在庫の個別仕様が `sf-inventory` | `docs/ja/specdojo/samples/sf-sample.md` | grep | 一致 | 28・42・78行目 |
+| 9 | `SF-POS-01` の概要（請求額・釣銭の提示、現金の受領確認、販売の記録）と、人間に残す判断「取引の中止」 | `sf-sample.md` の `FR-02`〜`FR-04` | grep | 一致 | 77〜79行目 |
+| 10 | 作成済みの BPS は補充依頼確定（`P-06`）、作成済みの画面仕様は販売登録画面（GUI）だけ | samples ディレクトリの一覧、`bps-sample.md`、`uis-sample.md` | ls・grep | 一致 | ほかの `bps-*`・`uis-*` sample はない。bps-sample の16行目、uis-sample の15行目 |
+| 11 | `SF-INV-03` は承認された補充依頼を記録する | `bps-sample.md` の `S-03` | grep | 一致 | 56行目 |
+| 12 | 在庫未反映・結果不明の取引を販売完了として通知しない | `sf-sample.md` | grep | 一致 | 42・91行目 |
+| 13 | 回復条件の正本は `sf-sample`（販売とつけ販売の両方） | `sf-sample.md` の対象外 | grep | 不一致（直した） | 22行目がつけ販売を対象外としている |
+| 14 | 機能は全部で9件 | 本文の一覧表 | 数えた | 一致 | 一覧表は9行 |
+| 15 | 販売管理 CLI を接点に含めない | なし | 該当する正本を探した | 確かめられない | 正本にない仮定。共通サンプル文脈とは食い違わない |
+| 16 | 個別仕様が成果物カタログに未登録 | kata の範囲にはカタログがない | — | 確かめられない | 適用先のプロジェクトのカタログが要る |
+
+**指摘（人への報告）**
+
+1. 直した誤り（上の No 13）。修正は本 kata の中で済んでいます。
+2. `sf-sample.md` の15行目と139行目は、上位一覧を `sf-index`（未作成）としています。`sf-index-sample` は既にあるので、事実と食い違っています。本 kata ではなく `sf-sample` 側で `[[specdojo:sf-index-sample]]` への参照に直す案です。これは F004 と同じ件で、R5 に任せます。
+3. grade の F001〜F004 は R4 の観点ではないので扱っていません。F001 の `vp-pm-control-reporting` は kata のレビューでは使わない観点です。F002 と F004 は R5、F003 は R2 の観点です。なお F003 は、本文の機能構成表が既に「`Q-02` で未決」と書いており、解消済みに見えます。
+
+**検査**: lint などの検査は、親 runner が許可された一覧のとおりに後で実行します。executor の手元で実行する検査はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）として sf-index-sample の主張16件を cdfd-overview・prj-overview・prj-scope・sf-sample・bps-sample・uis-sample・rulebook・schema と突き合わせた。不一致1件（つけ販売の回復条件の正本を sf-sample としていた。sf-sample はつけ販売を対象外とする）を docs/ja/specdojo/samples/sf-index-sample.md の54行目で直した。確かめの表は最終応答にある。","handoff":["指摘: 「システム化機能一覧」の表の後の注記が、販売とつけ販売の両方について回復条件の正本を [[specdojo:sf-sample]] としていた。sf-sample の22行目はつけ販売（`P-04`）を対象外とするため、正本とするのを店頭商品販売の回復条件だけに改め、つけ販売の回復条件は未定（`Q-03`）と直した。確かめ方は sf-sample.md の対象外の行を grep で読み取った。","指摘（相手側を直す案）: docs/ja/specdojo/samples/sf-sample.md の15行目と139行目は上位一覧を `sf-index`（未作成）としているが、sf-index-sample は既にあり事実と食い違う。sf-sample 側で [[specdojo:sf-index-sample]] への参照に直す案。grade の F004 と同じ件で、R5（整合）に任せる。","確かめの表のうち確かめられなかった主張: 「販売管理 CLI を接点に含めない」は正本のない仮定で、共通サンプル文脈とは食い違わない。「個別仕様が成果物カタログに未登録」を確かめるには、適用先のプロジェクトの成果物カタログが要る。","grade の F001〜F004 は R4 の観点ではないので扱っていない。F001（`vp-pm-control-reporting`）は kata のレビューで使わない観点。F002（`vp-dev-change-impact`）と F004（`vp-qe-kata-conformance`）は R5、F003（`vp-qe-omissions-consistency`）は R2 の観点。F003 は機能構成表に「`Q-02` で未決」と既に書いてあり、解消済みに見える。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が許可された一覧のとおりに実行する。親の結果を正とする。"}]}
+</specdojo_executor_evidence>
