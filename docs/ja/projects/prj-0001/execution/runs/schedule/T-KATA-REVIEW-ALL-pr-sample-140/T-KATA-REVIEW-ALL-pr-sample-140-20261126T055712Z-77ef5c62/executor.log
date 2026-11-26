@@ -1,0 +1,29 @@
+R4（正しさ）では `docs/ja/specdojo/samples/pr-sample.md` に正本と食い違う記述が見つからなかったため、どのファイルも変更していません。grade の finding F001 は R4 の観点の外なので扱わず、申し送りに回しました。
+
+**確かめの表**（result の実施内容に載せる材料）
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 個票 ID `PJR-KP21`・`PJR-KP22`・`PJR-KP23`（リスク・課題、次期予定） | `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` | ID の形式を照合 | 一致 | 形式は `^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$`。K・P・2・1 はどれも使える文字 |
+| 2 | 根拠 ID `T-11`〜`T-15`（schedule のタスク ID） | `docs/specdojo/schemas/v1/sch-common.schema.yaml` | ID の形式を照合 | 一致 | 形式は `^[A-Za-z0-9][A-Za-z0-9_-]{1,127}$` |
+| 3 | 担当 `PM`・`PO`・`BA`・`OPS`（Role code） | `sch-common.schema.yaml`、`docs/ja/specdojo/samples/pm-roles-sample.yaml` | 形式と定義済みの code を照合 | 一致 | 形式は `^[A-Z]{2,4}$`。4 つとも定義済み |
+| 4 | 判断待ちは個票、リスクは risk・課題は issue で起票 | `register-item-frontmatter.schema.yaml` の `ItemType` | 列挙値を照合 | 一致 | `question`・`risk`・`issue`・`decision` がある |
+| 5 | 報告期間 2026-04-13〜2026-04-19 と「5 営業日」 | `date` コマンド | 曜日を実行して確認 | 一致 | 4/13 は月曜、4/19 は日曜なので平日は 5 日 |
+| 6 | 次期は 2026-04-20〜2026-04-26、期日 4/21〜4/24 | `date` コマンド | 曜日を実行して確認 | 一致 | 4/21 は火曜、4/24 は金曜、4/26 は日曜。期日はすべて次期の範囲内 |
+| 7 | 5 章の順、各表の列、影響度 3 段階の定義 | `docs/ja/specdojo/rulebooks/pr-rulebook.md` の「本文要件」「記述ガイド」 | 読み比べ | 一致 | 章の名前と順、列名、高・中・低の定義が rulebook と同じ |
+| 8 | 補充点、16:00 の入力締切、欠品 9 回などの業務の値 | 正本なし | 対象外 | 確かめられない（対象外） | 共通サンプル文脈の仮定で、食い違いはない |
+
+**grade の finding F001 の扱い**
+
+F001 は導入文に報告者・報告先を書くよう求める指摘で、観点は `vp-ba-stakeholder-clarity` です。kata ガイドの「kata の観点の組」では、この観点は kata の段のレビューで使わないとされています。業務の中身は R1 と R5 の `vp-qe-kata-conformance` で確かめるためです。そのため R4 では直していません。
+
+**検証**
+
+検証コマンドは実行していません。
+
+- `npm run lint:md` と `npm run lint:md:changed` は、終了後に親 runner が実行します。
+- `npm run validate:history-links` は、変更した履歴ファイルがないため非該当です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で pr-sample の事実を照合した。個票 ID・タスク ID・Role code・item_type の列挙値はスキーマと、日付と曜日は date コマンドの実行結果と、章と列は pr-rulebook と照合し、すべて一致した。直すべき誤りがなかったため sample は変更していない。","handoff":["R4 の確かめの表（result の実施内容に載せる材料）: (1) 個票 ID `PJR-KP21`/`PJR-KP22`/`PJR-KP23` は register-item-frontmatter.schema.yaml の形式 `^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$` に一致。(2) タスク ID `T-11`〜`T-15` は sch-common.schema.yaml の Id の形式 `^[A-Za-z0-9][A-Za-z0-9_-]{1,127}$` に一致。(3) 担当 `PM`/`PO`/`BA`/`OPS` は Owner の形式 `^[A-Z]{2,4}$` に合い、pm-roles-sample.yaml の code として定義済みで一致。(4) 個票の分類 risk/issue/question/decision は ItemType の列挙値に含まれ一致。(5) 報告期間 2026-04-13(月)〜2026-04-19(日) は平日が 5 日で「5 営業日」と一致（date で確認）。(6) 次期は 2026-04-20〜2026-04-26(日)、期日 4/21(火)〜4/24(金) はすべて範囲内で一致。(7) 5 章の順・各表の列・影響度 3 段階の定義は pr-rulebook の本文要件と記述ガイドに一致。(8) 補充点・16:00 の入力締切・欠品 9 回などの業務の値は正本のない共通サンプル文脈の仮定のため確かめの対象外（確かめられない・食い違いなし）。","F001（`vp-ba-stakeholder-clarity`、line=3、導入文に報告者・報告先を書く指摘）は、kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点とされている。業務の中身は R1 と R5 の `vp-qe-kata-conformance` で確かめるため、R4 では直していない。直すかどうかは R5 か人の判断に委ねる。直す場合は、導入文に報告者の Role code（例: `PM`）と報告先（定例の参加者）を足す案になる。"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"変更した履歴ファイルがない","reason":"executor は plan・result・個票を変更しておらず、適用条件を満たさない"}]}
+</specdojo_executor_evidence>
