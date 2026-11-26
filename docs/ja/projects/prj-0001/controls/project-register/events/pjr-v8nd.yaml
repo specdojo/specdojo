@@ -80,3 +80,32 @@
       from: "-"
       to: medium
   previous_event_id: reg_493f5b07bdd34dd3baaeb1d61539b07f
+- v: 1
+  id: reg_06703454eeb1433d95b3d656baf84af1
+  ts: "2026-11-26T15:48:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6097e7500a3a4444912168c0e39b2f9e
+- v: 1
+  id: reg_9785aba7054a4da7b2b323bc75fc544d
+  ts: "2026-11-26T15:54:04Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_06703454eeb1433d95b3d656baf84af1
