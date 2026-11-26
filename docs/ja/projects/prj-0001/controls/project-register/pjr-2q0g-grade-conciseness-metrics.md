@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2q0g-grade-conciseness-metrics
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-17T12:53:26Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T12:16:22Z"
+  conclusion: grade に機械で測る大きさの指標と冗長さの観点の見直しを足した
   derived_from:
     - PJR-0T83
   depends_on:
