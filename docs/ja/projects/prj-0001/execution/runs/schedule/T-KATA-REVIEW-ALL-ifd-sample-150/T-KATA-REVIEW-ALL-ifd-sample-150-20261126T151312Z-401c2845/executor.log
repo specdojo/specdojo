@@ -1,0 +1,29 @@
+R5（整合）の段として `docs/ja/specdojo/samples/ifd-sample.md` を 2 か所直しました。prettier と markdownlint はどちらも通っています。
+
+**直した箇所**
+
+- **frontmatter の `owner: ARC` を削除**:
+  - schema では `owner` は登録簿の項目に使う欄と説明されている。
+  - rulebook の推奨 frontmatter にもこの欄はない。
+  - 同じ architecture の `cnd-sample` と `clis-sample` も持っていない。
+- **「配置と境界の定義」の、図に描かない要素の列挙に「店舗プリンタへのレシート印刷」を追加**: 後述の、テスト系 sample との食い違いへの対処です。
+
+**相手側を直すべき点（変更していません）**
+
+- **`etc-index-sample.md` の 30 行目**: ifd の経路に `receipt-print` コマンドが含まれる、と書いています。しかし ifd にはプリンタの要素も経路もありません。ifd は `cnd-sample`・`clis-sample` の印字経路を設計の根拠にしないと明記しています。`receipt-print` は `ifx-cmd-sample`（根拠は `clis-sample`）の連携先です。直す案は、`receipt-print` を「ifd の経路外で、`ifx-cmd-sample` が定める連携」と書き分けることです。`tsp-index-sample`・`itc-index-sample`・`itc-sample` も `receipt-print` を同じ系統の外部結合として扱っているので、合わせて確かめる必要があります。
+- **`cpd-sample.md` と `sysd-critical-flows-sample.md`**: 同じく `owner` 欄を持っているので、削除する案です。
+
+**食い違いがなかったもの**
+
+- 仮置きの個票 ID `kinuya:pjr-i003`・`kinuya:pjr-i004` は、`itc-index`・`tsp-index`・`utc-index` の sample で同じ論点に使われていました。
+- 経路 `PATH-01`〜`PATH-07` の範囲と内容は、`tsp-index`・`itc-index`・`itc`・`etc-index` の sample の記述と一致していました。
+- 「まず記録する」方針（`prj-overview-sample`）と、共通サンプル文脈の前提（単一店舗・タブレット・オフライン運用は未決）とも合っていました。
+- 用語集は SpecDojo の製品の用語だけで、店舗の業務の用語と食い違う語はありませんでした。
+
+**判断してほしいこと**
+
+印刷の食い違いは、ifd 側に印刷の経路を足すことでも解けます。今回は、店頭の記録と保全に絞る ifd の範囲を保つため、描かない要素への追記にとどめました。ifd に印刷の経路を足すかどうかを決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: ifd-sample の frontmatter から登録簿の項目用の欄 `owner` を外し、図に描かない要素に店舗プリンタへのレシート印刷を明記した。`etc-index-sample` などが ifd の経路に `receipt-print` を含めている食い違いは、相手側を直す案として handoff に記録した。","handoff":["R5-1: R5 / frontmatter / frontmatter に `owner: ARC` がある。schema（`deliverable-frontmatter.schema.yaml`）では `owner` は登録項目の担当ロール用の欄と説明され、rulebook の推奨 Frontmatter 項目にもなく、同じ architecture の `cnd-sample`・`clis-sample` も持たない / `owner: ARC` を削除した。`cpd-sample.md`・`sysd-critical-flows-sample.md` にも同じ欄があり、相手側から削除する案（未変更） / vp-qe-kata-conformance（kata 相互） / -","R5-2: R5 / 3. 配置と境界の定義 / `etc-index-sample.md` の 30 行目は ifd の経路に店舗プリンタを動かす `receipt-print` コマンドが含まれると書くが、ifd にはプリンタの要素も経路もなく、概要で `cnd-sample`・`clis-sample` の印字経路を設計根拠にしないと明記している。`receipt-print` は `ifx-cmd-sample`（`based_on`: `clis-sample`）の連携先である / ifd 側は、図に描かない要素に「店舗プリンタへのレシート印刷」を追記した。相手側は、`etc-index-sample.md` の 30 行目を「ifd の経路のうち復元用保管サービス（`PATH-05`・`PATH-06`）と、ifd の経路外で `ifx-cmd-sample` が定める `receipt-print` コマンド」と書き分ける案（未変更）。`tsp-index-sample`・`itc-index-sample`・`itc-sample` の `receipt-print` の扱いも同じ観点で確かめる / vp-qe-kata-conformance（適用先）、vp-dev-change-impact。迷った理由: ifd に印刷の経路（例 `PATH-08`）を足してテスト系 sample の前提に合わせる案もある。ifd が店頭の記録と保全に絞る範囲と、`cnd-sample`・`clis-sample` を根拠にしない方針を崩すため、選ばなかった / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifd-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/ifd-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ifd-sample.md のみで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
