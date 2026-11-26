@@ -5609,3 +5609,19 @@
       from: YQ32 の統合後の smoke が成功した
       to: PJR-3M4M・PJR-2Q0G を統合した runner で、start → review と実体の actor（sonnet-executor）を確かめた。
   previous_event_id: reg_58fb3e177e70471a891f03fb97fa4fd3
+- v: 1
+  id: reg_405b39905cad4e63acfa1585b929f1cc
+  ts: "2026-11-26T11:00:15Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-T4E0・PJR-FNB7 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-26"
+      to: "-"
+  previous_event_id: reg_78058f5936da448d914e1a320468acff

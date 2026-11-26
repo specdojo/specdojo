@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-25T22:25:45Z"
   conclusion: PJR-3M4M・PJR-2Q0G を統合した runner で、start → review と実体の actor（sonnet-executor）を確かめた。
   autopilot: approved
 ---
