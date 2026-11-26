@@ -1,0 +1,10 @@
+R3（読みやすさ）として、`docs/ja/specdojo/samples/dct-sample.yaml` のコメントを 2 か所直しました。YAML のキーと値は変えていません。直した後、schema 検査と Prettier の書式確認はどちらも通りました。
+
+1. **F001（30 行目）**: 「定義系の成果物すべてに渡す前提」を「kind が work の成果物すべてに渡す前提」に改めました。finding は `prj-issues-and-approach` に `brief` がないとしていますが、今の版では 120 行目に `brief: *project_baseline_brief` があります。実際に `brief` を持たないのは、control の `prj-glossary` と generated の `prj-definition-summary` です。共有の範囲を work 5 件に絞ったので、コメントと中身が合いました。
+2. **24 行目**: 「前提・制約・依存関係と課題と方針」は「と」が続き、どこで切れるか分かりにくい文でした。成果物名をかぎ括弧で囲み、「「前提・制約・依存関係」と「課題と方針」」として 2 件の境目を示しました（W5 修飾の係り）。
+
+W1〜W10 のほかの項目に当たる箇所はありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として docs/ja/specdojo/samples/dct-sample.yaml のコメントを 2 か所直した（F001 の `brief` 共有範囲の表現、24 行目の成果物名の区切り）。YAML のキーと値は変えていない。schema 検査と Prettier の書式確認は通過した。","handoff":["1: R3 / groups[0].deliverables の prj-overview の brief コメント（30 行目） / コメントは「定義系の成果物すべてに渡す前提」としているが、`brief` を共有しているのは kind が work の 5 件だけで、control の `prj-glossary` と generated の `prj-definition-summary` は `brief` を持たず、範囲が合わない（F001。finding が挙げた `prj-issues-and-approach` には今の版で 120 行目に `brief: *project_baseline_brief` がある） / 「kind が work の成果物すべてに渡す前提を、アンカーで共有する。」に改めた / vp-ux-readability、W7 / -","2: R3 / groups[0].deliverables 冒頭の _ASSUMPTION_ コメント（24 行目） / 「前提・制約・依存関係と課題と方針」は「と」が続き、成果物 2 件の境目が読み取れない / 「「前提・制約・依存関係」と「課題と方針」を追加採用した。」とかぎ括弧で区切った / W5 / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/dct-sample.yaml のみで、plan / result / 個票を変更していない"}]}
+</specdojo_executor_evidence>

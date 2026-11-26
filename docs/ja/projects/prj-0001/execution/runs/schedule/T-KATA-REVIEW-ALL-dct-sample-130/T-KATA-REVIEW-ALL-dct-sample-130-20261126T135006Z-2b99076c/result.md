@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-dct-sample-130
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-dct-sample-130/T-KATA-REVIEW-ALL-dct-sample-130-20261126T135006Z-2b99076c/plan.md
   started_at: "2026-11-26T13:50:18.298Z"
+  completed_at: "2026-11-26T14:02:52.240Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R3（読みやすさ）として `docs/ja/specdojo/samples/dct-sample.yaml` のコメント 2 か所を直した。YAML のキーと値は変えていない。
+- grade の F001 は、`brief` の共有範囲を実態に合わせる形で解消した。もう 1 か所は、成果物名の区切りが読み取れない文を直した（W5）。
+- executor が実行した schema 検査と Prettier の書式確認は通過した。runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` も通過した。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | R3 | `groups[0].deliverables` の `prj-overview` の `brief` コメント（30 行目） | コメントは「定義系の成果物すべてに渡す前提」としているが、`brief` を共有しているのは kind が work の 5 件だけである。control の `prj-glossary` と generated の `prj-definition-summary` は `brief` を持たず、範囲が合わない（F001）。 | 「kind が work の成果物すべてに渡す前提を、アンカーで共有する。」に改めた。 | vp-ux-readability、W7 | - |
+| 2 | R3 | `groups[0].deliverables` 冒頭の `_ASSUMPTION_` コメント（24 行目） | 「前提・制約・依存関係と課題と方針」は「と」が続き、成果物 2 件の境目が読み取れない。 | 「「前提・制約・依存関係」と「課題と方針」を追加採用した。」とかぎ括弧で区切った。 | W5 | - |
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/dct-sample.yaml`: `brief` 共有のコメントを、実態に合わせて「kind が work の成果物すべてに渡す前提を、アンカーで共有する。」に改めた（F001）。`_ASSUMPTION_` コメントの「前提・制約・依存関係」と「課題と方針」をかぎ括弧で区切り、成果物 2 件の境目が分かるようにした。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 1: R3 / groups[0].deliverables の prj-overview の brief コメント（30 行目） / コメントは「定義系の成果物すべてに渡す前提」としているが、`brief` を共有しているのは kind が work の 5 件だけで、control の `prj-glossary` と generated の `prj-definition-summary` は `brief` を持たず、範囲が合わない（F001。finding が挙げた `prj-issues-and-approach` には今の版で 120 行目に `brief: *project_baseline_brief` がある） / 「kind が work の成果物すべてに渡す前提を、アンカーで共有する。」に改めた / vp-ux-readability、W7 / -
+- 2: R3 / groups[0].deliverables 冒頭の `_ASSUMPTION_` コメント（24 行目） / 「前提・制約・依存関係と課題と方針」は「と」が続き、成果物 2 件の境目が読み取れない / 「「前提・制約・依存関係」と「課題と方針」を追加採用した。」とかぎ括弧で区切った / W5 / -
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/samples/dct-sample.yaml のみで、plan / result / 個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+根拠は plan の finding F001（`vp-ux-readability`）と kata-guide の文章のチェック項目 W1〜W10 で、executor の記録に基づく。F001 が挙げた `prj-issues-and-approach` は、現行版では `brief: *project_baseline_brief` を持つ。実際に `brief` を共有するのは kind が work の 5 件だけで、control の `prj-glossary` と generated の `prj-definition-summary` は持たない。そのため成果物側は変えず、コメントの対象範囲を実態に合わせた。文の直しのみで、意味と判断に要る背景・制約・例外は変えていない。未解消の finding はない。
