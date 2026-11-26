@@ -80,3 +80,16 @@
       from: "-"
       to: medium
   previous_event_id: reg_3a81d829dc1247beba29fe9dff153831
+- v: 1
+  id: reg_658dfff613de491689efe99e80fac9a1
+  ts: "2026-11-26T15:30:52Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_458e02d17fc94878897ddb4db7c48130
