@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-sysd-index-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-sysd-index-sample-130-20261126T031233Z-ddec535f",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T03:13:23.622Z",
+    "completed_at": "2026-11-26T03:14:54.306Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/sysd-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/sysd-index-sample.md | 16 ++++++++++++----\n 1 file changed, 12 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/sysd-index-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:sysd-index-sample\n  type: architecture\n  status: ready\n  rulebook: specdojo:sysd-index-rulebook\n---\n\n# 駄菓子屋きぬや 販売管理 CLI システム設計索引（SYSD Index）\n\n本索引は、設計の正本（SSOT: Single Source of Truth）への入口を集約する。開発担当は会計・保存・印刷の変更先を、同行レビュー担当は検証ケースの入力を、店舗運営アドバイザーはログ・設定の所在を、本索引から探す。詳細な値・構文・構造は各正本へ委ねる。\n\n## 1. 概要（対象範囲・更新責任）\n\n対象は単一店舗・現金販売の CLI `kinuya-pos`、取引・売上・レシートのローカル記録、本部の商品・売上 API との接続、外部印刷コマンドへの依頼である。通常\n… output omitted …\n記録の索引 | *TODO*: 関連ドキュメント導線で未作成とした構成・業務・非機能・運用・テスト・判断記録がなく、詳細設計を確認できない。当面は本索引と操作・印刷仕様を代替参照とする | 各文書の作成後、関連ドキュメント導線の該当行をリンクへ更新し、回復方式の判断を判断記録へ残す |\n| 印刷の実機受入 | *TODO*: 用紙切れ・時間切れ時の紙面照合と二重印字の可能性を実機で未確認。当面は警告と控えを残し、自動再印刷しない | 店舗端末で会計を再実行せずに控えを確認・再印刷できることを確かめ、再印刷手順と変更の入口の印刷連携の行を更新する |\n\n### 6.2. 公開・昇格前の確認条件\n\n- 架空参照が実在の正本へ置き換わり、API・保存・設定・監視の所在と生成・検証コマンドが本索引の記載と一致している。静的検査、対象ケース、ビルドが変更の入口の期待結果を満たす。\n- 通信結果不明、保存失敗、印字警告の引継ぎで同じ取引を追跡でき、期待結果が変更の入口の表と食い違っていない。\n- 回復契約、監視方式、未作成文書の扱いが確定済みか、登録簿の個票へ引き継がれている。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7570 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7570 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-index-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1778}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  12:15:14\n   Duration  2.65s (transform 6.48s, setup 839ms, import 8.99s, tests 6.24s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nbook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-index-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-index-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3 読みやすさの観点で sysd-index-sample.md を見直し、文の直しを 4 件入れた。意味・制約・例外は変えていない。prettier --check は通過。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R3 / 箇所: 冒頭の段落 / 指摘: 主語がなく、3 人の担当と目的を 1 文に詰めた長い文で、何がそうするのかが一つに決まらない / 直した案: 「本索引は、設計の正本（SSOT: Single Source of Truth）への入口を集約する。開発担当は…、同行レビュー担当は…、店舗運営アドバイザーは…を、本索引から探す。」の 2 文に分けた（反映済み） / 根拠: W1、W3、`vp-ux-readability` / 印: なし",
+    "No: 2 / 段: R3 / 箇所: 概要（対象範囲・更新責任）の 1 段落め「店舗端末1台で人が操作する」 / 指摘: 操作する主体が「人」で、ほかの箇所の役割名と合わない / 直した案: 「店舗端末1台で店番担当が操作する」にした（反映済み） / 根拠: W1、`vp-ux-language-consistency` / 印: なし",
+    "No: 3 / 段: R3 / 箇所: 概要（対象範囲・更新責任）の略語の文 / 指摘: 5 つの略語と正式名・意味を読点でつないだ長い 1 文で、読みにくい / 直した案: 「本索引で使う略語は次のとおり。」の後に、略語ごとの箇条書きを置いた。役割略語の文は別の段落に残した（反映済み） / 根拠: W9、W3、`vp-ux-readability` / 印: なし",
+    "No: 4 / 段: R3 / 箇所: 公開・昇格前の確認条件の 1 項目め / 指摘: 「架空参照を実在の正本へ置き換え、…が一致している」で主語と述語がねじれ、何と一致するかも書かれていない / 直した案: 「架空参照が実在の正本へ置き換わり、API・保存・設定・監視の所在と生成・検証コマンドが本索引の記載と一致している。」にした（反映済み） / 根拠: W2、W4 / 印: 要判断（一致の相手を「本索引の記載」と読んだため、書き手の意図と合うかを確かめてほしい）"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-index-sample-130/T-KATA-REVIEW-ALL-sysd-index-sample-130-20261126T031233Z-ddec535f/executor.log",
+      "bytes": 4050,
+      "truncated": false
+    }
+  ]
+}
