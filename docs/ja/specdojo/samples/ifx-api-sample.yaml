@@ -1,7 +1,7 @@
 # specdojo-schema: none reason=external-openapi
 # _TODO_: 本部側の問い合わせ窓口は未特定。BA が契約レビューの前に特定する。
 # _UNDECIDED_: 結果不明のときの受付照会の操作（照会 API の有無）を、ready の前に本部と決める。
-# _ASSUMPTION_: 通貨は日本円（整数の円）のみとし、税区分・税額・合計・預かり金は送らず本部が商品マスタから計算する。ready の前に本部へ確認する。
+# _ASSUMPTION_: 通貨は日本円（整数の円）のみとし、税区分・税額・合計は送らず本部が商品マスタから計算する。預かり金・釣銭は店舗端末の記録だけに残して送らない。ready の前に本部へ確認する。
 # _TODO_: OpenAPI の検証器での構造の確認と、店舗端末からの接続確認を、DEV が ready の前に行う。
 openapi: 3.0.3
 info:
@@ -75,7 +75,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/DuplicateSaleResponse"
         "429":
-          description: 利用制限。店舗端末は `Retry-After` の秒数を待ち、同じ取引 ID で送り直す。
+          description: 利用制限（未受付）。店舗端末は自動では送り直さず、`Retry-After` の秒数の経過後に店番担当の操作で同じ取引 ID を送り直す。
           headers:
             Retry-After:
               schema:
@@ -86,7 +86,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: 内部エラー。受付の有無が分からないため、店舗端末は結果不明として保持し、同じ取引 ID で送り直す。
+          description: 内部エラー。受付の有無が分からないため、店舗端末は結果不明として保持し、自動では送り直さない。PO（店主代表）と DEV が本部受付とローカル記録を照合し、未受付と確認できた場合だけ同じ取引 ID で送り直す。
           content:
             application/json:
               schema:
@@ -118,7 +118,7 @@ components:
       type: object
       additionalProperties: false
       description: >-
-        販売の明細。税区分・税額・合計・預かり金は送らず、本部が商品マスタから計算する。
+        販売の明細。税区分・税額・合計は送らず、本部が商品マスタから計算する。預かり金・釣銭は送らない。
       required: [product_code, quantity, unit_price]
       properties:
         product_code:
