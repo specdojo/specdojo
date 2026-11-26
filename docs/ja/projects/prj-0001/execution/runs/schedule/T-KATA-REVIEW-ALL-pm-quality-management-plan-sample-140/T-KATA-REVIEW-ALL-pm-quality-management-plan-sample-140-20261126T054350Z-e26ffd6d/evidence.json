@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T05:44:44.823Z",
+    "completed_at": "2026-11-26T05:48:12.311Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pm-quality-management-plan-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../samples/pm-quality-management-plan-sample.md   | 34 +++++++++++-----------\n 1 file changed, 17 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/pm-quality-management-plan-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/pm-quality-management-plan-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pm-quality-management-plan-sample\n  type: project\n  status: ready\n  rulebook: specdojo:pm-quality-management-plan-rulebook\n  based_on:\n    - specdojo:pm-plan-sample\n    - specdojo:prj-success-criteria-and-acceptance-criteria-sample\n---\n\n# 品質管理計画: 駄菓子屋きぬや 販売管理システム\n\n## 1. 品質方針と適用範囲\n\n店主代表と家族利用者代表が販売・在庫・つけの記録を同じ手順で続けられ、追加負担を許容できることを価値品質とする。文書・実装・公開物の整合、再現性、安全性は、その価値を支える成果物品質として確認する。\n\n本計画\n… output omitted …\n3 は準備着手前に候補を合意し初期リリース前に確定 / 人間の `PO` | 未承認の支出・時間割り当てと、具体日を前提とする初期リリース判定を保留する。決定後は品質ゲートの時期と `kinuya-schedule` を更新する |\n| オフライン時の運用・受入範囲 | *UNDECIDED*: 成功条件の未解決事項が正本。`BA` が運用案と追加する受入条件の案を整理する | 運用開始前 / 人間の `PO` | 当該経路の実運用と、その未決を残した店頭試用開始を保留する。決定後は追加された条件 ID を初期受入の合格条件と `kinuya-acceptance-record` に反映する |\n| 人気商品の対象範囲・除外条件 | *UNDECIDED*: 成功条件の未解決事項が正本。`BA` が販売記録と聞き取りから対象商品と除外条件の候補を整理する | ベースライン記録の開始前 / 人間の `PO` | SC-04 の基準値採取と、それを前提とする試用開始を保留する。決定後は基準値の採取対象と `kinuya-trial-log` の引き継ぎ項目を更新する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7638 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7638 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.t\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1759}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  14:48:41\n   Duration  2.84s (transform 8.67s, setup 2.79s, import 9.81s, tests 6.37s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\norkspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）の確かめを終えた。成功条件の sample を正本として、初期受入（SC-07・SC-09・AC-05 の追加）、短期利用（SC-08 の追加）、初期受入に含めない条件と後続観測への引き継ぎ対象（SC-10 の追加）の条件 ID の誤りと、`_UNDECIDED_` の目印の書き方を直した。F001〜F003 は前の段で解消済み。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4 の確かめの表: (1) frontmatter の `type`/`status`/`based_on` は `deliverable-frontmatter.schema.yaml`・`common-frontmatter.schema.yaml` と一致。(2) `rulebook`・`based_on`・wikilink の参照先 id は全件存在。(3) Role code の `PO`/`PM`/`BA`/`DEV`/`QE` は `src/exec/core.ts` の `KNOWN_OWNER_LABELS` と `pm-roles.schema.yaml` の enum と一致。(4) 初期受入の「SC-01・AC-01〜AC-04」は成功条件の正本（SC-01・SC-07・SC-09・AC-01〜AC-05）と不一致→直した。(5) 短期利用の「SC-02・SC-03」は、判定時期が運用開始後2週間の SC-08 が漏れていた→直した。(6) レビュー表の対象段階の必須条件も同じく不一致→直した。(7) 初期受入に含めない条件と後続観測への引き継ぎ対象から SC-10 が漏れていた→直した。(8) 管理計画の M-03・M-04・M-06、U-01〜U-03、「運用前の準備」、免除の例外を設けないことは一致。(9) オフライン時・人気商品の未決の担当・決定時期・判断者は成功条件の「例外条件と未解決事項」と一致。(10) `_UNDECIDED_:` をインラインコードで書いていたのは、ドキュメントメタ情報標準・Sample 記述標準・template（斜体の目印）と不一致→直した。(11) `kinuya-` で始まる参照名と `execution/` 配下のパスは本文で架空と明記した仮定のため確かめの対象外。",
+    "指摘: 初期受入・短期利用の条件 ID が、based_on の成功条件の sample（初期受入は SC-01・SC-07・SC-09・AC-01〜AC-05、運用開始後2週間に SC-08、6か月に SC-10）と食い違っていた。品質ゲートの表、レビューの表、ゲートの注記、後続観測への引き継ぎを直した。",
+    "指摘: 未決事項の表で `_UNDECIDED_:` がインラインコードで書かれていた。ドキュメントメタ情報標準・Sample 記述標準・template に合わせて、斜体の目印に直した（3 か所）。",
+    "次のアクション（R5・別の kata）: 管理計画の sample（`specdojo:pm-plan-sample`）の「M-07 品質」と、判断ゲートの「初期リリース・店頭試用開始」にも、古い条件 ID の SC-01・AC-01〜AC-04 が残っている。成功条件の sample に合わせて SC-07・SC-09・AC-05（試用継続は SC-08）を加える案を相手側に出す。",
+    "grade の finding F001〜F003 は、前の段で未決事項の表が template と同じ 4 列（担当・決定時期・判断者）になっていて解消済み。F001・F002 の観点は kata ガイドで kata の段のレビューでは使わない観点でもある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140/T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140-20261126T054350Z-e26ffd6d/executor.log",
+      "bytes": 7951,
+      "truncated": false
+    }
+  ]
+}
