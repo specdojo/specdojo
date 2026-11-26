@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: easy
   owner: BA
@@ -41,13 +41,18 @@ specdojo:
 
 | No  | 作業                                                     | 担当 | 状態 | メモ                          |
 | --- | -------------------------------------------------------- | ---- | ---- | ----------------------------- |
-| 1   | 印字の波及先を `ifx-cmd-sample` の wikilink に置き換える | BA   | open | `ifx-index-sample` は変えない |
-| 2   | grep と検査を流し、対応結果に書く                        | BA   | open | -                             |
+| 1   | 印字の波及先を `ifx-cmd-sample` の wikilink に置き換える | BA   | done | `ifx-index-sample` は変えない |
+| 2   | grep と検査を流し、対応結果に書く                        | BA   | done | grep 0 件。lint は親 runner   |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 変更箇所: `docs/ja/specdojo/samples/imp-interface-sample.md` の「影響詳細一覧」「確定済みレシートの印字」の備考。`ifx-cmd-receipt-printer` を `[[specdojo:ifx-cmd-sample\|レシート印刷コマンド連携仕様]]` に置き換えた（表示名は sample の `title`。YAML sample のため H1 がない）。セル内の `|` はエスケープ済み。
+- 整形: `prettier --write` で表の列幅が再整形され、同じ表の行の空白だけが変わった。内容の変更は上の 1 箇所のみ。
+- grep: 同ファイルに `ifx-cmd-receipt-printer` は 0 件。`ifx-index-sample` とほかの sample・rulebook は変えていない。
+- 検査: `npm run lint:fm`・`npm run lint:md` は親 runner が実行する。
+- 残課題: なし。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]]
+- [[specdojo:imp-interface-sample]]

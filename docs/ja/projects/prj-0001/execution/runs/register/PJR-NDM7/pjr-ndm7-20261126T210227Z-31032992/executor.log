@@ -1,0 +1,11 @@
+`imp-interface-sample` の「確定済みレシートの印字」の備考で、波及先を仮の ID `ifx-cmd-receipt-printer` から `[[specdojo:ifx-cmd-sample\|レシート印刷コマンド連携仕様]]` に置き換えました。表のセル内なので `|` はエスケープしています。`lint:fm` と `lint:md` は親 runner の検査なので、私は流していません。
+
+- **表示名:** `ifx-cmd-sample` は YAML の sample で H1 がないため、表示名は `title` を使いました。plan は H1 に合わせるよう求めています。他の sample も同じ表示名で参照しています。
+- **grep:** `imp-interface-sample.md` に `ifx-cmd-receipt-printer` は 0 件になりました。`ifx-index-sample` とほかの sample・rulebook は変えていません。
+- **整形:** 置き換え後に `prettier --write` を流したところ、同じ表の他の行の空白が再整形されました。diff は 12 行ありますが、内容の変更は上の 1 箇所だけです。
+- **個票:** 作業内容の表の 2 行を `done` にし、対応結果と関連ドキュメントを書きました。
+- **`pjr-ndm7.yaml`:** `git diff --stat` に `events/pjr-ndm7.yaml` の変更が出ています。私は編集していないので、runner 側の更新と見ています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-interface-sample の印字の波及先を ifx-cmd-sample の wikilink に置換し、grep で旧 ID が 0 件であることを確認した。個票の対応結果を更新した。","handoff":["`ifx-cmd-sample` は YAML sample で H1 がないため、wikilink の表示名は `title` の「レシート印刷コマンド連携仕様」にした（他の sample と同じ表示名）。","`prettier --write` で同じ表の他の行の空白が再整形された。内容の変更は印字の備考の 1 箇所だけ。","`npm run lint:fm`・`npm run lint:md` は親 runner の検査のため executor では流していない。"],"validations":[{"command":"grep -c ifx-cmd-receipt-printer docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"0 件"},{"command":"npx prettier --write docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"表の列幅を整形"}]}
+</specdojo_executor_evidence>
