@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-6xg2-docs-site-next-prj-0002
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-24T13:59:40Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T10:11:41Z"
+  conclusion: 公開の workflow で project/prj-0002/develop の docs/ja/projects/prj-0002/ だけを重ね、ビルドの間だけの設定で prj-0002 と specdojo-lp の repos を足して開発中の版に出す。2026-11-26 の deploy（run 45713911145）が通り、/specdojo/next/ と /next/ja/projects/prj-0002/ が 200 を返すことを確かめた
   commit_type: ci
   commit_scope: docs-site
 ---
