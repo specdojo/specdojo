@@ -1,0 +1,19 @@
+R4（正しさ）の段を終えました。誤りを 1 件見つけ、`docs/ja/specdojo/samples/cdt-sample.md` を 1 か所だけ直しました。
+
+**直したこと:** 「関連仕様との関係」の表で、用語集へのリンクの表示名「用語集 在庫・調達」が、参照先 `gl-sample.yaml` の実際の `title` と違っていました。正しい題名「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」に置き換えました。差分が 6 行あるのは、prettier が表の列幅をそろえ直したためです。文言の変更はこの 1 か所です。
+
+**突き合わせた主張:** ほかの 12 件はすべて正本と一致しました。確かめられなかった主張はありません。
+- 業務データ辞書の `product` と `reorder_point` は実在します。`product_type`・`handling_type`・`shelf_tags` は辞書に定義がなく、本文の「未定義」という記述と合っています。
+- 用語集の「定番商品」「発注点」の語義、「発注点は定番商品だけに設定する」という説明は、本文と食い違いません。
+- 在庫不足判定の「発注点 0 も有効な値で、未設定の代わりにしない」は、本文の「未設定をゼロと読み替えない」と合っています。
+- 種別（業務分類・動的分類）、分類定義の 5 項目、スタンドアロン定義の表の列は rulebook の要件どおりです。
+
+**扱わなかった指摘:**
+- F001（棚札の貼り替えの担当）: R4 の観点ではありません。また本文 87 行目で、すでに担当と期限が決まっています。
+- rulebook は動的分類の管理元として業務データ辞書のエンティティを参照するよう勧めていますが、この sample は紙の商品台帳を管理元にしています。これは rulebook への準拠の問題なので、R5 か人の判断に回します。
+
+**検証:** markdownlint は 0 件でした。親 runner が流す検査は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: cdt-sample の事実の主張 13 件を正本と突き合わせ、不一致 1 件（gl-sample への wikilink の表示名）を直した。残る 12 件は一致した。","handoff":["R4-1: R4 / 4. 関連仕様との関係 / gl-sample への wikilink の表示名「用語集 在庫・調達」が、参照先の title「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」と食い違う / 表示名を参照先の title に合わせた / `vp-qe-verifiability`（正本 docs/ja/specdojo/samples/gl-sample.yaml 5 行目の `title`） / -","R4-2: R4 / 2.3. 棚札タグ / rulebook の「分類定義」は動的分類の正本参照に業務データ辞書のエンティティを参照する例を挙げているが、本 sample は紙の商品台帳を管理元とし、業務データ辞書に未定義であることを明記している。事実の誤りではなく rulebook への準拠の問題のため、R4 では直さない / - / `vp-qe-kata-conformance`（R5 で扱う）。docs/ja/specdojo/rulebooks/cdt-rulebook.md の「分類定義」の参照方式の表 / 要判断（「良い例」は推奨であり、BDD が未定義の段階で紙台帳を管理元とする現行の書き方を維持する案と、BDD に管理元のエンティティを足す案がある）","F001（`vp-ops-operability`、75 行目）: kata の段のレビューでは使わない観点（kata-guide の「kata の観点の組」）であり、R4 の対象外。現行の本文 87 行目には、適用日までに棚札を新しい取扱区分の表示名へ貼り替える担当がすでに書かれており、指摘は解消済みと判断した","確かめの表（No / 主張 / 正本 / 確かめ方 / 結果 / 根拠）: (1) 対象エンティティ `product` / bdd-sample.yaml / grep / 一致 / 11 行目 `physical_name: product`。(2) 発注点 `reorder_point` を参照 / bdd-sample.yaml / grep / 一致 / 43 行目。(3) 分類属性（`product_type`・`handling_type`・`shelf_tags`）は辞書に未定義 / bdd-sample.yaml / grep / 一致 / 該当なし。(4) bdd-sample の表示名「業務データ辞書（駄菓子屋の販売管理）」 / bdd-sample.yaml / 読み取り / 一致 / 4 行目の `title`。(5) gl-sample の表示名 / gl-sample.yaml / 読み取り / 不一致→修正 / 5 行目の `title`。(6) 用語集に「定番商品」「発注点」がある / gl-sample.yaml / grep / 一致 / 13・24 行目。(7) 発注点は定番商品だけに設定する（`staple` の成立条件） / gl-sample.yaml / 読み取り / 一致 / 18 行目の notes。(8) 在庫不足判定は定番商品と発注点で判定する / br-sample.md / grep / 一致 / 11・18 行目。(9) 発注点の未設定をゼロと読み替えない / br-sample.md / grep / 一致 / 29 行目「0 も有効な値で、未設定の代用にしない」。(10) uis-sample は販売登録画面の画面仕様 / uis-sample.md / 読み取り / 一致 / 11 行目の H1。(11) 種別の値（業務分類・動的分類） / cdt-rulebook.md / 読み取り / 一致 / 「分類定義の要件」の表。(12) 分類定義の 5 項目と、スタンドアロン定義の値・分類名・表示名・説明の列 / cdt-rulebook.md / 読み取り / 一致 / 「分類定義の要件」「スタンドアロン定義」。(13) frontmatter の `rulebook: specdojo:cdt-rulebook`、`supersedes: specdojo:cld-sample` / cdt-rulebook.md の `sample`、docs/ja/specdojo/samples/cld-sample.md / ls・grep / 一致 / rulebook 8 行目 `sample: specdojo:cdt-sample`、cld-sample.md は実在する"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/cdt-sample.md","status":"passed","summary":"表の列幅を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cdt-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
