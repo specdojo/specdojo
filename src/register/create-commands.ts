@@ -187,7 +187,11 @@ export function registerCreateCommands(
   addCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   addCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   addCmd.option("--force", "Overwrite existing ticket file", false);
-  addCmd.option("--dry-run", "Print the generated item file without writing", false);
+  addCmd.option(
+    "--dry-run",
+    "Print the generated item file without writing (the ID shown is provisional)",
+    false,
+  );
   addRegisterCommitOptions(addCmd);
   addCmd.action(async (opts) => {
     try {
@@ -333,6 +337,11 @@ export function registerCreateCommands(
         process.stdout.write(
           `Would create ${registerEventFilePath(paths.projectRegisterPath, displayId)}:\n` +
             `${appendRegisterEvent(undefined, addEvent)}\n`,
+        );
+        process.stdout.write(
+          `Note: ${displayId} is provisional. A real add assigns a new random ID, so do not copy it ` +
+            `into a commit message; write {id} in --commit -m (for example "Refs: {id}") and it is ` +
+            `replaced with the actual ID.\n`,
         );
         if (warnAboutDerivedTopic) printDerivedTopicWarning(topic);
         return { id: displayId, title: opts.title };

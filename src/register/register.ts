@@ -269,7 +269,7 @@ function addRegisterCommitOptions(cmd: Command): Command {
     )
     .option(
       "-m, --message <message>",
-      "Override the register commit message (repeatable; each value becomes a paragraph, as in git commit -m)",
+      "Override the register commit message (repeatable; each value becomes a paragraph, as in git commit -m; {id} becomes the actual item ID)",
       collectRegisterCommitMessage,
     );
 }
@@ -280,14 +280,20 @@ function collectRegisterCommitMessage(value: string, previous: string[] | undefi
   return [...(previous ?? []), value];
 }
 
-// git commit -m と同じく、空でない各値を段落として空行でつなぐ。
+// 本文の `{id}` を、実際に起票・更新した項目 ID へ置き換える記号。dry-run の ID は仮で、
+// 起票のたびに乱数で振り直されるため、`Refs:` へ仮の ID を書き写さずに済ませる（PJR-V8ND）。
+export const REGISTER_COMMIT_ID_PLACEHOLDER = "{id}";
+
+// git commit -m と同じく、空でない各値を段落として空行でつなぐ。`id` があれば `{id}` を置き換える。
 export function registerCommitMessageFromParagraphs(
   paragraphs: readonly string[] | undefined,
+  id?: string,
 ): string | undefined {
-  const text = (paragraphs ?? [])
+  const joined = (paragraphs ?? [])
     .map((paragraph) => paragraph.trim())
     .filter((paragraph) => paragraph !== "")
     .join("\n\n");
+  const text = id === undefined ? joined : joined.split(REGISTER_COMMIT_ID_PLACEHOLDER).join(id);
   return text === "" ? undefined : text;
 }
 
@@ -400,7 +406,8 @@ async function commitRegisterMutation(
     if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
     const commitMessage =
-      registerCommitMessageFromParagraphs(message) ?? defaultRegisterCommitMessage(command, result);
+      registerCommitMessageFromParagraphs(message, result.id) ??
+      defaultRegisterCommitMessage(command, result);
     // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
     gitOutputCapturingFailure(repoRoot, [
       "commit",

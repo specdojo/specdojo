@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-25T22:40:00Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-FNB7
 ---
@@ -62,7 +61,28 @@ register add の dry-run で出た ID は仮で、実際の起票では乱数で
 
 ## 6. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 6.1. 解決内容
+
+- `register add --dry-run` の出力の末尾に、ID が仮であり実際の起票で振り直されること、`-m` には `{id}` を書くことを示す注記を足した。`--dry-run` のヘルプにも仮の ID と明記した。
+- `--commit -m` の本文の `{id}` を、実際に起票・更新した項目の ID へ置き換える（`registerCommitMessageFromParagraphs` の第 2 引数）。`-m` の全段落が対象で、`{id}` を書かない従来の本文は変わらない。
+- 手段に差し込み記号を選んだ理由は、本文の `Refs:` に他項目（`derived_from` 元など）を正当に書けるため、食い違う ID の検出では誤検知が避けられないことによる。仮の ID を書き写す余地そのものを、`{id}` が無くす。
+
+### 6.2. 確認結果
+
+- 単体テストで、`{id}` の置換（全段落、ID 未指定では不変）と dry-run の注記を確かめた。
+
+### 6.3. オーケストレーター本文への変更案（保護された設定のため未反映）
+
+- register add の commit メッセージの手順に「dry-run で出た ID は仮。`Refs:` には実際の ID を書くか、`{id}` と書く。起票後の出力の `Created: ... (added PJR-XXXX)` から ID を読む」を足す。反映は利用者の承認のもとで行う。
+
+### 6.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `register add --dry-run` の ID が仮であることを出力で示し、`--commit -m` の `{id}` を実際の項目 ID へ置き換えるようにした（PJR-V8ND）。
+
+### 6.5. 残作業
+
+- 統合の後に、オーケストレーターが実際の run を流して動きを確かめてから close する（executor は行わない）。
 
 ## 7. 関連ドキュメント
 
