@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_04f13e92ae6747ea8dd9ca2e1fb25812
+- v: 1
+  id: reg_555b336f302446d293d4ba961fac735b
+  ts: "2026-11-26T22:07:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。内容の変更が 1 か所だけで、仮の ID が 0 件、ifx-index-sample は不変、統合後の lint:fm と markdownlint が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: imp-interface-sample の確定済みレシートの印字の波及先を、仮の ID から ifx-cmd-sample の wikilink に置き換えた
+  previous_event_id: reg_b7ad2b9bbd9d422496493018c8a56518

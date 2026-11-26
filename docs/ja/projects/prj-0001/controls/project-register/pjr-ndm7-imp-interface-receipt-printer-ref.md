@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ndm7-imp-interface-receipt-printer-ref
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-26T21:00:58Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T22:07:41Z"
+  conclusion: imp-interface-sample の確定済みレシートの印字の波及先を、仮の ID から ifx-cmd-sample の wikilink に置き換えた
 ---
 
 # PJR-NDM7 imp-interface-sample の印字の波及先を ifx-cmd-sample の参照にする
