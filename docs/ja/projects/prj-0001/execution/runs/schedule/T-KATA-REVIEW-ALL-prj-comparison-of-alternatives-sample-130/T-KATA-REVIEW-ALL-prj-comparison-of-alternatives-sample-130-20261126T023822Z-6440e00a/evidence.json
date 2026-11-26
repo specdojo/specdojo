@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130-20261126T023822Z-6440e00a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T02:39:09.628Z",
+    "completed_at": "2026-11-26T02:42:47.996Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../prj-comparison-of-alternatives-sample.md       | 40 ++++++++++++++--------\n 1 file changed, 25 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md",
+      "status": "passed",
+      "summary": "変更した sample の表を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を含まない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-comparison-of-alternatives-sample\n  type: project\n  status: ready\n  rulebook: specdojo:prj-comparison-of-alternatives-rulebook\n  based_on:\n    - specdojo:prj-scope-sample\n    - specdojo:prj-issues-and-approach-sample\n    - specdojo:prj-assumptions-constraints-dependencies-sample\n  supersedes: []\n---\n\n# 代替案比較: 駄菓子屋きぬや 販売管理システム\n\n本書は、販売・在庫・つけの記録を店主代表以外の店番でも継続できるよう、解決方式を比較し、試行対象と見直し条\n… output omitted …\n | 記録停止・移行漏れでつけ残高を失う | `DEV` が照合手順と ALT-01 の帳票控えの別保管を用意し、`QE` が復元後の元ノート全件で残高差分0件を確かめる |\n\n## 6. 決定と見直し\n\nD-01 は ALT-04 を優先試行対象とし、ALT-01 の統一帳票を切り戻し候補として一部採択する（理由は「比較結果と採択理由」）。方式の選択と実運用の承認は分け、最終判断は `PO` が行う。U-01〜U-03 の上限が決まるまでコスト・期間は全案未判定のため、どの案も正式採用ゲートを満たせない。次の表は、比較を見直す契機と、そのときに行う再評価を示す。\n\n| 見直し契機 | 再評価 |\n| - | - |\n| 試行・受入の不合格、2週間の試用継続条件の未達 | 縮小・延期・停止を判断する |\n| 移行漏れ、端末・通信障害、保守担当不在の兆候 | 対象案のリスク評価と軽減策を見直す |\n| 承認上限、範囲、利用者・端末、外部依存の変更 | 該当カテゴリの全案を再比較する。特定製品を自動採用しない |\n\n判断理由・影響範囲・移行と撤退の方法は決定記録に残す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7554 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7554 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.te\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1804}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  11:43:39\n   Duration  2.62s (transform 5.77s, setup 813ms, import 8.12s, tests 6.29s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\ns/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3 として sample `prj-comparison-of-alternatives-sample.md` の文を直した（説明文のない 8 つの表に前置きの 1 文を追加、主語・指示語・用語の明示、長い文の分割）。意味は変えていない。prettier と markdownlint を通した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 冒頭の目的の文・1. 比較目的と前提条件 / 目的の文に主語がない。決定の表の前に何の表かを示す 1 文がない / 「本書は、」を足し、表の前に「次の表は、本書で比較する決定と、その決定に含める範囲・含めない範囲を示す。」を加えた / W1、Sample 記述標準（表の前の 1 文） / -",
+    "R3-2: R3 / 1. 比較目的と前提条件（_ASSUMPTION_ の段落） / 「上限と具体日は…決まるまで」で主語と述語がねじれている。候補カテゴリの表に前置きの文がない / 「上限と具体日が…決まるまで」に直し、表の前に「比較対象案は、次の表の候補カテゴリごとに、基準を満たす案を選ぶ。」を加えた / W2、Sample 記述標準（表の前の 1 文） / -",
+    "R3-3: R3 / 1. 比較目的と前提条件（公式ヘルプの段落） / どの製品のヘルプで何を確かめたかの対応が読み取れない。「市場代表・店舗適合の証明ではない」に主語がない / ALT-02 はスプレッドシートで編集・書き出しを、ALT-03 は Square で販売に連動した在庫更新を確かめたと分けて書き、「公式ヘルプの確認は機能の有無を示すだけで、…の証明ではない」とした / W1、W4、W5 / -",
+    "R3-4: R3 / 2.1. D-01: 業務・システム解決方式 / 「前段の A-03」が指す文書が一つに決まらない。案の表に前置きの文がない / 「前段」を「課題と解決アプローチ」に置き換え、表の前に何の表かを示す 1 文を加えた / W4、Sample 記述標準（表の前の 1 文） / -",
+    "R3-5: R3 / 3. 評価軸と評価基準 / 「両利用者」が誰かを書いていない。評価軸の表に前置きの文がない / 「店主代表と家族利用者代表（以下、両利用者）」とし、表の前に何の表かを示す 1 文を加えた / W1、W8、Sample 記述標準（表の前の 1 文） / -",
+    "R3-6: R3 / 3. 評価軸と評価基準（表の後の段落） / 「このゲート」が指す先に名前がない。正式採用の条件を言い切りで並べている / 「正式採用には、全軸が `Middle` 以上で未判定がなく、受入・試用条件に合格すること（正式採用ゲート）を要する。比較結果の総合評価は、正式採用ゲートの充足状況を示す。」にした / W4、W2 / -",
+    "R3-7: R3 / 4.3. 比較試行の完了条件 / 「全件一致」で何と何を比べるかが読み取れない / 「試行の記録と架空記録の全件一致、欠落・重複0件、両利用者の必須タスク完了を確かめ、その結果で机上評価を更新する」にした / W7、W5。迷った理由: 比べる相手を「架空記録（入力）」とするのは前の箇条書きから推した補いで、「元ノート」と読む案は選ばなかった。R4 で正本と照らすかを人が決める / 要判断",
+    "R3-8: R3 / 4.1. D-01: 業務・システム解決方式（判定の表・根拠の表） / 説明が「結果は学習用の架空記録。」だけで、2 つ目の表には前置きがない / 「次の表は、評価基準で各案を判定した結果を示す。評価は学習用の架空記録である。」とし、根拠の表の前に「次の表は、各案の判定の根拠と、判定を見直すのに要る材料を示す。」を加えた / Sample 記述標準（表の前の 1 文） / -",
+    "R3-9: R3 / 4.1. D-01: 業務・システム解決方式（根拠の表のセル） / 「6/6を自力完了」の主語がなく、「自力」が判定基準の「支援なし」と表記が合わない。ALT-02 のセルは 1 文に複数の主張がある。ALT-03 の「効果・適合、料金」の並びが読みにくい / 「両利用者が6タスクすべてを支援なしで完了」にした。ALT-02 は文を 2 つに分け「未確認のため保守性は未判定」とした。ALT-03 は「効果・業務適合の材料と料金は未確認」とした / W1、W3、W8、`vp-ux-language-consistency` / -",
+    "R3-10: R3 / 4.2. 技術的実現性と影響・5. リスクとトレードオフ / 表の前に何の表かを示す文がない / それぞれの表の前に 1 文を加えた / Sample 記述標準（表の前の 1 文） / -",
+    "R3-11: R3 / 6. 決定と見直し / 見直し契機の表に前置きの文がない / 「次の表は、比較を見直す契機と、そのときに行う再評価を示す。」を加えた / Sample 記述標準（表の前の 1 文） / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130/T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130-20261126T023822Z-6440e00a/executor.log",
+      "bytes": 7236,
+      "truncated": false
+    }
+  ]
+}
