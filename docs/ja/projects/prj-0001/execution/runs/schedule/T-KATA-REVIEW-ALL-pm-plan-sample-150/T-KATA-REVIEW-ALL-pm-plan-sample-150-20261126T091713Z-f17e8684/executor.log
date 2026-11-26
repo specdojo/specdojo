@@ -1,0 +1,17 @@
+R5 整合の段を終えました。編集したのは `docs/ja/specdojo/samples/pm-plan-sample.md` だけで、差分を入れたあと Prettier で表を整形しています（20 行の追加と 20 行の削除）。
+
+**読んだ範囲:** 同じ接頭辞 `pm-` の sample、`based_on` にある 4 つの sample、本文の wikilink の参照先、`pjr-rulebook`、用語集を読みました。
+
+**sample を直した指摘（4 件）:**
+- **登録簿への付け替え:** 「更新先と報告」の課題・リスク・変更・決定の行は、課題ログ・リスク登録簿・変更要求ログの各 sample にリンクしていました。どれも `status: deprecated` で、正本はプロジェクト登録簿の項目だと本文に書かれています。リンク先を `[[specdojo:pjr-rulebook|プロジェクト登録簿]]` の `issue`・`risk`・`change-request`・`decision` の項目に替えました。
+- **M-10 の言い換え:** 上の付け替えに合わせ、M-10 の「各管理簿へ分け」を「登録簿の項目種別へ分け」にしました。
+- **M-01 の優先対象:** BV-01・BV-02 だけを優先していましたが、BV-04（つけ残高）が抜けていました。BV-04 は初期リリースで確かめる価値で、M-07 では SC-09 が初期受入の条件になっています。スコープの境界の判断基準にも「つけ残高の記録継続」があるため、BV-04 を足しました。
+- **未決事項の不足:** 成功条件の「例外条件と未解決事項」にある 4 つの論点のうち、「長期滞留の定義」（SC-05）と「繁忙期にかかるベースライン」（SC-04・SC-05）が載っていませんでした。人気商品の行を広げてこの 2 つを含め、変わる対象を SC-04・SC-05 にしました。
+
+**相手側を直す案（変更していない・1 件）:** 成功基準と受入条件、スコープの 2 つの sample も、非推奨の変更要求ログ・決定記録・課題ログの sample にリンクしています。同じ wikilink の中で表示名が「課題ログ」「課題一覧」と揺れてもいます。そちらも登録簿の項目に付け替える案を `handoff` に書きました。
+
+**検証:** 実行したのは Prettier による整形だけです。markdownlint と frontmatter の検査は、このあと親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: pm-plan-sample.md の指摘 4 件を直した（非推奨のログ sample へのリンクを登録簿の項目へ付け替え、M-10 の言い換え、M-01 に BV-04 を追加、未決事項に長期滞留・繁忙期ベースラインを追加）。相手側の文書を直す案 1 件は handoff に残した。","handoff":["R5-1: 段 R5 / 箇所 4.1. 更新先と報告（課題・リスク・変更・決定の行） / 指摘 リンク先の pm-issue-log-sample・pm-risk-register-sample・pm-change-request-log-sample はどれも `status: deprecated` で、正本はプロジェクト登録簿の項目だと本文に書かれている。決定も「該当記録に付記」とあり、決定記録（登録簿の `decision`）と食い違う / 直した案 正本を `[[specdojo:pjr-rulebook|プロジェクト登録簿]]` の `issue`・`risk`・`change-request`・`decision` の項目に替えた / 根拠 `vp-qe-kata-conformance`（kata 相互）、pjr-rulebook の `item_type` 表、非推奨 sample 冒頭の注記（PJR-X141） / 印 -","R5-2: 段 R5 / 箇所 2. 統合管理方針（M-10） / 指摘 正本を登録簿へ替えたため、逸脱時対応の「各管理簿へ分け」が付け替え後の正本と合わない / 直した案 「登録簿の項目種別へ分け」にした / 根拠 `vp-dev-change-impact` / 印 -","R5-3: 段 R5 / 箇所 2. 統合管理方針（M-01） / 指摘 優先が BV-01・BV-02 だけで、初期リリースで確かめる BV-04（つけ残高）が抜けている。M-07 では SC-09（BV-04）が初期受入の条件で、スコープの境界の判断基準 2 にもつけ残高の記録継続がある / 直した案 「BV-01・BV-02・BV-04 を優先」にした / 根拠 `vp-qe-kata-conformance`、prj-success-criteria-and-acceptance-criteria-sample の業務価値の表（BV-04 は初期リリース・中長期）、prj-scope-sample の境界の判断基準 / 印 -","R5-4: 段 R5 / 箇所 5. 未決事項 / 指摘 成功条件の「例外条件と未解決事項」にある論点のうち、長期滞留の定義（SC-05）と繁忙期にかかるベースライン（SC-04・SC-05）が載っていない。「運用前の準備」が扱う SC-05 のベースラインに影響する / 直した案 人気商品の行を「人気商品の対象範囲、長期滞留の定義、繁忙期にかかるベースラインの扱い」に広げ、変わる対象を「運用前の準備」の SC-04・SC-05 にした / 根拠 `vp-qe-kata-conformance`、prj-success-criteria-and-acceptance-criteria-sample の例外条件と未解決事項 / 印 -","R5-5: 段 R5 / 箇所 相手側の sample（pm-plan-sample は変更していない） / 指摘 prj-success-criteria-and-acceptance-criteria-sample（判定手順と証跡の手順 6）は非推奨の pm-change-request-log-sample と dec-sample に、prj-scope-sample（スコープ変更方針）は pm-issue-log-sample・pm-change-request-log-sample・dec-sample にリンクしている。同じ pm-issue-log-sample への wikilink の表示名も「課題ログ」「課題一覧」と揺れている / 直した案 - / 根拠 `vp-dev-change-impact`。相手側の 2 つの sample で、課題・変更要求・決定の記録先を `[[specdojo:pjr-rulebook|プロジェクト登録簿]]` の `issue`・`change-request`・`decision` の項目に替える案。担当の段か別の todo で扱う / 印 要判断（相手側の sample を一括で付け替えるか、非推奨 sample の削除時にまとめるかは人の判断が要るため）"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-plan-sample.md","status":"passed","summary":"整形が終わった（変更したのは対象の sample 1 件だけ）"}]}
+</specdojo_executor_evidence>
