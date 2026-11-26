@@ -1,11 +1,9 @@
 # specdojo-schema: none reason=external-openapi
 # 詳細契約の参照元: [[specdojo:ifx-index-sample|駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧]] の「本部への売上登録」。
 # _TODO_: 本部側の問い合わせ窓口は未特定。BA が契約レビューの前に特定する。
-# _UNDECIDED_: ready にするための残課題は次のとおり。
-#   - 結果不明のときの受付照会の操作（照会 API の有無）を本部と決める。
-#   - 税区分・合計・預かり金を本部へ送るか（現在は本部が単価と数量から計算する仮定）。
-#   - 通貨は日本円のみとする仮定の確認。
-#   - OpenAPI の検証器での構造の確認と、店舗端末からの接続確認。
+# _UNDECIDED_: 結果不明のときの受付照会の操作（照会 API の有無）を、ready の前に本部と決める。
+# _ASSUMPTION_: 通貨は日本円（整数の円）のみとし、税区分・税額・合計・預かり金は送らず本部が商品マスタから計算する。ready の前に本部へ確認する。
+# _TODO_: OpenAPI の検証器での構造の確認と、店舗端末からの接続確認を、DEV が ready の前に行う。
 openapi: 3.0.3
 info:
   title: 本部売上登録API
@@ -13,13 +11,13 @@ info:
   description: >-
     駄菓子屋きぬやの店舗端末の販売管理 CLI が、会計確定した現金販売の売上を本部へ登録する API。
     `specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。
-    連携の前提: 単一店舗・店舗端末 1 台、通貨は日本円（整数の円）、税と合計は本部が商品マスタの税区分で計算する。
+    連携の前提: 単一店舗・店舗端末 1 台。通貨は日本円（整数の円）、税と合計は本部が商品マスタの税区分で計算する（いずれも仮置きで、本部の確認待ち）。
     合意対象: 要求・応答の項目、取引 ID による重複排除、各応答コードでの店舗端末の扱い。
     冪等性: 同じ `transaction_id` の再送は登録せず、409 で既存の `sale_id` を返す。
     互換: 任意の項目の追加は MINOR を上げ、受信側は知らない応答の項目を無視する。
     項目の削除・改名・必須化は MAJOR とパスの版（/v1）を上げる。
     404 はこの操作で返さない（対象の資源を指定しないため）。商品コードの未登録は 400 で返す。
-    未決事項: 結果不明のときの受付照会の操作と、税区分・合計・預かり金を本部へ送るかは本部と合意していない。
+    未決事項: 結果不明のときの受付照会の操作は本部と合意していない。
 
 x-spec-meta:
   id: specdojo:ifx-api-sample
@@ -96,12 +94,6 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
 components:
-  securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-API-Key
-
   schemas:
     CreateSaleRequest:
       type: object
@@ -181,3 +173,9 @@ components:
         details:
           type: object
           description: 任意の追加情報（入力不正の項目名など）
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
