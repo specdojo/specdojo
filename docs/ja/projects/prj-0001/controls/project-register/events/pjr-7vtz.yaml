@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f3ecf228c0294bc499781da9fc3e1b4a
+  ts: "2026-11-27T12:32:10Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 専用ブランチが使用中だと、exec のイベントの書き込みが待たずに失敗する
+    - field: description
+      from: ""
+      to: inRegisterBranchSync が使用中ならすぐ例外を投げるため、register の記帳と重なった exec refresh が worktree の用意の段で失敗し、run が waiting になる
+    - field: input
+      from: ""
+      to: '["2026-11-27 の PJR-86RK の 2 回目で、worktree の用意の exec refresh が「Register branch project/prj-0001/register is busy; retry the schedule operation.」で失敗し、run が waiting になった。同じ時刻にオーケストレーターが PJR-G5DY の close を register ... --commit で記帳していた","エラーは src/shared/register-branch.ts の inRegisterBranchSync が tryAcquirePoolSlot で枠を取れないときに投げる。非同期の inRegisterBranch は CrossProcessMutex で待つ"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-86RK"]'
