@@ -207,6 +207,53 @@ describe("register branch synchronization", () => {
     ).toBe(true);
   });
 
+  it("reads relative --section-file paths from the caller's cwd when committing to the register branch", async () => {
+    fixture();
+    write(join(repo, "tmp/add-work.md"), "- 起票時の作業内容\n");
+    write(join(repo, "tmp/update-work.md"), "- 更新時の作業内容\n");
+    await register(
+      "add",
+      "--project",
+      PROJECT,
+      "--id",
+      "PJR-AB12",
+      "--type",
+      "todo",
+      "--title",
+      "relative-section",
+      "--topic",
+      "relative-section",
+      "--registered",
+      "2026-11-23T00:00:00Z",
+      "--section",
+      "作業内容",
+      "--section-file",
+      "tmp/add-work.md",
+      "--commit",
+    );
+    expect(process.exitCode).toBeUndefined();
+    expect(git(remote, "show", `${BRANCH}:${ticket("PJR-AB12", "relative-section")}`)).toContain(
+      "- 起票時の作業内容",
+    );
+
+    await register(
+      "update",
+      "--project",
+      PROJECT,
+      "--id",
+      "PJR-AB12",
+      "--section",
+      "作業内容",
+      "--section-file",
+      "tmp/update-work.md",
+      "--commit",
+    );
+    expect(process.exitCode).toBeUndefined();
+    const updated = git(remote, "show", `${BRANCH}:${ticket("PJR-AB12", "relative-section")}`);
+    expect(updated).toContain("- 更新時の作業内容");
+    expect(updated).not.toContain("- 起票時の作業内容");
+  });
+
   it("keeps the legacy current-branch commit when disabled", async () => {
     fixture({ enabled: false });
     const remoteHead = git(remote, "rev-parse", BRANCH);

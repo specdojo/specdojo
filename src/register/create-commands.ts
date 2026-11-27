@@ -200,6 +200,8 @@ export function registerCreateCommands(
       printCommandError(error);
       return;
     }
+    // 同期や別 project の記帳は作業場所を移してから mutate を呼ぶ。利用者が渡したファイルは移る前の cwd から読む。
+    const callerDirectory = process.cwd();
     await runRegisterMutation("add", opts, ({ paths, assertCommitTargetsClean }) => {
       const explicitTopic = opts.topic?.trim();
       const topic = explicitTopic || slugify(opts.title);
@@ -307,7 +309,7 @@ export function registerCreateCommands(
 
       const sections = pairSectionOptions(opts.section, opts.sectionFile).map((section) => ({
         name: section.name,
-        content: validateSectionFile(section.file),
+        content: validateSectionFile(section.file, callerDirectory),
       }));
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
       const content = applyTicketSections(
@@ -475,6 +477,8 @@ export function registerUpdateCommand(
   updateCmd.option("--dry-run", "Print change without writing", false);
   addRegisterCommitOptions(updateCmd);
   updateCmd.action(async (opts) => {
+    // 同期や別 project の記帳は作業場所を移してから mutate を呼ぶ。利用者が渡したファイルは移る前の cwd から読む。
+    const callerDirectory = process.cwd();
     await runRegisterMutation("update", opts, (context) => {
       const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id);
@@ -567,7 +571,7 @@ export function registerUpdateCommand(
       }
       let sectionUpdate: { name: string; content: string } | undefined;
       if (sectionName !== undefined && sectionFilePath !== undefined) {
-        const sectionContent = validateSectionFile(sectionFilePath);
+        const sectionContent = validateSectionFile(sectionFilePath, callerDirectory);
         sectionUpdate = {
           name: sectionName,
           content: sectionContent,
