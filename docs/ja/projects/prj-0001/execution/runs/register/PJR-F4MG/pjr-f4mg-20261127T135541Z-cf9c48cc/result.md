@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-F4MG
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/plan.md
   started_at: "2026-11-27T13:57:31.771Z"
+  completed_at: "2026-11-27T14:05:38.683Z"
   agent: opus-executor
+  block_reason: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
 ---
 
 # Edit Result

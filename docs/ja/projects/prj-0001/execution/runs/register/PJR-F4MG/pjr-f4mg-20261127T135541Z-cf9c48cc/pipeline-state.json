@@ -2,15 +2,15 @@
   "schema_version": 1,
   "task_id": "PJR-F4MG",
   "run_id": "pjr-f4mg-20261127T135541Z-cf9c48cc",
-  "updated_at": "2026-11-27T13:58:26.373Z",
+  "updated_at": "2026-11-27T14:05:38.680Z",
   "stages": {
     "executor": {
-      "status": "pending",
+      "status": "blocked",
       "actor": "opus-executor",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "attempts": 1,
+      "started_at": "2026-11-27T13:59:07.080Z",
+      "completed_at": "2026-11-27T14:05:38.680Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/evidence.json"
     },
     "reporter": {
       "status": "pending",
@@ -21,11 +21,11 @@
       "artifact_ref": null
     },
     "prepare": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-27T13:58:26.373Z",
-      "completed_at": null,
+      "completed_at": "2026-11-27T13:59:07.078Z",
       "artifact_ref": null
     }
   },
