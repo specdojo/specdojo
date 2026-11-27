@@ -1,0 +1,20 @@
+狭い画面の空白を直しました。単体テストと `npm run typecheck` は通りました。ブラウザでの見え方は未確認で、オーケストレーターの確認待ちです。
+
+**原因:** VitePress の `VPNav` は、幅 960px 未満では `position: relative` のまま `top: var(--vp-layout-top-height)` を持ちます。帯が文書の流れで占める高さに加えて、変数の分も下がるため、帯の高さが二重に空いていました。
+
+**直し方:** `matchMedia("(min-width: 960px)")` に一致する幅（ナビゲーションが固定される幅）でだけ `--vp-layout-top-height` を設定し、それ未満では解除します。`change` イベントで幅の変化に追従します。広い画面の直しと本番の版の見え方は変えていません。
+
+**検証:**
+- `npm run test:unit` は全体では流していません。`tests/packages/docs-site/layout-top-height.test.ts` の 5 件だけ実行し、通りました。
+- `npm run lint:ts` はエラー 0 です（警告 43 件。確認できたのは `src/shared/specdojo-config.ts` の `max-lines` で、今回の変更ファイルではありません）。
+- `npm run lint:md` は流していません。親 runner が実行します。
+
+**変更ファイル:**
+- `packages/docs-site/.vitepress/theme/layout-top-height.ts`: 第 3 引数 `isFixedNav` と `FIXED_NAV_MEDIA_QUERY` を追加しました。
+- `packages/docs-site/.vitepress/theme/NextChannelBanner.vue`: 幅の判定と `change` イベントの監視を追加しました。
+- `tests/packages/docs-site/layout-top-height.test.ts`: 固定されない幅で変数を設定しないケースを追加しました。
+- 個票: 対応結果に 2 回目の原因と直し方を追記しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"狭い画面の二重の空白を直した。VitePress がナビゲーションを固定する幅（960px 以上）でだけ `--vp-layout-top-height` を設定し、それ未満では解除する。単体テストを追加し、個票の対応結果に原因と直し方を追記した。","handoff":["ブラウザでの見え方の確認（作業 3）はオーケストレーターが行う。幅 1440 で帯がナビゲーションの上に出ること、幅 640 で帯とヘッダーの間に余分な空白がないことを確かめる。","CHANGELOG に書く事項は個票の対応結果に記載済み（区分 Fixed）。"],"validations":[{"command":"npx vitest run tests/packages/docs-site/layout-top-height.test.ts","status":"passed","summary":"1 ファイル 5 件が通過"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0、警告 43 件（変更ファイル以外の max-lines など）"}]}
+</specdojo_executor_evidence>
