@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import type { Heading, Root, RootContent } from "mdast";
@@ -54,15 +55,22 @@ export function stripSectionNumber(headingText: string): string {
  * ファイルが存在しない・読めない場合や、中身に章の見出し（`##` 以浅）または `###` 以外の見出しが含まれる場合はエラーを投げる。
  * 章より 1 段深い `###` の小節見出しは本文に含められる。
  */
-export function validateSectionFile(filePath: string): string {
-  if (!existsSync(filePath)) {
-    throw new Error(`Cannot read section file: ${filePath}`);
+export function validateSectionFile(
+  filePath: string,
+  baseDirectory: string = process.cwd(),
+): string {
+  // 同期の専用ブランチや別 project の worktree へ移る前の呼び出し元の cwd を baseDirectory で受け、
+  // 相対パスを記帳の場所ではなく呼び出し元から解決する（PJR-MWKE）。
+  const resolvedPath = resolve(baseDirectory, filePath);
+  const label = resolvedPath === filePath ? filePath : `${filePath} (resolved to ${resolvedPath})`;
+  if (!existsSync(resolvedPath)) {
+    throw new Error(`Cannot read section file: ${label}`);
   }
   let fileContent: string;
   try {
-    fileContent = readFileSync(filePath, "utf8");
+    fileContent = readFileSync(resolvedPath, "utf8");
   } catch (error) {
-    throw new Error(`Cannot read section file: ${filePath}`, { cause: error });
+    throw new Error(`Cannot read section file: ${label}`, { cause: error });
   }
 
   const tree = unified().use(remarkParse).parse(fileContent);
