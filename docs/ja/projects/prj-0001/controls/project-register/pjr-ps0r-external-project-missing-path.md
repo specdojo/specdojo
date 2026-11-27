@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ps0r-external-project-missing-path
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-27T10:39:51Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T13:33:36Z"
+  conclusion: external_projects の置き場がないときは設定の読み込みを警告にとどめ、外部の project を使う操作だけをエラーで止める。マシンごとの置き場は specdojo.local.config.json で差し替え・追加できる（PJR-F6MC で対応済み）
   derived_from:
     - PJR-VM2S
 ---
