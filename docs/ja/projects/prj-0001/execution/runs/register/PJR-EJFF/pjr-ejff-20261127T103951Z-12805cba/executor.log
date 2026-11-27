@@ -1,0 +1,13 @@
+`prj-overview` の AI Agent の記述を、業務に使う場合だけ書く条件付きに変えました。`npm run -s lint:md` はエラーを出さず、出力は空でした。
+
+- **rulebook**: 前提条件の節で、AI Agent の役割を常に求める書き方をやめました。判断責任・適用範囲・公開方針・取捨選択方針の要求は、元の箇条書きに残しています。「AI Agent を業務の中で使う場合は、その役割と人の判断との境界を明示します」を別の箇条書きにしました。
+- **template**: 導入文から AI Agent を外し、条件付きの一文を足しました。`_AI_AGENT_ROLE_` の枠は削除しました。この枠は他のファイルから参照されていませんでした。
+- **sample**: 導入文の「AI Agent の役割」と、AI Agent の使い方の箇条書き 1 件を外しました。判断責任・公開方針・取捨選択方針の記述は残しています。
+- **CHANGELOG**: `[0.10.0]` の「型と文書」に 1 行追記しました。公開済みの版の節は変えていません。
+- **個票**: 作業内容の表と対応結果を実績に合わせて更新しました。
+
+`prj-overview-recipe` には、AI Agent の役割を求める記述が `docs/ja/specdojo/recipes/prj-overview-recipe.md` の 52・239・246・248・294 行目に残っています。完了条件の対象外なので変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-overview の rulebook・template・sample と CHANGELOG を条件付きの書き方に変更し、個票を更新した。lint:md は出力なしで通った。","handoff":["`prj-overview-recipe` に AI Agent の役割を常に求める記述が残る（52・239・246・248・294 行目）。完了条件の対象外のため未変更。必要なら別項目で扱う。"],"validations":[{"command":"npm run -s lint:md","status":"passed","summary":"エラー出力なし"}]}
+</specdojo_executor_evidence>
