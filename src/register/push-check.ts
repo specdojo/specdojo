@@ -3,10 +3,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { GIT_OUTPUT_MAX_BUFFER, gitEnvironment, gitOutput, gitResult } from "../shared/git.js";
-import {
-  resolveRegisterBranchTarget,
-  type RegisterBranchTarget,
-} from "../shared/register-branch.js";
+import { resolveSyncBranchTargets, type RegisterBranchTarget } from "../shared/register-branch.js";
 import { validateRegisterEventDocs } from "./events.js";
 import { validateRegisterItemDocs } from "./item.js";
 
@@ -24,15 +21,19 @@ export type RegisterPushCheckInput = {
 export type RegisterPushCheckResult =
   | { status: "disabled" }
   | { status: "skipped"; reason: string }
-  | { status: "checked"; scopeViolations: string[]; shapeViolations: string[] };
+  | {
+      status: "checked";
+      target: RegisterBranchTarget;
+      scopeViolations: string[];
+      shapeViolations: string[];
+    };
 
-/** register の範囲（個票・イベントの置き場）の外にあるパスを返す。 */
+/** 専用ブランチの範囲（`scope` の置き場）の外にあるパスを返す。 */
 export function findOutOfScopePaths(
-  target: Pick<RegisterBranchTarget, "registerPath" | "eventsPath">,
+  target: Pick<RegisterBranchTarget, "scope">,
   paths: readonly string[],
 ): string[] {
-  const prefixes = [target.registerPath, target.eventsPath];
-  return paths.filter((path) => !prefixes.some((prefix) => path.startsWith(`${prefix}/`)));
+  return paths.filter((path) => !target.scope.some((prefix) => path.startsWith(`${prefix}/`)));
 }
 
 /** 個票とイベントの対応・イベントの形・個票の形を検査する。`registerDir` は個票の置き場。 */
@@ -77,6 +78,8 @@ function scopeViolations(target: RegisterBranchTarget, input: RegisterPushCheckI
 }
 
 function shapeViolations(target: RegisterBranchTarget, commit: string, timeZone: string): string[] {
+  // exec-events のブランチは登録簿を変えないため、個票とイベントの形は調べない。
+  if (!target.scope.includes(target.registerPath)) return [];
   if (
     gitResult(target.repoRoot, ["cat-file", "-e", `${commit}:${target.registerPath}`]).status !== 0
   ) {
@@ -102,22 +105,35 @@ function shapeViolations(target: RegisterBranchTarget, commit: string, timeZone:
   }
 }
 
+/** `remoteRef` が指す専用ブランチ。省略時は register のブランチ。どれでもなければ undefined。 */
+export function pushCheckTarget(
+  targets: readonly RegisterBranchTarget[],
+  remoteRef: string | undefined,
+): RegisterBranchTarget | undefined {
+  if (!remoteRef) return targets.find((target) => target.kind !== "exec-events");
+  return targets.find((target) => remoteRef === `refs/heads/${target.branch}`);
+}
+
 /**
- * register のブランチへ push する commit を検査する（4a）。範囲の外のファイルを含む commit と、
- * 先端の個票・イベントの形の違反を返す。hook（pre-push）と CI の両方がこの関数を使う。
+ * 専用ブランチ（register / exec-events）へ push する commit を検査する（4a）。範囲の外のファイルを
+ * 含む commit と、register のブランチでは先端の個票・イベントの形の違反を返す。hook（pre-push）と
+ * CI の両方がこの関数を使う。
  */
 export function checkRegisterPush(
   projectId: string,
   timeZone: string,
   input: RegisterPushCheckInput,
 ): RegisterPushCheckResult {
-  const target = resolveRegisterBranchTarget(projectId);
-  if (!target) return { status: "disabled" };
-  if (input.remoteRef && input.remoteRef !== `refs/heads/${target.branch}`) {
-    return { status: "skipped", reason: `${input.remoteRef} is not ${target.branch}` };
+  const targets = resolveSyncBranchTargets(projectId);
+  if (!targets.length) return { status: "disabled" };
+  const target = pushCheckTarget(targets, input.remoteRef);
+  if (!target) {
+    const branches = targets.map((entry) => entry.branch).join(", ");
+    return { status: "skipped", reason: `${input.remoteRef} is not ${branches}` };
   }
   return {
     status: "checked",
+    target,
     scopeViolations: scopeViolations(target, input),
     shapeViolations: shapeViolations(target, input.commit, timeZone),
   };
@@ -125,15 +141,15 @@ export function checkRegisterPush(
 
 /** 違反ごとに、どのファイルのどこが違うかと直し方を添えた報告を組み立てる。 */
 export function formatRegisterPushReport(
-  target: Pick<RegisterBranchTarget, "registerPath" | "eventsPath" | "branch">,
+  target: Pick<RegisterBranchTarget, "registerPath" | "scope" | "branch">,
   result: { scopeViolations: readonly string[]; shapeViolations: readonly string[] },
 ): string {
   const lines: string[] = [];
   if (result.scopeViolations.length) {
     lines.push(
-      `register の範囲の外のファイルを含む commit があります（<commit>: <path>）:`,
+      `${target.branch} の範囲の外のファイルを含む commit があります（<commit>: <path>）:`,
       ...result.scopeViolations.map((violation) => `  ${violation}`),
-      `直し方: ${target.branch} には ${target.registerPath}/ と ${target.eventsPath}/ の配下だけを含められます。`,
+      `直し方: ${target.branch} には ${target.scope.map((prefix) => `${prefix}/`).join(" と ")} の配下だけを含められます。`,
       "  該当ファイルを commit から外し（git rebase -i で分ける）、feature ブランチと PR で develop へ入れてください。",
     );
   }

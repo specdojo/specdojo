@@ -35,7 +35,7 @@ import {
 import {
   inRegisterBranchSync,
   pushRegisterBranch,
-  registerBranchForSchedule,
+  execEventsBranchForSchedule,
 } from "../shared/register-branch.js";
 
 export { collectRepeatable };
@@ -282,7 +282,7 @@ function orderSameTimestampEventsByState(items: { path: string; event: ExecEvent
 }
 
 export function readAllEventFiles(projectPath: string): { path: string; event: ExecEventV1 }[] {
-  const target = registerBranchForSchedule(projectPath);
+  const target = execEventsBranchForSchedule(projectPath);
   if (target) {
     return inRegisterBranchSync(target, (worktree) =>
       readEventFilesFromDirectory(join(worktree, target.eventsPath)),
@@ -358,7 +358,7 @@ export function writeEventFile(
   event: ExecEventV1,
   dependencies: { randomHex?: (bytes: number) => string } = {},
 ): string {
-  const target = registerBranchForSchedule(projectPath);
+  const target = execEventsBranchForSchedule(projectPath);
   if (!target) return writeEventToDirectory(eventsDirForProject(projectPath), event, dependencies);
   return inRegisterBranchSync(target, (worktree) => {
     const execDir = join(worktree, target.eventsPath);
@@ -372,7 +372,7 @@ export function writeEventFile(
       }
       if (state !== "todo") {
         throw new Error(
-          `Cannot publish claim for ${event.task_id}: register branch state is ${state}. Inspect concurrent claims before retrying.`,
+          `Cannot publish claim for ${event.task_id}: exec-events branch state is ${state}. Inspect concurrent claims before retrying.`,
         );
       }
     };

@@ -10,8 +10,10 @@ import {
 import {
   assertRegisterBranchPaths,
   inRegisterBranch,
+  isInSyncScope,
   pushRegisterBranch,
   resolveRegisterBranchTarget,
+  resolveSyncBranchTargets,
 } from "../../shared/register-branch.js";
 import { gitOutput, gitResult, repoRelative, worktreeStatusPaths } from "../../shared/git.js";
 import { stabilizeCommitTargets } from "../worktree-ops.js";
@@ -92,11 +94,9 @@ function assertNoSyncedRegisterChanges(projectId: string, sourceRoot: string): v
     throw new Error(`Register edits cannot enter an exec commit: ${paths.join(", ")}`);
 }
 
+/** True for paths published through any sync branch (register or exec-events). */
 export function isSyncedRegisterPath(projectId: string, repoRoot: string, path: string): boolean {
-  const target = resolveRegisterBranchTarget(projectId);
-  if (!target) return false;
-  const relative = repoRelative(repoRoot, resolve(repoRoot, path));
-  return [target.registerPath, target.eventsPath].some((prefix) =>
-    relative.startsWith(`${prefix}/`),
-  );
+  const targets = resolveSyncBranchTargets(projectId);
+  if (!targets.length) return false;
+  return isInSyncScope(targets, repoRelative(repoRoot, resolve(repoRoot, path)));
 }

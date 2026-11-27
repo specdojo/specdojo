@@ -1,0 +1,40 @@
+実装はできていますが、計画の作業は 2 つ残っています。CI の workflow と prj-0001 の設定です。どちらも私には書き込めないファイルなので、変更案を個票に書き、承認待ちにしています。そのため、完了状態は `incomplete` で返します。
+
+**実装したこと**
+- 新しい設定 `sync` を足しました。既定のブランチは `project/<id>/sync/register`（登録簿の個票とイベント）と `project/<id>/sync/exec-events`（`execution/exec/events/`）の 2 本です。名前は `branches.<種類>.branch` で変えられます。
+- 今の `register_sync` は、これまでどおり 1 本のブランチで動く古い形として残しました。`sync` と同時に書くと読み込みでエラーになります。今の作りで `register_sync` を `sync` に読み替えると、版を上げた時点でまだ無い 2 本へ書きに行き、記帳が止まります。そのため、切り替えは設定を書き換える時点に限りました。
+- 書き込み先は次のとおりです。
+  - 起票・状態遷移・`exec run --register` の転送は register のブランチへ書きます。
+  - schedule の claim・complete は exec-events のブランチへ書きます。
+  - どちらのブランチも、自分の範囲の外のパスは受け付けません。
+- コマンドは次のように変えました。
+  - `register branch-merge` と `exec run` の前後の自動取り込みは、register → exec-events の順に 1 本ずつ merge し、途中で止まったら後は取り込みません。
+  - `register branch-guard` は両方の範囲を調べます。
+  - `register branch-check` は `--remote-ref` が指すブランチの範囲で調べます。
+  - `register branch-push` に `--sync register|exec-events` を足しました。省くと 2 本を順に処理します。
+- `sync` の専用 worktree は `specdojo/sync/<種類>/` に置きます。ロックは 1 つを共有し、どちらのブランチへの同期も 1 つずつ順に行います。
+- 両方へ書く場合の順番は、register を先にし、1 本ずつ書く形にしました。register で失敗したら exec-events には書きません。exec-events だけ失敗したときは、register 側は取り消さずに残し、`--sync exec-events` で公開してから操作をやり直します。今の作りでは両方へ書く操作はありません。
+- lefthook の `register-branch-guard` と pre-push の検査は、そのままで 2 本に対応できるので変えていません。
+- 文書も更新しました（設定リファレンス、コマンドリファレンス、登録簿運用ガイドの移し替え手順、ほかの guide 2 本、Git ブランチ標準、設定の schema）。CHANGELOG は運用メモの決まりどおり直接は変えず、追加する行の文案を個票に書きました。
+
+**確かめたこと**
+- 統合テスト 4 ファイル 41 件が通りました。新しく書いた `tests/src/register/sync-branches.integration.test.ts` を含みます。
+- 関連する単体テスト 4 ファイル 64 件が通りました。
+- `tsc --noEmit` と、変えたファイルへの ESLint はエラーなしです。ESLint の警告は 3 件で、ファイルと関数の長さについての既存のものです。
+- `npm run validate:history-links` は通りました。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`test-integration` は、親の runner が流す結果を正とします。
+
+**承認が要る残り**
+- **CI の変更（`.github/workflows/check-register-push.yml`）**：
+  - `on.push.branches` に `project/*/sync/register` と `project/*/sync/exec-events` を足します。
+  - project 名の取り出しを `project="${project%/register}"` から `project="${project%%/*}"` に替えます。
+  - 移し替えが終わるまでは `project/*/register` も残します。
+- **prj-0001 の移し替え**：実行中の run がないときにオーケストレーターが行います。手順は次のとおりです。
+  1. 古いブランチを develop へ取り込みます。
+  2. その develop の先端から 2 本を作って push します。
+  3. `.specdojo/specdojo.config.json` の `register_sync` を `sync` に置き換え、feature ブランチで develop へ入れます。
+  4. `register branch-push --project prj-0001 --dry-run` で、2 本ともリモートに揃っていることを確かめます。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"Implemented the split of the sync branches into project/<id>/sync/register and project/<id>/sync/exec-events. Added the new `sync` config with per-kind `branches` and kept legacy `register_sync` as a one-branch compatibility mode. Two plan items remain open because executor cannot write the files: the CI workflow (.github/workflows is denied) and the prj-0001 config migration. Proposals for both are in the ticket and in handoff.","handoff":["Protected change proposal (needs user approval, feature branch): .github/workflows/check-register-push.yml. Add \"project/*/sync/register\" and \"project/*/sync/exec-events\" to on.push.branches, keeping \"project/*/register\" until migration completes. Change project extraction from `project=\"${project%/register}\"` to `project=\"${project%%/*}\"`. branch-check picks the branch scope from --remote-ref, so nothing else changes. Executor could not write .github/workflows/ (permission denied). Ticket work row 5 is left open for this.","Migration of prj-0001 from project/prj-0001/register to the two sync branches, to be done by the orchestrator when no run, queue or routine is active. (1) Publish any stopped sync with register branch-push. (2) Run register branch-merge on develop and push develop. (3) Create project/prj-0001/sync/register and project/prj-0001/sync/exec-events from the merged develop tip and push them. (4) Replace \"register_sync\": {\"enabled\": true} with \"sync\": {\"enabled\": true} in .specdojo/specdojo.config.json via a feature branch. (5) Check that register branch-push --project prj-0001 --dry-run reports both as already on origin, then remove the old dedicated worktree. (6) Delete the old branch once other users have switched. Ticket work row 9 is left open for this.","Decision recorded in the ticket: legacy `register_sync` is not aliased to `sync`. Aliasing would switch writes to not-yet-existing branches as soon as the CLI is upgraded. The switch therefore happens explicitly when the config changes. `sync` and `register_sync` together is a config error.","Decision recorded in the ticket: when one operation writes both branches, register goes first and exec-events second, one at a time and not nested (the lock is shared). A register failure stops before exec-events. An exec-events failure keeps the published register bookkeeping, and recovery is `register branch-push --sync exec-events` followed by a retry. No current operation writes both.","CHANGELOG lines (Added / Migration notes) are drafted in the ticket's response section 'CHANGELOG に書く事項' per the playbook rule (PJR-EPQ3). CHANGELOG.md was not edited."],"validations":[{"command":"npx vitest run --config vitest.integration.config.ts tests/src/register/sync-branches.integration.test.ts tests/src/register/register-branch.integration.test.ts tests/src/register/register-branch-merge.integration.test.ts tests/src/register/register-branch-push.integration.test.ts","status":"passed","summary":"4 files, 41 tests passed, including the new split-branch integration test"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/register/push-check.test.ts tests/src/register/branch-push.test.ts tests/src/shared/register-sync-config.test.ts tests/src/register/external-project.test.ts","status":"passed","summary":"4 files, 64 tests passed"},{"command":"npx tsc --noEmit -p tsconfig.test.json","status":"passed","summary":"No type errors"},{"command":"npx eslint (changed src/tests files)","status":"passed","summary":"0 errors, 3 existing max-lines warnings"},{"command":"npx prettier --write (changed files)","status":"passed","summary":"Changed files formatted"},{"command":"npm run validate:history-links","status":"passed","summary":"All history files valid, including the updated ticket"}]}
+</specdojo_executor_evidence>
