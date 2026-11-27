@@ -264,3 +264,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5651cf498748461ca2332581393babc9
+- v: 1
+  id: reg_1eafeef7326b4167b25cacfead2e10b7
+  ts: "2026-11-27T13:49:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 4 回目の統合後、開発中の版と本番の版の開発サーバーをヘッドレスのブラウザで幅 640・960・1280・1440 で写して比べ、本文のずれが帯の高さ（38px）だけであることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: 開発中の版の帯の高さを --vp-layout-top-height に反映し、960px 以上では帯を固定して local nav の上書きを VitePress の scoped 規則に勝たせた。幅 640・960・1280・1440 で本番の版から帯の高さだけずれる
+  previous_event_id: reg_d0811f63d84049d8b3611213257a95b2
