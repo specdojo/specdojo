@@ -31,7 +31,12 @@ prj-overview-rulebook の前提条件の節が AI Agent の役割を常に求め
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `prj-overview-rulebook` の前提条件の節で、AI Agent の役割を常に求める書き方を、「AI Agent を業務の中で使う場合は、その役割と人の判断との境界を明示します」という条件付きの書き方に変えている。判断責任・適用範囲・公開方針・取捨選択方針を明示する要求は残している。
+- `prj-overview-template` の導入文「判断責任、AI Agent の役割、公開方針、取捨選択方針は次のとおりとする。」と、その下の枠を、上の rulebook に合わせている。条件付きの書き方は `prj-charter-template` の前例（「AI Agent を利用する場合は、支援対象の活動と委譲範囲を記述する。」）にそろえている。
+- `prj-overview-sample` から AI Agent の記述（導入文の「AI Agent の役割」と、AI Agent の使い方の箇条書き）を外している。判断責任・公開方針・取捨選択方針の記述は残している。
+- ほかの sample・rulebook・template の AI Agent の記述（`pm-organization`・`pm-raci`・`pm-communication-plan`・`prj-stakeholder-register` など）は変えていない。管理の文書で開発に AI Agent を使う前提は文脈に合うと利用者が判断した（2026-11-27）。
+- `npm run -s lint:md` が通っている。
+- CHANGELOG の書き方は運用メモの決まりに従い、公開済みの版の節は変えていない。
 
 ## 4. 作業内容
 
