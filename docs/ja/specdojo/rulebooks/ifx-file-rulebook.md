@@ -173,7 +173,7 @@ YAML のルートには以下のキーを配置します。
 ### 6.1. ファイル基本情報と責務境界の判断基準
 
 1. **判断基準**: 誰がいつファイルを書き（`source` / `writer`）、誰が何のために読み（`target` / `reader`）、どこにどの名前で置かれるか（`location` / `naming_rule`）が、実装コードを見ずに特定できること。
-2. **単一ファイルと複数ファイルの使い分け**: 1 つのファイルだけで完結する連携は `file` を使い、実行エビデンス（`evidence.json`）とパイプライン状態（`pipeline-state.json`）のように同一実行単位で協調動作するファイル群は `files` 配列で定義し、ファイルごとに `writer`・`reader`・`required_fields` を明記します。
+2. **単一ファイルと複数ファイルの使い分け**: 同一実行単位で協調動作するファイル群（例: `evidence.json` と `pipeline-state.json`）は `files` で定義します（粒度は 3.1 の 3 項目め）。
 3. **仮置き・前提条件の明記**: 通信環境や運用体制に関する前提条件、または未確定の技術判断がある場合は、YAML コメントで `# _ASSUMPTION_:` や `# _UNDECIDED_:` を付記し、何が決まれば解消するかを書きます。
 
 ### 6.2. 受け渡し条件と構造定義の判断基準
@@ -181,7 +181,7 @@ YAML のルートには以下のキーを配置します。
 1. **判断基準**: 下流の実装者がパーサ・バリデータ・ファイル配置処理を実装でき、テスト担当が正常データと境界値・異常データのテストケースを導出できること。
 2. **インライン定義と正本参照の選択**:
    - 外部取引先（問屋や外部システム）との CSV / JSON 連携など、リポジトリ内に別途スキーマ定義が存在しない場合は、`schema.fields` に型・必須性・制約（`constraints`）・マッピング（`mapping`）を具体的に記述します。
-   - 同一システム内のランナーとエージェント間の契約など、TypeScript 型定義や JSON Schema が正本として存在する場合は、`files[].schema_ref` および `schema.references` で正本パスを指し、`files[].required_fields` に必須キーを列挙して二重管理を防ぎます。
+   - TypeScript 型定義や JSON Schema が正本として存在する場合（同一システム内のランナーとエージェント間の契約など）は、記述方法を 5.6 の 3 項目めに従って正本を参照します。
 
 ### 6.3. 失敗時の扱いの判断基準
 
@@ -254,4 +254,18 @@ error_handling:
 ### 8.1. 成果物の検証手順
 
 1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し（`ifx-index` に登録しない契約は `based_on` の参照元仕様と照合し）、`schema_ref` / `references` の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
-2. **異常系の導出**: `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）と `required_fields` から正常系・異常系の確認ケースを導出し、各ケースで継続・停止、ファイルの保持・退避、再試行・引き継ぎの期待結果が一意に決まることを確かめます。
+2. **構造・書式の検証**: 次のコマンドを `<path>`（対象 YAML）で実行し、終了コード 0 を合格とします。非 0 の場合は出力された指摘を直して再実行し、解消しない指摘は登録簿へ引き継ぎます。
+   - `npx prettier --check <path>`: 書式の確認（不合格時は `npx prettier --write <path>` で整形する）。
+   - `npm run validate:schema:file -- --schema <schema-path> --data <path>`: 専用スキーマがある場合の構造検証。modeline が `no-ifx-file-schema` で構造検証を省く間は実行せず、`x-spec-meta.type` と rulebook 宣言の照合を含むリポジトリ全体の `npm run validate:schema` で確かめます。
+3. **異常系の導出**: `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）と `required_fields` から正常系・異常系の確認ケースを導出し、各ケースで継続・停止、ファイルの保持・退避、再試行・引き継ぎの期待結果が一意に決まることを確かめます。
+
+### 8.2. 変更・廃止時の追従対象
+
+改訂・廃止の手順と `status` の扱いは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。ifx-file の変更・廃止時は、次の対象を同じ変更で追従させます。担当は適用先のメンバー定義で割り当てます。
+
+| 追従対象                                      | 確認する内容                                           | 担当 Role code |
+| --------------------------------------------- | ------------------------------------------------------ | -------------- |
+| `ifx-index` の `spec_ref`                     | 仕様 ID の一致、廃止時の登録解除                       | `BA`           |
+| 参照元の `ifx-cmd`（`based_on` の参照元仕様） | 受け渡しファイルの契約の記述との整合                   | `BA`           |
+| `schema_ref` / `schema.references` の正本     | 参照先の実在、`required_fields` と正本の必須項目の一致 | `ARC`          |
+| reader・writer の実装とテスト                 | 命名・配置・必須項目・異常時の動作の反映               | `DEV`          |
