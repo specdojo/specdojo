@@ -20,7 +20,9 @@ specdojo:
 
 ## 1. 背景
 
-register_sync の専用ブランチを project/`<id>`/sync/register（登録簿）と project/`<id>`/sync/exec-events（schedule の実行のイベント）の 2 本に分け、名前と置き場を中身に合わせる
+register_sync の専用ブランチ `project/<id>/register` には、登録簿の記帳（個票とイベント）と、schedule の task の実行のイベント（`execution/exec/events/` の claim・complete）の両方が載っている。ブランチの名前が中身と合っていない。
+
+将来、登録簿と関係ないもの（定期実行の記録など）も複数の作業者で共有したくなったとき、`register` という 1 つの名前では足す場所がない。そのため、`sync/` の下に種類ごとのブランチを置く階層の形にし、今の中身を 2 本に分けるかを決める。
 
 ## 2. 入力
 
