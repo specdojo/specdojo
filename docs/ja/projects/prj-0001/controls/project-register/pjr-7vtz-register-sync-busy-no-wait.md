@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -30,13 +30,13 @@ inRegisterBranchSync が使用中ならすぐ例外を投げるため、register
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                                                                                              |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| スコープ     | `src/shared/register-branch.ts` の `inRegisterBranchSync` と、`src/shared/cross-process-lock.ts` に足した同期の待機。呼び出し側（`src/exec/events.ts`）は変えない |
+| スケジュール | 期限（2026-11-30）内に対応した                                                                                                                                    |
+| コスト       | 書き込みが重なったときだけ、使用中の操作が終わるまで待つ時間が増える                                                                                              |
+| 品質         | 記帳と重なった `exec refresh`・claim・complete などが失敗せず、run が waiting にならない                                                                          |
+| 関係者       | DEV、exec run を回すオーケストレーター                                                                                                                            |
 
 ## 4. 対応方針
 
@@ -59,8 +59,39 @@ inRegisterBranchSync が使用中ならすぐ例外を投げるため、register
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容:
+
+- `src/shared/cross-process-lock.ts` に `acquirePoolSlotSync` を足した。枠が取れるまで `Atomics.wait` でスレッドを止めて `LOCK_POLL_MS`（200 ms）ごとに取り直し、上限の時間を超えたら `timeout` を返す。
+- `inRegisterBranchSync` はこの関数で待つ。上限を超えたら「`Register branch <branch> is still busy after waiting <n>s (limit <m>s); retry the schedule operation.`」で止まり、対象のブランチと待った時間を出す。
+- 待ち方は同期のまま待つ方式にした。exec のイベントを書く API（`writeEventFile`・`readAllEventFiles`）は同期で、claim・complete・`exec refresh` などの多くの呼び出し元が同期で使っているため、非同期にすると変更が広がる。別プロセスの `register ... --commit` は heartbeat を別プロセスで持つため、こちらのスレッドを止めても解放は進む。
+- 同じプロセスの非同期の書き手（`inRegisterBranch`）が枠を持っている場合は、スレッドを止めると解放されないため、待たずに「`is busy in this process`」で止まる。従来の即時失敗が残るのはこの場合だけである。
+- 上限の既定値は `REGISTER_BRANCH_SYNC_WAIT_MS` の 120 秒とし、設定は設けない。1 回の `register ... --commit` が枠を持つのは fetch・rebase・push の間で、通常は数秒、遅くても 1 分程度のため。止まった持ち主の枠は 30 秒の stale 判定で奪えるので、長い上限で待ち続けることもない。設定が要るほどのばらつきは今は観測していない。
+- `exec run --register --worktree` の worktree の用意の段の `exec refresh` も同じ `inRegisterBranchSync` を通るため、記帳と重なっても待ってから書き、run は waiting にならない。
+
+確認結果:
+
+- `tests/src/exec/slot-lock.test.ts` に `acquirePoolSlotSync` の単体テストを足した。使用中の間は待って解放後に取る、上限を超えると待った時間とともに `timeout` を返す、同じプロセスが持つときは待たずに返す、の 3 件である。
+- `tests/src/register/register-branch.integration.test.ts` に統合テストを 2 件足した。別プロセスが 1.5 秒後に枠を解放するとき `writeEventFile` が待ってから専用ブランチへ push すること、上限（テストでは 0.3 秒）を超えるとブランチ名と待った時間を含むエラーで止まり操作を実行しないこと、を確かめた。
+- `npx tsc -b`・`npx eslint`（変更ファイル）・`npx vitest run`（上記 2 ファイルの該当テスト）が通った。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` は親 runner が実行する。
+
+再発防止策:
+
+- 同期の書き込みは即時失敗せず、上限まで待つ形に統一した。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 利用者から見て動きが変わる点
+- 文案: `exec refresh`・claim・complete などの exec のイベントの書き込みは、専用ブランチが `register ... --commit` などで使用中でも、すぐ失敗せずに最大 120 秒待ってから書きます。上限を超えると、ブランチ名と待った時間を示して止まります（PJR-7VTZ）。
+
+### 5.2. 作業内容
+
+| 作業                                              | 状態 | メモ                                    |
+| ------------------------------------------------- | ---- | --------------------------------------- |
+| 同期の枠の待機（`acquirePoolSlotSync`）を足す     | done | `src/shared/cross-process-lock.ts`      |
+| `inRegisterBranchSync` を上限付きで待つ形に変える | done | 既定 120 秒、超えたらブランチと待ち時間 |
+| 単体テスト・統合テストを足す                      | done | 単体 3 件、統合 2 件                    |
+| 個票の対応結果と CHANGELOG の文案を書く           | done | `CHANGELOG.md` は変えていない           |
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-86RK（2 回目の run で本事象を観測した項目）。
