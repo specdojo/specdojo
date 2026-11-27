@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_44c87e3445254546bd7dd44580af9ac7
+  ts: "2026-11-27T10:33:12Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard の「人の対応が要るもの」の表に内容の列を足す
+    - field: description
+      from: ""
+      to: 表が種別・項目（ID）・次にすることだけで、項目が何かをパッと見て分からないため、個票のタイトルや対象の成果物の名前を出す列を足す
+    - field: input
+      from: ""
+      to: '["利用者（indie）が、dashboard の「人の対応が要るもの」の表に内容が書かれていないため、パッと見て分からないと指摘した（2026-11-27）","表は src/dashboard/dashboard.ts の renderActionRequiredSection が作り、行は aggregateActionRequired が集める。今の列は種別・項目・次にすること"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
