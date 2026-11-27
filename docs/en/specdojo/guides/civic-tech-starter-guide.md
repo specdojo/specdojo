@@ -24,6 +24,7 @@ This guide introduces five starter kata for small civic tech teams with limited 
 
 - What comprehension debt is and how kata can reduce it
 - Which kata to start with and when to add others
+- How agents create kata documents while people check and decide
 - What to preserve first for new and existing systems
 - How to mark unverified content with `_ASSUMPTION_` and `_UNDECIDED_`
 
@@ -31,6 +32,7 @@ This guide introduces five starter kata for small civic tech teams with limited 
 
 - [[specdojo:kata-guide|Kata Guide]] explains rulebooks, recipes, samples, and templates.
 - [[specdojo:register-operation-guide|Register Operation Guide]] explains how to record decisions and work.
+- [[specdojo:orchestrator-operation-guide|Orchestrator Operation Guide]] explains how to work with the orchestrator in conversation.
 - [[specdojo:ryu-guide|Practice Guide]] explains `retrofit`, creating documentation from existing systems.
 
 ## 1. Comprehension debt and kata
@@ -41,7 +43,7 @@ Kata are rules and examples for what to write and in which form. Following them 
 
 | Stage               | Action                                                                                |
 | ------------------- | ------------------------------------------------------------------------------------- |
-| Reconstruction      | Create documents from existing code and fragmentary records using kata                |
+| Reconstruction      | An agent creates documents from existing code and fragmentary records using kata      |
 | Verification status | Mark which reconstructed content has been checked and which is inferred               |
 | Human confirmation  | Ask affected people or experienced participants to check and confirm inferred content |
 | Recording           | Preserve future reasons in the register when decisions are made                       |
@@ -50,7 +52,7 @@ Code mainly reveals what a system does. It cannot recover people's problems, des
 
 ## 2. The starter kata set
 
-Start with these five kata. People who do not code can help write or check each one.
+Start with these five kata. People who do not code can explain or check the content of each one. Agents write the documents; people take part through the flow in `What to preserve, in which order`.
 
 | Order | Kata                   | What to preserve                                                                        | How nonprogrammers participate                                              | Rulebook                                                                   |
 | ----- | ---------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
@@ -69,7 +71,7 @@ Why these five:
 
 ## 3. When to add other kata
 
-Do not start with the following. Add one at a time when its triggering problem actually occurs.
+Do not start with the following. File and add one at a time when its triggering problem actually occurs.
 
 | Kata                                                                                                           | When to add it                                                                             |
 | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -88,26 +90,71 @@ Consider test kata such as acceptance test catalogs, and migration or operations
 
 ## 4. What to preserve, in which order
 
-### 4.1. Starting something new
+### 4.1. The basic flow
 
-1. Write the project overview. Affected people explain their problems, a facilitator or AI writes using the kata, and those people check it.
-2. Write issues and approach, including approaches not chosen and why.
-3. Write the function index. Map each function to a problem; functions without a match are candidates to omit.
-4. Write business rules for functions being started, including institutional sources or participants' experience.
-5. Record decisions and uncertainties as they arise. Use decision for settled choices and question for unsettled ones.
+People do not write kata documents by hand; agents create them. When you ask the orchestrator (the conversational AI that operates SpecDojo), work proceeds as follows:
 
-### 4.2. Starting from an existing system (reconstruction)
+1. You tell the orchestrator which kata document you want and give it materials: interview notes, institutional sources, or the location of code to examine.
+2. The orchestrator files a todo in the register. When creating several kata together, it splits the work into an epic and child todos. You check the completion conditions and approve filing.
+3. The orchestrator has an agent create the document with `exec run`. The agent follows the kata's rulebook, marks content without evidence with `_ASSUMPTION_`, and marks undecided content with `_UNDECIDED_`.
+4. People read and check the result. If changes are needed, add them to the completion conditions and run again; otherwise instruct the orchestrator to close the item.
+
+People have four roles. Agents do the writing.
+
+| Role            | What it involves                                                                                                                  |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Explain         | Tell the orchestrator, in your own words, about problems, purposes, institutional and local rules, and past history               |
+| Check           | Read documents created by agents and check them against facts and real work                                                       |
+| Decide          | Choose directions and instruct closing todos and epics and finalizing documents (`ready`); only people finalize                   |
+| Resolve markers | Check `_ASSUMPTION_` content and have the marker removed; decide `_UNDECIDED_` content in a register decision and have it removed |
+
+### 4.2. Starting something new
+
+1. Affected people explain their problems and purpose, and an agent creates the project overview. Those people read and check it.
+2. Have the agent create issues and approach. Explain approaches not chosen and why, and have them preserved.
+3. Have the agent create the function index, mapping each function to a problem. People decide whether to omit functions without a match.
+4. Have the agent create business rules for functions being started. Give it the location of institutional sources and participants' experience as materials.
+5. Tell the orchestrator about decisions and uncertainties as they arise, and have them recorded in the register. Use decision for settled choices and question for unsettled ones.
+
+To start steps 1 to 3 together, have the orchestrator file an epic and child todos as below. IDs and file names are examples.
+
+```chat
+You: We are building a reservation system for a children's cafeteria. Please create the first kata documents together, from the project overview to the function index. The material is last week's interview notes (notes/hearing.md).
+
+Orchestrator: I will file an epic and child todos as follows:
+  - Epic: Prepare the starter kata documents
+  - Child todo 1: Create the project overview
+  - Child todo 2: Create issues and approach (run after 1)
+  - Child todo 3: Create the system functions index (run after 2)
+  Each todo's completion conditions will say to use the interview notes and to mark any "why" not in the notes with `_ASSUMPTION_`. Business rules will be a separate todo once you decide which function to build first. May I file them?
+
+You: Yes, please.
+
+Orchestrator: I filed epic PJR-AB12 and child todos PJR-CD34, PJR-EF56, and PJR-GH78. I will have agents create them with `exec run`, starting with PJR-CD34. May I start?
+
+You: Please start.
+
+Orchestrator: PJR-CD34 has finished and is in review. The project overview has two `_ASSUMPTION_` markers. Please ask the affected people to check them and tell me the results.
+
+You: The first one is correct. The second, "why the service is limited to elementary school children," is because of the venue size. Ms. Tanaka from the organizing team checked it today.
+
+Orchestrator: I will add to the completion conditions: remove both markers and write who checked, the date, and the reason for the second. Then I will run it again, close PJR-CD34, and move on to PJR-EF56.
+```
+
+When all child todos are done, a person also instructs closing the epic. See the section on managing track work with epics and child todos (`track の仕事を epic と子 todo で管理する`) in the [[specdojo:register-operation-guide|Register Operation Guide]] for how to file epics.
+
+### 4.3. Starting from an existing system (reconstruction)
 
 When a working system exists but its creators or reasons are unavailable, distinguish what code can reveal from what requires interviews.
 
-1. Write the overview through interviews with current participants and affected people. Code cannot recover “why,” so begin with interviews rather than reconstruction. Mark unknowns.
-2. Reconstruct business rules and the function index from code. SpecDojo calls this approach `retrofit`.
-3. Code confirms only current behavior. Mark inferred rationale and correctness with `_ASSUMPTION_`.
-4. Ask affected or experienced people to check marked content. If confirmed, record who checked and when, then remove the marker. If behavior differs from intent, do not force the document to match code; record whether to fix it as a register decision.
-5. Write issues and approach when the direction for changes or additions is decided.
-6. Continue recording decisions as in step 5 for new work.
+1. Have an agent create the overview from what current participants and affected people explain. Code cannot recover “why,” so begin with interviews rather than reconstruction.
+2. Have the agent reconstruct business rules and the function index from code. SpecDojo calls this approach, where an agent examines the implementation and creates documents, `retrofit`. Tell the orchestrator where the code is when filing.
+3. The agent can confirm only current behavior from code. Have it mark inferred rationale and correctness with `_ASSUMPTION_`.
+4. Ask affected or experienced people to check marked content. If confirmed, tell the orchestrator who checked and when, and have the marker removed. If behavior differs from intent, do not force the document to match code; decide whether to fix it and have that recorded as a register decision.
+5. Have issues and approach created when the direction for changes or additions is decided.
+6. Continue having decisions recorded as in step 5 for new work.
 
-To run `retrofit` through the register, file an item and put the code location in its inputs before execution. The path and rulebook below are examples.
+When reconstructing several kata, split the work into an epic and child todos as for new work. The orchestrator files a `retrofit` todo with a command like the following and puts the code location in the ticket before execution. The path and rulebook below are examples.
 
 ```bash
 specdojo register add --project <project-id> --type todo --title "Reconstruct benefit eligibility rules" \
@@ -134,7 +181,7 @@ _UNDECIDED_: Whether household size includes family members living elsewhere. De
 ```
 
 - Absence of a marker is not proof. Without a checker and date in the text, treat the content as unverified.
-- Require AI to mark content `_ASSUMPTION_` when it cannot identify evidence in sources, code, or interviews.
+- Require the agent to mark content `_ASSUMPTION_` when it cannot identify evidence in sources, code, or interviews. Put this in the completion conditions when filing the item.
 - A document's `ready` state does not confirm marked content. A person must review remaining markers before finalization.
 - The [[specdojo:document-metadata-standard|Document Metadata Standard]] is authoritative for context-marker notation.
 
@@ -142,7 +189,7 @@ _UNDECIDED_: Whether household size includes family members living elsewhere. De
 
 Sustainable Participation means counting participants' time and ongoing burden as costs alongside money, choosing only needed documents, and sharing work. This is why the starter set has five kata and others wait for actual problems.
 
-- Do not fill every chapter of even these five at once. Mark unknown sections with `_ASSUMPTION_` or explain blanks so someone with knowledge can fill them later.
-- Add kata when the triggers above actually occur, rather than because they might help someday.
-- Share the work: affected people explain and check, facilitators or AI write, developers verify correspondence with code.
-- Record decisions to add or stop using kata, with reasons, in the register. Later participants can trace why this set was chosen.
+- Do not fill every chapter of even these five at once. Have the agent mark unknown sections with `_ASSUMPTION_` or explain blanks, so someone with knowledge can explain them later and have them filled.
+- File kata when the triggers above actually occur, rather than because they might help someday.
+- Leave writing to agents and limit human work to the four roles in `The basic flow`. Do not concentrate it on one person: affected people explain and check, experienced participants resolve markers, facilitators gather requests to the orchestrator and close instructions, and developers verify reconstructed content against code.
+- Have decisions to add or stop using kata recorded, with reasons, in the register. Later participants can trace why this set was chosen.
