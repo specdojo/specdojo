@@ -62,6 +62,17 @@ specdojo:
 - 変更ファイル: `src/dashboard/dashboard.ts`、`tests/src/dashboard/dashboard.test.ts`、`docs/ja/specdojo/references/command-reference.md`。
 - 検証: `npm run typecheck`・`npm run lint:ts`（エラーなし）、dashboard の単体テストは通過。
 
+### 5.1. 2 回目の実行（2026-11-27）
+
+schedule の task の行の「内容」を、対象の文書の名前に直した。
+
+- 型の task の ID（`T-KATA-WAVE-3-atc-index-sample-140`）は `extractLocalId` では `WAVE-3-atc-index-sample` と誤って引けるため、schedule の task 定義（`buildScheduleIndex` の node）の `local_id` を使う。ready.json の task は、その `local_id` を優先する。
+- 選ぶ順は、task 定義の成果物名（`artifact_name`、strategy のカタログの名前）、成果物カタログのファイル名、`local_id`、task 名、`-`。blocked・doing で ready.json にない task も、task 定義から同じように引く。
+- task 名は「次にすること」に含まれるときは出さない（human の行は「<task 名>を実施」と重なるため）。
+- 単体テストを足した（型の task と blocked の task の行）。既存の human の行の期待は、task 名が出なくなり `-` に変えた。
+- 変更ファイル: `src/dashboard/dashboard.ts`、`tests/src/dashboard/dashboard.test.ts`、`docs/ja/specdojo/references/command-reference.md`。
+- 検証: dashboard の単体テスト・`npm run typecheck`・`npm run lint:ts`（エラーなし）を通した。
+
 ### CHANGELOG に書く事項
 
 - 区分: Changed
