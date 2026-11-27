@@ -86,3 +86,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_1af6c9bf2f4b41369e4be58adad4c6f7
+- v: 1
+  id: reg_ed17feac688543519ba0ca77e19d83dd
+  ts: "2026-11-27T23:31:31Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_31593c05aa364a4bad00b4ce038f35d9

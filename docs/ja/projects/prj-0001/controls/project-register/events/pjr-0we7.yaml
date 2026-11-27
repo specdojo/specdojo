@@ -64,3 +64,16 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_bc2da226fbfb41308027f68b8e2d4452
+- v: 1
+  id: reg_07d4b36dda774630a83a662c64182000
+  ts: "2026-11-27T23:30:34Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1048bdec2e40474f9b1f3bb00d03de7b
