@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ynqg-watch-headless-diagnosis
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:13:23Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T23:22:15Z"
+  conclusion: 見張りが判断の要る止まりを読み取り専用の watch-diagnoser（codex terra、read-only sandbox・MCP なし）に診断させ、案を朝報告の第 7 節に載せるようにした。agent は手を打たない
   derived_from:
     - PJR-52EE
   depends_on:

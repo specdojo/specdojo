@@ -89,3 +89,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8335983729ac428eb1222cd551a6556a
+- v: 1
+  id: reg_9c57458998274e33940ca37ca83bc379
+  ts: "2026-11-27T23:22:15Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を決めた（2026-11-28）。実際の見張りで V681 の診断案が朝報告に載り、実 CLI で書き込みが拒まれ、設定と登録簿が変わらないことを確かめた。途中で落ちた診断が running のまま残る扱いは別の issue で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 見張りが判断の要る止まりを読み取り専用の watch-diagnoser（codex terra、read-only sandbox・MCP なし）に診断させ、案を朝報告の第 7 節に載せるようにした。agent は手を打たない
+  previous_event_id: reg_807ee1890e1d4ee0b2d229a9d835aec3
