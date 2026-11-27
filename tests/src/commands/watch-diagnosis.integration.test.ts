@@ -1,5 +1,14 @@
 import { Command } from "commander";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  utimesSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -8,6 +17,7 @@ import { runWatchDiagnosis, diagnosisNight } from "../../../src/exec/watch-diagn
 import { type WatchScanOutcome, type WatchStalledLine } from "../../../src/exec/watch-scan.js";
 import type { ExecDefaultsConfig } from "../../../src/exec/agent-config.js";
 import type { MemberRoster } from "../../../src/shared/specdojo-config.js";
+import { releaseLock, tryAcquireLock } from "../../../src/shared/cross-process-lock.js";
 
 const originalCwd = process.cwd();
 const repos: string[] = [];
@@ -110,7 +120,141 @@ function records(root: string) {
     );
 }
 
+function seedRecord(
+  input: ReturnType<typeof setup>["input"],
+  status: "running" | "interrupted" | "proposed",
+  retry = false,
+): string {
+  const stall = input.outcome.current[0]!;
+  const directory = join(input.executionPath, "watch/diagnoses");
+  mkdirSync(directory, { recursive: true });
+  const path = join(
+    directory,
+    `${createHash("sha256").update(stall.key).digest("hex")}${retry ? ".retry" : ""}.json`,
+  );
+  // 所有者などの新しいメタデータを持たない既存形式の記録も回復する。
+  writeFileSync(
+    path,
+    JSON.stringify({
+      key: stall.key,
+      target: stall.target,
+      night: diagnosisNight(input.now, input.timeZone),
+      by: "diagnoser",
+      started_at: input.now.toISOString(),
+      status,
+      proposal: status === "proposed" ? "保存済みの診断案" : "診断中",
+    }),
+  );
+  return path;
+}
+
 describe("headless watch diagnosis", () => {
+  it("recovers an abandoned legacy reservation, counts it against the night limit, and retries once on a later night", async () => {
+    const { input, root, reportPath } = setup();
+    const original = seedRecord(input, "running");
+    // コンテナ再起動後に残る、心拍の途絶えたロック。
+    const lockPath = join(input.executionPath, "watch/diagnoses/.launch-lock");
+    mkdirSync(lockPath);
+    const stale = new Date(Date.now() - 60_000);
+    utimesSync(lockPath, stale, stale);
+
+    await runWatchDiagnosis({ ...input, enabled: false });
+    expect(records(root)).toHaveLength(1);
+    expect(JSON.parse(readFileSync(original, "utf8"))).toMatchObject({ status: "interrupted" });
+    expect(readFileSync(reportPath, "utf8")).toContain("`interrupted`");
+    await runWatchDiagnosis(input);
+    expect(records(root)).toHaveLength(1);
+    expect(readFileSync(reportPath, "utf8")).toContain("診断上限");
+
+    input.now = new Date("2026-11-28T13:00:00Z");
+    await Promise.all([runWatchDiagnosis(input), runWatchDiagnosis(input)]);
+    expect(records(root)).toHaveLength(2);
+    expect(
+      records(root)
+        .map((record) => record.status)
+        .sort(),
+    ).toEqual(["interrupted", "proposed"]);
+    expect(
+      records(root)
+        .map((record) => record.night)
+        .sort(),
+    ).toEqual(["2026-11-27", "2026-11-28"]);
+    expect(JSON.parse(readFileSync(original, "utf8"))).toMatchObject({ status: "interrupted" });
+    input.now = new Date("2026-11-29T13:00:00Z");
+    await runWatchDiagnosis(input);
+    expect(records(root)).toHaveLength(2);
+  });
+
+  it("counts a retry in the same night and does not launch another stall over the limit", async () => {
+    const { input, root, stall, reportPath } = setup();
+    seedRecord(input, "running");
+    input.config.watch!.diagnosis!.max_per_night = 2;
+    await runWatchDiagnosis(input);
+    expect(records(root)).toHaveLength(2);
+    expect(
+      records(root)
+        .map((record) => record.status)
+        .sort(),
+    ).toEqual(["interrupted", "proposed"]);
+    input.outcome.current = [{ ...stall, key: `${stall.key}-new` }];
+    await runWatchDiagnosis(input);
+    expect(records(root)).toHaveLength(2);
+    expect(readFileSync(reportPath, "utf8")).toContain("診断上限");
+  });
+
+  it("does not retry again after the retry itself was interrupted, including on later nights", async () => {
+    const { input, root } = setup();
+    seedRecord(input, "interrupted");
+    seedRecord(input, "running", true);
+    input.config.watch!.diagnosis!.max_per_night = 10;
+    await runWatchDiagnosis(input);
+    expect(records(root).map((record) => record.status)).toEqual(["interrupted", "interrupted"]);
+    input.now = new Date("2026-11-28T13:00:00Z");
+    await runWatchDiagnosis(input);
+    expect(records(root)).toHaveLength(2);
+  });
+
+  it("keeps a live reservation running and includes saved proposals when the launch lock is busy", async () => {
+    const { input, root, reportPath, stall } = setup();
+    seedRecord(input, "running");
+    seedRecord(
+      { ...input, outcome: { ...input.outcome, current: [{ ...stall, key: "past" }] } },
+      "proposed",
+    );
+    const lock = tryAcquireLock(join(input.executionPath, "watch/diagnoses/.launch-lock"), {
+      actor: "test-diagnosis",
+    });
+    expect(lock).not.toBeNull();
+    try {
+      await runWatchDiagnosis(input);
+      expect(
+        records(root)
+          .map((record) => record.status)
+          .sort(),
+      ).toEqual(["proposed", "running"]);
+      expect(readFileSync(reportPath, "utf8")).toContain("保存済みの診断案");
+    } finally {
+      if (lock) releaseLock(lock);
+    }
+  });
+
+  it("publishes saved proposals and the reservation before starting the agent", async () => {
+    const { input, root, stall, reportPath } = setup(`
+      const fs = await import('node:fs');
+      const report = fs.readFileSync('execution/reports/watch-scan/report.md', 'utf8');
+      if (!report.includes('保存済みの診断案') || !report.includes('\x60running\x60')) process.exit(1);
+      process.stdout.write('起動前の報告を確認した');
+    `);
+    seedRecord(
+      { ...input, outcome: { ...input.outcome, current: [{ ...stall, key: "past" }] } },
+      "proposed",
+    );
+    input.config.watch!.diagnosis!.max_per_night = 3;
+    await runWatchDiagnosis(input);
+    expect(records(root).every((record) => record.status === "proposed")).toBe(true);
+    expect(readFileSync(reportPath, "utf8")).toContain("起動前の報告を確認した");
+  });
+
   it("launches through the CLI with roster/template, passes playbook and reason, and only writes watch/report files", async () => {
     const { root } = setup();
     writeFileSync(

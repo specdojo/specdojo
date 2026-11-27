@@ -9,6 +9,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  renameSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -55,6 +56,7 @@ import {
 } from "./watch-remedy.js";
 
 export const WATCH_SCAN_ACTOR = "watch-scan";
+export const WATCH_DIAGNOSIS_HEADING = "\n## 7. agent の診断案\n";
 const LOG_TAIL_BYTES = 256 * 1024;
 
 export type WatchStalledLine = {
@@ -985,8 +987,13 @@ export function runWatchScan(input: WatchScanInput): WatchScanOutcome {
       }
     }
     mkdirSync(dirname(reportPath), { recursive: true });
+    // 診断用ロックを取れない回や、診断へ進む前に落ちた回も、既存の案を残す。
+    const previousReport = existsSync(reportPath) ? readFileSync(reportPath, "utf8") : "";
+    const diagnosisOffset = previousReport.indexOf(WATCH_DIAGNOSIS_HEADING);
+    const diagnosisSection = diagnosisOffset < 0 ? "" : previousReport.slice(diagnosisOffset);
+    const temporaryReport = `${reportPath}.${process.pid}.tmp`;
     writeFileSync(
-      reportPath,
+      temporaryReport,
       renderWatchReport({
         projectId: input.projectId,
         date,
@@ -998,9 +1005,10 @@ export function runWatchScan(input: WatchScanInput): WatchScanOutcome {
         remediesToday,
         stoppedToday,
         waiting: remedy.waiting,
-      }),
+      }) + diagnosisSection,
       "utf8",
     );
+    renameSync(temporaryReport, reportPath);
   }
   return {
     current: diff.current,

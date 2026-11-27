@@ -469,6 +469,11 @@ describe("watch-scan file readers", () => {
     };
 
     const first = runWatchScan(input);
+    const diagnosisSection = "\n## 7. agent の診断案\n\n>     保存済みの診断案\n";
+    await writeFile(
+      first.reportPath,
+      (await readFile(first.reportPath, "utf8")) + diagnosisSection,
+    );
     const second = runWatchScan({ ...input, now: new Date("2026-11-14T00:30:00Z") });
 
     const log = await readFile(first.logPath, "utf8");
@@ -478,6 +483,9 @@ describe("watch-scan file readers", () => {
       path.join("execution", "reports", "watch-scan", "watch-scan-20261114.md"),
     );
     const report = await readFile(second.reportPath, "utf8");
+    // 診断の後処理へ進む前に落ちても、見張り本体が既存の節を保持する。
+    expect(report.endsWith(diagnosisSection)).toBe(true);
+    expect(report.split("## 7. agent の診断案")).toHaveLength(2);
     expect(report).toContain("- 最後に見た時刻: `2026-11-14T00:30:00Z`");
     expect(report).toContain("## 3. 見張りの対象外\n\n- なし");
     expect(report).toContain("## 4. 手当て\n\n- なし");

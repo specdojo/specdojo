@@ -8,10 +8,14 @@ import { releaseLock, tryAcquireLock } from "../shared/cross-process-lock.js";
 import type { MemberRoster } from "../shared/specdojo-config.js";
 import { resolveMemberCommand, type ExecDefaultsConfig } from "./agent-config.js";
 import { usesAgentProcessGroup, waitForAgentExit } from "./run/agent-timeout.js";
-import { reportDate, type WatchScanOutcome, type WatchStalledLine } from "./watch-scan.js";
+import {
+  reportDate,
+  WATCH_DIAGNOSIS_HEADING,
+  type WatchScanOutcome,
+  type WatchStalledLine,
+} from "./watch-scan.js";
 
 const OUTPUT_LIMIT = 32 * 1024;
-const HEADING = "\n## 7. agent の診断案\n";
 
 type DiagnosisRecord = {
   key: string;
@@ -19,7 +23,7 @@ type DiagnosisRecord = {
   night: string;
   by: string;
   started_at: string;
-  status: "running" | "proposed" | "failed" | "timeout";
+  status: "running" | "proposed" | "failed" | "timeout" | "interrupted";
   proposal: string;
 };
 
@@ -34,11 +38,45 @@ function readRecord(path: string): DiagnosisRecord {
     typeof record.started_at !== "string" ||
     !record.target ||
     typeof record.target.id !== "string" ||
-    !["running", "proposed", "failed", "timeout"].includes(record.status ?? "") ||
+    !["running", "proposed", "failed", "timeout", "interrupted"].includes(record.status ?? "") ||
     typeof record.proposal !== "string"
   )
     throw new Error(`Invalid diagnosis record: ${path}`);
   return record as DiagnosisRecord;
+}
+
+function saveRecord(path: string, record: DiagnosisRecord): void {
+  const temporary = `${path}.${process.pid}.tmp`;
+  writeFileSync(temporary, `${JSON.stringify(record)}\n`);
+  renameSync(temporary, path);
+}
+
+function writeDiagnosisReport(
+  input: Parameters<typeof runWatchDiagnosis>[0],
+  records: DiagnosisRecord[],
+  warnings: string[],
+): void {
+  // agent の出力は引用として表示し、見出しや frontmatter を報告に注入させない。
+  const currentKeys = new Set(input.outcome.current.map((stall) => stall.key));
+  const night = diagnosisNight(input.now, input.timeZone);
+  const sections = records
+    .filter((record) => currentKeys.has(record.key) || record.night === night)
+    .map(
+      (record) =>
+        `- \`${record.target.id}\` / \`${record.by}\` / \`${record.status}\` / \`${record.started_at}\`\n\n${record.proposal
+          .replaceAll("\r", "")
+          .split("\n")
+          .map((line) => `>     ${line}`)
+          .join("\n")}`,
+    );
+  sections.push(...warnings.map((warning) => `>     ${warning.replaceAll("\n", " ")}`));
+  const report = readFileSync(input.outcome.reportPath, "utf8").split(WATCH_DIAGNOSIS_HEADING)[0]!;
+  const temporary = `${input.outcome.reportPath}.${process.pid}.tmp`;
+  writeFileSync(
+    temporary,
+    `${report}${WATCH_DIAGNOSIS_HEADING}\n診断は案であり、手は打っていない。\n\n${sections.join("\n\n") || "- なし"}\n`,
+  );
+  renameSync(temporary, input.outcome.reportPath);
 }
 
 export function resolveWatchDiagnosis(config: ExecDefaultsConfig): {
@@ -149,17 +187,30 @@ export async function runWatchDiagnosis(input: {
     // 走っている診断と同じ記録を同時に書かない。実行ロックとは別で、待たない。
     mkdirSync(directory, { recursive: true });
     lock = tryAcquireLock(join(directory, ".launch-lock"), { actor: "watch-diagnosis" });
-    if (!lock) return;
     for (const file of readdirSync(directory).filter((file) => file.endsWith(".json"))) {
-      const record = readRecord(join(directory, file));
+      const path = join(directory, file);
+      const record = readRecord(path);
+      // 専用ロックを取得できたなら、前の持ち主の診断は終了済みか心拍が途絶えている。
+      // PID は再利用されるため判定に使わず、既存のロックの寿命を正本にする。
+      if (lock && record.status === "running") {
+        record.status = "interrupted";
+        record.proposal = "診断の完了前に見張りが中断した。再診断は同じ止まりにつき 1 回まで。";
+        saveRecord(path, record);
+      }
       records.push(record);
     }
     const config = resolveWatchDiagnosis(input.config);
     if (input.enabled && config.by && lock) {
       const night = diagnosisNight(input.now, input.timeZone);
-      const seen = new Set(records.map((record) => record.key));
       const candidates = input.outcome.current
-        .filter((stall) => stall.category === "needs_decision" && !seen.has(stall.key))
+        .filter((stall) => {
+          const previous = records.filter((record) => record.key === stall.key);
+          return (
+            stall.category === "needs_decision" &&
+            (previous.length === 0 ||
+              (previous.length === 1 && previous[0]!.status === "interrupted"))
+          );
+        })
         .sort((a, b) => a.since.localeCompare(b.since) || a.key.localeCompare(b.key));
       if (
         candidates.length &&
@@ -178,9 +229,10 @@ export async function runWatchDiagnosis(input: {
         if (!command) throw new Error(`No command_template or command for ${config.by}`);
         const playbook = readFileSync(input.playbookPath, "utf8");
         const stall = candidates[0]!;
+        const retry = records.some((record) => record.key === stall.key);
         const path = join(
           directory,
-          `${createHash("sha256").update(stall.key).digest("hex")}.json`,
+          `${createHash("sha256").update(stall.key).digest("hex")}${retry ? ".retry" : ""}.json`,
         );
         const record: DiagnosisRecord = {
           key: stall.key,
@@ -191,9 +243,11 @@ export async function runWatchDiagnosis(input: {
           status: "running",
           proposal: "診断中。未完了のままなら人が実行記録を確認する。",
         };
-        // 起動前に予約。失敗・時間切れ・翌晩も同じ止まりを二度起こさない。
+        // 初回と再診断を別々に予約し、中断も晩ごとの回数へ数える。
         writeFileSync(path, `${JSON.stringify(record)}\n`, { flag: "wx" });
         records.push(record);
+        // 長い agent の実行へ進む前に、保存済みの案と今回の予約を報告へ出す。
+        writeDiagnosisReport(input, records, warnings);
         Object.assign(
           record,
           await diagnose(
@@ -203,9 +257,7 @@ export async function runWatchDiagnosis(input: {
             config.timeoutSeconds,
           ),
         );
-        const temporary = `${path}.${process.pid}.tmp`;
-        writeFileSync(temporary, `${JSON.stringify(record)}\n`);
-        renameSync(temporary, path);
+        saveRecord(path, record);
       }
     }
   } catch (error) {
@@ -214,25 +266,7 @@ export async function runWatchDiagnosis(input: {
     );
   }
   try {
-    // agent の出力は引用として表示し、見出しや frontmatter を報告に注入させない。
-    const currentKeys = new Set(input.outcome.current.map((stall) => stall.key));
-    const night = diagnosisNight(input.now, input.timeZone);
-    const sections = records
-      .filter((record) => currentKeys.has(record.key) || record.night === night)
-      .map(
-        (record) =>
-          `- \`${record.target.id}\` / \`${record.by}\` / \`${record.status}\` / \`${record.started_at}\`\n\n${record.proposal
-            .replaceAll("\r", "")
-            .split("\n")
-            .map((line) => `>     ${line}`)
-            .join("\n")}`,
-      );
-    sections.push(...warnings.map((warning) => `>     ${warning.replaceAll("\n", " ")}`));
-    const report = readFileSync(input.outcome.reportPath, "utf8").split(HEADING)[0]!;
-    writeFileSync(
-      input.outcome.reportPath,
-      `${report}${HEADING}\n診断は案であり、手は打っていない。\n\n${sections.join("\n\n") || "- なし"}\n`,
-    );
+    writeDiagnosisReport(input, records, warnings);
     for (const warning of warnings) process.stderr.write(`[watch-diagnosis] ${warning}\n`);
   } finally {
     if (lock) releaseLock(lock);
