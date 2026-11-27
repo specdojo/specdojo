@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-EVWA"]'
+- v: 1
+  id: reg_9412256ad4e043c7b31ed208d21a46b8
+  ts: "2026-11-27T10:21:24Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_be5ca0ebf0c045888c567a5b9bc5536a
