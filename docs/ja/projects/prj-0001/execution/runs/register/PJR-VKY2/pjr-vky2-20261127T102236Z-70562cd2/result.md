@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-VKY2
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/plan.md
   started_at: "2026-11-27T10:22:40.711Z"
+  completed_at: "2026-11-27T10:38:27.484Z"
   agent: opus-executor
+  block_reason: "executor reported incomplete: Implemented the split of the sync branches into project/`<id>`/sync/register and project/`<id>`/sync/exec-events. Added the new `sync` config with per-kind `branches` and kep…"
 ---
 
 # Edit Result
