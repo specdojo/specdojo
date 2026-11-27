@@ -2,35 +2,49 @@
   "schema_version": 1,
   "task_id": "PJR-F4MG",
   "run_id": "pjr-f4mg-20261127T135541Z-cf9c48cc",
-  "updated_at": "2026-11-27T14:05:38.680Z",
+  "updated_at": "2026-11-27T14:54:34.196Z",
   "stages": {
     "executor": {
-      "status": "blocked",
-      "actor": "opus-executor",
+      "status": "succeeded",
+      "actor": "sol-executor",
       "attempts": 1,
-      "started_at": "2026-11-27T13:59:07.080Z",
-      "completed_at": "2026-11-27T14:05:38.680Z",
+      "started_at": "2026-11-27T14:43:58.693Z",
+      "completed_at": "2026-11-27T14:50:31.513Z",
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/evidence.json"
     },
     "reporter": {
-      "status": "pending",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "started_at": "2026-11-27T14:54:30.091Z",
+      "completed_at": "2026-11-27T14:54:30.091Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/result.md"
     },
-    "prepare": {
-      "status": "succeeded",
-      "actor": "opus-executor",
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
       "attempts": 1,
-      "started_at": "2026-11-27T13:58:26.373Z",
-      "completed_at": "2026-11-27T13:59:07.078Z",
+      "started_at": "2026-11-27T14:54:34.196Z",
+      "completed_at": null,
       "artifact_ref": null
     }
   },
   "artifacts": {
     "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/plan.md",
     "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/result.md"
-  }
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-27T14:19:46.554Z",
+      "notes": [
+        "PJR-BXYM が統合され、入門の型の組（5 つの型）が docs/ja/specdojo/guides/civic-tech-starter-guide.md に決まった。BXYM は review（人の確かめ待ち）だが、その組を正として入門の型の組の英語版を作る。組が後で変わった場合の扱いは個票の対応結果に書く。"
+      ]
+    },
+    {
+      "at": "2026-11-27T14:43:58.662Z",
+      "notes": [
+        "前回は親の検証の lint-md-changed・lint-fm-changed・lint-fm で止まった。lint:fm は --frail のため、docs/en/specdojo の sample・template が日本語版と同じ rulebook の ID（例: specdojo:prj-overview-rulebook）を参照し、「rulebook ... is ambiguous; cannot check deliverable_type」の警告が約 1,300 件出たことが失敗の原因。英語版の rulebook を同じ ID で置く場合の解き方（同じ言語の rulebook を優先して解決する、英語版の ID や名前空間を分ける、など）を決めて直し、lint:fm・lint:md を通す。決めた内容と理由を個票の対応結果と報告の handoff に書く。既存の日本語版の文書の警告を増やさない。"
+      ]
+    }
+  ]
 }

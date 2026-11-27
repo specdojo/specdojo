@@ -70,4 +70,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 - PJR-BXYM が統合され、入門の型の組（5 つの型）が docs/ja/specdojo/guides/civic-tech-starter-guide.md に決まった。BXYM は review（人の確かめ待ち）だが、その組を正として入門の型の組の英語版を作る。組が後で変わった場合の扱いは個票の対応結果に書く。
 
+## 再開の指示（2026-11-27T14:43:58.662Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 前回は親の検証の lint-md-changed・lint-fm-changed・lint-fm で止まった。lint:fm は --frail のため、docs/en/specdojo の sample・template が日本語版と同じ rulebook の ID（例: specdojo:prj-overview-rulebook）を参照し、「rulebook ... is ambiguous; cannot check deliverable_type」の警告が約 1,300 件出たことが失敗の原因。英語版の rulebook を同じ ID で置く場合の解き方（同じ言語の rulebook を優先して解決する、英語版の ID や名前空間を分ける、など）を決めて直し、lint:fm・lint:md を通す。決めた内容と理由を個票の対応結果と報告の handoff に書く。既存の日本語版の文書の警告を増やさない。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

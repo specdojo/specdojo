@@ -1,0 +1,101 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "英語版34文書とREADME・文書サイト入口を整備し、個票を更新しました。executorの検証は成功し、親runnerの検証とホスト側ビルドへ引き継ぎます。",
+  "handoff": [
+    "`npm run docs:build` は `.specdojo/doc-index.json` を更新するためsandboxでは実行していません。ホスト側で実行し、英語入口・両ガイド・5つの型のリンクと描画を確認してください。個票の作業6は理由付きでopenです。",
+    "npm配布には保護された `package.json` の `files` に `docs/en/specdojo` と `!docs/en/specdojo/**/generated/**` を追加する必要があります。executorでは変更していません。",
+    "`kata_locale`、`init` の質問と `--kata-locale`、`kata list` の `LOCALE` 列は後続項目で実装してください。登録簿の日本語固定表記も確認対象です。OS言語による既定値とCLI・オーケストレーターの言語切替は未決として個票に記録しました。",
+    "PJR-BXYMのreviewで組や本文が変わった場合は、翻訳追従todoを起票し、各文書の `translated_from.commit` から日本語差分を照合して構成ファイル・入門ガイド・英語入口を更新します。この扱いは個票にも記録しました。"
+  ],
+  "validations": [
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --write .remarkrc.yaml README.md docs/index.md docs/en/index.md 'docs/en/specdojo/**/*.md' docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md docs/ja/specdojo/standards/id-and-file-naming-standard.md docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "passed",
+      "summary": "変更したMarkdown・YAMLを整形しました。"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --write docs/en/index.md docs/en/specdojo/rulebooks/sf-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "passed",
+      "summary": "最終追記した3ファイルも整形済みです。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema tmp/json-schema-meta.schema.json --data docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "passed",
+      "summary": "JSON Schema 2020-12で検証しました。直接指定時のAjv登録ID衝突を参照ラッパーで解消。一時ファイルは削除済みです。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に成功しました。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成文書・再exportへの参照などの警告があります。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の検証と派生ビュー生成に成功しました。"
+    },
+    {
+      "command": "node tmp/check-english-scope.mjs",
+      "status": "passed",
+      "summary": "34文書のID・メタ情報・翻訳元commit・雛形トークン・view-slotを照合。実リンク66件の参照先を確認しました。検証用一時ファイルは削除済みです。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーはありません。"
+    },
+    {
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "書き込み禁止の文書索引を更新するため、ホスト側での実行が必要です。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": ".remarkrc.yaml",
+      "status": "changed",
+      "path": ".remarkrc.yaml"
+    },
+    {
+      "target": "README.md",
+      "status": "changed",
+      "path": "README.md"
+    },
+    {
+      "target": "docs/en/index.md",
+      "status": "changed",
+      "path": "docs/en/index.md"
+    },
+    {
+      "target": "docs/index.md",
+      "status": "changed",
+      "path": "docs/index.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md"
+    },
+    {
+      "target": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml"
+    },
+    {
+      "target": "docs/en/specdojo/guides/quick-start-guide.md",
+      "status": "changed",
+      "path": "docs/en/specdojo/guides/quick-start-guide.md"
+    }
+  ]
+}
+</specdojo_executor_evidence>

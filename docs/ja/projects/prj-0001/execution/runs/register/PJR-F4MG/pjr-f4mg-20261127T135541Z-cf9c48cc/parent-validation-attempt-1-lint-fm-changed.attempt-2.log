@@ -1,0 +1,88 @@
+parent validation: lint-fm-changed
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:fm:changed
+> node tools/lint-changed.mjs fm
+
+
+
+--- stderr ---
+[4m[33mdocs/en/specdojo/samples/br-sample.md[39m[24m
+ [33mwarning[39m [1mspecdojo.type: rulebook specdojo:br-rulebook is ambiguous; cannot check deliverable_type.[22m                                                    frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/samples/prj-issues-and-approach-sample.md[39m[24m
+ [33mwarning[39m [1mspecdojo.type: rulebook specdojo:prj-issues-and-approach-rulebook is ambiguous; cannot check deliverable_type.[22m                               frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/samples/prj-overview-sample.md[39m[24m
+ [33mwarning[39m [1mspecdojo.type: rulebook specdojo:prj-overview-rulebook is ambiguous; cannot check deliverable_type.[22m                                          frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/samples/sf-index-sample.md[39m[24m
+ [33mwarning[39m [1mspecdojo.type: rulebook specdojo:sf-index-rulebook is ambiguous; cannot check deliverable_type.[22m                                              frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/br-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:br-rulebook is ambiguous; cannot check deliverable_type.[22m                      frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-change-request-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-decision-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-dependent-items-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-derived-items-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-epic-items-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-epic-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-handoff-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-handoffs-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-index-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-issue-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-note-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-question-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-risk-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-todo-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-views-by-owner-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-views-by-priority-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/pjr-views-by-status-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                     frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/prj-issues-and-approach-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:prj-issues-and-approach-rulebook is ambiguous; cannot check deliverable_type.[22m frontmatter-deliverable-type
+
+[4m[33mdocs/en/specdojo/templates/prj-overview-template.md[39m[24m
+ [33mwarning[39m [1mspecdojo.frontmatter_template.specdojo.type: rulebook specdojo:prj-overview-rulebook is ambiguous; cannot check deliverable_type.[22m            frontmatter-deliverable-type
+
+[4m[33mdocs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md[39m[24m
+ [33mwarning[39m [1mspecdojo.type: rulebook specdojo:pjr-rulebook is ambiguous; cannot check deliverable_type.[22m                                                   frontmatter-deliverable-type
+
+[33m⚠[39m 25 warnings

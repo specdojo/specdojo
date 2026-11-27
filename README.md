@@ -6,7 +6,7 @@ SpecDojo is an open-source toolkit that aims to make civic tech sustainable by r
 
 SpecDojo organizes specifications and design upstream of other spec-driven development tools, supporting both new work and the recovery of knowledge from existing systems.
 
-Start with the [Quick Start guide](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) and explore the [documentation site](https://specdojo.github.io/specdojo/ja/). Both are currently in Japanese.
+Start with the [Quick Start guide](https://specdojo.github.io/specdojo/en/specdojo/guides/quick-start-guide.html) and the [Civic Tech Starter Guide](https://specdojo.github.io/specdojo/en/specdojo/guides/civic-tech-starter-guide.html). The [English documentation](https://specdojo.github.io/specdojo/en/) includes five starter kata. The English edition is being built in stages; the full [documentation site](https://specdojo.github.io/specdojo/ja/) is in Japanese, which remains the source of truth.
 
 SpecDojo は、Spec道（仕様道）の道場です。
 仕様と設計を作り、運用まで保つための体系を整えます。判断を記帳し、型に沿って実戦で書き、評定で鍛え続け、講評で完了を判断します。人と生成 AI が同じ成果物を作成・検証・更新できるようにし、仕様駆動開発のツールに対しては、その上流で仕様と設計の体系を担います。
