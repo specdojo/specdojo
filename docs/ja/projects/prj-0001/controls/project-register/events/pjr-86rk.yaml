@@ -109,3 +109,19 @@
       from: review
       to: in-progress
   previous_event_id: reg_5ffa1d538b664aaca160a8efa9c4f2cf
+- v: 1
+  id: reg_69ed5bea42334b64a14e55b87577b758
+  ts: "2026-11-27T12:23:48Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+  previous_event_id: reg_5ce4f20cf12940e3a000bf060829e3fe
