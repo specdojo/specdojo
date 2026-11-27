@@ -89,9 +89,10 @@ onBeforeUnmount(stopObserving);
  * `.VPLocalNav` の padding-top の両方へ使う。帯を固定表示にして文書の流れから外し、本文のずれを帯の高さ 1 回分にそろえるため、
  * 960px 以上では local nav の padding-top を外し、sticky の位置へ帯の高さを足す。
  * 帯が無い版では変数が未設定（0px）になり、既定と同じ値になる。
+ * VitePress の規則は scoped（`.VPLocalNav[data-v-…]`、詳細度 0,2,0）なので、`html .Layout > .VPLocalNav`（0,2,1）で上書きする。
  */
 @media (min-width: 960px) {
-  .VPLocalNav {
+  html .Layout > .VPLocalNav {
     padding-top: 0;
     top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px));
   }
