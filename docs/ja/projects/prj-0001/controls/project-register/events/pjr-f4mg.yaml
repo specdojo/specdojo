@@ -140,3 +140,16 @@
       from: "parent validation failed: lint-md-changed, lint-fm-changed, lint-fm"
       to: "-"
   previous_event_id: reg_3d2f1b9a38b14d5ea62a4f4510b88beb
+- v: 1
+  id: reg_965b60b3eba8451690686286bde613e6
+  ts: "2026-11-27T14:55:19Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_10f47c878a234de79d6ce349ead117b0
