@@ -86,7 +86,8 @@ describe("NextChannelBanner styles", () => {
 
     expect(blocks).toHaveLength(2);
     expect(blocks[0]).toMatch(/\.next-channel-banner\s*{[^}]*position:\s*fixed/);
-    expect(blocks[1]).toMatch(/\.VPLocalNav\s*{[^}]*padding-top:\s*0/);
+    // VitePress の scoped 規則（`.VPLocalNav[data-v-…]`）より詳細度を高くしないと上書きが効かない。
+    expect(blocks[1]).toMatch(/html \.Layout > \.VPLocalNav\s*{[^}]*padding-top:\s*0/);
     expect(blocks[1]).toContain("var(--vp-layout-top-height, 0px)");
   });
 });
