@@ -39,6 +39,12 @@ specdojo:
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`package.json` など）は変えない。
 - 作業を終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
+- 2 回目の実行（2026-11-27）で、schedule の task の行の「内容」を直している。1 回目では、型の task（`T-KATA-WAVE-3-atc-index-sample-140` など）の対象が成果物カタログにないため、task 名（「完成版確定」）が出て「次にすること」と重なり、blocked の行（`T-KATA-WAVE-1-bes-index-140` など）は `-` だった。
+  - 「内容」には、対象の文書の名前を出す。ready.json の task の `local_id`（例: `atc-index-sample`）を使い、成果物カタログか型のカタログ（`dct-kata.yaml` など）から引ける場合は、その文書の名前（H1 などの人が読む名前が引ければそれ、引けなければ `local_id`）を出す。
+  - ready.json にない blocked・doing の task も、schedule の task の定義から `local_id` を引いて同じように出す。
+  - task 名は、「次にすること」と同じ中身になるときは「内容」に出さない。
+  - 単体テストに、型の task と blocked の task の行の「内容」を確かめる場合を足している。
+
 ## 4. 作業内容
 
 | No  | 作業                                                                           | 担当 | 状態 | メモ                                                            |
