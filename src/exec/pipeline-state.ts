@@ -11,7 +11,7 @@ export type PipelineStageStatus =
 
 // 統合段（commit → merge → worktree 撤去）は agent ではなく runner が実行する段。executor /
 // reporter と同じ粒度で記録し、agent 段が成功したまま統合だけ失敗した run を特定できるようにする。
-export type PipelineStageRole = AgentStageRole | "integrate";
+export type PipelineStageRole = AgentStageRole | "prepare" | "integrate";
 
 export type PipelineStageState = {
   status: PipelineStageStatus;
@@ -49,6 +49,7 @@ export type PipelineIntegrateStageState = PipelineStageState & {
 
 // integrate は統合段を持たない旧 run の state に存在しないため任意項目とする。
 export type PipelineStages = Record<AgentStageRole, PipelineStageState> & {
+  prepare?: PipelineStageState;
   integrate?: PipelineIntegrateStageState;
 };
 
@@ -268,6 +269,7 @@ export function isPipelineState(value: unknown): value is PipelineState {
     return false;
   if (state.resume_notes !== undefined && !isResumeNotes(state.resume_notes)) return false;
   const stages = state.stages as Record<string, unknown>;
+  if (stages.prepare !== undefined && !isStageState(stages.prepare)) return false;
   if (stages.integrate !== undefined && !isIntegrateStageState(stages.integrate)) return false;
   return isStageState(stages.executor) && isStageState(stages.reporter);
 }

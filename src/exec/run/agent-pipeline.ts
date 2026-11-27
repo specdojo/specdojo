@@ -24,6 +24,7 @@ import {
   writePipelineState,
   type PipelineResumeNote,
   type PipelineState,
+  type PipelineStageState,
 } from "../pipeline-state.js";
 import {
   deriveReporterFacts,
@@ -435,6 +436,7 @@ export async function runAgentPipeline(params: {
   /** Resume instructions recorded in the checkpoint (earlier entries plus this resume's). */
   resumeNotes?: readonly PipelineResumeNote[];
   runId?: string;
+  preparationStage?: PipelineStageState;
   /** reporter が返す出力の mode。省略時は edit。 */
   mode?: TaskMode;
   executorRateLimitOptions?: PinnedRateLimitRunOptions;
@@ -498,6 +500,7 @@ export async function runAgentPipeline(params: {
       ? { resumeNotes: params.resumeNotes.map((entry) => ({ ...entry, notes: [...entry.notes] })) }
       : {}),
   });
+  if (params.preparationStage) state.stages.prepare = params.preparationStage;
   state = updatePipelineStage(
     state,
     "executor",

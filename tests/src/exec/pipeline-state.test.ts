@@ -89,6 +89,17 @@ describe("pipeline state", () => {
     });
     state = updatePipelineStage(
       state,
+      "prepare",
+      {
+        status: "succeeded",
+        attempts: 1,
+        started_at: "2026-08-10T06:59:00Z",
+        completed_at: "2026-08-10T07:00:00Z",
+      },
+      "2026-08-10T07:00:00Z",
+    );
+    state = updatePipelineStage(
+      state,
       "executor",
       {
         status: "succeeded",

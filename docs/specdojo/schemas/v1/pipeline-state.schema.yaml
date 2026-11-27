@@ -2,7 +2,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo executor/reporter pipeline state schema"
 description: >
-  Run-scoped recovery checkpoint persisted by the runner at executor, reporter, and integrate
+  Run-scoped recovery checkpoint persisted by the runner at prepare, executor, reporter, and integrate
   stage boundaries.
 type: object
 additionalProperties: false
@@ -63,6 +63,9 @@ properties:
     additionalProperties: false
     required: [executor, reporter]
     properties:
+      # Register worktree preparation, before the executor starts. Absent in older runs.
+      prepare:
+        $ref: "#/$defs/stage"
       executor:
         $ref: "#/$defs/stage"
       reporter:
