@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-27T12:33:45Z"
   due_on: "2026-11-30"
+  block_reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AEWP. Generated docs are gitignored and must be rebuilt per worktr…"
   derived_from:
     - PJR-86RK
 ---
