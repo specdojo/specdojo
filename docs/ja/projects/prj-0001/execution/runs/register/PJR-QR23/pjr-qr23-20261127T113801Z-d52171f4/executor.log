@@ -1,0 +1,13 @@
+`ifx-file-rulebook` の minor 3 件を直し、個票の対応結果を更新しました。`lint:md` と `lint:fm` は親 runner の実行に任せ、`npx prettier --write` で整形しただけです。
+
+- **F001（重複）:** 6.1 の `file`・`files` の使い分けは 3.1 の参照に短縮しました。6.2 の正本参照は、記述方法を 5.6 の 3 項目めに委ねる形にしました。
+- **F002（追従対象）:** 8.2 に追従対象の表を追加しました。対象は `ifx-index` の `spec_ref`、参照元の `ifx-cmd`、正本スキーマ、reader・writer の実装とテストです。担当 Role code は `BA`・`ARC`・`DEV` としました。
+- **F003（検証コマンド）:** 8.1 に `npx prettier --check <path>` と `npm run validate:schema:file` を、終了コードと再実行手順つきで追加しました。`no-ifx-file-schema` の間は `validate:schema:file` を使わず、`npm run validate:schema` で確かめる旨も書きました。
+
+個票には 5.2.1 として、grade の minor ごとの扱いを表にしました。残りの rulebook の minor 3 件（F004〜F006）は 1 回目の対応で解消済みです。sample の minor のうち、取引状態欠落の行の混在（F002）は sample のコメント 51・52 行で事象ごとに分かれていることを確認しました。ほかの sample の指摘は 1 回目の YAML 化で除いた記述が対象で、中身は再確認していません。
+
+CHANGELOG の文案も更新しました。型の grade は統合の後に orchestrator が流すため、個票の作業 No.3 は `open` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-rulebook の minor（重複整理、8.2 追従対象の追加、8.1 検証コマンドの具体化）を直し、個票の対応結果に minor の扱いの表と CHANGELOG 文案を記載した。","handoff":["型の grade は統合の後に orchestrator が流す（個票の作業 No.3 は open のまま）。","8.2 の追従対象表の担当 Role code（BA/ARC/DEV）は、メンバー定義を確認せずに置いた仮置きである。適用先の定義と合うか確認すること。","sample の minor（F001〜F008）のうち、1 回目の YAML 化で除いた記述が解消されたかは再 grade で確認する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/ifx-file-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-qr23-ifx-file-kata-refine.md","status":"passed","summary":"両ファイルを整形した"},{"command":"npm run validate:history-links","status":"not_run","reason":"","summary":"個票の変更は Markdown リンクを含まない記述のみ。実行していない。"}]}
+</specdojo_executor_evidence>
