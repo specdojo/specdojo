@@ -3,6 +3,10 @@
 
 export const LAYOUT_TOP_HEIGHT_VAR = "--vp-layout-top-height";
 
+// VitePress がナビゲーションを固定表示にする幅。これ未満では `position: relative` のため、
+// 変数を設定すると帯の分だけ二重に下がって空白ができる。
+export const FIXED_NAV_MEDIA_QUERY = "(min-width: 960px)";
+
 export interface StyleTarget {
   style: {
     setProperty(name: string, value: string): void;
@@ -10,8 +14,12 @@ export interface StyleTarget {
   };
 }
 
-export function applyLayoutTopHeight(root: StyleTarget, height: number): void {
-  if (height > 0) {
+export function applyLayoutTopHeight(
+  root: StyleTarget,
+  height: number,
+  isFixedNav: boolean = true,
+): void {
+  if (isFixedNav && height > 0) {
     root.style.setProperty(LAYOUT_TOP_HEIGHT_VAR, `${Math.ceil(height)}px`);
     return;
   }

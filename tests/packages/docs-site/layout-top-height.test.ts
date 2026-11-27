@@ -43,6 +43,15 @@ describe("applyLayoutTopHeight", () => {
     expect(root.values.get(LAYOUT_TOP_HEIGHT_VAR)).toBe("62px");
   });
 
+  it("does not set the variable on narrow screens where the nav is not fixed", () => {
+    const root = createRoot();
+    applyLayoutTopHeight(root, 38);
+
+    applyLayoutTopHeight(root, 38, false);
+
+    expect(root.values.has(LAYOUT_TOP_HEIGHT_VAR)).toBe(false);
+  });
+
   it("removes the variable when the banner has no height", () => {
     const root = createRoot();
     applyLayoutTopHeight(root, 38);
