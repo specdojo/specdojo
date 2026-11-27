@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_07d4b36dda774630a83a662c64182000
+- v: 1
+  id: reg_70e72a1c8ebd4b3982d5e46b038b2b4c
+  ts: "2026-11-27T23:48:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票の対応結果・親の検証を確かめ、統合後の実際の見張り（--no-diagnosis）で、再起動で残った PJR-VEHX の記録が interrupted に回復し、朝報告に V681 の案とともに載ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 持ち主のいない running の診断記録を interrupted として回復し、同じ止まりを 1 回だけ再診断できるようにした（晩の上限に数える）。朝報告の診断の節は描き直しや中断でも残る
+  previous_event_id: reg_1ad5b51bb2a34a14ad746ed1cebdf2ca
