@@ -146,6 +146,13 @@ rate_limit_policy:
 # reset horizon により retryable と回復戦略が変わるため、詳細は各 provider 設計書の
 # limit 表を参照する。stderr の実文言は CLI バージョンで変わりうるため、下記 pattern は
 # 実際の出力で検証してから確定する。
+# 見張りが判断の要る止まりを読み取り専用の agent に診断させる（PJR-YNQG）。案だけを朝報告に載せ、手は打たない。
+watch:
+  diagnosis:
+    by: watch-diagnoser
+    max_per_night: 3
+    timeout_seconds: 300
+
 providers:
   claude:
     # 1 回の起動の上限。hard の項目でも 2 時間を超える起動は固まったとみなす（PJR-K8F1、2026-11-23 indie の決定）。
