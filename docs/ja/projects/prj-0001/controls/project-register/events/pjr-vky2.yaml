@@ -99,3 +99,16 @@
       from: "executor reported incomplete: Implemented the split of the sync branches into project/`<id>`/sync/register and project/`<id>`/sync/exec-events. Added the new `sync` config with per-kind `branches` and kep…"
       to: "-"
   previous_event_id: reg_ac62a47db16a403e945ff5f5ea628369
+- v: 1
+  id: reg_085e30a6c41c47bb97a7676ca9bfa86b
+  ts: "2026-11-27T11:28:03Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b5ddcf3beb52461392320d51017f4510
