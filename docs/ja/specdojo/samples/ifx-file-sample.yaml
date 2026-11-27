@@ -1,0 +1,181 @@
+# specdojo-schema: none reason=no-ifx-file-schema
+# 駄菓子屋きぬや 取引状態・販売実績控えファイル連携仕様サンプル
+# ifx-file-rulebook に従う複数ファイル・正本スキーマ参照の完成例。
+# _ASSUMPTION_: 販売管理 CLI 仕様（clis-sample）の各サブコマンド実行時に、進行中の取引状態と確定後の販売実績控えをローカルで授受・照合する契約例。
+# CLI 内部の取引記録は外部 I/F 一覧の登録対象外のため、ifx-index の spec_ref からは参照せず、
+# 販売管理 CLI 仕様の入出力表が参照する正本（kinuya-session-schema / kinuya-sales-record-schema）を schema_ref と共有する。
+# 照合先は参照元の販売管理 CLI 仕様とする。
+# _UNDECIDED_: api_sync_status と照合する本部売上登録 API（ifx-api-sample）は、取引 ID による重複排除は定めるが、
+# 結果不明時の受付照会の仕様は未整備。本部 API 契約で受付照会の方式が決まるまでは自動再送せず、店頭で保留する。
+#
+# 参照する正本スキーマの制約（required_fields で表せないもの。全項目は正本が持つ）:
+# - 両スキーマとも additionalProperties: false で未定義の項目を拒否する。
+# - current-tx.json の status は open / payment_requested の 2 値。payment_requested では line_items を 1 件以上とする。
+# - TX-*.json の line_items は常に 1 件以上。api_sync_status が accepted 以外なら print_status は not_requested に限る。
+# - tendered_yen - total_yen = change_yen の一致はスキーマで表せないため、読み手の CLI が検査し、不一致は malformed とする。
+# 検証は JSON Schema 2020-12 対応のバリデータ（format 検査を有効）で、current-tx.json を kinuya-session-schema、
+# TX-*.json を kinuya-sales-record-schema に照らして行う。
+#
+# 状態値の意味:
+# - status open: 明細追加中。sales add / total / cancel を受け付ける。
+# - status payment_requested: 控えを pending で保存した後、本部へ送る前に書く。送信済みの可能性があるため取消は不可。
+# - api_sync_status pending: 送信前に控えを保存した状態。送信済みかどうかは current-tx.json の status で判定する。
+# - api_sync_status accepted: 本部が受付を返した。会計確定済みで再送しない。
+# - api_sync_status rejected: 本部が拒否を返した。未受付と確認済みで、原因を直した後だけ同じ取引を再送できる。
+# - api_sync_status unknown: 接続不能・時間切れで受付結果が不明。未登録と断定せず、本部受付の照会まで保留する。
+# - print_status not_requested / printed: 印字前、または印字完了。
+# - print_status failed / unknown: 印字未完了の警告。会計は維持し、保存済みレシートだけを再印刷する。
+#
+# 会計確定の途中で止まった後の再開判定（current-tx.json の status と同じ tx_id の控えの組み合わせ）:
+# - open / 控えなし: 明細追加中。通常どおり受け付ける。
+# - open / pending: 送信前に停止（未送信が確定）。sales complete は控えを作り直して続ける。sales add / cancel は先に控えを削除してから進める。
+# - payment_requested / pending: 送信したか不明。控えを unknown にして exit code 3（受付結果不明）で停止し、本部受付の照会を待つ。
+# - payment_requested / unknown: 本部受付の照会を待つ。結果で accepted または rejected にする。
+# - payment_requested / rejected: 未受付が確定。原因を直した後だけ同じ tx_id で再送する。
+# - payment_requested / accepted（print_status not_requested）: 印字したか不明。print_status を unknown にして警告し、current-tx.json を削除する。再印刷は保存済みレシートだけで行う。
+# - payment_requested / accepted（not_requested 以外）: 削除の前に停止。current-tx.json を削除して会計確定とする。
+# - payment_requested / 控えなし: 書き込み順序と矛盾。missing の sales_record_json に従い exit code 3 で停止する。
+# - なし / accepted: 会計確定済み。新規取引を受け付ける。
+# - なし / pending・unknown・rejected: 書き込み順序と矛盾。missing の current_tx_json に従い、本部受付と照合するまで新規取引を始めない。
+#
+# 受入ケース（期待結果が一意に決まること）:
+# - 正常（明細追加）: current-tx.json、status open、明細 1 件 → スキーマ適合。sales add / total を継続できる。
+# - 正常（会計確定）: TX-*.json、明細 1 件、accepted、printed、釣銭一致 → スキーマ適合。current-tx.json は削除済みで明細は控えに残る。
+# - 不正（控えの明細）: TX-*.json から line_items を除く → スキーマ不適合。malformed として退避し照合へ引き継ぐ。
+# - 不正（必須欠落）: current-tx.json から status を除く → スキーマ不適合。malformed として exit code 2。
+# - 不正（状態値）: current-tx.json、status completed → enum 違反。malformed として扱う。
+# - 不正（組み合わせ）: TX-*.json、unknown かつ printed → then 違反。malformed として退避し照合へ引き継ぐ。
+# - 未解決: TX-*.json が unknown、current-tx.json が同じ tx_id で payment_requested → 適合だが未解決。新規取引を始めず照会を待つ。
+#
+# 異常時の利用者の次の手:
+# - 取引未開始（sales add / total / complete / cancel で current-tx.json がない）: 空の状態ファイルを作らず exit code 2 で停止。店番担当が sales start で始め直す。
+# - 未解決の控えがある（sales start で pending / unknown / rejected の控えがある）: 新規取引を始めず exit code 3 で停止。店主代表と DEV が data/sales/ の控えを本部受付と照合して解決する。
+# - 取引の二重開始（current-tx.json が既にある）: 店番担当が sales total で既存明細を確認し、open なら続けるか取り消し、payment_requested なら店主代表が本部受付と控えを照合する。
+# - 破損・保存失敗（malformed / io_error）: ファイル削除や強制再実行を禁止し、本部受付の有無を照合してから回復手段を選ぶ。受付済みなら控えのみ回復し、未受付時のみ再登録する。
+
+x-spec-meta:
+  id: specdojo:ifx-file-sample
+  type: api
+  status: draft
+  title: 駄菓子屋きぬや 取引状態・販売実績控えファイル連携仕様
+  rulebook: specdojo:ifx-file-rulebook
+  based_on:
+    - specdojo:clis-sample
+
+files:
+  - name: current-tx.json
+    naming_rule: current-tx.json
+    location: <store-data-dir>/.session/current-tx.json
+    description: >-
+      進行中の現金販売取引の明細・金額集計・会計要求状態を保持し、
+      コマンド間での状態引き継ぎ、二重開始防止、および中断時の再開判定に用いる状態ファイル。
+    writer: 販売管理 CLI（sales start で新規生成、sales add / complete でアトミック更新、会計確定または open での cancel で削除）
+    reader: 販売管理 CLI（各サブコマンド起動時の状態検証・再開判定）および店主代表・開発担当（障害時の状態照合）
+    format: JSON
+    encoding: UTF-8
+    schema_ref: schemas/kinuya-session.schema.json
+    required_fields:
+      - schema_version
+      - tx_id
+      - started_at
+      - status
+      - line_items
+      - subtotal_yen
+      - tax_yen
+      - total_yen
+
+  - name: TX-YYYYMMDD-NNNN.json
+    naming_rule: TX-<YYYYMMDD>-<NNNN>.json
+    location: <store-data-dir>/data/sales/TX-<YYYYMMDD>-<NNNN>.json
+    description: >-
+      会計確定要求時の販売実績明細（商品・単価・数量）と金額集計、預かり金・釣銭、本部売上登録 API の受付結果、
+      およびレシート印字状態を記録する証跡ファイル。current-tx.json の削除後も明細の正本として残し、
+      販売管理 CLI は会計確定後に削除・上書きしない（受付結果と印字状態の更新を除く）。
+    writer: 販売管理 CLI（sales complete の送信前に pending で新規生成し、本部受付応答受領・receipt-print 実行後にアトミック更新）
+    reader: 販売管理 CLI（二重送信抑止・回復照合）、店主代表（PO）・開発担当（DEV）（通信失敗・印字未完了時の照合）
+    format: JSON
+    encoding: UTF-8
+    schema_ref: schemas/kinuya-sales-record.schema.json
+    required_fields:
+      - schema_version
+      - tx_id
+      - business_date
+      - seq_no
+      - line_items
+      - subtotal_yen
+      - tax_yen
+      - total_yen
+      - tendered_yen
+      - change_yen
+      - api_sync_status
+      - print_status
+      - recorded_at
+
+source: 店舗端末の販売管理 CLI（sales start / add / total / complete / cancel）
+target: 店舗端末の販売管理 CLI（後続サブコマンド・回復照合処理）および店頭運用・保守確認
+direction: bidirectional
+format: JSON
+timing: >-
+  取引開始時、明細追加時、会計確定要求前後、本部売上登録応答受領時、
+  レシート印字完了後、および中断・障害後の再開照合時
+
+transport:
+  method: ローカルファイルシステム
+  endpoint: <store-data-dir>/（.session/ および data/sales/）
+  frequency: 取引操作ごとに都度
+  atomic_write: >-
+    各ファイルは同一ディレクトリ内の一時ファイル（.tmp）へ書き込んで fsync し、renameSync で置換した後に
+    ディレクトリも fsync する。sales complete は次の順に書き、前の段の永続化を確かめてから次へ進む。
+    (1) current-tx.json の明細と金額を写した TX-*.json を api_sync_status pending で書く。
+    (2) current-tx.json の status を payment_requested にする。
+    (3) 本部売上登録 API へ送り、応答で TX-*.json の api_sync_status を accepted / rejected / unknown にする。
+    rejected なら「売上登録失敗（exit code 3）」、unknown なら「売上登録失敗（exit code 3、受付結果不明）」で停止し、
+    current-tx.json と TX-*.json をどちらも保持する。(4) と (5) へは進まない。
+    (4) accepted の永続化を確かめた後だけ receipt-print を実行し、TX-*.json の print_status を更新する。
+    (5) TX-*.json が accepted で永続化されていることを確かめた場合だけ current-tx.json を削除する。
+    本部へ送るのは (2) の後に限るので、status が open なら未送信と判定できる。
+    途中で止まったファイルの組み合わせの扱いは、冒頭コメントの再開判定に従う。
+
+schema:
+  json:
+    root_type: object
+    content_type: application/json
+    encoding: UTF-8
+  references:
+    session_schema: schemas/kinuya-session.schema.json
+    sales_record_schema: schemas/kinuya-sales-record.schema.json
+
+error_handling:
+  missing:
+    current_tx_json:
+      action: >-
+        sales start 実行時に存在しない場合は、生成の前に data/sales/ の控えを検査する。
+        api_sync_status が pending / unknown / rejected の控えが 1 件でもあれば生成せず、
+        「売上登録失敗（exit code 3、受付結果不明）」で停止して店主代表（PO）と開発担当（DEV）の本部受付照合へ引き継ぐ。
+        未解決の控えがない場合だけ新規取引として生成する。
+        sales add / total / complete / cancel 実行時に欠落している場合は「取引未開始（exit code 2）」として停止し、
+        空の状態ファイルを自動生成しない。
+    sales_record_json:
+      action: >-
+        会計要求後の回復照合時に該当取引の控えファイルが欠落している場合は、未登録と即断せず
+        current-tx.json を保持したまま「売上登録失敗（exit code 3、受付結果不明）」として停止し、
+        店主代表（PO）と開発担当（DEV）による本部受付照会へ引き継ぐ。
+
+  malformed:
+    current_tx_json:
+      action: >-
+        JSON 構文不正または required_fields 欠落を検知した場合は、二重会計や明細消失を防ぐため
+        「取引記録破損（exit code 2）」として即時停止し、破損ファイルを削除・強制初期化せず保持して
+        店主代表（PO）と開発担当（DEV）の照合へ引き継ぐ。
+    sales_record_json:
+      action: >-
+        JSON 解析失敗またはスキーマ不整合を検知した場合は、自動再送や上書きを行わず
+        破損ファイルを data/quarantine/ へ退避コピーしたうえで元ファイルを保持し、
+        開発担当（DEV）の調査と店主代表（PO）の本部受付照合を促す。
+
+  transport_failure:
+    io_error:
+      action: >-
+        ディスク容量不足、書き込み権限不足、ファイルロック競合等の I/O エラー発生時は、
+        標準エラー出力に対象パス・取引番号・受付状態を出力して即時異常停止（exit code 4）させ、
+        確定済み売上の再登録を行わずに開発担当（DEV）の環境復旧へ引き継ぐ。

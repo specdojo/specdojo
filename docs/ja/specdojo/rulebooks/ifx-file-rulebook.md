@@ -44,7 +44,7 @@ flowchart LR
 ```
 
 1. **一覧からの詳細化**: 本仕様は [[specdojo:ifx-index-rulebook|外部システムI/F一覧作成ルール]] に従う `ifx-index` に登録されたファイル連携（`kind: ファイル`、または外部コマンド連携等で授受するファイル契約）の詳細仕様として位置づけます。
-2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。
+2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。CLI 内部の状態・証跡ファイルなど `ifx-index` に登録しない契約は、`based_on` に参照元の仕様（CLI 仕様など）を書き、照合先をその仕様とします。
 3. **契約の主体とファイルの主体**: `source` / `target` は連携契約全体の送信元・受信先、`writer` / `reader` は個別ファイルを実際に書く・読む主体です。報告内容の作り手とファイルの書き手が異なる場合は、`writer` にファイルの書き手を書きます。
 
 ## 3. ファイル命名・ID規則
@@ -158,7 +158,7 @@ YAML のルートには以下のキーを配置します。
 2. **項目定義（外部との合意スキーマを本仕様で直接定める場合）**:
    - `schema.fields` 配列に各フィールドの `name`（必須）、`type`（必須）、`description`（必須）、`required`（必須, boolean）を定義し、必要に応じて `example`、`constraints`（`min`、`max`、`maxLength`、`pattern` 等）、`mapping`（`csv.column`、`json.pointer` 等）を記載します。
 3. **正本スキーマ・型定義参照（既存の schema やコード型定義が正本の場合）**:
-   - `schema.references`（または `schema.schema_ref`、`files[].schema_ref`）に正本ファイルパスを記載し、各ファイルの契約上の必須項目は `files[].required_fields` で宣言します。正本に定義済みの全フィールド構造を YAML 内へ重複転記しません。
+   - `schema.references`（キー名と正本ファイルパスの対応を持つオブジェクト）と `files[].schema_ref`（ファイルごとの正本パス）に正本を記載し、各ファイルの契約上の必須項目は `files[].required_fields` で宣言します。正本に定義済みの全フィールド構造を YAML 内へ重複転記しません。
 
 ### 5.7. 失敗時の扱いとエラーハンドリング（`error_handling`）
 
@@ -253,5 +253,5 @@ error_handling:
 
 ### 8.1. 成果物の検証手順
 
-1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し、`schema_ref` / `references` の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
+1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し（`ifx-index` に登録しない契約は `based_on` の参照元仕様と照合し）、`schema_ref` / `references` の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
 2. **異常系の導出**: `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）と `required_fields` から正常系・異常系の確認ケースを導出し、各ケースで継続・停止、ファイルの保持・退避、再試行・引き継ぎの期待結果が一意に決まることを確かめます。
