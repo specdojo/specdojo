@@ -76,3 +76,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_6cad3966473c4d34a426d3ecbbcd7901
+- v: 1
+  id: reg_13c50f1144324ac48f72f915668c48b5
+  ts: "2026-11-27T14:05:46Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
+  previous_event_id: reg_bf569ea2398649189355cece8fde25fb

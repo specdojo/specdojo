@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T22:53:08Z"
   due_on: "2026-12-31"
+  block_reason: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
   derived_from:
     - PJR-BHJM
   depends_on:
