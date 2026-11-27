@@ -61,6 +61,7 @@ specdojo:
 - 直し方: `NextChannelBanner.vue` で帯の実測の高さを `ResizeObserver` で監視し、`document.documentElement` の `--vp-layout-top-height` へ反映する。理由は、VitePress の決まった方法であり、文の折り返しで高さが変わっても追従するため。帯を出さない本番では要素が無く、変数も設定しないため見え方は変わらない。狭い画面では VitePress がこの変数を使わないため変わらない。
 - 追加: `packages/docs-site/.vitepress/theme/layout-top-height.ts`（変数の設定・解除）と、その単体テスト `tests/packages/docs-site/layout-top-height.test.ts`。
 - 2 回目の対応（狭い画面の空白）: 原因は、VitePress の `VPNav` が幅 960px 未満では `position: relative` のまま `top: var(--vp-layout-top-height)` を持つため、帯が文書の流れで既に占める高さに加えて変数の分も下がり、二重に空いたこと。直し方は、`matchMedia("(min-width: 960px)")` に一致する幅（ナビゲーションが固定される幅）でだけ変数を設定し、それ未満では解除する（`applyLayoutTopHeight` の第 3 引数 `isFixedNav`、`change` イベントで追従）。広い画面の直りは変えない。単体テストに、固定されない幅で変数を設定しないケースを追加した。
+- 3 回目の対応（中間の幅の空白）: 幅ごとの VitePress の配置は次のとおり。960px 未満はナビゲーション・local nav とも固定されず文書の流れに並ぶため、変数を設定しない。960px 以上はナビゲーションとサイドバーが固定され、`.VPContent` の margin-top が変数を使う。960〜1279px では local nav（「On this page」の帯）が sticky で表示され、`padding-top` にも同じ変数を使うため、帯が文書の流れに残ったままだと帯・local nav の padding・本文の margin で高さが重なり、帯の高さの約 2 倍が余計に空いた。直し方は、960px 以上で帯を `position: fixed`（`z-index` は VitePress の `--vp-z-index-layout-top`）にして文書の流れから外し、本文のずれを `.VPContent` の margin-top の 1 回分（帯の高さ）にそろえること。あわせて `.VPLocalNav` の `padding-top` を 0 にし、sticky の `top` へ変数を足して、local nav の見える位置は変えない。帯が無い版では変数が未設定で `0px` になり、既定と同じ値になる。単体テストで、960px 以上の `@media` に帯の固定と local nav の上書きがあることを確かめた。ブラウザでの幅 960・1440・640 の確認はオーケストレーターが行う（_ASSUMPTION_: VitePress の CSS から推定した直し方で、実測は未実施）。
 - 残課題: ブラウザでの見え方の確認（作業 3）はオーケストレーターが行う。
 
 ### 5.2. CHANGELOG に書く事項
