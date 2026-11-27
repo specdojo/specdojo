@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5913d2b2f6784b00917f1de6e22ca327
+  ts: "2026-11-27T23:42:11Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターに承認を前提として git push を許す
+    - field: description
+      from: ""
+      to: オーケストレーターは `git push` を行わない決まりのため、commit のたびに利用者が手で push しており、そのたびに作業が止まる。利用者から、人の確認を前提に `git push` まで許してよいのではないかと提案があった（2026-11-28）。
+    - field: input
+      from: ""
+      to: '["利用者の提案：オーケストレーターには git push までは人の確認前提で許してよい（2026-11-28）","CLAUDE.md とオーケストレーターの本文は git push を行わないと定めている。どちらも保護された文書"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: indie
+    - field: registered
+      from: ""
+      to: "2026-11-28"
