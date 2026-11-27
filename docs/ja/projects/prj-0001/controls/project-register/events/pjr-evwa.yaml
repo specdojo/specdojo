@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3dbc73af81af473f82cfbfaa120d7f6c
+  ts: "2026-11-27T03:37:53Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register\_sync のブランチを sync/register と sync/exec-events に分ける
+    - field: description
+      from: ""
+      to: register\_sync の専用ブランチを project/`<id>`/sync/register（登録簿）と project/`<id>`/sync/exec-events（schedule の実行のイベント）の 2 本に分け、名前と置き場を中身に合わせる
+    - field: input
+      from: ""
+      to: '["現在の専用ブランチ project/prj-0001/register には、登録簿の記帳と execution/exec/events/ の claim・complete の両方が載る（直近 40 件中 8 件が schedule の task の記帳）","利用者は、将来登録簿と関係ないものも共有する場合に register の名前では行き詰まる点を懸念し、sync/ の下に種類ごとのブランチを置く階層の形を選んだ（2026-11-27）","exec run --register は登録簿の状態遷移だけを記帳し、schedule の task の実行は exec の events だけを記帳するため、今の作りでは 1 回の実行が両方のブランチへ書く場面はない","決めること: 両方へ書く必要が出た場合の順番と片方が失敗したときの扱い、exec-events という名前、今のブランチからの移し替えの手順（実行中の run がない時に切り替える）","変更の範囲: 設定（sync.branches など）、push・merge・guard・check のコマンド、exec run の後の自動取り込み、CI（check-register-push.yml）、lefthook、専用の worktree の置き場"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VM2S"]'
