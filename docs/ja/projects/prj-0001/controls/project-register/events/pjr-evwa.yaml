@@ -67,3 +67,16 @@
       from: ""
       to: 検討した選択肢
   previous_event_id: reg_aad3279d00034619b16218aefa770214
+- v: 1
+  id: reg_89d4149a8dcf43e8a40272e1ccbab18f
+  ts: "2026-11-27T10:04:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲とフォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_460cf634c2c143cd82ec14103f4c649c
