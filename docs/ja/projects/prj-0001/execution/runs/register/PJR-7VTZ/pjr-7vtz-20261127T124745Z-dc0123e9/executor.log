@@ -1,0 +1,25 @@
+専用ブランチが使用中でも、exec のイベントの書き込みはすぐ失敗せず、最大 120 秒待ってから書くようにしました。追加したテストは通っています。ただし `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` はパイプラインの指示に従ってこちらでは実行しておらず、このあと親 runner が実行します。
+
+**変更内容**
+- `src/shared/cross-process-lock.ts`：枠が空くまで同期で待つ `acquirePoolSlotSync` を追加しました。
+  - 200 ms ごとに枠を取り直し、上限を超えたら `timeout` を返します。
+  - 同じプロセスの中で枠が使われているときは、待っても解放されないため、待たずに返します。
+- `src/shared/register-branch.ts`：`inRegisterBranchSync` がこの関数で待つようにしました。
+  - 上限を超えたら、ブランチ名・待った時間・上限を含むエラーで止まります。
+  - 既定の上限は `REGISTER_BRANCH_SYNC_WAIT_MS`（120 秒）で、設定項目は作っていません。
+- 待ち方は「同期のまま待つ」を選びました。イベントを書く API（`writeEventFile`・`readAllEventFiles`）を同期で呼んでいる箇所が多く、非同期にすると変更範囲が広がるためです。
+- `exec run --register --worktree` の worktree の用意の段の `exec refresh` も同じ経路を通るので、`register ... --commit` と重なっても待ってから書き、run は waiting になりません。
+
+**テスト**
+- 単体テスト 3 件（`tests/src/exec/slot-lock.test.ts`）：使用中の間は待って解放後に取る、上限を超えると timeout を返す、同じプロセスが持っているときは待たずに返す、を確かめています。
+- 統合テスト 2 件（`tests/src/register/register-branch.integration.test.ts`）：
+  - 別プロセスが 1.5 秒後に枠を解放すると、`writeEventFile` が待ってから専用ブランチへ push すること。
+  - 上限を超えるとエラーで止まり、操作を実行しないこと。
+
+**個票**（`docs/ja/projects/prj-0001/controls/project-register/pjr-7vtz-register-sync-busy-no-wait.md`）
+- 影響範囲・対応結果・関連ドキュメントを書きました。作業内容の表は全行 `done` で、`_TODO_` は残っていません。
+- 「CHANGELOG に書く事項」の小節に、区分「利用者から見て動きが変わる点」と行の文案を書きました。`CHANGELOG.md` 自体と保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"inRegisterBranchSync now blocks synchronously (up to REGISTER_BRANCH_SYNC_WAIT_MS = 120s) for the register branch lock via the new acquirePoolSlotSync, failing with the branch, waited time and limit on timeout, and failing at once only when the holder is this process. Added 3 unit and 2 integration tests and updated the ticket's response section, including the CHANGELOG draft.","handoff":["CHANGELOG に書く事項（`CHANGELOG.md` は未変更）: 区分「利用者から見て動きが変わる点」、文案「`exec refresh`・claim・complete などの exec のイベントの書き込みは、専用ブランチが `register ... --commit` などで使用中でも、すぐ失敗せずに最大 120 秒待ってから書きます。上限を超えると、ブランチ名と待った時間を示して止まります（PJR-7VTZ）。」","待ち方は同期のまま待つ方式（`Atomics.wait`）を採用。イベント API が同期で呼び出し元が多いため。同じプロセスの非同期の書き手が枠を持つ場合だけは、待つと解放されないため即時に失敗する。","上限の既定値は `REGISTER_BRANCH_SYNC_WAIT_MS` = 120 秒で、設定項目は設けていない（1 回の `register ... --commit` の fetch・rebase・push は通常数秒〜1 分程度、停止した持ち主は 30 秒の stale 判定で奪えるため）。保護された設定の変更は不要。"],"validations":[{"command":"npx tsc -b","status":"passed","summary":"No type errors"},{"command":"npx eslint src/shared/cross-process-lock.ts src/shared/register-branch.ts tests/src/exec/slot-lock.test.ts tests/src/register/register-branch.integration.test.ts","status":"passed","summary":"No lint errors in changed TS files"},{"command":"npx vitest run tests/src/exec/slot-lock.test.ts","status":"passed","summary":"8 tests passed including 3 new acquirePoolSlotSync tests"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/register/register-branch.integration.test.ts -t wait","status":"passed","summary":"2 new integration tests passed (wait then write; timeout error with branch and waited time)"},{"command":"npx prettier --write (changed files)","status":"passed","summary":"Formatted changed TS and ticket Markdown"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-7vtz-register-sync-busy-no-wait.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"All history files valid"}]}
+</specdojo_executor_evidence>
