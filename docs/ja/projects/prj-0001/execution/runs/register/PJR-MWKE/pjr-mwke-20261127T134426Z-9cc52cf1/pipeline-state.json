@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-MWKE",
   "run_id": "pjr-mwke-20261127T134426Z-9cc52cf1",
-  "updated_at": "2026-11-27T13:53:18.750Z",
+  "updated_at": "2026-11-27T13:54:43.921Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MWKE/pjr-mwke-20261127T134426Z-9cc52cf1/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-27T13:53:18.750Z",
-      "completed_at": null,
+      "completed_at": "2026-11-27T13:54:43.921Z",
       "artifact_ref": null
     }
   },
