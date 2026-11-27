@@ -1,0 +1,379 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VKY2",
+  "run_id": "pjr-vky2-20261127T102236Z-70562cd2",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-27T11:22:03.272Z",
+    "completed_at": "2026-11-27T11:23:32.143Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vky2-register-sync-branch-split-impl.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/branch-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/branch-push.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/cross-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/external-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/push-check.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/register-branch.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/register-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/branch-push.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/push-check.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/register-sync-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/sync-branches.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vky2-register-sync-branch-split-impl.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 23,
+    "summary": ".../pjr-vky2-register-sync-branch-split-impl.md    |  72 ++++++++++-\n .../pjr-vky2-20261127T102236Z-70562cd2/plan.md     |   6 +\n docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |   2 +-\n .../ja/specdojo/guides/register-operation-guide.md |  42 ++++--\n docs/ja/specdojo/references/command-reference.md   |  50 ++++----\n .../references/specdojo-config-reference.md        |  41 ++++--\n .../specdojo/standards/git-branching-standard.md   |  35 ++---\n .../schemas/v1/specdojo-config.schema.yaml         |  37 +++++-\n src/exec/events.ts                                 |   8 +-\n src/exec/run/register-sync.ts                      |  12 +-\n src/exec/run/register-worktree.ts                  |  13 +-\n src/register/branch-commands.ts                    |  67 ++++++----\n src/register/branch-push.ts                        |  57 +++++++--\n src/register/cross-project.ts                      |   3 +-\n src/register/external-project.ts                   |   5 +-\n src/register/push-check.ts                         |  52 +++++---\n src/shared/register-branch.ts                      | 142 ++++++++++++++++-----\n src/shared/register-merge.ts                       | 115 +++++++++++------\n src/shared/specdojo-config.ts                      |  52 +++++++-\n tests/src/register/branch-push.test.ts             |   8 ++\n tests/src/register/push-check.test.ts              |   1 +\n tests/src/shared/register-sync-config.test.ts      |  60 ++++++++-\n 23 files changed, 667 insertions(+), 215 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check <changed files>",
+      "status": "passed",
+      "summary": "All 23 changed files pass Prettier (ticket reformatted with --write after the edit)."
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "All history files valid, exit 0."
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2/src/shared/specdojo-config.ts\n  1269:1  warning  File has too many lines (1161). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7902 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7902 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] \n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1540}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  20:23:56\n   Duration  2.58s (transform 5.31s, setup 692ms, import 8.08s, tests 6.36s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (test infrastructure or settings changed: docs/specdojo/schemas/v1/specdojo-config.schema.yaml): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pip…",
+      "test_selection": {
+        "mode": "full",
+        "reason": "test infrastructure or settings changed: docs/specdojo/schemas/v1/specdojo-config.schema.yaml"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VKY2\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/reporter.test.ts\"}\n ✓ tests/src/exec/reporter.test.ts (136 tests) 70ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/exec/reporter.test.ts\",\"duration_ms\":70}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-vky2-register-sync-branch-split-impl.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vky2-register-sync-branch-split-impl.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/events.ts",
+      "status": "changed",
+      "path": "src/exec/events.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-sync.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-sync.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/branch-commands.ts",
+      "status": "changed",
+      "path": "src/register/branch-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/branch-push.ts",
+      "status": "changed",
+      "path": "src/register/branch-push.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/cross-project.ts",
+      "status": "changed",
+      "path": "src/register/cross-project.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/external-project.ts",
+      "status": "changed",
+      "path": "src/register/external-project.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/push-check.ts",
+      "status": "changed",
+      "path": "src/register/push-check.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/register-branch.ts",
+      "status": "changed",
+      "path": "src/shared/register-branch.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/register-merge.ts",
+      "status": "changed",
+      "path": "src/shared/register-merge.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/branch-push.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/branch-push.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/push-check.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/push-check.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/register-sync-config.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/register-sync-config.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/sync-branches.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/sync-branches.integration.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "Split register_sync into project/<id>/sync/register and project/<id>/sync/exec-events (new `sync` config with per-kind `branches`; legacy `register_sync` kept as one-branch compatibility). Covers commands, auto-merge, guard, check, push, and the dedicated worktree location. Docs, schema and tests are updated. Per the resume instruction, the protected CI workflow and config changes are satisfied by the written proposals. Prettier and validate:history-links pass.",
+  "completion_status": "complete",
+  "handoff": [
+    "Protected change proposal (needs user approval, feature branch): .github/workflows/check-register-push.yml. Add \"project/*/sync/register\" and \"project/*/sync/exec-events\" to on.push.branches, keeping \"project/*/register\" until the migration completes. Change project extraction from `project=\"${project%/register}\"` to `project=\"${project%%/*}\"`. branch-check picks the branch scope from --remote-ref, so nothing else changes. Ticket work row 5 stays open because executor cannot write .github/workflows/.",
+    "Migration of prj-0001 from project/prj-0001/register to the two sync branches, to be done by the orchestrator when no run, queue or routine is active: (1) publish any stopped sync with register branch-push; (2) run register branch-merge on develop and push develop; (3) create project/prj-0001/sync/register and project/prj-0001/sync/exec-events from the merged develop tip and push them; (4) replace \"register_sync\": {\"enabled\": true} with \"sync\": {\"enabled\": true} in .specdojo/specdojo.config.json via a feature branch; (5) check that register branch-push --project prj-0001 --dry-run reports both as already on origin, then remove the old dedicated worktree; (6) delete the old branch once other users have switched. Ticket work row 9 stays open for this.",
+    "Decision: legacy `register_sync` is not aliased to `sync`. Aliasing would switch writes to not-yet-existing branches as soon as the CLI is upgraded. Setting both is a config error.",
+    "Decision: when one operation writes both branches, register goes first and exec-events second, one at a time and not nested (the lock is shared). A register failure stops before exec-events. An exec-events failure keeps the published register bookkeeping, and recovery is `register branch-push --sync exec-events` followed by a retry. No current operation writes both.",
+    "CHANGELOG lines (Added / Migration notes) are drafted in the ticket section 'CHANGELOG に書く事項'. CHANGELOG.md was not edited."
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/executor.log",
+      "bytes": 7105,
+      "truncated": false
+    }
+  ]
+}

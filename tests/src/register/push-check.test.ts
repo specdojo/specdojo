@@ -12,6 +12,7 @@ const TARGET = {
   registerPath: "docs/sample/controls/project-register",
   eventsPath: "docs/sample/execution/exec/events",
   branch: "project/sample/register",
+  scope: ["docs/sample/controls/project-register", "docs/sample/execution/exec/events"],
 };
 
 const TICKET = `---

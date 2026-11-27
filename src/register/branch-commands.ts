@@ -1,7 +1,11 @@
 import type { Command } from "commander";
-import { resolveRegisterBranchTarget } from "../shared/register-branch.js";
-import { checkRegisterGuard, mergeRegisterBranch } from "../shared/register-merge.js";
-import { pushRegisterBranchForProject } from "./branch-push.js";
+import { SYNC_BRANCH_KINDS, type SyncBranchKind } from "../shared/specdojo-config.js";
+import {
+  checkRegisterGuard,
+  mergeRegisterBranch,
+  type RegisterBranchMergeOutcome,
+} from "../shared/register-merge.js";
+import { pushSyncBranchesForProject } from "./branch-push.js";
 import type { RegisterCommandDependencies } from "./command-types.js";
 import { checkRegisterPush, formatRegisterPushReport } from "./push-check.js";
 
@@ -18,22 +22,27 @@ export function registerBranchCommands(
   const mergeCmd = reg
     .command("branch-merge")
     .description(
-      "Merge the register branch (register_sync) into the current branch one way with --no-ff",
+      "Merge the sync branches (register, then exec-events) into the current branch one way with --no-ff",
     );
   addProjectOption(mergeCmd);
   mergeCmd.action((opts: { project?: string }) => {
     try {
       const { projectId } = resolveRegisterPaths(opts);
       const outcome = mergeRegisterBranch(projectId);
+      if (outcome.status === "disabled") {
+        process.stdout.write(`register_sync is not enabled for ${projectId}; nothing to merge.\n`);
+        return;
+      }
       const messages: Record<RegisterMergeStatus, string> = {
-        disabled: `register_sync is not enabled for ${projectId}; nothing to merge.`,
-        "on-register-branch": "Current branch is the register branch; nothing to merge.",
+        "on-register-branch": "Current branch is a sync branch; nothing to merge.",
         "up-to-date": "Register branch is already merged.",
         merged: "Merged register branch.",
       };
-      const suffix =
-        outcome.status === "merged" ? ` (${outcome.branch} ${outcome.commit.slice(0, 12)})` : "";
-      process.stdout.write(`${messages[outcome.status]}${suffix}\n`);
+      for (const entry of outcome.branches) {
+        const suffix =
+          entry.status === "merged" ? ` (${entry.branch} ${entry.commit.slice(0, 12)})` : "";
+        process.stdout.write(`${messages[entry.status]} [${entry.source}]${suffix}\n`);
+      }
     } catch (error) {
       printCommandError(error);
     }
@@ -42,7 +51,7 @@ export function registerBranchCommands(
   const guardCmd = reg
     .command("branch-guard")
     .description(
-      "Fail when register files are changed directly outside the register branch (register_sync)",
+      "Fail when register files or exec events are changed directly outside the sync branches (sync / register_sync)",
     );
   addProjectOption(guardCmd);
   guardCmd.option("--staged", "Check the staged changes (pre-commit)", false);
@@ -79,14 +88,14 @@ export function registerBranchCommands(
   const checkCmd = reg
     .command("branch-check")
     .description(
-      "Check a commit pushed to the register branch: files outside the register scope and register record shape",
+      "Check a commit pushed to a sync branch: files outside its scope and, on the register branch, register record shape",
     );
   addProjectOption(checkCmd);
   checkCmd.requiredOption("--commit <commit>", "Tip commit being pushed");
   checkCmd.option("--base <commit>", "Current remote tip (all zeros or omitted: new commits only)");
   checkCmd.option(
     "--remote-ref <ref>",
-    "Remote ref being updated; skipped unless it is the register branch",
+    "Remote ref being updated; skipped unless it is a sync branch (omitted: the register branch)",
   );
   checkCmd.action(
     (opts: { project?: string; commit: string; base?: string; remoteRef?: string }) => {
@@ -109,9 +118,7 @@ export function registerBranchCommands(
           process.stdout.write("Register push checks passed.\n");
           return;
         }
-        const target = resolveRegisterBranchTarget(paths.projectId);
-        if (!target) throw new Error(`register_sync is not enabled for ${paths.projectId}`);
-        throw new Error(formatRegisterPushReport(target, result));
+        throw new Error(formatRegisterPushReport(result.target, result));
       } catch (error) {
         printCommandError(error);
       }
@@ -121,30 +128,44 @@ export function registerBranchCommands(
   const pushCmd = reg
     .command("branch-push")
     .description(
-      "Create, publish or recover the register branch (register_sync); pushes only to its configured remote and branch",
+      "Create, publish or recover the sync branches (sync / register_sync); pushes only to their configured remote and branches",
     );
   addProjectOption(pushCmd);
-  // The push target comes only from register_sync; no argument can point at another ref.
+  // The push targets come only from sync / register_sync; no argument can point at another ref.
   pushCmd.allowExcessArguments(false);
   pushCmd.option(
     "--dry-run",
     "Show the branch to create, the commits to push and the check result",
     false,
   );
-  pushCmd.action(async (opts: { project?: string; dryRun?: boolean }) => {
+  pushCmd.option(
+    "--sync <kind>",
+    `Only this sync branch (${SYNC_BRANCH_KINDS.join(" | ")}); default: every sync branch in that order`,
+  );
+  pushCmd.action(async (opts: { project?: string; dryRun?: boolean; sync?: string }) => {
     try {
+      const kind = parseSyncKind(opts.sync);
       const paths = resolveRegisterPaths(opts);
-      const outcome = await pushRegisterBranchForProject(
+      const outcomes = await pushSyncBranchesForProject(
         paths.projectId,
         paths.registerDateTimeZone,
-        { dryRun: Boolean(opts.dryRun) },
+        { dryRun: Boolean(opts.dryRun), sync: kind },
       );
-      process.stdout.write(`${outcome.lines.join("\n")}\n`);
-      if (outcome.wouldStop) process.exitCode = 1;
+      process.stdout.write(`${outcomes.flatMap((outcome) => outcome.lines).join("\n")}\n`);
+      if (outcomes.some((outcome) => outcome.wouldStop)) process.exitCode = 1;
     } catch (error) {
       printCommandError(error);
     }
   });
 }
 
-type RegisterMergeStatus = ReturnType<typeof mergeRegisterBranch>["status"];
+type RegisterMergeStatus = RegisterBranchMergeOutcome["status"];
+
+function parseSyncKind(value: string | undefined): SyncBranchKind | undefined {
+  if (value === undefined) return undefined;
+  const kind = SYNC_BRANCH_KINDS.find((candidate) => candidate === value.trim());
+  if (!kind) {
+    throw new Error(`--sync must be one of ${SYNC_BRANCH_KINDS.join(", ")}: ${value}`);
+  }
+  return kind;
+}

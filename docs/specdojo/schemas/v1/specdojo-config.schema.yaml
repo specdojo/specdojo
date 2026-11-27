@@ -84,8 +84,43 @@ $defs:
           Branch that receives direct project-register commits. Defaults to
           project/<project-id>/develop.
         $ref: "#/$defs/NonEmptyString"
+      sync:
+        description: >-
+          Opt-in synchronization through dedicated branches. The register branch carries
+          register tickets and events; the exec-events branch carries execution/exec/events/.
+          Cannot be set together with register_sync.
+        type: object
+        additionalProperties: false
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          remote:
+            type: string
+            pattern: "^(?!-)(?!.*[\\s:])\\S+$"
+            default: origin
+          branches:
+            type: object
+            additionalProperties: false
+            properties:
+              register:
+                type: object
+                additionalProperties: false
+                properties:
+                  branch:
+                    description: Defaults to project/<project-id>/sync/register.
+                    $ref: "#/$defs/NonEmptyString"
+              exec-events:
+                type: object
+                additionalProperties: false
+                properties:
+                  branch:
+                    description: Defaults to project/<project-id>/sync/exec-events.
+                    $ref: "#/$defs/NonEmptyString"
       register_sync:
-        description: Opt-in register and schedule-event synchronization through a dedicated branch.
+        description: >-
+          Legacy single-branch synchronization of register mutations and schedule events.
+          Kept for compatibility; migrate to sync.
         type: object
         additionalProperties: false
         properties:

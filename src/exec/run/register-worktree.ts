@@ -725,12 +725,17 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
-    // PJR-1JF6: register_sync の project では、develop の作業の前に register のブランチを
-    // 一方向に取り込む。未設定なら何もしない。取り込めないときは worktree を作らずに止める。
+    // PJR-1JF6・PJR-VKY2: sync（register_sync）の project では、develop の作業の前に専用の
+    // ブランチ（register → exec-events の順）を一方向に取り込む。未設定なら何もしない。
+    // 取り込めないときは worktree を作らずに止める。
     try {
       const intake = mergeRegisterBranch(projectId);
-      if (intake.status === "merged") {
-        process.stdout.write(`  [run] merged register branch: ${intake.commit.slice(0, 12)}\n`);
+      for (const entry of intake.status === "checked" ? intake.branches : []) {
+        if (entry.status === "merged") {
+          process.stdout.write(
+            `  [run] merged sync branch ${entry.source}: ${entry.commit.slice(0, 12)}\n`,
+          );
+        }
       }
     } catch (error) {
       const message = `register branch merge failed: ${error instanceof Error ? error.message : String(error)}`;

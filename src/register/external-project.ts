@@ -2,6 +2,7 @@ import { spawnSync, type SpawnSyncReturns } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
+  isProjectSyncEnabled,
   loadConfig,
   resolveExternalProjectRoot,
   specdojoRootDir,
@@ -239,11 +240,11 @@ export function delegateExternalRegisterAdd(
   }
   const targetProject = loadConfig(repoRoot).config?.projects[externalProject.project_id];
   if (
-    targetProject?.register_sync?.enabled &&
+    isProjectSyncEnabled(targetProject) &&
     !versionAtLeast(version, MINIMUM_EXTERNAL_REGISTER_SYNC_VERSION)
   ) {
     throw new Error(
-      `External project ${alias} enables register_sync but uses SpecDojo ${version}; ` +
+      `External project ${alias} enables sync (register_sync) but uses SpecDojo ${version}; ` +
         `${MINIMUM_EXTERNAL_REGISTER_SYNC_VERSION} or newer is required to avoid writing to develop.`,
     );
   }

@@ -1,14 +1,16 @@
 import { gitOutput, gitResult, worktreeStatusPaths } from "../shared/git.js";
 import {
+  branchPushCommand,
   clearRegisterRecovery,
   inRegisterBranchLock,
   isRegisterRebaseInProgress,
   pushRegisterBranch,
   registerBranchWorktree,
-  resolveRegisterBranchTarget,
+  resolveSyncBranchTarget,
+  resolveSyncBranchTargets,
   type RegisterBranchTarget,
 } from "../shared/register-branch.js";
-import { loadConfig } from "../shared/specdojo-config.js";
+import { loadConfig, type SyncBranchKind } from "../shared/specdojo-config.js";
 import { resolveProjectIntegrationBranch } from "./cross-project.js";
 import { checkRegisterPush, formatRegisterPushReport } from "./push-check.js";
 
@@ -112,7 +114,7 @@ function assertCheckPassed(state: BranchState, check: PushCheck, hint?: string):
 /** `--dry-run` の検査結果の行。止まるときは本番と同じ案内（`hint`）を添える。 */
 export function checkLines(
   check: PushCheck,
-  target: Pick<RegisterBranchTarget, "registerPath" | "eventsPath" | "branch">,
+  target: Pick<RegisterBranchTarget, "registerPath" | "scope" | "branch">,
   hint?: string,
 ): string[] {
   if (!hasViolations(check)) return ["Checks: passed."];
@@ -124,7 +126,7 @@ export function checkLines(
 }
 
 function conflictError(state: BranchState, worktree: string, conflicts: string[]): Error {
-  const command = `specdojo register branch-push --project ${state.target.projectId}`;
+  const command = branchPushCommand(state.target);
   return new Error(
     `Register worktree ${worktree} has conflicts while rebasing onto ` +
       `${state.target.remote}/${state.target.branch}:\n` +
@@ -141,7 +143,7 @@ function dirtyError(state: BranchState, worktree: string, dirty: string[]): Erro
       dirty.map((path) => `  ${path}`).join("\n") +
       `\nReview them in that worktree and commit the bookkeeping to publish (for parallel claims, ` +
       `keep only the adopted claim), then rerun ` +
-      `\`specdojo register branch-push --project ${state.target.projectId}\`.`,
+      `\`${branchPushCommand(state.target)}\`.`,
   );
 }
 
@@ -149,8 +151,8 @@ export const INITIAL_CHECK_HINT =
   "On the first push, push the integration branch to the remote first so that only register " +
   "commits remain outside it.";
 
-function loadState(projectId: string, timeZone: string): BranchState {
-  const target = resolveRegisterBranchTarget(projectId);
+function loadState(projectId: string, timeZone: string, kind: SyncBranchKind): BranchState {
+  const target = resolveSyncBranchTarget(projectId, kind);
   if (!target) {
     throw new Error(
       `register_sync is not enabled for ${projectId}; nothing to push. ` +
@@ -252,7 +254,7 @@ function pushNewBranch(state: BranchState, worktree: string): void {
   throw new Error(
     `Register push failed: ${`${String(result.stdout ?? "")}\n${String(result.stderr ?? "")}`.trim()}\n` +
       `The local branch ${branch} and worktree ${worktree} are kept. If the remote branch was ` +
-      `created meanwhile, rerun \`specdojo register branch-push --project ${state.target.projectId}\`.`,
+      `created meanwhile, rerun \`${branchPushCommand(state.target)}\`.`,
   );
 }
 
@@ -454,22 +456,53 @@ function syncBranch(state: BranchState): RegisterBranchPushOutcome {
 }
 
 /**
- * `register branch-push`（PJR-M120）。push の先は `register_sync` の remote と branch だけ。
- * 初回の作成と push、リモートにだけあるブランチの取り込み、止まった同期の復旧を受け持つ。
+ * `register branch-push`（PJR-M120）。push の先は `sync`（`register_sync`）の remote と、
+ * `kind`（既定は register）の専用ブランチだけ。初回の作成と push、リモートにだけあるブランチの
+ * 取り込み、止まった同期の復旧を受け持つ。
  */
 export async function pushRegisterBranchForProject(
   projectId: string,
   timeZone: string,
   options: RegisterBranchPushOptions = {},
+  kind: SyncBranchKind = "register",
 ): Promise<RegisterBranchPushOutcome> {
-  const initial = loadState(projectId, timeZone);
+  const initial = loadState(projectId, timeZone, kind);
   // --dry-run は読むだけにし、ロックのファイルも作らない。
   if (options.dryRun) return describeDryRun(initial);
   return inRegisterBranchLock(initial.target, () => {
     // ロックを待つ間に別の同期がブランチや worktree を作っていることがある。
-    const state = loadState(projectId, timeZone);
+    const state = loadState(projectId, timeZone, kind);
     if (!state.localTip && !state.remoteTip) return createBranch(state);
     if (!state.localTip) return trackRemoteBranch(state);
     return syncBranch(state);
   });
+}
+
+/**
+ * `register branch-push` の入口。`sync` を省くと専用ブランチを register → exec-events の順に
+ * 1 本ずつ処理し、止まった時点で後のブランチには進まない（PJR-VKY2）。`register_sync`（1 本）の
+ * project では `sync` の指定にかかわらずそのブランチだけを扱う。
+ */
+export async function pushSyncBranchesForProject(
+  projectId: string,
+  timeZone: string,
+  options: RegisterBranchPushOptions & { sync?: SyncBranchKind } = {},
+): Promise<RegisterBranchPushOutcome[]> {
+  const targets = resolveSyncBranchTargets(projectId);
+  const kinds: SyncBranchKind[] = options.sync
+    ? [options.sync]
+    : targets.length > 1
+      ? targets.flatMap((target) => (target.kind === "legacy" ? [] : [target.kind]))
+      : ["register"];
+  const outcomes: RegisterBranchPushOutcome[] = [];
+  for (const kind of kinds) {
+    const outcome = await pushRegisterBranchForProject(projectId, timeZone, options, kind);
+    const branch = resolveSyncBranchTarget(projectId, kind)?.branch;
+    outcomes.push(
+      targets.length > 1 && branch
+        ? { ...outcome, lines: [`[${branch}]`, ...outcome.lines] }
+        : outcome,
+    );
+  }
+  return outcomes;
 }

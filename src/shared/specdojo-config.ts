@@ -65,7 +65,20 @@ export type SpecDojoProjectConfig = {
   base_path?: string;
   /** Branch that receives direct project-register commits. */
   integration_branch?: string;
-  /** Opt-in synchronization of register mutations and schedule events through a dedicated branch. */
+  /**
+   * Opt-in synchronization through dedicated branches under `project/<id>/sync/` (PJR-VKY2).
+   * `branches.register` carries register tickets and events; `branches.exec-events` carries
+   * `execution/exec/events/`. Mutually exclusive with the legacy `register_sync`.
+   */
+  sync?: {
+    enabled?: boolean;
+    remote?: string;
+    branches?: Partial<Record<SyncBranchKind, { branch?: string }>>;
+  };
+  /**
+   * Legacy single-branch synchronization: register mutations and schedule events share one
+   * branch (default `project/<id>/register`). Kept for compatibility; migrate to `sync`.
+   */
   register_sync?: {
     enabled?: boolean;
     branch?: string;
@@ -1038,6 +1051,32 @@ function isOmittedOrNonEmptyString(value: unknown): boolean {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+export const SYNC_BRANCH_KINDS = ["register", "exec-events"] as const;
+export type SyncBranchKind = (typeof SYNC_BRANCH_KINDS)[number];
+
+function isValidSyncConfig(sync: unknown): boolean {
+  if (!isRecord(sync)) return false;
+  if (Object.keys(sync).some((key) => !["enabled", "remote", "branches"].includes(key)))
+    return false;
+  if (sync.enabled !== undefined && typeof sync.enabled !== "boolean") return false;
+  if (!isOmittedOrNonEmptyString(sync.remote)) return false;
+  if (typeof sync.remote === "string" && !/^(?!-)[^\s:]+$/.test(sync.remote)) return false;
+  if (sync.branches === undefined) return true;
+  if (!isRecord(sync.branches)) return false;
+  return Object.entries(sync.branches).every(
+    ([kind, entry]) =>
+      (SYNC_BRANCH_KINDS as readonly string[]).includes(kind) &&
+      isRecord(entry) &&
+      Object.keys(entry).every((key) => key === "branch") &&
+      isOmittedOrNonEmptyString(entry.branch),
+  );
+}
+
+/** True when the project publishes bookkeeping through `sync` or the legacy `register_sync`. */
+export function isProjectSyncEnabled(project: SpecDojoProjectConfig | undefined): boolean {
+  return Boolean(project?.sync?.enabled || project?.register_sync?.enabled);
+}
+
 function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfig {
   if (!project || typeof project !== "object" || Array.isArray(project)) return false;
 
@@ -1047,12 +1086,17 @@ function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfi
     integration_branch?: unknown;
     project_context?: unknown;
     register_sync?: unknown;
+    sync?: unknown;
   };
   // 省略は既定値へ解決するため許容する。ただし指定したうえでの空文字は、設定漏れと
   // 意図的な省略を区別できないため引き続き不正として扱う。
   if (!isOmittedOrNonEmptyString(candidate.schedule_path)) return false;
   if (!isOmittedOrNonEmptyString(candidate.execution_path)) return false;
   if (!isOmittedOrNonEmptyString(candidate.integration_branch)) return false;
+  if (candidate.sync !== undefined) {
+    if (candidate.register_sync !== undefined) return false;
+    if (!isValidSyncConfig(candidate.sync)) return false;
+  }
   if (candidate.register_sync !== undefined) {
     const sync = candidate.register_sync;
     if (!isRecord(sync)) return false;
@@ -1116,8 +1160,10 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
       throw new Error(
         `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +
           `schedule_path/execution_path/integration_branch or set them to non-empty strings, ` +
-          `project_context must be a string[] when present, and register_sync must contain only ` +
-          `enabled (boolean), branch and remote (non-empty strings)`,
+          `project_context must be a string[] when present, register_sync must contain only ` +
+          `enabled (boolean), branch and remote (non-empty strings), and sync must contain only ` +
+          `enabled (boolean), remote (non-empty string) and branches.{register,exec-events}.branch ` +
+          `(non-empty strings); sync and register_sync cannot be set together`,
       );
     }
   }
