@@ -66,8 +66,34 @@ onBeforeUnmount(stopObserving);
   border-bottom: 1px solid var(--vp-c-warning-2);
 }
 
+/* ナビゲーションが固定される幅では、帯も固定して常にナビゲーションの上に出す（文書の流れからは外れる）。 */
+@media (min-width: 960px) {
+  .next-channel-banner {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: var(--vp-z-index-layout-top, 40);
+  }
+}
+
 .next-channel-banner a {
   font-weight: 600;
   text-decoration: underline;
+}
+</style>
+
+<style>
+/*
+ * VitePress は `--vp-layout-top-height` を、固定のナビゲーション・サイドバー・本文の余白（`.VPContent` の margin-top）と、
+ * `.VPLocalNav` の padding-top の両方へ使う。帯を固定表示にして文書の流れから外し、本文のずれを帯の高さ 1 回分にそろえるため、
+ * 960px 以上では local nav の padding-top を外し、sticky の位置へ帯の高さを足す。
+ * 帯が無い版では変数が未設定（0px）になり、既定と同じ値になる。
+ */
+@media (min-width: 960px) {
+  .VPLocalNav {
+    padding-top: 0;
+    top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px));
+  }
 }
 </style>

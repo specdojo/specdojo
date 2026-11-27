@@ -1,5 +1,7 @@
+import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 import {
+  FIXED_NAV_MEDIA_QUERY,
   applyLayoutTopHeight,
   clearLayoutTopHeight,
   LAYOUT_TOP_HEIGHT_VAR,
@@ -70,5 +72,21 @@ describe("clearLayoutTopHeight", () => {
     clearLayoutTopHeight(root);
 
     expect(root.values.size).toBe(0);
+  });
+});
+
+describe("NextChannelBanner styles", () => {
+  const sourcePath = "packages/docs-site/.vitepress/theme/NextChannelBanner.vue";
+
+  it("fixes the banner and removes the local nav padding only where the nav is fixed", async () => {
+    const source = await readFile(sourcePath, "utf8");
+    const query = `@media ${FIXED_NAV_MEDIA_QUERY}`;
+
+    const blocks = source.split(query).slice(1);
+
+    expect(blocks).toHaveLength(2);
+    expect(blocks[0]).toMatch(/\.next-channel-banner\s*{[^}]*position:\s*fixed/);
+    expect(blocks[1]).toMatch(/\.VPLocalNav\s*{[^}]*padding-top:\s*0/);
+    expect(blocks[1]).toContain("var(--vp-layout-top-height, 0px)");
   });
 });

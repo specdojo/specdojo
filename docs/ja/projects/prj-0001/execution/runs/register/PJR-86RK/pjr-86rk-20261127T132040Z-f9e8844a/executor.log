@@ -1,0 +1,26 @@
+3 回目の修正として、幅 960〜1279px の余分な空白に当たる直しを入れました。ただし、ブラウザでの実測はしていません。CSS からの推定です。
+
+**原因（VitePress の CSS から推定）**
+- 960px 以上では、固定のナビゲーションとサイドバーが `--vp-layout-top-height` の分だけ下がります。
+- 本文の `.VPContent` は、同じ変数を `margin-top` に使います。
+- 960〜1279px に出る「On this page」の帯（`.VPLocalNav`）は、同じ変数を `padding-top` にも使います。
+- 帯が文書の流れに残ったままだと、帯の高さ・local nav の `padding-top`・本文の `margin-top` の 3 つが重なり、空白が帯の高さの約 2 倍余計に空きます。
+
+**直し方**
+- 960px 以上では、帯を `position: fixed` にして文書の流れから外します。`z-index` は VitePress の `--vp-z-index-layout-top` を使います。これで本文のずれは、`.VPContent` の `margin-top` 1 回分、つまり帯の高さだけになります。
+- 同じ幅で `.VPLocalNav` の `padding-top` を 0 にします。sticky の `top` には変数を足すので、local nav の見える位置は変わりません。
+- 960px 未満は従来どおり、帯を文書の流れに置いて変数を設定しません。
+- 本番の版では変数が未設定（`0px`）なので、既定と同じ値になります。
+
+**変更ファイル**
+- `packages/docs-site/.vitepress/theme/NextChannelBanner.vue`
+- `tests/packages/docs-site/layout-top-height.test.ts`: 960px 以上の `@media` に、帯の固定と local nav の上書きがあることを確かめます。
+- 個票 `pjr-86rk-docs-next-banner-hidden.md`: 3 回目の対応を対応結果へ追記しました。
+
+**検証**
+- 対象の単体テストは 6 件が通りました。
+- 変更した 3 ファイルの Prettier 検査も通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"960px 以上で帯を position: fixed にして文書の流れから外し、.VPLocalNav の padding-top を 0 にして sticky の top へ変数を足す形で、中間の幅の二重の空白を直した。単体テストで幅による扱いの違いを確かめた。ブラウザでの実測は未実施。","handoff":["幅 960・1440・640 で、開発中の版と本番の版の本文の位置を比べるブラウザ確認はオーケストレーターが行う。今回の直しは VitePress の CSS からの推定で、実測していない（_ASSUMPTION_）。","個票の作業 3（ブラウザ確認）は open のまま残している。","CHANGELOG.md は変更していない。個票の対応結果の「CHANGELOG に書く事項」を参照する。"],"validations":[{"command":"npx vitest run tests/packages/docs-site/layout-top-height.test.ts","status":"passed","summary":"6 件が通った"},{"command":"npx prettier --check packages/docs-site/.vitepress/theme/NextChannelBanner.vue tests/packages/docs-site/layout-top-height.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-86rk-docs-next-banner-hidden.md","status":"passed","summary":"整形は問題なし"}]}
+</specdojo_executor_evidence>
