@@ -93,3 +93,16 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_5eba19a744b04cdc91011e4c11f67041
+- v: 1
+  id: reg_e4de95043f64440ca98adda63c9c2739
+  ts: "2026-11-27T14:13:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_d7d07a6c648f413d901659a560378d45
