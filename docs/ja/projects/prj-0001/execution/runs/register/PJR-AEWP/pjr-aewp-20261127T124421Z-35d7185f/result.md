@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-AEWP
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-AEWP/pjr-aewp-20261127T124421Z-35d7185f/plan.md
   started_at: "2026-11-27T12:44:29.107Z"
+  completed_at: "2026-11-27T12:59:04.825Z"
   agent: sol-executor
 ---
 
