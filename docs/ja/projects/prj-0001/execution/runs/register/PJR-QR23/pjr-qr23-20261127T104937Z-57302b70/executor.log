@@ -1,0 +1,21 @@
+ifx-file の sample を Markdown から YAML に作り直し、rulebook の minor も一部直しました。lint・schema 検証とテストは親 runner が実行するので、私は動かしていません。YAML の構文だけ手元で確認し、読み込めました。
+
+**sample の形式:** `sample-authoring-standard` は sample の拡張子を `target_format` に合わせるよう求めていて、Markdown を認める例外の記述は standards にありませんでした。ほかの ifx の sample も YAML なので、YAML に合わせました。
+
+**sample の変更点:**
+- `ifx-file-sample.md` を `ifx-file-sample.yaml` に改名しました。
+- 承認・`ready` 昇格の担当や進み具合の記述、「PO 業務助言」の表記、`status: draft` の自己言及を外しました。
+- 残した未決事項は、本部 API の結果不明時の受付照会だけです。
+- 状態値、再開判定、受入ケース、異常時の次の手は、冒頭の YAML コメントに移しました。
+- `x-spec-meta.status` は `draft` にしました。`ready` への昇格は人間が行います。
+- `dct-kata.yaml` の `path` を `.yaml` に更新しました。
+
+**rulebook の変更点:**
+- 定義のなかった `schema.schema_ref` を削除し、`schema.references` と `files[].schema_ref` の型を明示しました。
+- `ifx-index` に登録しない契約は、`based_on` の参照元仕様と照合するようにしました。
+
+CHANGELOG は変えていません。個票の対応結果に「CHANGELOG に書く事項」の小節を作りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-sample を Markdown から YAML に再構成し、承認・昇格の記述を除去した。rulebook の参照キーと ifx-index 未登録契約の照合先も整え、dct-kata.yaml の path を更新した。個票の対応結果を記入済み。","handoff":["sample 形式の決定: standards に Markdown 例外を認める記述がなく、ほかの ifx の sample も YAML のため、YAML に作り直した。理由は個票の対応結果に記載済み。","週次発注 CSV 連携（schema.fields による直接定義の例）は 1 ファイル 1 契約の YAML に収まらないため sample から外した。復活させる場合は別の sample 契約を足す。","sample の x-spec-meta.status は draft にした。ready への昇格は人間が行う。","rulebook の minor のうち、運用ルールの追従対象の列挙と検証コマンドの具体化は未対応。型の grade は統合の後に orchestrator が流す。","CHANGELOG に書く事項: 区分 Changed、「ifx-file の sample を Markdown から YAML に改め、rulebook の参照キーと照合先の記述を整えた」。"],"validations":[{"command":"python3 -I -c yaml.safe_load(ifx-file-sample.yaml)","status":"passed","summary":"YAML として読み込め、トップレベルキーを確認した"},{"command":"npm run lint:md","status":"not_applicable","reason":"親 runner が実行する検査のため。"},{"command":"npm run lint:fm","status":"not_applicable","reason":"親 runner が実行する検査のため。"}]}
+</specdojo_executor_evidence>

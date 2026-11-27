@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
@@ -42,14 +42,35 @@ ifx-file-sample に承認と昇格の記述が残り、rulebook の target_forma
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                  | 担当 | 状態 | メモ                                                  |
+| --- | --------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------- |
+| 1   | sample を YAML に作り直し、承認・昇格の記述を外す                     | BA   | done | `ifx-file-sample.md` を `.yaml` へ改名して再構成      |
+| 2   | rulebook の minor（参照キー・`ifx-index` 未登録の契約の照合先）を直す | BA   | done | `schema.schema_ref` を削除し、照合先を明記            |
+| 3   | 型の grade の起動                                                     | BA   | open | 統合の後に orchestrator が流す。executor は実行しない |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- sample の形式は YAML に作り直す方を選んだ。理由は、`sample-authoring-standard` が sample の拡張子を `target_format` に合わせるよう求め、Markdown とする例外を認める記述が standards にないため。ほかの ifx の sample も YAML である。
+- `docs/ja/specdojo/samples/ifx-file-sample.md` を `ifx-file-sample.yaml` へ改名し、Markdown の章を持たない YAML にした。補足の表（状態値、再開判定、受入ケース、異常時の次の手）は冒頭の YAML コメントへ移した。
+- 承認と `ready` への昇格の担当・進み具合の記述、「PO 業務助言」の表記、`status: draft` の自己言及を外した。採否と受付照会の未決事項（`_UNDECIDED_`）だけを残した。
+- 正本スキーマの全文掲載はもともと無く、`required_fields` で表せない制約だけをコメントに残した。
+- `dct-kata.yaml` の `ifx-file-sample` の `path` を `.yaml` に更新した。
+- rulebook は `schema.schema_ref` を削除して `schema.references` と `files[].schema_ref` の型を明示し、`ifx-index` に登録しない契約の照合先を `based_on` の参照元仕様とした。
+
+### 5.2. 残課題と申し送り
+
+- 週次発注 CSV 連携（`schema.fields` による直接定義の例）は、1 ファイル 1 契約の YAML に収まらないため sample から外した。直接定義の説明は rulebook に残る。復活させる場合は別の sample 契約を足す。
+- sample の `x-spec-meta.status` は `draft` にした。`ready` への昇格は人間が行う。
+- 型の grade は未実行。rulebook の minor（運用ルールの追従対象、検証コマンドの具体化）は未対応。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Changed
+- 行の文案: ifx-file の sample を Markdown から YAML に改め、rulebook の参照キーと照合先の記述を整えた。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `specdojo:ifx-file-rulebook`
+- `specdojo:ifx-file-sample`
