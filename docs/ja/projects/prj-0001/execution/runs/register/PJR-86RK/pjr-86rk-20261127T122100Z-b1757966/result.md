@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-86RK
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-86RK/pjr-86rk-20261127T122100Z-b1757966/plan.md
   started_at: "2026-11-27T12:21:05.587Z"
+  completed_at: "2026-11-27T12:35:38.626Z"
   agent: sonnet-executor
 ---
 
