@@ -1,4 +1,5 @@
 import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
+import { recordClaimRun } from "../release-safety.js";
 import { type Command } from "commander";
 import { existsSync } from "node:fs";
 import { specdojoRootDir, type AgentProvider } from "../../shared/specdojo-config.js";
@@ -864,6 +865,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                     : `claim task as resumed executor ${prepared.actor}`,
                 meta,
               });
+              recordClaimRun(claimEvent, executionPath);
               writeEventFile(schedulePath, releaseEvent);
               writeEventFile(schedulePath, claimEvent);
             }
