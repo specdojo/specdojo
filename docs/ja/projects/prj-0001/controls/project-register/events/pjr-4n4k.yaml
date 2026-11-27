@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_22775aed1b2749de9172114a9910d55f
+  ts: "2026-11-27T23:35:05Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 日本語版より古くなった翻訳を見つける検査を足す
+    - field: description
+      from: ""
+      to: 日本語版（正本）が書き換えられても、英語版などの翻訳が古くなったことを知らせる仕組みがない。翻訳の frontmatter の `specdojo.translated_from.commit` と正本の git の履歴を比べ、古くなった翻訳を一覧にする検査を足す（段 1）。直しの起票（段 2）は、この項目の後に決める。
+    - field: input
+      from: ""
+      to: '["翻訳の variant は frontmatter の `specdojo.translated_from` に正本の言語と、訳した時点の正本の commit を書く（ID 標準の「翻訳元の版」）。差分は git log で手で追うしかない","翻訳が古くなったことを見つける検査も、直しを起票する仕組みもない（2026-11-28 の確認）","段 1（見つける検査）をこの項目で作り、段 2（直しの todo の自動起票）は後で決める。人の確かめなしに翻訳を自動で書き換えない（利用者の決定、2026-11-28）","担当 DEV・期限 2026-12-31 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-F4MG"]'
