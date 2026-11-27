@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_11faa46751464a03b6a28e3dc78c4318
+- v: 1
+  id: reg_411ef80a560e4a82958933e7ca094f95
+  ts: "2026-11-27T23:10:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 実装・単体テスト・コマンドリファレンスを確かめ、本文の変更を利用者の承認のもと develop へ反映（9cdba95144）。統合後の JSEY の smoke が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 停止を CLI が確かめられる run の claim に限り、specdojo-orchestrator も exec release --force で戻せるようにした。配布するオーケストレーターの本文にも条件を反映した
+  previous_event_id: reg_2100d3a7d53b4de2a35b40b65355bf5b

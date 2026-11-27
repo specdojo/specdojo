@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-zfca-exec-release-force-orchestrator-idle-claim
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-26T22:16:41Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-27T23:10:45Z"
+  conclusion: 停止を CLI が確かめられる run の claim に限り、specdojo-orchestrator も exec release --force で戻せるようにした。配布するオーケストレーターの本文にも条件を反映した
   derived_from:
     - PJR-E189
 ---
