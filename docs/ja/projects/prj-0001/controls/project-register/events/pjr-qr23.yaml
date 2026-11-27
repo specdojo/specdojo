@@ -99,3 +99,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_941461e963f040939257bc16e8d41ff5
+- v: 1
+  id: reg_0f86417637df47378f2fa1fc15e0c7d8
+  ts: "2026-11-27T11:38:16Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_4ea4711683e34b74b34b510b599c053f
