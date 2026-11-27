@@ -2205,7 +2205,7 @@ groups:
         kind: work
         depends_on: []
         overview: "駄菓子屋の販売管理システムを題材に、駄菓子屋きぬや 外部ファイル連携仕様の完成例を示す"
-        path: ifx-file-sample.md
+        path: ifx-file-sample.yaml
         rulebook: specdojo:ifx-file-rulebook
         done_criteria:
           - text: rulebook の章立てと必須の表に沿っていること
