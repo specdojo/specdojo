@@ -16,6 +16,7 @@ import {
   appendGitFailureLog,
   appendGitResultFailureLog,
   ensureExecWorktree,
+  installWorktreeDependencies,
   execBranchExists,
   findExecWorktree,
   formatGitResultFailure,
@@ -279,6 +280,7 @@ export async function checkpointAndEnsureWorktree(params: {
   commitMessage: string;
   products?: readonly ProductRepo[];
   failureLogPath?: string;
+  resumeCheckpoint?: boolean;
 }): Promise<ExecWorktree> {
   const products = params.products ?? [];
   let repos: ProductWorktree[] = [];
@@ -306,6 +308,7 @@ async function checkpointAndEnsureProjectWorktree(
     checkpointPaths: string[];
     commitMessage: string;
     failureLogPath?: string;
+    resumeCheckpoint?: boolean;
   },
   repoDirName: string | undefined,
   ensureSiblingWorktrees: () => Promise<void>,
@@ -331,8 +334,19 @@ async function checkpointAndEnsureProjectWorktree(
     // 依存と違い、生成物は前回実行時のまま古くなる。生成段階を持たない版が作成した
     // worktree では存在すらしない。再利用時も作り直し、生成物起因の検証失敗を避ける。
     // 前回の準備がプロダクト worktree の作成前に失敗した場合に備え、先にそれらを揃える。
+    if (params.resumeCheckpoint) await installWorktreeDependencies(existing.path);
     await ensureSiblingWorktrees();
     await generateWorktreeArtifacts(existing.path);
+    if (params.resumeCheckpoint) {
+      await commitCheckpointPaths(
+        context.repoRoot,
+        existing.path,
+        withPlanConventionsFiles(params.checkpointPaths).map((path) =>
+          repoRelative(context.repoRoot, path),
+        ),
+        params,
+      );
+    }
     return existing;
   }
 
