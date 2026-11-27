@@ -80,3 +80,61 @@
       from: ""
       to: 影響範囲とフォローアップ
   previous_event_id: reg_460cf634c2c143cd82ec14103f4c649c
+- v: 1
+  id: reg_b52028345389417c87bd3c83ca8a6a77
+  ts: "2026-11-27T10:07:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_89d4149a8dcf43e8a40272e1ccbab18f
+- v: 1
+  id: reg_c58f570f2a504bee890cc8a55d7dec0c
+  ts: "2026-11-27T10:07:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_b52028345389417c87bd3c83ca8a6a77
+- v: 1
+  id: reg_943ad530be5e43e6bd34602a7031167f
+  ts: "2026-11-27T10:08:50Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_c58f570f2a504bee890cc8a55d7dec0c
+- v: 1
+  id: reg_5e4c32184d234e25a4238a70c360b243
+  ts: "2026-11-27T10:09:51Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で推奨の D を採った（2026-11-27）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: D を採る。register_sync の専用ブランチを project/`<id>`/sync/register と project/`<id>`/sync/exec-events の 2 本に分ける。実装は別の todo で行う
+  previous_event_id: reg_943ad530be5e43e6bd34602a7031167f

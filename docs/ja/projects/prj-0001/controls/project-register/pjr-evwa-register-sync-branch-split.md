@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: DEV
   registered_at: "2026-11-27T03:37:49Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T10:09:51Z"
+  conclusion: D を採る。register_sync の専用ブランチを project/`<id>`/sync/register と project/`<id>`/sync/exec-events の 2 本に分ける。実装は別の todo で行う
   derived_from:
     - PJR-VM2S
 ---
@@ -43,20 +45,29 @@ register_sync の専用ブランチ `project/<id>/register` には、登録簿�
 
 ## 4. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+選択肢 D を採る。register_sync の専用ブランチを `project/<id>/sync/register`（登録簿の個票とイベント）と `project/<id>/sync/exec-events`（`execution/exec/events/` の claim・complete など）の 2 本に分ける。
+
+- 名前は `exec-events` とする。`exec` は実行の記録（runs）全体を共有すると誤解されやすいため使わない。
+- 設定とコマンドは `sync` を軸にし、ブランチごとに置き場を設定に書く。将来ほかのものを共有するときは `sync/` の下に足す。
+- 1 回の操作が両方のブランチへ書く必要が出た場合の順番と、片方が失敗したときの扱いは、実装の todo で決めて個票に記録する。今の作りでは両方へ書く操作はない。
+- 今の `project/<id>/register` からの移し替えは、実行中の run がない時に行う。
+- 実装は別の todo で行う。
 
 ## 5. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- 両方のブランチの名前が中身どおりになり、`sync/` の下に足す形で将来の共有にも行き詰まらない。
+- 登録簿の履歴に schedule の実行の記帳が混ざらない。別の project からの起票は `sync/register` だけに触れるため、範囲の検査を絞りやすい。
+- 今の作りでは `exec run --register` は登録簿だけ、schedule の task の実行は exec の events だけを記帳するため、2 本に分けても 1 回の実行が両方へ書く場面がない。
+- 名前を変える作業と分ける作業は同じ範囲（設定・コマンド・CI）を触るため、1 回で済ませる方が手間が少ない。
 
 ## 6. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                        |
+| -------- | ------------------------------------------- |
+| 決定者   | indie                                       |
+| 決定日   | 2026-11-27                                  |
+| 承認方式 | commit                                      |
+| 証跡     | 対話での承認（推奨の D を採る、2026-11-27） |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
