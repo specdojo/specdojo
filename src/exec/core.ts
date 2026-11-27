@@ -8,7 +8,6 @@ import {
 import {
   acquireSchedulerLockAsync,
   buildEvent,
-  canReleaseTask,
   collectRepeatable,
   findDoingTasksForActor,
   foldEventsToState,
@@ -41,6 +40,7 @@ import {
 import { configuredProductRepos } from "./task-repos.js";
 import type { Approach, ExecEventType, SchedulerStrategy, TaskMode } from "./types.js";
 import { discardStaleExecWorktree } from "./worktree-ops.js";
+import { checkReleaseWithRunSafety, recordClaimRun, type ReleaseCheck } from "./release-safety.js";
 
 export const KNOWN_OWNER_LABELS = ["PO", "PM", "BA", "ARC", "DEV", "QE", "UX", "OPS"] as const;
 export const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join("|");
@@ -120,7 +120,7 @@ export type LockedEventAction = {
     taskId: string,
     actor: string,
     opts: ExecCommandOpts,
-  ) => { ok: boolean; reason?: string };
+  ) => ReleaseCheck | Promise<ReleaseCheck>;
   requireSingleDoing?: boolean;
 };
 
@@ -135,10 +135,12 @@ export function addLockOptions(cmd: Command): Command {
     .option("--lock-stale-ms <ms>", "Lock stale threshold in ms", "300000");
 }
 
-export function addForceOption(cmd: Command): Command {
+export function addForceOption(cmd: Command, release = false): Command {
   return cmd.option(
     "--force",
-    "Human actor only: override the guard on a task held by another actor",
+    release
+      ? "Override another actor's claim (human, or specdojo-orchestrator with a verified stopped run)"
+      : "Human actor only: override the guard on a task held by another actor",
     false,
   );
 }
@@ -425,6 +427,7 @@ export async function runLockedEventCommand(
   action: LockedEventAction,
 ): Promise<void> {
   let lockDir = "";
+  let cleanup: (() => void) | undefined;
 
   try {
     const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
@@ -464,7 +467,8 @@ export async function runLockedEventCommand(
       return;
     }
 
-    const check = action.check(state, taskId, actor, resolvedOpts);
+    const check = await action.check(state, taskId, actor, resolvedOpts);
+    cleanup = check.cleanup;
     if (!check.ok) {
       process.stdout.write(`Cannot ${action.type} ${taskId}: ${check.reason}\n`);
       exitWithCode(false);
@@ -472,6 +476,9 @@ export async function runLockedEventCommand(
     }
 
     const event = buildEvent(action.type, resolvedOpts);
+    if (action.type === "release" && check.meta) {
+      event.meta = { ...event.meta, ...check.meta };
+    }
     if (action.type === "claim") {
       const plannedOwner = state.schedule.nodes.get(taskId)?.owner;
       const claimOwner = resolveClaimOwner(resolvedOpts, actor, roster, plannedOwner);
@@ -487,6 +494,7 @@ export async function runLockedEventCommand(
       if (plannedOwner && claimOwner !== plannedOwner && resolvedOpts.allowOwnerMismatch) {
         event.meta.owner_override = true;
       }
+      recordClaimRun(event, executionPath);
     }
     if (action.type === "unblock" && resolvedOpts.takeOver) {
       event.meta = { ...(event.meta ?? {}), take_over: true };
@@ -535,10 +543,14 @@ export async function runLockedEventCommand(
   } catch (error) {
     printCommandError(error);
   } finally {
-    if (lockDir) {
-      try {
-        releaseSchedulerLock(lockDir);
-      } catch {}
+    try {
+      cleanup?.();
+    } finally {
+      if (lockDir) {
+        try {
+          releaseSchedulerLock(lockDir);
+        } catch {}
+      }
     }
   }
 }
@@ -575,7 +587,7 @@ export function resetExecWorktreeForTask(args: {
 }
 
 // `release --all-blocked`: return every blocked task in the project to todo under a single scheduler
-// lock. Tasks blocked by a different actor are skipped unless --force is given (humans only); each
+// lock. Cross-actor release uses the same force and stopped-run checks as single-task release; each
 // skip is reported with its reason. --reset-worktree discards each released task's stale worktree.
 export async function runReleaseAllBlocked(opts: ExecCommandOpts): Promise<void> {
   let lockDir = "";
@@ -616,34 +628,45 @@ export async function runReleaseAllBlocked(opts: ExecCommandOpts): Promise<void>
     // Releasing one task does not change another task's releasability, so a single snapshot read is
     // sufficient even though the in-memory snapshot is not re-folded after each write.
     for (const taskId of blockedTaskIds) {
-      const check = canReleaseTask(state.schedule, state.snapshot, taskId, actor, override);
-      if (!check.ok) {
-        skipped.push({ taskId, reason: check.reason ?? "not releasable" });
-        continue;
-      }
+      const check = await checkReleaseWithRunSafety(executionPath, state, taskId, actor, override);
+      try {
+        if (!check.ok) {
+          skipped.push({ taskId, reason: check.reason ?? "not releasable" });
+          continue;
+        }
 
-      const event = buildEvent("release", { ...opts, task: taskId });
-      if (opts.dryRun) {
-        process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
+        const event = buildEvent("release", { ...opts, task: taskId });
+        if (check.meta) event.meta = { ...event.meta, ...check.meta };
+        if (opts.dryRun) {
+          process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
+          if (opts.resetWorktree) {
+            resetExecWorktreeForTask({
+              projectId,
+              taskId,
+              schedulePath,
+              executionPath,
+              dryRun: true,
+            });
+          }
+          released.push(taskId);
+          continue;
+        }
+
+        const out = writeEventFile(schedulePath, event);
         if (opts.resetWorktree) {
           resetExecWorktreeForTask({
             projectId,
             taskId,
             schedulePath,
             executionPath,
-            dryRun: true,
+            dryRun: false,
           });
         }
+        process.stdout.write(out + "\n");
         released.push(taskId);
-        continue;
+      } finally {
+        check.cleanup?.();
       }
-
-      const out = writeEventFile(schedulePath, event);
-      if (opts.resetWorktree) {
-        resetExecWorktreeForTask({ projectId, taskId, schedulePath, executionPath, dryRun: false });
-      }
-      process.stdout.write(out + "\n");
-      released.push(taskId);
     }
 
     const dryRunSuffix = opts.dryRun ? " (dry-run)" : "";

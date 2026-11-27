@@ -699,6 +699,10 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `exec claim`・`release`・`block`・`unblock`・`complete`・`reopen`・`cancel` などの記帳コマンドの `--by` は、名簿の人と agent に加え、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けます。予約 actor で記帳した event も `exec refresh`・`exec status` はそのまま読みます。名簿にも予約 actor にもない名前は、記帳の前にエラーで止まります。`reopen` と `--take-over` は人の actor に限ります。
 
+他の actor の claim に対する `--force` は人に限ります。ただし `exec release --by specdojo-orchestrator --force` は、claim に記録された runner PID の終了を CLI が確認できる場合にも使えます。現在の project の run lock に生存 PID がある場合は task と PID を示して拒否し、PID・lock の記録不足や読み取り失敗などで判定できない場合も理由を示して拒否します。その場合は人が `--force` で解除できます。旧 claim や runner を伴わない手動 claim には判定情報がないため、この例外を使えません。
+
+解除時は run lock を取得して新規実行・再開との競合を防ぎます。終了した run の lock がまだ新しい場合は、既存の stale 判定を満たすまで拒否します。成功した release event の `meta.release_stopped_claim_run` に確認した PID と lock token、`meta.release_claim_owner` に元の所有者を記録します。`--all-blocked` でも task ごとに同じ条件を確認します。`--reset-worktree` と `--all-blocked` をオーケストレーターが使う場合は、利用者の承認を得る運用を続けます。
+
 次のコマンドは runner・job・orchestrator が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
 
 | コマンド         | 用途                                                                                            | 例                                                                                 |

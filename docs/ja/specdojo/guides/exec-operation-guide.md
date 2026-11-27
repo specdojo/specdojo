@@ -363,6 +363,8 @@ specdojo exec release \
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
 
+他の actor が claim した task を戻す場合、人は `--force` を使えます。`specdojo-orchestrator` も、claim に記録された runner PID の終了を CLI が確認できる場合に限って `--force` を使えます。実行中の run や判定情報のない旧 claim、読めない lock がある場合は拒否されます。拒否理由を確認し、人の `--force` に引き継ぎます。詳細な判定条件とイベント記録は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 #### 2.2.1. 人が unblock するときの続行と引き取り
 
 `exec unblock` を人が実行しても、claim の持ち主は変わりません。claim の持ち主は `claim` イベントの actor で、`note` やほかの actor の `unblock` では移りません。人が障害を取り除いて agent の run を続けさせる場合と、人が自分で直して完了させる場合は、`--take-over` の有無で区別します。

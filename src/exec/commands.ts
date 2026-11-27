@@ -48,7 +48,6 @@ import {
   canCancelTask,
   canClaimTask,
   canCompleteTask,
-  canReleaseTask,
   canReopenTask,
   canUnblockTask,
   claimOwnerOf,
@@ -101,6 +100,7 @@ import { registerExecWatchCommand } from "./watch-command.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
 import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
+import { checkReleaseWithRunSafety } from "./release-safety.js";
 
 export function printExecPaths(opts: { project?: string }): void {
   try {
@@ -174,8 +174,14 @@ export function registerExecCommands(program: Command): void {
     },
     release: {
       type: "release",
-      check: ({ schedule, snapshot }, taskId, actor, opts) =>
-        canReleaseTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
+      check: (state, taskId, actor, opts) =>
+        checkReleaseWithRunSafety(
+          resolveProjectContext(opts).executionPath,
+          state,
+          taskId,
+          actor,
+          resolveForceOverride(opts, actor),
+        ),
     },
     cancel: {
       type: "cancel",
@@ -202,7 +208,7 @@ export function registerExecCommands(program: Command): void {
 
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
-    if (t === "complete" || t === "block" || t === "release") addForceOption(cmd);
+    if (t === "complete" || t === "block" || t === "release") addForceOption(cmd, t === "release");
     if (t === "unblock") addTakeOverOption(cmd);
     if (t === "release") {
       cmd.option(

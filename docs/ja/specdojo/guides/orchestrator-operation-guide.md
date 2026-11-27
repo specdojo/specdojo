@@ -174,6 +174,8 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 
 影響の大きい操作（`specdojo exec run` など、エージェントを起動して成果物を生成・更新するもの）は、対象と実行範囲を提示して承認を得てから実行します。
 
+他の agent が claim したまま停止した task は、`exec release --by specdojo-orchestrator --force` で戻せます。CLI が claim の runner PID の終了を確認し、現在の project の run lock を検査してから解除します。動作中または判定不能の場合は拒否理由に従い、人の `--force` に引き継ぎます。`--by` に人の名前を代用しません。`--reset-worktree` と `--all-blocked` は、引き続き利用者の承認を得てから使います。判定情報のない旧 claim などの制約は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 ## 5. 設定ファイルの構成
 
 指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーに加え、`config scaffold` で利用者へ配る provider テンプレートも同じ本文から生成します。
