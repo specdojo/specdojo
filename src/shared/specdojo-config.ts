@@ -565,7 +565,51 @@ export function resolveExternalProjectRoot(
   return resolve(repositoryIdentityRoot(rootDir), project.path);
 }
 
-/** Return external projects in configuration order with absolute repository roots. */
+function missingExternalProjectMessage(
+  alias: string,
+  project: SpecDojoExternalProjectConfig,
+  repoRoot: string,
+): string {
+  return (
+    `external_projects.${alias}.path "${project.path}" does not exist ` +
+    `(project_id "${project.project_id}", resolved to ${repoRoot})`
+  );
+}
+
+/** Require the directory only when an operation uses this external project. */
+export function requireExternalProjectRoot(
+  rootDir: string,
+  alias: string,
+  project: SpecDojoExternalProjectConfig,
+): string {
+  const repoRoot = resolveExternalProjectRoot(rootDir, project);
+  if (!existsSync(repoRoot)) {
+    throw new Error(missingExternalProjectMessage(alias, project, repoRoot));
+  }
+  if (!statSync(repoRoot).isDirectory()) {
+    throw new Error(
+      `external_projects.${alias}.path "${project.path}" is not a directory ` +
+        `(project_id "${project.project_id}", resolved to ${repoRoot})`,
+    );
+  }
+  return repoRoot;
+}
+
+const warnedMissingExternalProjects = new Set<string>();
+
+/** Warn once per declaration and resolved path in this CLI process, even across config loads. */
+function warnMissingExternalProjects(rootDir: string, config: SpecDojoConfig): void {
+  for (const [alias, project] of Object.entries(config.external_projects ?? {})) {
+    const repoRoot = resolveExternalProjectRoot(rootDir, project);
+    if (existsSync(repoRoot)) continue;
+    const message = missingExternalProjectMessage(alias, project, repoRoot);
+    if (warnedMissingExternalProjects.has(message)) continue;
+    warnedMissingExternalProjects.add(message);
+    process.stderr.write(`WARN: ${message}. Operations using this external project will fail.\n`);
+  }
+}
+
+/** Return external projects in configuration order, requiring every repository directory. */
 export function resolveExternalProjects(
   rootDir: string,
   config: Pick<SpecDojoConfig, "external_projects">,
@@ -573,7 +617,7 @@ export function resolveExternalProjects(
   return Object.entries(config.external_projects ?? {}).map(([alias, project]) => ({
     alias,
     ...project,
-    repoRoot: resolveExternalProjectRoot(rootDir, project),
+    repoRoot: requireExternalProjectRoot(rootDir, alias, project),
   }));
 }
 
@@ -612,9 +656,7 @@ export function validateExternalProjects(
       errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
     } else {
       const absolutePath = resolveExternalProjectRoot(rootDir, { path });
-      if (!existsSync(absolutePath)) {
-        errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
-      } else if (!statSync(absolutePath).isDirectory()) {
+      if (existsSync(absolutePath) && !statSync(absolutePath).isDirectory()) {
         errors.push(`${at}.path "${path}" is not a directory (resolved to ${absolutePath})`);
       }
     }
@@ -1203,6 +1245,8 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
         configErrors.map((message) => `  - ${message}`).join("\n"),
     );
   }
+
+  warnMissingExternalProjects(rootDir, effective);
 
   return local
     ? {

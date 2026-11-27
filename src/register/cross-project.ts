@@ -5,7 +5,7 @@ import { gitOutput, gitResult, worktreeStatusPaths } from "../shared/git.js";
 import {
   isProjectSyncEnabled,
   loadConfig,
-  resolveExternalProjectRoot,
+  requireExternalProjectRoot,
   specdojoRootDir,
   type SpecDojoConfig,
   type SpecDojoProjectConfig,
@@ -125,7 +125,7 @@ export function resolveCrossProjectMutationTarget(
   if (!project) {
     const externalProject = config.external_projects?.[projectId];
     if (externalProject) {
-      const targetRoot = resolveExternalProjectRoot(repoRoot, externalProject);
+      const targetRoot = requireExternalProjectRoot(repoRoot, projectId, externalProject);
       throw new Error(
         `Cross-repository register ${command} is not supported for external project ${projectId}. ` +
           `Run the command in ${targetRoot} for project ${externalProject.project_id}.`,

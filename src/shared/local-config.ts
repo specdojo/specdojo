@@ -287,8 +287,8 @@ export function applyLocalConfig(
           });
         } else {
           // Local-only alias. The shared validator (validateExternalProjects) checks the merged
-          // value: alias pattern, collision with a local project id, and path existence relative
-          // to `rootDir`.
+          // value: alias pattern, collision with a local project id, and path shape relative
+          // to `rootDir`. Missing directories are warned about after the merge.
           mergedExternalProjects[alias] = { ...(entry as SpecDojoExternalProjectConfig) };
           overrides.push({ external: alias, kind: "external-added", path });
         }

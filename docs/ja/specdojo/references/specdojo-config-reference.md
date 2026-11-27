@@ -95,7 +95,9 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 | `project_id` | 必須 | 相手の `specdojo.config.json` の `projects` にある実際の project ID です。                                                    |
 | `source_url` | 任意 | 相手のリポジトリ相対のパスを後ろに足すと文書の URL になる基点です。`http://` か `https://` で始めます。文書サイトが使います。 |
 
-別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
+別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` が空・絶対パス・ディレクトリでないファイルの場合は、設定の読み込み時にエラーにします。存在しないパスは、ローカル設定の上書き後に標準エラーへ警告を出し、設定の読み込みを続けます。同じ宣言と解決先への警告は、CLI のプロセス内で 1 回だけです。外部 project を使わない `register branch-check` や `exec validate --records-only` は、相手を checkout していなくても実行できます。
+
+相手を使う操作では、置き場がなければ別名・`project_id`・設定の `path`・解決した絶対パスを含むエラーで止まります。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は宣言したすべての外部リポジトリを使うため、それらが存在する必要があります。`repos` に加えて各外部リポジトリへ provider 別の編集許可を付けます。文書サイトの wikilink は後述の警告と未解決表示の扱いに従います。
 
 linked worktree（`exec run --worktree` の作業場所など）では、`path` を worktree ではなく、その worktree を持つ主の作業ツリーのルートから解決します。相手のリポジトリは主の作業ツリーの隣にあり、task の worktree の隣にはないためです。主の作業ツリーでの解決は変わりません。
 
