@@ -32,7 +32,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                                |
 | --- | --------------------------- | ---- | ---- | ----------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-1TYG の統合後の再実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-YNQG の統合後の再実行を記録した |
 
 ## 4. 対応結果
 
@@ -136,8 +136,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-27 00:46 | PJR-1TYG | sonnet-executor        |
 | 2026-11-27 07:31 | PJR-1TYG | sonnet-executor        |
 | 2026-11-27 23:18 | PJR-1TYG | sonnet-executor        |
+| 2026-11-28 08:06 | PJR-YNQG | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-1TYG とした（統合 merge commit `21a27d974e`、2026-11-27 00:39 JST。実行時点で `review`）。この worktree の HEAD（`97b5f177c1`）に含まれることを、`git log --merges` の件名照合で確認した。その後に統合された項目（PJR-BXYM・PJR-MWKE・PJR-86RK など）は対象一覧に含まれない。今回の run は `pjr-jsey-20261127T141701Z-54db047e`、executor の nickname は `sonnet-executor` とした。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-YNQG とした（統合 merge commit `7a65a61a2f`、2026-11-27 22:43 JST）。この worktree の HEAD に含まれることを、`git log --merges` の件名照合で確認した。それより後に統合された項目（PJR-BXYM・PJR-MWKE・PJR-86RK など）は対象一覧に含まれない。今回の run は `pjr-jsey-20261127T230438Z-d78970c7`、executor の nickname は `sonnet-executor` とした。
 
 申し送り: executor が変更した成果物は本個票のみ。親 runner の検証（lint-ts・lint-fm・lint-md・lint-mermaid・lint-d2・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
