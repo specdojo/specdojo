@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-25T12:09:58Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
   derived_from:
     - PJR-98HS
 ---
@@ -57,6 +56,7 @@ specdojo:
 - 原因: VitePress は固定のナビゲーション・サイドバー・本文を `--vp-layout-top-height` の分だけ下げる。帯はこの変数へ高さを反映しておらず、広い画面（固定表示）でナビゲーションに隠れた。
 - 直し方: `NextChannelBanner.vue` で帯の実測の高さを `ResizeObserver` で監視し、`document.documentElement` の `--vp-layout-top-height` へ反映する。理由は、VitePress の決まった方法であり、文の折り返しで高さが変わっても追従するため。帯を出さない本番では要素が無く、変数も設定しないため見え方は変わらない。狭い画面では VitePress がこの変数を使わないため変わらない。
 - 追加: `packages/docs-site/.vitepress/theme/layout-top-height.ts`（変数の設定・解除）と、その単体テスト `tests/packages/docs-site/layout-top-height.test.ts`。
+- 2 回目の対応（狭い画面の空白）: 原因は、VitePress の `VPNav` が幅 960px 未満では `position: relative` のまま `top: var(--vp-layout-top-height)` を持つため、帯が文書の流れで既に占める高さに加えて変数の分も下がり、二重に空いたこと。直し方は、`matchMedia("(min-width: 960px)")` に一致する幅（ナビゲーションが固定される幅）でだけ変数を設定し、それ未満では解除する（`applyLayoutTopHeight` の第 3 引数 `isFixedNav`、`change` イベントで追従）。広い画面の直りは変えない。単体テストに、固定されない幅で変数を設定しないケースを追加した。
 - 残課題: ブラウザでの見え方の確認（作業 3）はオーケストレーターが行う。
 
 ### 5.2. CHANGELOG に書く事項

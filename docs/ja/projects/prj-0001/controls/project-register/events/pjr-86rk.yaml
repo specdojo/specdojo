@@ -157,3 +157,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
   previous_event_id: reg_bd9048a5a6d447e89d89f8a5a85e0654
+- v: 1
+  id: reg_b3ca3c71372843a4bb78a458aaf475b4
+  ts: "2026-11-27T12:35:48Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+      to: "-"
+  previous_event_id: reg_d1db819979ee439999ef523442e69d98
+- v: 1
+  id: reg_61906eb0892a4490b44e89f2131f3e37
+  ts: "2026-11-27T12:42:40Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b3ca3c71372843a4bb78a458aaf475b4
