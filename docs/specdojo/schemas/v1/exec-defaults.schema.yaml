@@ -83,6 +83,24 @@ $defs:
     type: object
     additionalProperties: false
     properties:
+      diagnosis:
+        type: object
+        additionalProperties: false
+        description: Read-only diagnosis proposals for needs_decision stalls; disabled when by is absent.
+        properties:
+          by:
+            $ref: "#/$defs/AgentNickname"
+            description: Dedicated review-mode member selected through command_template or member command.
+          max_per_night:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 3
+          timeout_seconds:
+            type: integer
+            minimum: 1
+            maximum: 3600
+            default: 300
       remedies:
         type: object
         additionalProperties: false

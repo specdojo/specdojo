@@ -1436,6 +1436,8 @@ specdojo orchestrator integration-tests --project prj-0001
 
 `orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。exec-defaults の `watch.remedies` で手当てを選んだ種類（使用量の上限・負荷による時間切れ・統合先の同期）だけ、再開のコマンドを切り離して 1 件起動します。既定は手を打たず、commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、手当ては同じガイドの「止まった実行に手当てを打つ」、見張りの対象外の見分け方と停止・再開は「立ち上げたままのオーケストレーターと共存する」に従います。見張りの対象外には記録も手当ても行いません。見張りは exec の実行ロックを取らないため、実行中の run を待たずに動きます。別の run が実行ロックを持つ間は手当てを次の回に回します。
 
+`watch.diagnosis.by` を設定すると、判断が要る止まりの診断 agent を 1 件起動し、playbook と理由を渡して、案を朝報告へ転記します。既定では起動しません。回数と時間には上限があり、失敗しても見張りと報告は続きます。権限の準備と設定は [[specdojo:exec-config-guide|exec設定ガイド]] の「判断が要る止まりの診断」、記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「判断が要る止まりの診断案」を参照してください。
+
 ```bash
 specdojo orchestrator watch-scan --project prj-0001
 specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
@@ -1446,8 +1448,9 @@ specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
 | `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h`                         |
 | `--if-busy <policy>`       | 別の run が実行ロックを持っているとき。`scan`（既定）は読み取りと記録を続け、`skip` は何もせず `[watch-scan] skipped: exec busy` を出して次の回に回す |
 | `--exec-defaults <path>`   | 手当ての設定を読む exec-defaults。既定は `.specdojo/exec-defaults.yaml`                                                                               |
-| `--no-remedy`              | 設定があっても手当てを起動せず、記録と報告だけを行う                                                                                                  |
-| `--dry-run`                | 記録と報告を書かず、手当ても起動せずに、足す行・起動する手当て・件数だけを表示する                                                                    |
+| `--no-remedy`              | 設定があっても決まった手当てを起動しない。診断は別に制御する                                                                                          |
+| `--no-diagnosis`           | `watch.diagnosis.by` があっても診断 agent を起動しない。過去の診断案は報告に引き継ぐ                                                                  |
+| `--dry-run`                | 記録と報告を書かず、手当て・診断 agent も起動せずに、足す行・起動する手当て・件数だけを表示する                                                       |
 
 読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。見張りを止めているときと、`--if-busy skip` で別の run がロックを持っているときは、記録も手当てもせずに終わります。routine から起動したときは終了コード 75 を返し、busy の回は routine が次の回に流し直します。
 

@@ -6,6 +6,25 @@ import { buildValidator, formatErrors } from "../../../helpers/schema.js";
 const validate = buildValidator("docs/specdojo/schemas/v1/exec-defaults.schema.yaml");
 
 describe("exec-defaults.schema.yaml frontier", () => {
+  it("accepts opt-in watch diagnosis", () => {
+    expect(
+      validate({
+        watch: { diagnosis: { by: "diagnoser", max_per_night: 3, timeout_seconds: 300 } },
+      }),
+      formatErrors(validate.errors),
+    ).toBe(true);
+  });
+
+  it.each([
+    { by: "bad nickname" },
+    { max_per_night: 0 },
+    { max_per_night: 101 },
+    { timeout_seconds: 0 },
+    { timeout_seconds: 3601 },
+    { command: "unsafe" },
+  ])("rejects invalid diagnosis configuration: %j", (diagnosis) => {
+    expect(validate({ watch: { diagnosis } })).toBe(false);
+  });
   it("accepts post-integration build-dist with paths", () => {
     expect(
       validate({
