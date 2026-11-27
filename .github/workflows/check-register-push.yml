@@ -2,7 +2,10 @@ name: Check register branch push
 on:
   push:
     branches:
+      # project/<id>/register は sync への移し替えが済むまで残す。
       - "project/*/register"
+      - "project/*/sync/register"
+      - "project/*/sync/exec-events"
 permissions:
   contents: read
 jobs:
@@ -17,12 +20,13 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # project はブランチ名（project/<project-id>/register）から取る（prj-0001 と prj-0002 で共有する）。
+      # project はブランチ名（project/<project-id>/register または project/<project-id>/sync/<種類>）から取る。
+      # どの範囲で調べるかは --remote-ref から branch-check が決める。
       - name: Check register branch push
         env:
           BEFORE: ${{ github.event.before }}
         run: |
           project="${GITHUB_REF_NAME#project/}"
-          project="${project%/register}"
+          project="${project%%/*}"
           node --import tsx src/specdojo.ts register branch-check --project "$project" \
             --commit "$GITHUB_SHA" --base "$BEFORE" --remote-ref "$GITHUB_REF"
