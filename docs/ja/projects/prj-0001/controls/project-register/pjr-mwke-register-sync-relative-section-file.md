@@ -92,5 +92,5 @@ register のほかのコマンド（遷移・maintenance）には、呼び出し
 
 ## 6. 関連ドキュメント
 
-- 派生元: PJR-VM2S
-- 実装: `src/register/section.ts`、`src/register/create-commands.ts`
+- [[prj-0001:prj-0001:pjr-4ejc-register-sync-switch-check|PJR-4EJC]]: register_sync の切り替えの確かめで、この問題を見つけた記録。
+- [[prj-0001:prj-0001:pjr-vm2s-register-branch-migration-trial|PJR-VM2S]]: register のブランチへ移る手順の試行。

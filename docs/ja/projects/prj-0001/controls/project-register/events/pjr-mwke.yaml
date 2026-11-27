@@ -80,3 +80,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_33d0d594230e483582413d56c05a6770
+- v: 1
+  id: reg_d7d07a6c648f413d901659a560378d45
+  ts: "2026-11-27T14:12:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_5eba19a744b04cdc91011e4c11f67041
