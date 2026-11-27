@@ -4,13 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-86RK
   mode: edit
-  status: complete
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-86RK/pjr-86rk-20261127T105508Z-a3432ad6/plan.md
   started_at: "2026-11-27T10:55:11.473Z"
-  completed_at: "2026-11-27T11:01:25.720Z"
+  completed_at: "2026-11-27T12:30:19.934Z"
   agent: sonnet-executor
+  block_reason: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
 ---
 
 # Edit Result
