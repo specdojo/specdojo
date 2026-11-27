@@ -4,7 +4,7 @@ import { join } from "node:path";
 import {
   isProjectSyncEnabled,
   loadConfig,
-  resolveExternalProjectRoot,
+  requireExternalProjectRoot,
   specdojoRootDir,
   type SpecDojoExternalProjectConfig,
 } from "../shared/specdojo-config.js";
@@ -212,7 +212,7 @@ export function delegateExternalRegisterAdd(
     );
   }
 
-  const repoRoot = resolveExternalProjectRoot(rootDir, externalProject);
+  const repoRoot = requireExternalProjectRoot(rootDir, alias, externalProject);
   const executable = targetSpecdojoExecutable(repoRoot);
   const versionResult = run(executable.command, [...executable.args, "--version"], {
     cwd: repoRoot,

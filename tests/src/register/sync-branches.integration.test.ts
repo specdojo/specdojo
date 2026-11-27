@@ -42,7 +42,7 @@ describe("sync branches split into register and exec-events", () => {
   let repo: string;
   let remote: string;
 
-  function fixture(): void {
+  function fixture(missingExternal = false): void {
     parent = mkdtempSync(join(tmpdir(), "specdojo-sync-branches-"));
     repo = join(parent, "repo");
     remote = join(parent, "remote.git");
@@ -54,6 +54,9 @@ describe("sync branches split into register and exec-events", () => {
       JSON.stringify({
         version: 1,
         current_project: PROJECT,
+        ...(missingExternal
+          ? { external_projects: { customer: { path: "../missing", project_id: "remote" } } }
+          : {}),
         projects: {
           [PROJECT]: {
             base_path: "docs/sample",
@@ -205,5 +208,29 @@ describe("sync branches split into register and exec-events", () => {
       expect.stringMatching(new RegExp(`: ${REGISTER}/stray\\.md$`, "u")),
     ]);
     expect(result.status === "checked" && result.shapeViolations).toEqual([]);
+  });
+
+  it("passes register branch-check with an unrelated external project missing", async () => {
+    fixture(true);
+    const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+    await addItem();
+    expect(process.exitCode).toBeUndefined();
+
+    await register(
+      "branch-check",
+      "--project",
+      PROJECT,
+      "--commit",
+      REGISTER_BRANCH,
+      "--base",
+      DEVELOP,
+      "--remote-ref",
+      `refs/heads/${REGISTER_BRANCH}`,
+    );
+
+    expect(process.exitCode).toBeUndefined();
+    expect(process.stdout.write).toHaveBeenCalledWith("Register push checks passed.\n");
+    expect(stderr).toHaveBeenCalledTimes(1);
+    expect(stderr.mock.calls[0]?.[0]).toContain("external_projects.customer.path");
   });
 });

@@ -2,6 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { resolveCrossProjectMutationTarget } from "../../../src/register/cross-project.js";
 import {
   buildExternalRegisterAddArgs,
   delegateExternalRegisterAdd,
@@ -245,6 +246,34 @@ describe("delegateExternalRegisterAdd preconditions", () => {
       stderr: "",
     }));
   }
+
+  it("rejects a missing external repository with alias, project id and both paths before spawning", () => {
+    createFixture();
+    const target = join(fixtureRoot, "target");
+    rmSync(target, { recursive: true });
+    const run = successfulRun();
+
+    expect(() => delegateExternalRegisterAdd(baseOptions, run)).toThrow(
+      `external_projects.customer.path "../target" does not exist ` +
+        `(project_id "target", resolved to ${target})`,
+    );
+    expect(run).not.toHaveBeenCalled();
+    expect(() =>
+      resolveCrossProjectMutationTarget("update", { project: "customer", commit: true }),
+    ).toThrow(
+      `external_projects.customer.path "../target" does not exist ` +
+        `(project_id "target", resolved to ${target})`,
+    );
+  });
+
+  it("keeps local register add available when an unrelated external repository is missing", () => {
+    createFixture();
+    rmSync(join(fixtureRoot, "target"), { recursive: true });
+    const run = successfulRun();
+
+    expect(delegateExternalRegisterAdd({ ...baseOptions, project: "source" }, run)).toBe(false);
+    expect(run).not.toHaveBeenCalled();
+  });
 
   it("requires a sync-capable target CLI when the external project enables register_sync", () => {
     const source = createFixture();
