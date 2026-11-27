@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-86RK"]'
+- v: 1
+  id: reg_be1bdd17fd1a4a7cab93cd991f655e7d
+  ts: "2026-11-27T12:34:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_963957c6c195423586dfd230d2f640fc
