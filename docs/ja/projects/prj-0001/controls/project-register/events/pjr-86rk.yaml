@@ -57,3 +57,29 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_b8080f0728b84453b5e502c55662d72b
+- v: 1
+  id: reg_ade8c47faa404bb49e39c3a1b7957191
+  ts: "2026-11-27T10:55:22Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_37c033ba2a424f0d8b177e112c856e59
+- v: 1
+  id: reg_15b473ebc4b94006b1bf0841bbb4dbc8
+  ts: "2026-11-27T11:02:13Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ade8c47faa404bb49e39c3a1b7957191
