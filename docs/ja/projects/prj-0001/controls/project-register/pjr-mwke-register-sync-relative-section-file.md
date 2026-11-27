@@ -31,22 +31,22 @@ register_sync を有効にした project で register update/add の --section-f
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                  |
+| ------------ | --------------------------------------------------------------------- |
+| スコープ     | `register add` / `register update` の `--section-file` の読み込みだけ |
+| スケジュール | 期限 2026-11-30 の前に対応した                                        |
+| コスト       | 追加の費用なし                                                        |
+| 品質         | 同期ありで相対パスの `--commit` が止まる不具合を解消する              |
+| 関係者       | 登録簿を記帳する indie・オーケストレーター                            |
 
 ## 4. 対応方針
 
-| 項目     | 内容                                                                                                                                           |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 原因     | _TODO_: executor が調べて書く。同期を有効にした project では、記帳を専用ブランチの worktree で行うため、相対パスがそこから解決されるとみられる |
-| 対応策   | 利用者が渡したファイルのパスは、記帳の場所に移る前に、呼び出し元の cwd から絶対パスへ解決する                                                  |
-| 依存事項 | なし                                                                                                                                           |
-| 完了条件 | 下の一覧のとおり                                                                                                                               |
+| 項目     | 内容                                                                                                                                                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | `--commit` で同期が有効なとき、`runRegisterMutationInCurrentWorktree` が専用ブランチの worktree へ `process.chdir` してから記帳を呼ぶ。`validateSectionFile` が相対パスをそのまま読んでいたため、移った先から解決していた |
+| 対応策   | 利用者が渡したファイルのパスは、記帳の場所に移る前に、呼び出し元の cwd から絶対パスへ解決する                                                                                                                             |
+| 依存事項 | なし                                                                                                                                                                                                                      |
+| 完了条件 | 下の一覧のとおり                                                                                                                                                                                                          |
 
 完了条件:
 
@@ -61,8 +61,36 @@ register_sync を有効にした project で register update/add の --section-f
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容:
+
+- `validateSectionFile` に基点のディレクトリの引数を足し、相対パスをそこから絶対パスへ解決して読むようにした（`src/register/section.ts`）。
+- `register add` と `register update` は、記帳の場所へ移る前（`runRegisterMutation` の前）に呼び出し元の cwd を取り、`--section-file` をその cwd から解決する（`src/register/create-commands.ts`）。別 project の worktree へ移る記帳（`inCrossProjectWorktree`）でも同じく呼び出し元から読む。
+- ファイルが無い・読めないときのエラーは `Cannot read section file: <渡したパス> (resolved to <解決した絶対パス>)` とした。絶対パスを渡したときは従来どおりパスだけを出す。
+- 同期を有効にしていない project は cwd を移さないため、解決結果は従来と同じ。
+
+対象のオプションの一覧:
+
+| コマンド                           | オプション                              | 扱い                                                                   |
+| ---------------------------------- | --------------------------------------- | ---------------------------------------------------------------------- |
+| `register add`                     | `--section-file`（繰り返し可）          | 呼び出し元の cwd から解決する                                          |
+| `register update`                  | `--section-file`                        | 呼び出し元の cwd から解決する                                          |
+| `register add` / `register update` | `--target-path`・`--target`・`--source` | 対象外。リポジトリ相対の成果物の参照で、呼び出し元のファイルを読まない |
+
+register のほかのコマンド（遷移・maintenance）には、呼び出し元のファイルを読むオプションは無い。
+
+確認結果:
+
+- 単体テスト（`tests/src/register/section.test.ts`）に、基点からの相対パスの解決と、渡したパス・解決した絶対パスを含むエラーを足した。
+- 統合テスト（`tests/src/register/register-branch.integration.test.ts`）に、同期を有効にした project で相対パスの `--section-file` を `register add` と `register update` に `--commit` で渡し、専用ブランチへ記帳されることを確かめるケースを足した。両ファイルを `vitest` で個別に流して通った。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` は親の runner が流す。
+
+再発防止策: 利用者が渡すファイルのパスを読む処理は、作業場所を移す前の cwd を基点として受け取る形にした。
+
+### CHANGELOG に書く事項
+
+- 区分: 修正
+- 文案: 登録簿の同期（`register_sync`）を有効にした project で、`register add` / `register update` の `--section-file` に相対パスを渡して `--commit` すると `Cannot read section file` で止まっていた不具合を直しました。相対パスは呼び出し元の cwd から解決し、見つからないときは渡したパスと解決した絶対パスをエラーに出します（PJR-MWKE）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 派生元: PJR-VM2S
+- 実装: `src/register/section.ts`、`src/register/create-commands.ts`
