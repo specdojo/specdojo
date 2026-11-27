@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_963957c6c195423586dfd230d2f640fc
+  ts: "2026-11-27T12:33:48Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: worktree の用意で止まった run の --resume が、統合済みの前の run の統合をやり直す
+    - field: description
+      from: ""
+      to: 同じ項目に統合済みの前の run があると、用意の段で止まった新しい run を --resume したとき、前の run の状態を拾って統合の段から再開し、executor が動かないまま統合に失敗する
+    - field: input
+      from: ""
+      to: '["2026-11-27 の PJR-86RK: 1 回目の run（pjr-86rk-20261127T105508Z-a3432ad6）は統合済み。2 回目の run（pjr-86rk-20261127T122100Z-b1757966）は worktree の用意で止まり、plan と result だけがあった","exec run --register PJR-86RK --worktree --resume は「Syncing integration targets before integrate resume」として 1 回目の run の pipeline-state を使い、親の検証の後、統合の commit が index-build（生成した登録簿の索引がない）で失敗して waiting になった。develop の作業ツリーと index は汚れなかった"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-86RK"]'
+- v: 1
+  id: reg_be1bdd17fd1a4a7cab93cd991f655e7d
+  ts: "2026-11-27T12:34:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_963957c6c195423586dfd230d2f640fc

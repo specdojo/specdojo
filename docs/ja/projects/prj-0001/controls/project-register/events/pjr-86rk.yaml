@@ -96,3 +96,64 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_15b473ebc4b94006b1bf0841bbb4dbc8
+- v: 1
+  id: reg_5ce4f20cf12940e3a000bf060829e3fe
+  ts: "2026-11-27T12:21:51Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_5ffa1d538b664aaca160a8efa9c4f2cf
+- v: 1
+  id: reg_69ed5bea42334b64a14e55b87577b758
+  ts: "2026-11-27T12:23:48Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+  previous_event_id: reg_5ce4f20cf12940e3a000bf060829e3fe
+- v: 1
+  id: reg_bd9048a5a6d447e89d89f8a5a85e0654
+  ts: "2026-11-27T12:25:18Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+      to: "-"
+  previous_event_id: reg_69ed5bea42334b64a14e55b87577b758
+- v: 1
+  id: reg_d1db819979ee439999ef523442e69d98
+  ts: "2026-11-27T12:30:29Z"
+  action: wait
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+  previous_event_id: reg_bd9048a5a6d447e89d89f8a5a85e0654

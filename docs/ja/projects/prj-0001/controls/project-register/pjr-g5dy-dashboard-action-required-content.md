@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-g5dy-dashboard-action-required-content
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-27T10:33:10Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T12:22:57Z"
+  conclusion: dashboard の「人の対応が要るもの」の表に「内容」の列を足した。登録簿の項目は個票のタイトル、schedule の task は対象の文書の名前を出す
 ---
 
 # PJR-G5DY dashboard の「人の対応が要るもの」の表に内容の列を足す
