@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-86rk-docs-next-banner-hidden
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-25T12:09:58Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T13:49:12Z"
+  conclusion: 開発中の版の帯の高さを --vp-layout-top-height に反映し、960px 以上では帯を固定して local nav の上書きを VitePress の scoped 規則に勝たせた。幅 640・960・1280・1440 で本番の版から帯の高さだけずれる
   derived_from:
     - PJR-98HS
 ---
