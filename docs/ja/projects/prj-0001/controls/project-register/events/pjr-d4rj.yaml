@@ -32,3 +32,22 @@
     - field: registered
       from: ""
       to: "2026-11-28"
+- v: 1
+  id: reg_152297c8130d4a0b8c28ba99d74727ff
+  ts: "2026-11-27T23:43:25Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話での承認（推奨の B を採る、2026-11-28）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 選択肢 B。develop と feature ブランチへの普通の push を、毎回の承認を前提にオーケストレーターに許す。main・force・タグ・npm の公開は人が行い、同期ブランチは specdojo のコマンドに任せる
+  previous_event_id: reg_5913d2b2f6784b00917f1de6e22ca327
