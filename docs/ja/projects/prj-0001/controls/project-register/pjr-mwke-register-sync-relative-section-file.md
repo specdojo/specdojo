@@ -9,6 +9,7 @@ specdojo:
   item_type: issue
   item_status: open
   priority: high
+  difficulty: medium
   owner: DEV
   registered_at: "2026-11-26T22:39:48Z"
   due_on: "2026-11-30"
@@ -40,12 +41,23 @@ register_sync を有効にした project で register update/add の --section-f
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                           |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | _TODO_: executor が調べて書く。同期を有効にした project では、記帳を専用ブランチの worktree で行うため、相対パスがそこから解決されるとみられる |
+| 対応策   | 利用者が渡したファイルのパスは、記帳の場所に移る前に、呼び出し元の cwd から絶対パスへ解決する                                                  |
+| 依存事項 | なし                                                                                                                                           |
+| 完了条件 | 下の一覧のとおり                                                                                                                               |
+
+完了条件:
+
+- 登録簿の同期（`sync` と互換の `register_sync`）を有効にした project で、`register update --section-file` と `register add --section-file` に相対パスを渡すと、呼び出し元の cwd から解決して読める。
+- 同じ扱いを、register のコマンドのうちファイルのパスを受け取るほかのオプションにも揃えている。対象のオプションの一覧を個票の対応結果に書いている。
+- 同期を有効にしていない project の動きは変えていない。
+- ファイルが見つからないときのエラーには、渡したパスと解決した絶対パスを含めている。
+- 統合テストで、同期を有効にした project で相対パスの `--section-file` が `--commit` で記帳できることを確かめている。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 保護された設定（`.specdojo/`・`.github/`・`.agents/`・`.claude/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
+- 作業を終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証の `test-integration` を通す。
 
 ## 5. 対応結果
 

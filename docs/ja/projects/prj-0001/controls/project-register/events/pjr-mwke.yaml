@@ -38,3 +38,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_edac1a2d71bd435481299bdfeb0a706d
+  ts: "2026-11-27T13:14:04Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_a3d69f7d4f69428184cc84541e9f26e9
