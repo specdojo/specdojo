@@ -46,10 +46,16 @@ plugins:
           require_frontmatter: true
         - glob: docs/ja/specdojo/rulebooks/**/*.md
           schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
+        - glob: docs/en/specdojo/rulebooks/**/*.md
+          schema: docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml
+          require_frontmatter: true
         - glob: docs/ja/specdojo/references/**/*.md
           schema: docs/specdojo/schemas/v1/reference-frontmatter.schema.yaml
           require_frontmatter: true
         - glob: docs/ja/specdojo/guides/**/*.md
+          schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
+          require_frontmatter: true
+        - glob: docs/en/specdojo/guides/**/*.md
           schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
           require_frontmatter: true
         - glob: docs/ja/specdojo/philosophy/**/*.md
@@ -59,9 +65,15 @@ plugins:
           schema: docs/specdojo/schemas/v1/standard-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/recipes/**/*.md
           schema: docs/specdojo/schemas/v1/recipe-frontmatter.schema.yaml
+        - glob: docs/en/specdojo/recipes/**/*.md
+          schema: docs/specdojo/schemas/v1/recipe-frontmatter.schema.yaml
+          require_frontmatter: true
         - glob: docs/ja/product/**/*.md
           schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
         - glob: docs/ja/projects/**/*.md
           schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
         - glob: docs/ja/specdojo/samples/**/*.md
           schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
+        - glob: docs/en/specdojo/samples/**/*.md
+          schema: docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml
+          require_frontmatter: true

@@ -1,0 +1,28 @@
+I did most of PJR-F4MG, but it is not complete. The English versions of the starter kata set are not written, because PJR-BXYM (which decides that set) is still in progress. I also couldn't confirm that the docs site builds (`npm run docs:build`).
+
+**What was made**
+- **English Quick Start:** `docs/en/specdojo/guides/quick-start-guide.md` is a full translation of the Japanese guide and uses the same id. Links to other guides still lead to the Japanese pages, and their link text says "(Japanese)".
+- **Entry pages and README:** `docs/en/index.md`, `docs/index.md` and the English section of `README.md` now point to the English Quick Start. They also say that Japanese is the source of truth.
+- **Tracking which Japanese version was translated:** English pages now carry `specdojo.translated_from` in their frontmatter, holding the source language and the commit. The field is optional and was added to `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`. The rule is written in the ID standard (`id-and-file-naming-standard.md`). I also added `docs/en/specdojo/guides/**/*.md` to the frontmatter checks in `.remarkrc.yaml`.
+- **Ticket:** the work table, the results and a "CHANGELOG に書く事項" subsection with draft lines are filled in. `CHANGELOG.md` was not changed.
+
+**Language decisions (recorded in the ticket)**
+- English kata go in `docs/en/specdojo/{rulebooks,recipes,samples,templates}/`, with the same file names and ids as the Japanese ones. The repo already lists `ja` and `en` as locales, so no new ids or link rewrites are needed.
+- The setting is `kata_locale` at the top level of `.specdojo/specdojo.config.json` (`ja` or `en`, default `ja`). If an English version is missing, the Japanese one is used.
+- `init` asks `Kata language (ja / en) [ja]:`; without prompts it is `--kata-locale`.
+- `kata list` gets a `LOCALE` column at the end, so existing columns keep their positions. It shows `ja (fallback)` when no English version exists.
+- These are decisions only; none of this is implemented yet.
+
+**Still open (marked `_UNDECIDED_` in the ticket)**
+- Whether the `init` default should follow the OS language.
+- Whether the orchestrator and CLI messages should switch language with the same setting.
+- The contents of the starter kata set (waiting for PJR-BXYM).
+
+**Checks**
+- Prettier and `npm run validate:history-links` passed.
+- I did not run `npm run docs:build`, because it rewrites `.specdojo/doc-index.json`, which I'm not allowed to write.
+- The other lint and schema checks run in the parent runner after this step.
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `docs/en` guides). Decided where English kata go and how the language is chosen, and recorded this in the ticket. The English starter kata set is not done because PJR-BXYM is still in progress and the set is undecided.","handoff":["Not done: the English starter kata set (ticket work item 5). PJR-BXYM is still in progress and the set is undecided. After BXYM is settled, translate the kata into `docs/en/specdojo/{rulebooks,recipes,samples,templates}/` with the same file names and ids, and add `specdojo.translated_from` (`locale: ja`, plus the commit that last changed the Japanese file).","To ship English kata in the npm package, add `docs/en/specdojo` (excluding `generated`) to `files` in `package.json`. This is protected configuration, so it was not changed.","Implementation is a separate item: `kata_locale` (top level of `.specdojo/specdojo.config.json`, `ja`/`en`, default `ja`, falls back to `ja` when the English version is missing), the `init` question `Kata language (ja / en) [ja]:` and `--kata-locale`, and a `LOCALE` column at the end of `kata list` (`ja (fallback)` on fallback). Suggest filing it as its own register item.","_UNDECIDED_: whether the `init` default follows the OS language (`LANG`), and whether orchestrator and CLI messages switch language with the same key. Both need the user's decision.","The completion criteria require `npm run docs:build`. It rewrites `.specdojo/doc-index.json`, so the executor could not run it. The orchestrator should run it on the host and confirm that the `docs/en/` pages (English Quick Start and entry page) build.","Since `.remarkrc.yaml` now runs the guide frontmatter schema on `docs/en/specdojo/guides/**/*.md`, check that the parent `lint:fm` passes for the English Quick Start (including `translated_from`)."],"validations":[{"command":"npx prettier --check docs/en/specdojo/guides/quick-start-guide.md docs/en/index.md docs/index.md README.md docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md docs/specdojo/schemas/v1/common-frontmatter.schema.yaml .remarkrc.yaml docs/ja/specdojo/standards/id-and-file-naming-standard.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"No history-link violations, including the updated ticket"},{"command":"npm run docs:build","status":"requires_human","summary":"Required by the completion criteria. It rewrites `.specdojo/doc-index.json`, which the agent may not write, so the orchestrator must run it on the host and confirm the `docs/en/` pages build"}]}
+</specdojo_executor_evidence>

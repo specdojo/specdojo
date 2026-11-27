@@ -44,21 +44,40 @@ function rulebooksIn(root, pattern) {
   return [...new Set(files)].sort((left, right) => left.localeCompare(right));
 }
 
-function buildRulebookIndex(workspaceRoot) {
+function readLocales(workspaceRoot) {
+  const configPath = path.join(workspaceRoot, ".specdojo/index-config.yaml");
+  if (!fs.existsSync(configPath)) return [];
+  try {
+    const config = load(fs.readFileSync(configPath, "utf8"));
+    return Array.isArray(config?.locales)
+      ? config.locales.filter((locale) => typeof locale === "string" && locale.length > 0)
+      : [];
+  } catch {
+    // Match the document index's behavior for an unreadable or invalid config.
+    return [];
+  }
+}
+
+function localeOf(filePath, root, locales) {
+  const [directory, locale] = path.relative(root, filePath).replaceAll("\\", "/").split("/");
+  return directory === "docs" && locales.includes(locale) ? locale : null;
+}
+
+function buildRulebookIndex(workspaceRoot, locales = readLocales(workspaceRoot)) {
   const index = new Map();
-  function add(files, fallback) {
+  function add(files, root, fallback) {
     for (const filePath of files) {
       const metadata = readMetadata(filePath);
       if (metadata?.type !== "rulebook" || typeof metadata.id !== "string") continue;
       if (fallback && index.has(metadata.id)) continue;
       const entries = index.get(metadata.id) ?? [];
-      entries.push({ metadata, filePath });
+      entries.push({ metadata, filePath, locale: localeOf(filePath, root, locales) });
       index.set(metadata.id, entries);
     }
   }
 
   // Ejected/local rulebooks override the installed Kata by exact ID.
-  add(rulebooksIn(workspaceRoot, "docs/**/rulebooks/**/*.md"), false);
+  add(rulebooksIn(workspaceRoot, "docs/**/rulebooks/**/*.md"), workspaceRoot, false);
   let packageRoot;
   try {
     const workspaceRequire = createRequire(path.join(path.resolve(workspaceRoot), "package.json"));
@@ -67,7 +86,7 @@ function buildRulebookIndex(workspaceRoot) {
     // A source checkout or a workspace with no installed SpecDojo uses local rulebooks only.
   }
   if (packageRoot && packageRoot !== path.resolve(workspaceRoot)) {
-    add(rulebooksIn(packageRoot, "docs/ja/specdojo/rulebooks/**/*.md"), true);
+    add(rulebooksIn(packageRoot, "docs/ja/specdojo/rulebooks/**/*.md"), packageRoot, true);
   }
   return index;
 }
@@ -78,7 +97,14 @@ function getRulebookIndex(workspaceRoot) {
   const resolvedRoot = path.resolve(workspaceRoot || process.cwd());
   let index = workspaceIndexCache.get(resolvedRoot);
   if (!index) {
-    index = (createDeliverableTypeChecker.buildRulebookIndex ?? buildRulebookIndex)(resolvedRoot);
+    const locales = readLocales(resolvedRoot);
+    index = {
+      entries: (createDeliverableTypeChecker.buildRulebookIndex ?? buildRulebookIndex)(
+        resolvedRoot,
+        locales,
+      ),
+      locales,
+    };
     workspaceIndexCache.set(resolvedRoot, index);
   }
   return index;
@@ -144,12 +170,26 @@ function createDeliverableTypeChecker(workspaceRoot) {
     const ref = target?.rulebook;
     if (typeof ref !== "string" || ref === "none") return legacyErrors;
 
-    const index = getRulebookIndex(resolvedRoot);
-    const candidates = ref.includes(":")
-      ? (index.get(ref) ?? [])
-      : [...index.entries()]
-          .filter(([id]) => id === ref || id.endsWith(`:${ref}`))
-          .flatMap(([, entries]) => entries);
+    const { entries: index, locales } = getRulebookIndex(resolvedRoot);
+    const matches = ref.includes(":")
+      ? index.has(ref)
+        ? [[ref, index.get(ref)]]
+        : []
+      : [...index.entries()].filter(([id]) => id === ref || id.endsWith(`:${ref}`));
+    let candidates = matches.flatMap(([, entries]) => entries);
+    // Select a language variant only after resolving the logical ID uniquely. Neutral/localized
+    // collisions and duplicate files in the selected locale must still be reported as ambiguous.
+    if (matches.length === 1 && candidates.every((entry) => entry.locale !== null)) {
+      const sourceLocale = localeOf(
+        path.resolve(resolvedRoot, relativePath),
+        resolvedRoot,
+        locales,
+      );
+      const preferred = [sourceLocale, ...locales].find(
+        (locale) => locale !== null && candidates.some((entry) => entry.locale === locale),
+      );
+      candidates = candidates.filter((entry) => entry.locale === preferred);
+    }
     if (candidates.length !== 1) {
       return [
         ...legacyErrors,
