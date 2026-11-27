@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-G5DY",
   "run_id": "pjr-g5dy-20261127T115634Z-f038da46",
-  "updated_at": "2026-11-27T12:02:46.650Z",
+  "updated_at": "2026-11-27T12:04:13.811Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-G5DY/pjr-g5dy-20261127T115634Z-f038da46/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-27T12:02:46.650Z",
-      "completed_at": null,
+      "completed_at": "2026-11-27T12:04:13.811Z",
       "artifact_ref": null
     }
   },
