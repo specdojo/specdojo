@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qr23-ifx-file-kata-refine
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-23T04:56:09Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T12:21:03Z"
+  conclusion: ifx-file の sample を YAML に作り直して承認の記述を外し、rulebook の参照キー・照合先・minor の指摘を直した。型の grade は rulebook pass 95、sample pass 92
   derived_from:
     - PJR-BM07
   commit_type: docs
