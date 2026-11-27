@@ -54,3 +54,16 @@
       from: register\_sync の専用ブランチを project/`<id>`/sync/register（登録簿）と project/`<id>`/sync/exec-events（schedule の実行のイベント）の 2 本に分け、名前と置き場を中身に合わせる
       to: register\_sync の専用ブランチ `project/<id>/register` には、登録簿の記帳（個票とイベント）と、schedule の task の実行のイベント（`execution/exec/events/` の claim・complete）の両方が載っている。ブランチの名前が中身と合っていない。
   previous_event_id: reg_3dbc73af81af473f82cfbfaa120d7f6c
+- v: 1
+  id: reg_460cf634c2c143cd82ec14103f4c649c
+  ts: "2026-11-27T10:03:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_aad3279d00034619b16218aefa770214
