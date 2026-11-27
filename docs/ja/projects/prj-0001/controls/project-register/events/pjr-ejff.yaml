@@ -64,3 +64,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_ef112f3dd672487e9289f5f3d1337784
+- v: 1
+  id: reg_4edbbc16d54847d28e8c6cadaf4a9951
+  ts: "2026-11-27T10:48:07Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_108b229458a24439818ee8954c25b2a9
