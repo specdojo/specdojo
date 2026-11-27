@@ -28,7 +28,16 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `dashboard build` が作る「人の対応が要るもの」の表に、「項目」の次へ「内容」の列を足している。
+- 登録簿の項目の行（`review`・`decision`・`question`・`waiting` など）は、「内容」に個票のタイトルを出している。
+- schedule の task の行（`human`・`blocked`）は、「内容」に対象の成果物の名前（成果物カタログから引けるもの）を出している。引けない場合は task の名前、どちらもない場合は `-` を出す。どれを出すかの細かい決め方は executor が決め、理由を個票の対応結果に書いている。
+- 「内容」のセルは、今の `sanitizeDashboardCell` と同じ扱い（`|` のエスケープ、改行の除去）をしている。長いタイトルを切るかどうかは executor が決め、理由を個票の対応結果に書いている。
+- 「種別」「項目」「次にすること」の列と、行の並びは変えていない。dashboard のほかの章は変えていない。
+- dashboard の単体テストで、登録簿の項目と schedule の task の両方の行に「内容」が出ることを確かめている。
+- `docs/ja/specdojo/` の dashboard の説明に表の列が書かれていれば、それに合わせている。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`package.json` など）は変えない。
+- 作業を終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 4. 作業内容
 
