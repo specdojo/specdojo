@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0WE7",
+  "run_id": "pjr-0we7-20261127T233018Z-11c29a6a",
+  "updated_at": "2026-11-27T23:31:13.208Z",
+  "stages": {
+    "executor": {
+      "status": "pending",
+      "actor": "sol-executor",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "prepare": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T23:31:13.208Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-0WE7/pjr-0we7-20261127T233018Z-11c29a6a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-0WE7/pjr-0we7-20261127T233018Z-11c29a6a/result.md"
+  }
+}
