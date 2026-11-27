@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-27T10:11:56Z"
   due_on: "2026-11-30"
-  block_reason: "executor reported incomplete: Implemented the split of the sync branches into project/`<id>`/sync/register and project/`<id>`/sync/exec-events. Added the new `sync` config with per-kind `branches` and kep…"
   derived_from:
     - PJR-EVWA
 ---
