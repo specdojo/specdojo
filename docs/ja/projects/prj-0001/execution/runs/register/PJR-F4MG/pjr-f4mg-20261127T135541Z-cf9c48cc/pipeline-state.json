@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-F4MG",
+  "run_id": "pjr-f4mg-20261127T135541Z-cf9c48cc",
+  "updated_at": "2026-11-27T13:58:26.373Z",
+  "stages": {
+    "executor": {
+      "status": "pending",
+      "actor": "opus-executor",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "prepare": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T13:58:26.373Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/result.md"
+  }
+}
