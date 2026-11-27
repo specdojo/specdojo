@@ -1,5 +1,5 @@
 import { mkdirSync, existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { basename, join, relative } from "node:path";
 import type { Command } from "commander";
 import type { ExecEventV1, ReadyTaskView, StateSnapshot } from "../exec/types.js";
 import { toArtifactPath } from "../shared/artifact-path.js";
@@ -165,6 +165,7 @@ export type DashboardActionRequiredRow = {
   kind: string;
   id: string;
   link: string;
+  content: string;
   nextAction: string;
 };
 
@@ -348,6 +349,19 @@ function readRegisterEvents(view: RegisterItemView, registerPath: string): Regis
   return readRegisterEventsFromContent(readFileSync(path, "utf8"), path);
 }
 
+// schedule の task の内容は、成果物カタログから引ける成果物の名前、task の名前、`-` の順で選ぶ。
+// 長いタイトルは表の可読性より情報の欠落を避けるため切らない。
+function taskContent(
+  taskId: string,
+  taskName: string | undefined,
+  catalogDocMap: Map<string, string>,
+): string {
+  const localId = extractLocalId(taskId);
+  const docPath = localId ? catalogDocMap.get(localId) : undefined;
+  const docName = docPath ? basename(docPath).replace(/\.[^.]+$/, "") : "";
+  return docName || taskName || "-";
+}
+
 export function aggregateActionRequired(
   paths: DashboardPaths,
   views: RegisterItemView[],
@@ -363,6 +377,7 @@ export function aggregateActionRequired(
       kind: "review",
       id: view.id,
       link: formatTicketLink(view, paths.executionGeneratedPath),
+      content: view.item.title || "-",
       nextAction: "close の確認待ち",
     });
   }
@@ -375,6 +390,7 @@ export function aggregateActionRequired(
       kind: view.item.type,
       id: view.id,
       link: formatTicketLink(view, paths.executionGeneratedPath),
+      content: view.item.title || "-",
       nextAction:
         view.item.type === "decision" ? "意思決定を行い状態を更新" : "回答・判断を行い状態を更新",
     });
@@ -387,6 +403,7 @@ export function aggregateActionRequired(
       kind: "waiting",
       id: view.id,
       link: formatTicketLink(view, paths.executionGeneratedPath),
+      content: view.item.title || "-",
       nextAction: waitReason
         ? `待機理由を解消: ${sanitizeDashboardCell(waitReason)}`
         : "待機理由の解消",
@@ -398,17 +415,20 @@ export function aggregateActionRequired(
     const readyPath = join(paths.executionGeneratedPath, "ready.json");
     const statePath = join(paths.executionGeneratedPath, "state.json");
     const humanTaskIds = new Set<string>();
+    const taskNames = new Map<string, string>();
 
     if (existsSync(readyPath)) {
       try {
         const ready = readReadySnapshot(readyPath);
         for (const task of ready.tasks) {
+          if (task.name) taskNames.set(task.id, task.name);
           if (task.execution === "human") {
             humanTaskIds.add(task.id);
             rows.push({
               kind: "human",
               id: task.id,
               link: formatTaskLink(task.id, paths, catalogDocMap),
+              content: taskContent(task.id, task.name, catalogDocMap),
               nextAction: task.name
                 ? `${sanitizeDashboardCell(task.name)}を実施`
                 : "人手による作業を実施",
@@ -432,6 +452,7 @@ export function aggregateActionRequired(
               kind: taskState.state === "blocked" ? "blocked" : "human",
               id: taskId,
               link: formatTaskLink(taskId, paths, catalogDocMap),
+              content: taskContent(taskId, taskNames.get(taskId), catalogDocMap),
               nextAction:
                 taskState.state === "blocked"
                   ? `ブロッキング原因を解消: ${sanitizeDashboardCell(taskState.last_msg ?? "-")}`
@@ -547,10 +568,12 @@ function renderActionRequiredSection(
     return lines;
   }
 
-  lines.push("| 種別 | 項目 | 次にすること |");
-  lines.push("| --- | --- | --- |");
+  lines.push("| 種別 | 項目 | 内容 | 次にすること |");
+  lines.push("| --- | --- | --- | --- |");
   for (const row of rows) {
-    lines.push(`| \`${row.kind}\` | ${row.link} | ${sanitizeDashboardCell(row.nextAction)} |`);
+    lines.push(
+      `| \`${row.kind}\` | ${row.link} | ${sanitizeDashboardCell(row.content)} | ${sanitizeDashboardCell(row.nextAction)} |`,
+    );
   }
   lines.push("");
   return lines;
