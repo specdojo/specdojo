@@ -75,6 +75,7 @@ SpecDojo の利用者に影響する変更を記録します。
 - ifx-api・ifx-msg の rulebook を標準の章構成に組み直し、タイトルから略語を外しました。ifx-api では `info.version` と各操作の `responses` を必須にし、sample を本部への売上登録の API に替えました（PJR-AEKE）。
 - `cdt`・`ifx-file` の rulebook と `ifx-index`・`ifx-cmd` の template で、プロダクト文書の id を名前空間なしの形にしました（PJR-PHY7）。
 - sample の作成標準に、表の前に何を示す表かを 1 文で書く決まりと、列名を中身の分かる言葉にする決まりを足し、最終チェックから `docs:build` を外しました（PJR-C7WD、PJR-RPNF）。
+- `prj-overview-rulebook` と `prj-overview-template` の前提条件で、AI Agent の役割を、業務の中で AI Agent を使う場合だけ書く条件付きにしました。`prj-overview-sample` からは AI Agent の記述を外しました（PJR-EJFF）。
 - `sysd-critical-flows-template` の未決事項と後続作業の表に「受入や運用への影響」「当面の扱い」の列を足しました（PJR-QHES）。
 - Git CLI と GitHub CLI の外部コマンド連携仕様（`ifx-cmd-git-cli`・`ifx-cmd-github-cli`）を足し、`git-branching-standard` を register 専用ブランチの方式へ改訂しました。SpecDojo のプロダクト文書 7 件の id から名前空間を外しました（PJR-CJMN、PJR-SJC7、PJR-E4MW）。
 

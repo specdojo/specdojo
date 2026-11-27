@@ -89,10 +89,9 @@ _TODO_: 判定時期と、どの成果への寄与を確かめるかを記述す
 
 - _DEPENDENT_CONDITION_
 
-判断責任、AI Agent の役割、公開方針、取捨選択方針は次のとおりとする。
+判断責任、公開方針、取捨選択方針は次のとおりとする。AI Agent を業務の中で使う場合は、その役割と人の判断との境界も記述する。
 
 - _HUMAN_DECISION_RESPONSIBILITY_
-- _AI_AGENT_ROLE_
 - _DISCLOSURE_POLICY_
 - _SELECTION_POLICY_
 - _UNDECIDED_: _UNDECIDED_ITEM_ は _DECISION_DOCUMENT_OR_TIMING_ で決定する。
