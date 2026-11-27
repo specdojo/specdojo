@@ -840,7 +840,7 @@ describe("PJR-0F94 action-first dashboard layout", () => {
         ["decision", "PJR-DEC1", "方針決定待ち"],
         ["question", "PJR-QUE1", "要件確認待ち"],
         ["waiting", "PJR-WAI1", "解除待ち項目"],
-        ["human", "T-HUMAN-01", "人手確定作業"],
+        ["human", "T-HUMAN-01", "-"],
       ]);
       expect(rows.map((r) => [r.kind, r.id, r.nextAction])).toEqual([
         ["review", "PJR-REV1", "close の確認待ち"],
@@ -848,6 +848,86 @@ describe("PJR-0F94 action-first dashboard layout", () => {
         ["question", "PJR-QUE1", "回答・判断を行い状態を更新"],
         ["waiting", "PJR-WAI1", "待機理由の解消"],
         ["human", "T-HUMAN-01", "人手確定作業を実施"],
+      ]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("型の task と blocked の task の内容に、対象の文書の local_id を出す", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-action-content-test-"));
+
+    try {
+      const genDir = join(root, "execution", "generated");
+      const schedDir = join(root, "schedule");
+      mkdirSync(genDir, { recursive: true });
+      mkdirSync(schedDir, { recursive: true });
+
+      const paths: DashboardPaths = {
+        projectId: "prj-test",
+        projectPath: root,
+        timelinePath: join(root, "timeline"),
+        executionGeneratedPath: genDir,
+        schedulePath: schedDir,
+      };
+
+      writeFileSync(
+        join(schedDir, "sch-track-kata-x.yaml"),
+        [
+          "kind: track",
+          "track: kata-x",
+          "tasks:",
+          "  - local_id: atc-index-sample",
+          '    phase_suffix: "140"',
+          "    name: 完成版確定",
+          "  - local_id: bes-index-sample",
+          '    phase_suffix: "140"',
+          "    name: 完成版確定",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        join(genDir, "ready.json"),
+        JSON.stringify({
+          schedule_path: "",
+          execution_path: "",
+          generated_dir: "",
+          ready_count: 1,
+          default_strategy: "critical-first",
+          strategies: {
+            "critical-first": { next_task_id: null, ordered_task_ids: [] },
+            fifo: { next_task_id: null, ordered_task_ids: [] },
+          },
+          tasks: [
+            {
+              id: "T-KATA-X-atc-index-sample-140",
+              local_id: "atc-index-sample",
+              name: "完成版確定",
+              execution: "human",
+              fifo_rank: 1,
+              critical_first_rank: 1,
+              schedule_file: "sch-track-kata-x.yaml",
+            },
+          ],
+        }),
+        "utf8",
+      );
+      writeFileSync(
+        join(genDir, "state.json"),
+        JSON.stringify({
+          tasks: {
+            "T-KATA-X-bes-index-sample-140": { state: "blocked", last_msg: "原因あり" },
+          },
+        }),
+        "utf8",
+      );
+
+      const rows = aggregateActionRequired(paths, [], new Map());
+
+      expect(rows.map((r) => [r.kind, r.id, r.content])).toEqual([
+        ["human", "T-KATA-X-atc-index-sample-140", "atc-index-sample"],
+        ["blocked", "T-KATA-X-bes-index-sample-140", "bes-index-sample"],
       ]);
     } finally {
       rmSync(root, { recursive: true, force: true });

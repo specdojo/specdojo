@@ -349,17 +349,32 @@ function readRegisterEvents(view: RegisterItemView, registerPath: string): Regis
   return readRegisterEventsFromContent(readFileSync(path, "utf8"), path);
 }
 
-// schedule の task の内容は、成果物カタログから引ける成果物の名前、task の名前、`-` の順で選ぶ。
-// 長いタイトルは表の可読性より情報の欠落を避けるため切らない。
+// schedule の task の内容は、対象の文書の名前を出す。task 定義の成果物名、成果物カタログの
+// ファイル名、`local_id` の順に選び、どれもなければ task 名、`-` の順に選ぶ。task 名は
+// 「次にすること」に含まれるとき重複するため出さない。長いタイトルは情報の欠落を避けるため切らない。
 function taskContent(
   taskId: string,
   taskName: string | undefined,
+  nextAction: string,
   catalogDocMap: Map<string, string>,
+  node: ScheduleNode | undefined,
+  readyLocalId?: string,
 ): string {
-  const localId = extractLocalId(taskId);
+  if (node?.artifact_name) return node.artifact_name;
+  const localId = readyLocalId ?? node?.local_id ?? extractLocalId(taskId);
   const docPath = localId ? catalogDocMap.get(localId) : undefined;
   const docName = docPath ? basename(docPath).replace(/\.[^.]+$/, "") : "";
-  return docName || taskName || "-";
+  if (docName || localId) return docName || localId || "-";
+  if (taskName && !nextAction.includes(taskName)) return taskName;
+  return "-";
+}
+
+function readScheduleNodes(schedulePath: string): Map<string, ScheduleNode> {
+  try {
+    return buildScheduleIndex(schedulePath).nodes;
+  } catch {
+    return new Map();
+  }
 }
 
 export function aggregateActionRequired(
@@ -416,6 +431,7 @@ export function aggregateActionRequired(
     const statePath = join(paths.executionGeneratedPath, "state.json");
     const humanTaskIds = new Set<string>();
     const taskNames = new Map<string, string>();
+    const scheduleNodes = readScheduleNodes(paths.schedulePath);
 
     if (existsSync(readyPath)) {
       try {
@@ -424,14 +440,22 @@ export function aggregateActionRequired(
           if (task.name) taskNames.set(task.id, task.name);
           if (task.execution === "human") {
             humanTaskIds.add(task.id);
+            const nextAction = task.name
+              ? `${sanitizeDashboardCell(task.name)}を実施`
+              : "人手による作業を実施";
             rows.push({
               kind: "human",
               id: task.id,
               link: formatTaskLink(task.id, paths, catalogDocMap),
-              content: taskContent(task.id, task.name, catalogDocMap),
-              nextAction: task.name
-                ? `${sanitizeDashboardCell(task.name)}を実施`
-                : "人手による作業を実施",
+              content: taskContent(
+                task.id,
+                task.name,
+                nextAction,
+                catalogDocMap,
+                scheduleNodes.get(task.id),
+                task.local_id,
+              ),
+              nextAction,
             });
           }
         }
@@ -448,15 +472,22 @@ export function aggregateActionRequired(
             (taskState.state === "doing" || taskState.state === "blocked") &&
             !humanTaskIds.has(taskId)
           ) {
+            const nextAction =
+              taskState.state === "blocked"
+                ? `ブロッキング原因を解消: ${sanitizeDashboardCell(taskState.last_msg ?? "-")}`
+                : "作業の継続・完了";
             rows.push({
               kind: taskState.state === "blocked" ? "blocked" : "human",
               id: taskId,
               link: formatTaskLink(taskId, paths, catalogDocMap),
-              content: taskContent(taskId, taskNames.get(taskId), catalogDocMap),
-              nextAction:
-                taskState.state === "blocked"
-                  ? `ブロッキング原因を解消: ${sanitizeDashboardCell(taskState.last_msg ?? "-")}`
-                  : "作業の継続・完了",
+              content: taskContent(
+                taskId,
+                taskNames.get(taskId),
+                nextAction,
+                catalogDocMap,
+                scheduleNodes.get(taskId),
+              ),
+              nextAction,
             });
           }
         }
