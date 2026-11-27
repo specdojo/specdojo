@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BXYM",
+  "run_id": "pjr-bxym-20261127T233316Z-79d55685",
+  "updated_at": "2026-11-27T23:34:16.840Z",
+  "stages": {
+    "executor": {
+      "status": "pending",
+      "actor": "opus-executor",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "prepare": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T23:34:16.840Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BXYM/pjr-bxym-20261127T233316Z-79d55685/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BXYM/pjr-bxym-20261127T233316Z-79d55685/result.md"
+  }
+}
