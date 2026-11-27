@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0we7-watch-diagnosis-interrupted-record
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-27T23:23:51Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-27T23:48:41Z"
+  conclusion: 持ち主のいない running の診断記録を interrupted として回復し、同じ止まりを 1 回だけ再診断できるようにした（晩の上限に数える）。朝報告の診断の節は描き直しや中断でも残る
   derived_from:
     - PJR-YNQG
 ---
