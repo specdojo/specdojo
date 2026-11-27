@@ -835,6 +835,13 @@ describe("PJR-0F94 action-first dashboard layout", () => {
 
       const rows = aggregateActionRequired(paths, views, new Map());
 
+      expect(rows.map((r) => [r.kind, r.id, r.content])).toEqual([
+        ["review", "PJR-REV1", "レビュー待ち項目"],
+        ["decision", "PJR-DEC1", "方針決定待ち"],
+        ["question", "PJR-QUE1", "要件確認待ち"],
+        ["waiting", "PJR-WAI1", "解除待ち項目"],
+        ["human", "T-HUMAN-01", "人手確定作業"],
+      ]);
       expect(rows.map((r) => [r.kind, r.id, r.nextAction])).toEqual([
         ["review", "PJR-REV1", "close の確認待ち"],
         ["decision", "PJR-DEC1", "意思決定を行い状態を更新"],
