@@ -1,0 +1,5 @@
+`prj-overview-recipe` の AI Agent 記述と template の `_TODO_:` 段落への修正は終わりました。変更は作業ツリー上にあり、コミットはしていません。`lint:md` などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2回目の3点を修正した。template の AI Agent の一文を `_TODO_:` 段落にした。`CHANGELOG.md` の PJR-EJFF の行を外し、文案を個票の対応結果へ移した。`prj-overview-recipe` の AI Agent 記述を rulebook の条件付きの書き方に合わせた。","handoff":["`CHANGELOG.md` の 0.10.0 節に入れる文案は、個票の「CHANGELOG に書く事項」に記録した。区分は型と文書。","`lint:md` などの検査は親 runner の実行結果を正とする。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
