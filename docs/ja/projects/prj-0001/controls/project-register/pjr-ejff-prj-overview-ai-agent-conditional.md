@@ -38,6 +38,11 @@ prj-overview-rulebook の前提条件の節が AI Agent の役割を常に求め
 - `npm run -s lint:md` が通っている。
 - CHANGELOG の書き方は運用メモの決まりに従い、公開済みの版の節は変えていない。
 
+- 2 回目の実行（2026-11-27）で、次の 3 点を直している。
+  - `prj-overview-template` に入れた「AI Agent を業務の中で使う場合は、その役割と人の判断との境界も記述する。」を、template から作る文書の本文に残らない書き方にしている。`prj-charter-template` の前例にそろえ、`_TODO_:` を付けた段落にする。
+  - 1 回目で `CHANGELOG.md` の `## [0.10.0] - 未公開` の節に足した PJR-EJFF の行を外し、個票の対応結果の「CHANGELOG に書く事項」の小節へ、区分と行の文案として移している。PJR-EPQ3 の決まりどおり、項目では `CHANGELOG.md` を変えない。
+  - `prj-overview-recipe` で AI Agent の役割を常に書くよう求める記述（52・239・246・248・294 行目付近）を、rulebook の条件付きの書き方に合わせている。判断責任は人が担い、AI Agent は支援に限るという趣旨は、AI Agent を業務に使う場合の記述として残す。
+
 ## 4. 作業内容
 
 | No  | 作業                                | 担当 | 状態 | メモ                                                       |
