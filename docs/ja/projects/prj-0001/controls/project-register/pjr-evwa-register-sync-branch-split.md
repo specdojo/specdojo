@@ -43,7 +43,13 @@ register_sync の専用ブランチ `project/<id>/register` には、登録簿�
 
 ## 4. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+選択肢 D を採る。register_sync の専用ブランチを `project/<id>/sync/register`（登録簿の個票とイベント）と `project/<id>/sync/exec-events`（`execution/exec/events/` の claim・complete など）の 2 本に分ける。
+
+- 名前は `exec-events` とする。`exec` は実行の記録（runs）全体を共有すると誤解されやすいため使わない。
+- 設定とコマンドは `sync` を軸にし、ブランチごとに置き場を設定に書く。将来ほかのものを共有するときは `sync/` の下に足す。
+- 1 回の操作が両方のブランチへ書く必要が出た場合の順番と、片方が失敗したときの扱いは、実装の todo で決めて個票に記録する。今の作りでは両方へ書く操作はない。
+- 今の `project/<id>/register` からの移し替えは、実行中の run がない時に行う。
+- 実装は別の todo で行う。
 
 ## 5. 採択理由
 
