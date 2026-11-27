@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
@@ -40,14 +40,19 @@ prj-overview-rulebook の前提条件の節が AI Agent の役割を常に求め
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ                                                       |
+| --- | ----------------------------------- | ---- | ---- | ---------------------------------------------------------- |
+| 1   | rulebook の前提条件を条件付きにする | BA   | done | AI Agent の要求を別の箇条書きに分け条件付きにした          |
+| 2   | template の導入文と枠を合わせる     | BA   | done | `_AI_AGENT_ROLE_` の枠を外し導入文に条件付きの一文を足した |
+| 3   | sample から AI Agent の記述を外す   | BA   | done | 導入文と箇条書き 1 件を削除                                |
+| 4   | CHANGELOG に追記する                | BA   | done | 0.10.0 の型と文書に追記（公開済みの版は不変）              |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: `prj-overview-rulebook` の前提条件で AI Agent の役割を「業務の中で使う場合は役割と人の判断との境界を明示する」条件付きにした。`prj-overview-template` の導入文を `prj-charter-template` の前例にそろえ、`_AI_AGENT_ROLE_` の枠を外した。`prj-overview-sample` から AI Agent の記述を外した。
+- 他の rulebook・sample・template は変更していない。
+- 残課題: `prj-overview-recipe` に AI Agent の役割を求める記述（52・239・246・248・294 行目）が残る。完了条件の対象外のため変更していない。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `prj-overview-rulebook`、`prj-overview-template`、`prj-overview-sample`（変更対象）
