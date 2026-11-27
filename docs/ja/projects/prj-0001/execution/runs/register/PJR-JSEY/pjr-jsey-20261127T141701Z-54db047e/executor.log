@@ -1,0 +1,11 @@
+個票の対応結果に 1 行追記し、本文の説明を今回の run に合わせて更新しました。親の検証はまだ流れていません。
+
+- **追記した行**: 2026-11-27 23:18（JST）、確認対象 PJR-1TYG、agent は `sonnet-executor` です。
+- **PJR-1TYG を選んだ理由**: 完了条件の一覧のうち最も新しく統合された項目で、統合 commit は `21a27d974e` です。`git log --merges` の件名を一覧と照合し、これより新しい統合済みの項目が一覧に無いことを確認しました。現在の HEAD（`97b5f177c1`）にも含まれています。
+- **本文の更新**: 今回の確認対象の説明を、run `pjr-jsey-20261127T141701Z-54db047e` と HEAD の commit に合わせて書き換えました。
+- **変更範囲**: 変更したのは個票だけです。個票の作業内容の表は、状態がすでに `done` でした。
+- **ファイル削除**: 作業用に作った `tmp/ids.txt` と `tmp/list.txt` は、削除コマンドが許可されず残っています。`tmp/` は commit の対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果に 2026-11-27 23:18 / PJR-1TYG / sonnet-executor の行を追記し、確認対象の説明を今回の run に更新した。変更ファイルは個票のみ。","handoff":["確認対象は完了条件の一覧のうち最も新しく統合された PJR-1TYG（merge commit 21a27d974e）。それ以降に統合された項目は一覧に含まれない。","作業用の tmp/ids.txt と tmp/list.txt が残っている。tmp/ は commit 対象外。","親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run validate:history-links","status":"not_run","summary":"個票を変更したが実行していない。親の検証対象ではないため、後続段で確認が必要。"}]}
+</specdojo_executor_evidence>

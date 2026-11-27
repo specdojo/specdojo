@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-mwke-register-sync-relative-section-file
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-26T22:39:48Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T14:14:31Z"
+  conclusion: register add / update の --section-file の相対パスを、記帳の場所へ移る前に呼び出し元の cwd から解決するようにした
   derived_from:
     - PJR-VM2S
 ---
@@ -92,5 +94,5 @@ register のほかのコマンド（遷移・maintenance）には、呼び出し
 
 ## 6. 関連ドキュメント
 
-- 派生元: PJR-VM2S
-- 実装: `src/register/section.ts`、`src/register/create-commands.ts`
+- [[prj-0001:pjr-4ejc-register-sync-switch-check|PJR-4EJC]]: register_sync の切り替えの確かめで、この問題を見つけた記録。
+- [[prj-0001:pjr-vm2s-register-branch-migration-trial|PJR-VM2S]]: register のブランチへ移る手順の試行。

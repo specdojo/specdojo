@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_657c869740634e55a063941a2588a289
+- v: 1
+  id: reg_9aa76964f24442d58045e0d60b653bc3
+  ts: "2026-11-27T14:16:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、記帳と並行した 5 件の exec run --register（--join を含む）が worktree の用意で使用中のために止まらずに流れることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: 専用ブランチが使用中のとき、exec のイベントの書き込みは最大 120 秒待ってから書く。上限を超えるとブランチ名と待った時間を示して止まる
+  previous_event_id: reg_b6394f88e4fd4c7597978489328a117f

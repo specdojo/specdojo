@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-7vtz-register-sync-busy-no-wait
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-27T12:32:07Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-27T14:16:01Z"
+  conclusion: 専用ブランチが使用中のとき、exec のイベントの書き込みは最大 120 秒待ってから書く。上限を超えるとブランチ名と待った時間を示して止まる
   derived_from:
     - PJR-86RK
 ---
