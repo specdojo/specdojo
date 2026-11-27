@@ -40,6 +40,9 @@ ifx-file-sample に承認と昇格の記述が残り、rulebook の target_forma
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
 
+- 2 回目の実行（2026-11-27）で、1 回目の result が未対応とした `ifx-file-rulebook` の minor（運用ルールの追従対象の列挙、検証コマンドの具体化）を直している。根拠は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-file-rulebook.yaml` の minor の指摘である。
+- 同じファイルと `specdojo.ifx-file-sample.yaml` のほかの minor のうち、1 回目の YAML 化で解消したもの・直したもの・直さないもの（理由つき）を、個票の対応結果に表で書いている。
+
 ## 4. 作業内容
 
 | No  | 作業                                                                  | 担当 | 状態 | メモ                                                  |
