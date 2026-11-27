@@ -538,6 +538,22 @@ watch:
 
 期間は `<正の整数><m|h|d>` で書きます。不正な値は `exec run` などが exec-defaults を読む時点でエラーになります。
 
+### 5.3. 判断が要る止まりの診断
+
+`watch.diagnosis.by` に読み取り専用の診断用 member（`mode: review`）を指定すると、`needs_decision` の止まりについて診断と次の手の案を依頼します。省略時は起動しません。起動コマンドは通常の名簿と provider の `command_template`・`command_params`（または member の `command`）から解決します。
+
+```yaml
+watch:
+  diagnosis:
+    by: watch-diagnoser
+    max_per_night: 3
+    timeout_seconds: 300
+```
+
+`max_per_night` は 1〜100（既定 3）、`timeout_seconds` は 1〜3600 秒（既定 300）です。1 晩は登録簿の日付の時間帯の正午から翌正午までとし、夜中の日付変更では回数を戻しません。失敗・時間切れも 1 回と数えます。起動の記録が残る限り、同じ止まりの鍵には翌晩も再依頼しません。時刻や状態が変わった止まりは別件です。診断の動作と記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「判断が要る止まりの診断案」を参照してください。
+
+有効にする前に、診断専用 member の起動コマンドと provider 設定で読み取り専用の権限を用意してください。`mode: review` とプロンプトだけでは OS の書き込み権限は制限されません。一般の executor・reporter の書き込み許可を継がせず、shell による書き込み・状態変更、編集ツール、MCP を禁止します。agent は標準入力で渡す playbook と止まりの記録を読み、標準出力へ案を返します。朝報告への書き込みは見張りが代行するため、agent へのファイル書き込み許可は不要です。保護された設定は人が確認して適用します。
+
 ## 6. executor / reporter pipeline の構成
 
 pipeline は、成果物の編集と検証を行う executor と、evidence から result を構成する reporter の 2 stage で 1 タスクを実行します。設定は phase（`agent_pipeline.stages`）、member（`stage_role`）、provider（`command_template`）の 3 箇所に分かれ、それぞれの責務は `設定ファイルの分担` と同じです。
