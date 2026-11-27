@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-YNQG",
   "run_id": "pjr-ynqg-20261127T131950Z-05d8ed43",
-  "updated_at": "2026-11-27T13:41:41.873Z",
+  "updated_at": "2026-11-27T13:43:14.056Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YNQG/pjr-ynqg-20261127T131950Z-05d8ed43/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-27T13:41:41.873Z",
-      "completed_at": null,
+      "completed_at": "2026-11-27T13:43:14.056Z",
       "artifact_ref": null
     }
   },
