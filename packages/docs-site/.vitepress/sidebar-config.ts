@@ -54,6 +54,7 @@ export function buildSpecdojoSidebarItems(specdojoDir: string): SidebarItem[] {
             guide("全体概要", "specdojo-overview-guide"),
             guide("Quick Start", "quick-start-guide"),
             guide("ユースケース別", "use-case-guide"),
+            guide("シビックテック入門", "civic-tech-starter-guide"),
             guide("ドキュメント構成", "docs-structure-guide"),
           ],
           false,
