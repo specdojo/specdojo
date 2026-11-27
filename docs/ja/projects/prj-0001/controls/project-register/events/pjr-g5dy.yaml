@@ -116,3 +116,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_09edb262768f4f96bd7f5f3b7c15436b
+- v: 1
+  id: reg_435e6f63d7004f76a1e06688453681c0
+  ts: "2026-11-27T12:22:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の統合後に dashboard build を流し、review・decision の行にタイトル、human・blocked の行に文書の名前が出ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: dashboard の「人の対応が要るもの」の表に「内容」の列を足した。登録簿の項目は個票のタイトル、schedule の task は対象の文書の名前を出す
+  previous_event_id: reg_b64ec72777c04eec93a27fef8a3c49f0
