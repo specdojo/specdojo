@@ -10,7 +10,9 @@ specdojo:
   item_status: open
   priority: medium
   difficulty: easy
+  owner: DEV
   registered_at: "2026-11-25T12:09:58Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-98HS
 ---
