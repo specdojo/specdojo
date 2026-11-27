@@ -119,3 +119,22 @@
       from: ""
       to: 承認
   previous_event_id: reg_c58f570f2a504bee890cc8a55d7dec0c
+- v: 1
+  id: reg_5e4c32184d234e25a4238a70c360b243
+  ts: "2026-11-27T10:09:51Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で推奨の D を採った（2026-11-27）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: D を採る。register_sync の専用ブランチを project/`<id>`/sync/register と project/`<id>`/sync/exec-events の 2 本に分ける。実装は別の todo で行う
+  previous_event_id: reg_943ad530be5e43e6bd34602a7031167f
