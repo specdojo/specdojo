@@ -67,3 +67,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_9412256ad4e043c7b31ed208d21a46b8
+- v: 1
+  id: reg_ac62a47db16a403e945ff5f5ea628369
+  ts: "2026-11-27T10:38:33Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: Implemented the split of the sync branches into project/`<id>`/sync/register and project/`<id>`/sync/exec-events. Added the new `sync` config with per-kind `branches` and kep…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: Implemented the split of the sync branches into project/`<id>`/sync/register and project/`<id>`/sync/exec-events. Added the new `sync` config with per-kind `branches` and kep…"
+  previous_event_id: reg_034dedffd17d4b2fb6170963fd38f3c5
