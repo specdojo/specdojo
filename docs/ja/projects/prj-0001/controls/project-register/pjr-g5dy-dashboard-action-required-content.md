@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -41,14 +41,26 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                           | 担当 | 状態 | メモ                                                            |
+| --- | ------------------------------------------------------------------------------ | ---- | ---- | --------------------------------------------------------------- |
+| 1   | 「内容」列を `aggregateActionRequired` と `renderActionRequiredSection` に追加 | DEV  | done | `src/dashboard/dashboard.ts`                                    |
+| 2   | 単体テストと dashboard の説明の更新                                            | DEV  | done | `tests/src/dashboard/dashboard.test.ts`、`command-reference.md` |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+「項目」の次に「内容」の列を足した。
+
+- 登録簿の項目の行は個票のタイトルを出す（なければ `-`）。
+- schedule の task の行は、成果物カタログから引ける成果物のファイル名（拡張子なし）、なければ ready の task 名、どちらもなければ `-` の順に出す。カタログの対応表は成果物の名前を持たずパスだけのため、ファイル名を名前として使った。
+- セルは `sanitizeDashboardCell` を通す。長いタイトルは切らない。切ると項目の見分けに要る情報が欠け、表の幅は文書サイトの折り返しで足りるため。
+- 変更ファイル: `src/dashboard/dashboard.ts`、`tests/src/dashboard/dashboard.test.ts`、`docs/ja/specdojo/references/command-reference.md`。
+- 検証: `npm run typecheck`・`npm run lint:ts`（エラーなし）、dashboard の単体テストは通過。
+
+### CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: dashboard の「人の対応が要るもの」の表に、項目の内容（個票のタイトル、または成果物名・task 名）を示す「内容」の列を追加した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- なし
