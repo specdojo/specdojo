@@ -141,3 +141,19 @@
       from: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
       to: "-"
   previous_event_id: reg_69ed5bea42334b64a14e55b87577b758
+- v: 1
+  id: reg_d1db819979ee439999ef523442e69d98
+  ts: "2026-11-27T12:30:29Z"
+  action: wait
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+  previous_event_id: reg_bd9048a5a6d447e89d89f8a5a85e0654

@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-25T12:09:58Z"
   due_on: "2026-11-30"
+  block_reason: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
   derived_from:
     - PJR-98HS
 ---
