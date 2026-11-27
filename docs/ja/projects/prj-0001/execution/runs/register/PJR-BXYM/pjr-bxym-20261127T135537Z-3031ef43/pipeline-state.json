@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-BXYM",
   "run_id": "pjr-bxym-20261127T135537Z-3031ef43",
-  "updated_at": "2026-11-27T14:07:01.255Z",
+  "updated_at": "2026-11-27T14:08:27.335Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -29,11 +29,11 @@
       "artifact_ref": null
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-27T14:07:01.255Z",
-      "completed_at": null,
+      "completed_at": "2026-11-27T14:08:27.335Z",
       "artifact_ref": null
     }
   },
