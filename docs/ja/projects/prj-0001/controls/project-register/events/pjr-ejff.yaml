@@ -116,3 +116,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5d4b8a2ab4ec4aefb568dc89013567c8
+- v: 1
+  id: reg_d540687b36cd4962ab696e43c284c1ec
+  ts: "2026-11-27T11:40:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の exec run --register の結果を差分・個票・result で確かめた（template は _TODO_ の段落、CHANGELOG の行は個票へ移した、recipe も条件付き）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: prj-overview の rulebook・template・recipe で AI Agent の役割を業務に使う場合だけ書く条件付きにし、sample から AI Agent の記述を外した
+  previous_event_id: reg_f847b126ccc042b5ad1e818ae4166445
