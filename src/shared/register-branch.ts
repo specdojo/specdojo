@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { CrossProcessMutex, releaseLock, tryAcquirePoolSlot } from "./cross-process-lock.js";
+import {
+  acquirePoolSlotSync,
+  CrossProcessMutex,
+  releaseLock,
+  type SyncWaitOptions,
+} from "./cross-process-lock.js";
 import { gitOutput, gitResult, repoRelative, worktreeStatusPaths } from "./git.js";
 import {
   getProjectExecutionPath,
@@ -397,15 +402,39 @@ export async function inRegisterBranch<T>(
   });
 }
 
-/** Event APIs are synchronous. Busy callers retry instead of blocking an async writer in this process. */
+/**
+ * How long a synchronous writer waits for the branch lock. One `register ... --commit` holds it
+ * for a fetch, a rebase and a push, which normally takes seconds and rarely more than a minute.
+ */
+export const REGISTER_BRANCH_SYNC_WAIT_MS = 120_000;
+
+/**
+ * Event APIs are synchronous, so they block the thread while another process holds the branch
+ * lock, up to `waitMs`. A lock held by an async writer in this process cannot be released while
+ * the thread is blocked; that case fails at once.
+ */
 export function inRegisterBranchSync<T>(
   target: RegisterBranchTarget,
   operation: (worktree: string) => T,
+  wait: Partial<Pick<SyncWaitOptions, "timeoutMs" | "pollMs" | "sleep" | "now">> = {},
 ): T {
   const storage = branchStorage(target);
-  const handle = tryAcquirePoolSlot(storage.pool, 1, { actor: "SpecDojo", label: "schedule sync" });
-  if (!handle)
-    throw new Error(`Register branch ${target.branch} is busy; retry the schedule operation.`);
+  const timeoutMs = wait.timeoutMs ?? REGISTER_BRANCH_SYNC_WAIT_MS;
+  const acquired = acquirePoolSlotSync(
+    storage.pool,
+    1,
+    { actor: "SpecDojo", label: "schedule sync" },
+    { ...wait, timeoutMs },
+  );
+  if (acquired.kind !== "acquired") {
+    const seconds = (acquired.waitedMs / 1000).toFixed(1);
+    const reason =
+      acquired.kind === "timeout"
+        ? `is still busy after waiting ${seconds}s (limit ${timeoutMs / 1000}s)`
+        : `is busy in this process (waited ${seconds}s)`;
+    throw new Error(`Register branch ${target.branch} ${reason}; retry the schedule operation.`);
+  }
+  const handle = acquired.handle;
   let worktree = worktreeForBranch(target) ?? storage.worktree;
   try {
     worktree = prepareWorktree(target, storage.worktree);

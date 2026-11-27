@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import {
   cpSync,
   existsSync,
@@ -20,6 +20,7 @@ import { mergeRegisterBranch } from "../../../src/shared/register-merge.js";
 import { gitEnvironment } from "../../../src/shared/git.js";
 import {
   inRegisterBranch,
+  inRegisterBranchSync,
   pushRegisterBranch,
   resolveRegisterBranchTarget,
 } from "../../../src/shared/register-branch.js";
@@ -411,6 +412,54 @@ fi
     );
     expect(git(repo, "rev-parse", "HEAD")).toBe(head);
     expect(existsSync(join(repo, EVENTS))).toBe(false);
+  });
+
+  it("waits for another process to release the branch lock before writing an event", async () => {
+    fixture();
+    const commonDir = resolve(repo, git(repo, "rev-parse", "--git-common-dir"));
+    const slot = join(commonDir, "specdojo/register/lock/slot-1");
+    // Another process holds the slot, as `register ... --commit` does, and releases it later.
+    write(
+      join(slot, "owner.json"),
+      JSON.stringify({ actor: "holder", pid: 2_147_483_646, token: "t" }),
+    );
+    const releaser = spawn(
+      process.execPath,
+      [
+        "-e",
+        "setTimeout(() => require('node:fs').rmSync(process.argv[1], { recursive: true }), 1500)",
+        slot,
+      ],
+      { stdio: "ignore" },
+    );
+    const startedAt = Date.now();
+
+    writeEventFile(join(repo, "docs/sample/schedule"), event("claim"));
+
+    expect(Date.now() - startedAt).toBeGreaterThanOrEqual(1_000);
+    expect(existsSync(slot)).toBe(false);
+    expect(git(remote, "ls-tree", "-r", "--name-only", BRANCH, EVENTS).split("\n")).toHaveLength(1);
+    await new Promise((resolveExit) => {
+      if (releaser.exitCode !== null) resolveExit(undefined);
+      else releaser.once("exit", resolveExit);
+    });
+  });
+
+  it("stops with the branch and the waited time once the wait limit passes", () => {
+    fixture();
+    const target = resolveRegisterBranchTarget(PROJECT)!;
+    const commonDir = resolve(repo, git(repo, "rev-parse", "--git-common-dir"));
+    const slot = join(commonDir, "specdojo/register/lock/slot-1");
+    write(
+      join(slot, "owner.json"),
+      JSON.stringify({ actor: "holder", pid: 2_147_483_646, token: "t" }),
+    );
+    const operation = vi.fn();
+
+    expect(() => inRegisterBranchSync(target, operation, { timeoutMs: 300, pollMs: 50 })).toThrow(
+      /Register branch project\/sample\/register is still busy after waiting 0\.[3-9]s \(limit 0\.3s\)/,
+    );
+    expect(operation).not.toHaveBeenCalled();
   });
 
   it("rejects a claim when a different clone has already claimed the task", () => {
