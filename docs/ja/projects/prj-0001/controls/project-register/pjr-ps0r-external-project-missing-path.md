@@ -41,12 +41,25 @@ external_projects の path が見つからないとき、設定の読み込み�
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | `src/shared/specdojo-config.ts` の検証が、`external_projects.<id>.path` の置き場がないことを、どのコマンドでもエラーにする |
+| 対応策   | 置き場がないことは警告にとどめ、その外部の project を実際に使う操作だけをエラーで止める（案 B、indie、2026-11-27）         |
+| 依存事項 | なし                                                                                                                       |
+| 完了条件 | 下の一覧のとおり                                                                                                           |
+
+完了条件:
+
+- `.specdojo/specdojo.config.json` の `external_projects.<id>.path` の置き場がないとき、設定の読み込み（`src/shared/specdojo-config.ts`）はエラーにせず、警告にとどめる。`path` が空・絶対パス・ディレクトリでないファイル、などの形の誤りは今と同じくエラーにする。
+- 置き場のない外部の project を実際に使う操作（その project の登録簿への起票・参照など）は、今と同じ文脈（project の ID、設定の `path`、解決した絶対パス）を含むエラーで止まる。
+- 外部の project を使わないコマンド（`register branch-check`・`exec` の記録の配置の検査など）は、置き場がなくても通る。
+- 警告は、同じコマンドの中で何度も出さない。警告を標準エラーに出すか、どの場合に出すかは executor が決め、理由を個票の対応結果に書いている。
+- `specdojo.local.config.json` で `external_projects` の `path` を足す・差し替えることができるかを確かめ、結果を個票の対応結果に書いている。できない場合は、対応するかどうかの案を書く（この項目で実装はしない）。
+- 単体テストで、置き場がないときに設定の読み込みが通ること、外部の project を使う操作がエラーで止まることを確かめている。
+- 設定リファレンス（`docs/ja/specdojo/references/specdojo-config-reference.md`）の `external_projects` の説明を、この扱いに合わせている。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 保護された設定（`.specdojo/`・`.github/`・`.agents/`・`.claude/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
+- 作業を終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 5. 対応結果
 
