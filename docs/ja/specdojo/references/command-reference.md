@@ -1310,7 +1310,7 @@ schedule は track の明示と上書きの判断が必要なため、一括 `bu
 
 `build --skip-fresh` は既定の段のうち、前回 `--skip-fresh` で成功した時から入力が変わった段だけを実行します。`docs:dev` の前段の `specdojo-docs-site generate --skip-if-fresh` が使います。段ごとの入力ファイルのパス・サイズ・更新時刻、CLI の実装、`.specdojo/` の設定、`SPECDOJO_*` 環境変数、依存する前段の判定から鍵を作り、`node_modules/.cache/specdojo/build-steps.json` に記録した鍵と比べます。`generated/` の生成物は入力に数えません。exec・register・dashboard は日付が変わっても作り直します。記録した出力が欠けた段、依存する前段を作り直す段、`repos` や `external_projects` があり入力を repo の中で数えられない場合は作り直します。`--only` とは併用できません。`--skip-fresh` を付けない `build` は従来どおり全段を実行します。
 
-`build --only dashboard --project <id>` は `execution/generated/dashboard.md`、全体計画ガントチャート SVG、未作成カタログを再生成します。ダッシュボードは人の対応が要るもの（review、判断待ち、waiting、human タスク。表は種別・項目・内容・次にすることの列で、内容は登録簿の項目では個票のタイトル、schedule の task では成果物カタログの成果物名、task 名、`-` の順に選ぶ）、おすすめの登録項目（先行項目充足済み上位 10 件）、実行中の epic（開始日・終了日・稼働日数、段ごとの進捗と次に流せるタスク）を先頭に表示し、終わった epic（開始日・終了日・稼働日数一覧）、routine 定義一覧、Grade 全体表、全体の集計（Schedule 進捗・登録簿集計・ガントチャート）を `::: details` で折りたたみ表示します。各項目には文書サイトで開ける相対リンクを付与し、項目がない章は「ありません」を表示します。
+`build --only dashboard --project <id>` は `execution/generated/dashboard.md`、全体計画ガントチャート SVG、未作成カタログを再生成します。ダッシュボードは人の対応が要るもの（review、判断待ち、waiting、human タスク。表は種別・項目・内容・次にすることの列で、内容は登録簿の項目では個票のタイトル、schedule の task では対象の文書の名前を、task 定義の成果物名、成果物カタログのファイル名、`local_id` の順に選び、どれもなければ task 名、`-` とする。task 名は「次にすること」と重なるときは出さない）、おすすめの登録項目（先行項目充足済み上位 10 件）、実行中の epic（開始日・終了日・稼働日数、段ごとの進捗と次に流せるタスク）を先頭に表示し、終わった epic（開始日・終了日・稼働日数一覧）、routine 定義一覧、Grade 全体表、全体の集計（Schedule 進捗・登録簿集計・ガントチャート）を `::: details` で折りたたみ表示します。各項目には文書サイトで開ける相対リンクを付与し、項目がない章は「ありません」を表示します。
 
 watch の `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
