@@ -108,3 +108,19 @@
       from: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
       to: "-"
   previous_event_id: reg_13c50f1144324ac48f72f915668c48b5
+- v: 1
+  id: reg_3d2f1b9a38b14d5ea62a4f4510b88beb
+  ts: "2026-11-27T14:39:24Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md-changed, lint-fm-changed, lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md-changed, lint-fm-changed, lint-fm"
+  previous_event_id: reg_07582dee1aad484db028d7bf4620281f
