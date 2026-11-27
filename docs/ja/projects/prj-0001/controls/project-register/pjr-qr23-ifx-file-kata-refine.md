@@ -66,12 +66,24 @@ ifx-file-sample に承認と昇格の記述が残り、rulebook の target_forma
 
 - 週次発注 CSV 連携（`schema.fields` による直接定義の例）は、1 ファイル 1 契約の YAML に収まらないため sample から外した。直接定義の説明は rulebook に残る。復活させる場合は別の sample 契約を足す。
 - sample の `x-spec-meta.status` は `draft` にした。`ready` への昇格は人間が行う。
-- 型の grade は未実行。rulebook の minor（運用ルールの追従対象、検証コマンドの具体化）は未対応。
+- 型の grade は未実行（統合の後に orchestrator が流す）。
+
+### 5.2.1. 2 回目の実行（2026-11-27）の minor の扱い
+
+| 出典              | 指摘                                                                       | 扱い   | 内容・理由                                                                                                               |
+| ----------------- | -------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| rulebook F001     | 6.1・6.2 が 1.2・5.6 と重複                                                | 直した | 6.1 の 2 項目めを 3.1 参照に、6.2 の正本参照を 5.6 の 3 項目め参照に短縮した                                             |
+| rulebook F002     | 追従対象と担当が未定義                                                     | 直した | 8.2 に追従対象の表（`ifx-index`・参照元 `ifx-cmd`・正本・実装とテスト）と Role code を追加した                           |
+| rulebook F003     | 検証コマンドが具体でない                                                   | 直した | 8.1 に `npx prettier --check <path>`・`npm run validate:schema:file`、終了コード、再実行手順を追加した                   |
+| rulebook F004     | `schema.schema_ref` が未定義                                               | 解消済 | 1 回目に `schema.schema_ref` を削除し、`schema.references` の型を明示した                                                |
+| rulebook F005     | sample の形式が `target_format` と不一致                                   | 解消済 | 1 回目に sample を YAML 化した                                                                                           |
+| rulebook F006     | `ifx-index` 未登録契約の照合先                                             | 解消済 | 1 回目に `based_on` の参照元仕様を照合先と明記した                                                                       |
+| sample F001〜F008 | Markdown 時点の指摘（全文掲載・承認記述・`PO` 表記・状態表記・形式不一致） | 解消済 | 1 回目の YAML 化で該当記述を除いた。F002（取引状態欠落の行の混在）は sample のコメント 51・52 行で事象ごとに分かれている |
 
 ### 5.3. CHANGELOG に書く事項
 
 - 区分: Changed
-- 行の文案: ifx-file の sample を Markdown から YAML に改め、rulebook の参照キーと照合先の記述を整えた。
+- 行の文案: ifx-file の sample を Markdown から YAML に改め、rulebook の参照キー・照合先・検証コマンド・追従対象の記述を整えた。
 
 ## 6. 関連ドキュメント
 
