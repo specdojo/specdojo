@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-AVCB",
+  "run_id": "pjr-avcb-20261128T075757Z-48f48919",
+  "updated_at": "2026-11-28T07:58:57.536Z",
+  "stages": {
+    "executor": {
+      "status": "pending",
+      "actor": "sol-executor",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "prepare": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-28T07:58:57.536Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T075757Z-48f48919/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T075757Z-48f48919/result.md"
+  }
+}
