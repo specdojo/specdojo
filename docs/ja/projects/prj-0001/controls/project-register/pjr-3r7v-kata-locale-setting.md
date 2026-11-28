@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: hard
   owner: DEV
   registered_at: "2026-11-28T00:21:32Z"
   due_on: "2026-12-31"
@@ -47,9 +48,13 @@ PJR-F4MG で決めた設計に沿って、kata（rulebook・recipe・sample・te
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                               | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------------------------ | ---- | ---- | ---- |
+| 1   | `kata_locale` を設定・schema・設定リファレンスに足す               | DEV  | open | -    |
+| 2   | kata の解決に言語の variant と `ja` へのフォールバックを足す       | DEV  | open | -    |
+| 3   | `init` の質問と `--kata-locale`、`kata list` の `LOCALE` 列を足す  | DEV  | open | -    |
+| 4   | 英語の kata で日本語の表記に頼る処理が壊れないかを確かめる         | DEV  | open | -    |
+| 5   | 4 つの場合のテストを書き、型検査・lint・単体テストと親の検証を通す | DEV  | open | -    |
 
 ## 5. 対応結果
 
