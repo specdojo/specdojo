@@ -98,7 +98,7 @@ const SUPPORTED_COMMANDS = new Set([
 ]);
 const REMOTE_WRITE_COMMANDS = new Set(["push", "send-pack", "http-push", "receive-pack"]);
 const PUSH_GUIDANCE =
-  "Push must be performed by a human or through the guarded entry point planned in PJR-D4RJ.";
+  "Push must be performed by a human or through specdojo guarded-push (PJR-D4RJ).";
 const VALUE_OPTIONS = ["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env"];
 const FLAG_OPTIONS = new Set([
   "--bare",

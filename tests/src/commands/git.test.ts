@@ -157,7 +157,7 @@ describe("Git remote-write guard", () => {
       const spawnSync = vi.spyOn(childProcess, "spawnSync").mockImplementation(unexpectedGit);
       try {
         await expect(runSerializedGit(args, { project: "p" })).rejects.toThrow(
-          "Push must be performed by a human or through the guarded entry point planned in PJR-D4RJ",
+          "Push must be performed by a human or through specdojo guarded-push (PJR-D4RJ)",
         );
         expect(spawn).not.toHaveBeenCalled();
         expect(spawnSync).not.toHaveBeenCalled();

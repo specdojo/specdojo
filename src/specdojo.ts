@@ -27,6 +27,7 @@ import { registerDevcontainerCommands } from "./devcontainer/command.js";
 import { registerInitCommand } from "./commands/init.js";
 import { registerOrchestratorCommands } from "./commands/orchestrator.js";
 import { registerGitCommand } from "./commands/git.js";
+import { registerGuardedPushCommand } from "./commands/guarded-push.js";
 import { registerUpdateCommand } from "./commands/update.js";
 import { registerProjectMoveCommand } from "./project/command.js";
 
@@ -83,6 +84,7 @@ async function main(): Promise<void> {
   registerDevcontainerCommands(program);
   registerOrchestratorCommands(program);
   registerGitCommand(program);
+  registerGuardedPushCommand(program);
   registerUpdateCommand(program);
 
   await program.parseAsync(process.argv);

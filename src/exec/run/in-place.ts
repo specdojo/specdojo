@@ -1,5 +1,6 @@
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { spawn } from "node:child_process";
+import { AGENT_ROLE_ENV } from "../../shared/agent-role.js";
 import { existsSync, readFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
 import { extractLocalId } from "../../schedule/phase-sets.js";
@@ -243,6 +244,7 @@ export async function spawnAgentInPlace(
         SPECDOJO_SCHEDULE_PATH: schedulePath,
         SPECDOJO_EXECUTION_PATH: executionPath,
         ...productRepoEnvironment(cwd, products),
+        [AGENT_ROLE_ENV]: "executor",
       },
       shell: true,
       stdio: ["pipe", "inherit", "inherit"],
