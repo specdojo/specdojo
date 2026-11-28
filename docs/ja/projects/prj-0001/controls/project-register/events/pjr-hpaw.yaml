@@ -115,3 +115,19 @@
       from: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
       to: "-"
   previous_event_id: reg_0e692b6f1dde42848dbeea8a28708295
+- v: 1
+  id: reg_8826ac270d574431b445c6650b1198c7
+  ts: "2026-11-28T05:13:49Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
+  previous_event_id: reg_f4d0406cf4a943c897a6a77492deabc6
