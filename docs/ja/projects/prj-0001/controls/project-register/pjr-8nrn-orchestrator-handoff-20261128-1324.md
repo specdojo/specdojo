@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-8nrn-orchestrator-handoff-20261128-1324
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: handoff
-  item_status: open
+  item_status: done
   priority: medium
   owner: PO
   registered_at: "2026-11-28T13:24:15Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T14:14:52Z"
 ---
 
 # PJR-8NRN オーケストレーターの引き継ぎ（2026-11-28 13:24 UTC）

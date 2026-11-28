@@ -123,3 +123,19 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_31c590e322d74e3295bb119c0bd6c9b4
+- v: 1
+  id: reg_5316b02cd2414cf7ac4ecc46ca5fe18e
+  ts: "2026-11-28T14:14:52Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 次のセッションのオーケストレーター（Claude Code、Opus 5.5）が受け取った
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+  previous_event_id: reg_a08f3af59af44ffb830447b3e8040379
