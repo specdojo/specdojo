@@ -131,3 +131,22 @@
       from: ""
       to: prj-0001 での試し（オーケストレーター、2026-11-28）
   previous_event_id: reg_b4d137a6906b4737b2827c0519168060
+- v: 1
+  id: reg_037fb03dbab34a0ca5f181a0b0096db8
+  ts: "2026-11-28T11:09:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: prj-0001 での試し（記帳・exec run・branch-merge）に加え、prj-0002 の設定を sync に移して note PJR-MYGE を起票し、sync/register への commit・push、branch-check、branch-merge を確かめた（2026-11-28）。v0.10.0 に含めることは indie の指示
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: register の同期のブランチへ移る手順を書き、prj-0001 と別のプロジェクト（prj-0002）で試した。prj-0002 から prj-0001 への起票が新しい sync/register に届くことを確かめた
+  previous_event_id: reg_18a1ee0bf3b047adb3981853cbe54667
