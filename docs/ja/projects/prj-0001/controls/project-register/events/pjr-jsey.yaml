@@ -5835,3 +5835,19 @@
       from: runner 変更後の exec run の動作を smoke で確かめた
       to: sync の 2 本のブランチへ移した後も、exec run --register が start から review まで実体の actor で記帳し、統合まで通った
   previous_event_id: reg_52bfa55f3161481f83780c33960eb2f6
+- v: 1
+  id: reg_f036050b475745edbdb2a98bc3927cba
+  ts: "2026-11-28T15:39:44Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-3R7V の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-28"
+      to: "-"
+  previous_event_id: reg_378ddd8e3e8246a895ca7d5398bc1d12

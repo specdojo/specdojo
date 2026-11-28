@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-27T23:11:33Z"
   conclusion: sync の 2 本のブランチへ移した後も、exec run --register が start から review まで実体の actor で記帳し、統合まで通った
   autopilot: approved
 ---
