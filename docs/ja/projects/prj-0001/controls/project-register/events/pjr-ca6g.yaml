@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_48b5c7ae0a984fd69ac64aa4b9f33959
+  ts: "2026-11-28T07:19:58Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: note を done で close できるようにする
+    - field: description
+      from: ""
+      to: 使い終わった note（中身を別の項目・文書へ移した、古くなった）を done で close し、移した先または古くなった理由を conclusion に残す。rejected・deferred は note に使わない
+    - field: input
+      from: ""
+      to: '["利用者の問題提起（2026-11-28）: note は気軽に起票できるが、終わらせられないため open がたまる","比べた案: A note を done で close できるようにする / B 終わらせず一覧で追記の新旧を分ける / C 今のまま。indie が A を選んだ（2026-11-28）","v0.10.0 に入れる。担当 BA・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
