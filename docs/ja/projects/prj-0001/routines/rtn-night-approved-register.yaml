@@ -3,7 +3,8 @@
 id: rtn-night-approved-register
 name: 承認済み登録項目の夜間実行
 description: 毎晩 0 時に、人が autopilot を承認した open todo・issue を実行して朝報告を作る。
-enabled: true
+# 2026-11-28: indie の依頼で、しばらくすべての routine を止める（codex の週間上限が近いため）。再開は indie の指示による。
+enabled: false
 trigger:
   cron: "0 0 * * *"
   timezone: Asia/Tokyo

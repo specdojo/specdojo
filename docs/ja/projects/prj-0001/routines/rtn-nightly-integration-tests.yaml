@@ -5,7 +5,8 @@
 id: rtn-nightly-integration-tests
 name: 統合テストの全件を夜間に実行
 description: 毎晩 4 時（Asia/Tokyo）に統合テストの全件を流し、成功・失敗と失敗したテストを朝報告に残す。
-enabled: true
+# 2026-11-28: indie の依頼で、しばらくすべての routine を止める（codex の週間上限が近いため）。再開は indie の指示による。
+enabled: false
 trigger:
   cron: "0 4 * * *"
   timezone: Asia/Tokyo
