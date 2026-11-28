@@ -8,7 +8,7 @@ specdojo:
     - specdojo:ryu-guide
   translated_from:
     locale: ja
-    commit: a9ab7fd04621afceba67e6b8a365ac9618a9aee0
+    commit: 732cb42d64b223eacfd6127c1dcbea1a12d68df4
 ---
 
 # Civic Tech Starter Guide
