@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MACP",
+  "run_id": "pjr-macp-20261128T103941Z-d92b705a",
+  "updated_at": "2026-11-28T10:40:47.891Z",
+  "stages": {
+    "executor": {
+      "status": "pending",
+      "actor": "opus-executor",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "prepare": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-28T10:40:47.891Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MACP/pjr-macp-20261128T103941Z-d92b705a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MACP/pjr-macp-20261128T103941Z-d92b705a/result.md"
+  }
+}
