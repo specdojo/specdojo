@@ -114,7 +114,7 @@ type は次のように使い分ける。
 | `question`       | 判断を保留し、後で決める             | `decided` |
 | `risk`           | 将来の不確実性                       | `done`    |
 | `change-request` | 合意済み範囲の変更要求               | `done`    |
-| `note`           | 記録として残す観測・分析             | なし      |
+| `note`           | 記録として残す観測・分析             | `done`    |
 | `epic`           | track ごとの仕事の着手と完了の管理   | `done`    |
 | `handoff`        | セッション・LLM の切り替えの引き継ぎ | `done`    |
 
@@ -154,7 +154,7 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 
 順番のある項目は `--depends-on <PJR-XXXX>`（繰り返し指定できる）で先に終わっているべき項目を記録する。起票の由来を表す `--from`（`derived_from`）とは別の意味で、どちらかで他方を兼ねない。先行の項目がすべて `done` / `decided` になるまで、`exec run --register` は止まり、夜間の実行では飛ばされる。状態は自動では `waiting` にならない。外すときは `--depends-on -` を指定する。後続の項目は一覧の `depends_on` 列と `generated/pjr-dependent-items.md` で確かめる。
 
-`note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
+`note` の `open` は継続して更新できる記録を表す。使い終わった note（内容を別の項目・文書・運用メモへ移した、または古くなった）は `register close --conclusion <text>` で `done` にし、移した先または古くなった理由を必ず書く。`decided`・`rejected`・`deferred` は使わない。必要になれば `register reopen` で `open` に戻す。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
 
 別の project の登録簿へ起票するときは `register add --project <project-id> --commit` を使い、起票の元は `--from <project-id>:PJR-XXXX` で指す。close などの状態遷移は、その project の作業ツリーで行う。別のリポジトリの project は `external_projects` に宣言してから起票する。`register_sync` を有効にした project では、記帳が専用ブランチへ commit・push されるため、develop への取り込みは登録簿運用ガイドに従う。どちらも設定リファレンスを確かめてから案内する。
 
