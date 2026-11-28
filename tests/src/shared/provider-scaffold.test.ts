@@ -53,6 +53,13 @@ const CLAUDE_REMOTE_WRITE_DENIES = [
   "Bash(/usr/local/bin/gh *)",
 ];
 
+// The guarded push entry is for the interactive orchestrator only (PJR-GDMB).
+const CLAUDE_GUARDED_PUSH_DENIES = [
+  "Bash(specdojo guarded-push*)",
+  "Bash(npx specdojo guarded-push*)",
+  "Bash(./node_modules/.bin/specdojo guarded-push*)",
+];
+
 const CLAUDE_ORCHESTRATOR_READ_ALLOWS = [
   "Bash(gh pr list:*)",
   "Bash(gh pr view:*)",
@@ -110,6 +117,7 @@ describe("specdojoPackageRootDir", () => {
       "Bash(git add *)",
       "Bash(git commit *)",
       ...CLAUDE_REMOTE_WRITE_DENIES,
+      ...CLAUDE_GUARDED_PUSH_DENIES,
     ]);
   });
 
@@ -127,6 +135,7 @@ describe("specdojoPackageRootDir", () => {
       ...[...PROTECTED_EXACT_PATHS].map((protectedPath) => `Edit(./${protectedPath})`),
       ...CLAUDE_EDIT_GIT_REMOVE_DENIES,
       ...CLAUDE_REMOTE_WRITE_DENIES,
+      ...CLAUDE_GUARDED_PUSH_DENIES,
     ]);
   });
 

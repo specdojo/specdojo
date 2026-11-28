@@ -33,6 +33,9 @@ permission:
     "npm run lint:md*": allow
     "npm run lint:fm*": allow
     "npm run validate:schema:file*": allow
+    "specdojo guarded-push*": ask
+    "npx specdojo guarded-push*": ask
+    "./node_modules/.bin/specdojo guarded-push*": ask
   edit:
     "*": deny
     "docs/**": allow
@@ -57,14 +60,15 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 
 - 回答は原則として日本語で行う。
 - 操作は「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、「承認の聞き方」に従って何をするかを日本語で示し、利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
-- 破壊的変更や `git push` は行わない。`register_sync` を有効にした project の登録簿の専用ブランチへの push は、specdojo のコマンド（`register ... --commit`・`exec run`・`register branch-push`）に任せ、`git push` を自分で打たない。
+- 破壊的変更や直接の `git push` は行わない。`register_sync` を有効にした project の登録簿の専用ブランチへの push は、specdojo のコマンド（`register ... --commit`・`exec run`・`register branch-push`）に任せる。
+- 自分の push は `npx specdojo guarded-push --project <project-id>` だけで行う。送れるのは `project/<project-id>/develop` と `feature/<project-id>/*` で、fast-forward に限る。先に同じ引数で `--dry-run` を流して送るブランチ・remote・commit の範囲と件数を示し、その送信ごとに承認を得てから通常実行する。ブランチの先端・送信先・範囲が変わったら、示し直して承認を取り直す。範囲の外の push と、npm の公開・リリースの公開は利用者へ引き渡す。
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
   - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
   - 書き込みを伴う git 操作（commit・merge・add・restore など）は `npx specdojo git --project <project-id> -- <git の引数>` で流し、runner の統合と同じロックに並べる。register の記帳は、これまでどおり `register ... --commit` を使う。
 - commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
   - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
-  - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
+  - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。push は利用者が求めたときに `guarded-push` で行い、PR 作成は行わず利用者へ引き渡す。
   - `exec run` は現在ブランチを統合先にするため、実行前に対象 project の `develop` にいることを確認する。
   - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
 - commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
@@ -72,7 +76,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - 自分で、または subagent で項目を実装するときは、skill `specdojo-exec-in-session`（`.agents/skills/specdojo-exec-in-session/SKILL.md`）があればその手順に従う。
 - 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録や、自分で行った起票・記帳は `specdojo-orchestrator` で残す。`--by` は人と agent の名簿の nickname・alias と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）だけを受け付け、それ以外は記帳の前にエラーで止まる。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
-- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
+- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。そのリポジトリへの push は行わず、利用者へ引き渡す。宣言していないリポジトリは参照も変更もしない。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
 - 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
 - タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利用者に確認する。
@@ -307,6 +311,6 @@ npx specdojo exec validate --project <project-id>
 ## 禁止事項
 
 - 状態変更・ファイル生成を伴うコマンドを、承認なしに実行すること。
-- `git push` や履歴を書き換える破壊的操作を行うこと。
+- 直接の `git push`、`guarded-push` の範囲の外への push、承認のない push、履歴を書き換える破壊的操作を行うこと。
 - 認証情報・秘密・`.env`・`secrets/` の読み取り。
 - 会話で確定していないプロジェクト事実（担当・期日・結論など）を勝手に埋めること。

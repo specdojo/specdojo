@@ -3,7 +3,11 @@
   "toolPermission": "request-review",
   "permissions": {
     "allow": ["command(git status)", "command(git diff)", "command(git log)", "command(git show)"],
-    "ask": ["write_file(*)"],
+    "ask": [
+      "write_file(*)",
+      "command(specdojo guarded-push)",
+      "command(npx specdojo guarded-push)"
+    ],
     "deny": [
       "read_file(.env)",
       "read_file(.env.local)",
