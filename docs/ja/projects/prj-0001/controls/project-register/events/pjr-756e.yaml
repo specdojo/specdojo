@@ -54,3 +54,16 @@
       from: "-"
       to: hard
   previous_event_id: reg_f4c602f1504443a2af72d838d06c9161
+- v: 1
+  id: reg_10548803f2b148a9a0f07617af469536
+  ts: "2026-11-28T14:21:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_c57e81f6338a456e987b532bd38c5c73

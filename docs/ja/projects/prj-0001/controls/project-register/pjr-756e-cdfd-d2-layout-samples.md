@@ -61,4 +61,10 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-dm1n-cdfd-diagram-layout|PJR-DM1N]] CDFD の図の描き方の決定（根拠）
+- [[prj-0001:pjr-pys2-kata-wave-6-notation|PJR-PYS2]] 親の項目
+- [[prj-0001:pjr-t1d1-cdfd-concise-documents|PJR-T1D1]] 製品の CDFD をそろえる後続
+- [[specdojo:cdfd-d2-rulebook]]
+- [[specdojo:cdfd-overview-sample]]
+- [[specdojo:cdfd-sample]]
+- [[specdojo:cdfd-uc-sample]]
