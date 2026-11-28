@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-hpaw-specdojo-git-push-bypass
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-28T04:16:53Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T05:19:36Z"
+  conclusion: specdojo git が push・send-pack・http-push・receive-pack を git の起動前に拒むようにした。global option を前に置いた形も拒み、alias・未知のコマンド・外部の git-* はまとめて拒む
   derived_from:
     - PJR-D4RJ
 ---
