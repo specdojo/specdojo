@@ -16,6 +16,7 @@ import {
   resolveSyncBranchTargets,
 } from "../../shared/register-branch.js";
 import { gitOutput, gitResult, repoRelative, worktreeStatusPaths } from "../../shared/git.js";
+import { ensureSyncWorktreeRegisterIndexes } from "../../register/sync-worktree-index.js";
 import { stabilizeCommitTargets } from "../worktree-ops.js";
 
 /** Keep lifecycle fields authoritative while merging the executor's edits against its HEAD. */
@@ -67,6 +68,7 @@ export async function publishRegisterTicket(
     }
     if (merged !== current) {
       writeFileSync(destination, merged, "utf8");
+      ensureSyncWorktreeRegisterIndexes(worktree);
       gitOutput(worktree, ["add", "--", path]);
       gitOutput(worktree, [
         "commit",
