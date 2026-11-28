@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8aa0ee52be024f278a7e71d86dce4d57
+  ts: "2026-11-28T15:49:02Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの引き継ぎ（2026-11-28 15:48 UTC）
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: handoff
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-29"
