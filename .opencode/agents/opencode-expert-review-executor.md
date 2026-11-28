@@ -19,10 +19,10 @@ permission:
       "npm run lint:fm*": allow,
       "npm run validate:schema:file*": allow,
       "specdojo exec validate*": allow,
+      "specdojo guarded-push*": deny,
+      "npx specdojo guarded-push*": deny,
+      "./node_modules/.bin/specdojo guarded-push*": deny,
     }
-    "specdojo guarded-push*": deny
-    "npx specdojo guarded-push*": deny
-    "./node_modules/.bin/specdojo guarded-push*": deny
   edit: deny
   task: deny
   webfetch: allow

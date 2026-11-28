@@ -25,10 +25,10 @@ permission:
       "ls *": allow,
       "grep *": allow,
       "sed -n *": allow,
+      "specdojo guarded-push*": deny,
+      "npx specdojo guarded-push*": deny,
+      "./node_modules/.bin/specdojo guarded-push*": deny,
     }
-    "specdojo guarded-push*": deny
-    "npx specdojo guarded-push*": deny
-    "./node_modules/.bin/specdojo guarded-push*": deny
   edit:
     {
       "*": deny,
