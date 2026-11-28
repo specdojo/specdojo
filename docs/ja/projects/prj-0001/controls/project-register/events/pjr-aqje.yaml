@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-BXYM"]'
+- v: 1
+  id: reg_1e0168cc2f0942a2a273513c8f70a900
+  ts: "2026-11-28T08:32:46Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_c7561b3872cf4722890193d3478b7bc8
