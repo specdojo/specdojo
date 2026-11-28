@@ -106,3 +106,22 @@
       from: ""
       to: 承認
   previous_event_id: reg_f58ef07fa0da40ceaf2245ea79d9305a
+- v: 1
+  id: reg_e2013ec3c6da44619ba99181f91e5389
+  ts: "2026-11-28T03:29:51Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話での承認（B を採る、2026-11-28）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: 選択肢 B。develop と feature ブランチへの普通の push を、毎回の承認を前提にオーケストレーターに許す。main・force・タグ・npm の公開は人が行い、同期ブランチは specdojo のコマンドに任せる
+      to: 選択肢 B。範囲を守る push の入口を specdojo のコマンドとして作り、オーケストレーターにだけ毎回の承認で許す。各環境の git push の deny と executor の守りは残す
+  previous_event_id: reg_b111c8f6d1fd49c2a2f385a49a2cd408

@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: indie
   registered_at: "2026-11-27T23:42:08Z"
   due_on: null
-  conclusion: 選択肢 B。develop と feature ブランチへの普通の push を、毎回の承認を前提にオーケストレーターに許す。main・force・タグ・npm の公開は人が行い、同期ブランチは specdojo のコマンドに任せる
+  completed_at: "2026-11-28T03:29:51Z"
+  conclusion: 選択肢 B。範囲を守る push の入口を specdojo のコマンドとして作り、オーケストレーターにだけ毎回の承認で許す。各環境の git push の deny と executor の守りは残す
 ---
 
 # PJR-D4RJ オーケストレーターに承認を前提として git push を許す
