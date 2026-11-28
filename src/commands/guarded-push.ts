@@ -31,12 +31,13 @@ function assertBranch(project: string, branch: string): void {
   }
 }
 
-function git(cwd: string, args: string[]): string {
+function git(cwd: string, args: string[], input?: string): string {
   const result = spawnSync("git", ["--no-replace-objects", ...args], {
     cwd,
     env: gitEnvironment(),
     encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
+    input,
+    stdio: [input === undefined ? "ignore" : "pipe", "pipe", "pipe"],
   });
   if (result.error) throw result.error;
   if (result.status !== 0) {
@@ -54,6 +55,93 @@ function pushEndpoint(root: string, remote: string): string {
   const url = urls[0];
   // A local path must not be interpreted as another configured remote name by `push`.
   return /^[a-z][a-z0-9+.-]*:\/\//iu.test(url) || /^[^/]+:/u.test(url) ? url : resolve(root, url);
+}
+
+const COMMIT_ID = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
+const SHOWN_BASE_BRANCHES = 5;
+
+function fetchObjects(root: string, endpoint: string, commits: string[]): void {
+  // Fetch objects only, never remote-tracking refs or FETCH_HEAD. This also handles stale
+  // tracking refs and a push URL different from the fetch URL, including during dry-run.
+  git(root, [
+    "fetch",
+    "--no-tags",
+    "--no-recurse-submodules",
+    "--no-write-fetch-head",
+    "--no-auto-maintenance",
+    "--",
+    endpoint,
+    ...commits,
+  ]);
+}
+
+type RemoteHead = { name: string; commit: string };
+
+function remoteHeads(root: string, endpoint: string): RemoteHead[] {
+  const advertisement = git(root, ["ls-remote", "--refs", "--heads", "--", endpoint]);
+  if (!advertisement) return [];
+  return advertisement
+    .split(/\r?\n/u)
+    .map((line) => {
+      const [commit, ref, ...rest] = line.split("\t");
+      if (
+        rest.length > 0 ||
+        !commit ||
+        !COMMIT_ID.test(commit) ||
+        !ref?.startsWith("refs/heads/") ||
+        ref.length === "refs/heads/".length
+      ) {
+        throw new Error("Unexpected remote branch advertisement");
+      }
+      return { name: ref.slice("refs/heads/".length), commit };
+    })
+    .sort((left, right) => (left.name < right.name ? -1 : left.name > right.name ? 1 : 0));
+}
+
+function missingCommits(root: string, commits: string[]): string[] {
+  const output = git(
+    root,
+    ["cat-file", "--batch-check=%(objectname) %(objecttype)"],
+    `${commits.join("\n")}\n`,
+  );
+  const present = new Set(
+    output
+      .split(/\r?\n/u)
+      .filter((line) => line.endsWith(" commit"))
+      .map((line) => line.slice(0, line.indexOf(" "))),
+  );
+  return commits.filter((commit) => !present.has(commit));
+}
+
+/**
+ * For a branch the remote does not have yet, count only commits that no remote branch
+ * contains, and name the remote branches used as the base.
+ */
+function newBranchRange(
+  root: string,
+  endpoint: string,
+  remote: string,
+  tip: string,
+): { range: string; count: string } {
+  const heads = remoteHeads(root, endpoint);
+  if (heads.length === 0) {
+    return {
+      range: `(new branch) ${tip}; ${remote} has no branches, so the full history is counted`,
+      count: git(root, ["rev-list", "--count", tip, "--"]),
+    };
+  }
+  const bases = [...new Set(heads.map((head) => head.commit))];
+  const missing = missingCommits(root, bases);
+  if (missing.length > 0) fetchObjects(root, endpoint, missing);
+  const count = git(root, ["rev-list", "--count", tip, "--not", ...bases, "--"]);
+  const names = heads.slice(0, SHOWN_BASE_BRANCHES).map((head) => head.name);
+  const more = heads.length - names.length;
+  const listed = `${names.join(", ")}${more > 0 ? `, +${more} more` : ""}`;
+  const noun = heads.length === 1 ? "branch" : "branches";
+  return {
+    range: `(new branch) ${tip}, excluding commits on ${heads.length} ${remote} ${noun} (${listed})`,
+    count,
+  };
 }
 
 export async function runGuardedPush(options: GuardedPushOptions): Promise<number> {
@@ -93,21 +181,10 @@ export async function runGuardedPush(options: GuardedPushOptions): Promise<numbe
     }
     const base = entries[0]?.split("\t")[0];
     if (base) {
-      if (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(base)) {
+      if (!COMMIT_ID.test(base)) {
         throw new Error("Invalid remote commit ID");
       }
-      // Fetch objects only, never remote-tracking refs or FETCH_HEAD. This also handles stale
-      // tracking refs and a push URL different from the fetch URL, including during dry-run.
-      git(root, [
-        "fetch",
-        "--no-tags",
-        "--no-recurse-submodules",
-        "--no-write-fetch-head",
-        "--no-auto-maintenance",
-        "--",
-        endpoint,
-        base,
-      ]);
+      fetchObjects(root, endpoint, [base]);
       const check = spawnSync(
         "git",
         ["--no-replace-objects", "merge-base", "--is-ancestor", base, tip],
@@ -120,10 +197,14 @@ export async function runGuardedPush(options: GuardedPushOptions): Promise<numbe
       if (check.error) throw check.error;
       if (check.status !== 0) throw new Error("guarded-push refuses a non-fast-forward push");
     }
-    const range = base ? `${base}..${tip}` : tip;
-    const count = git(root, ["rev-list", "--count", range, "--"]);
+    const { range, count } = base
+      ? {
+          range: `${base}..${tip}`,
+          count: git(root, ["rev-list", "--count", `${base}..${tip}`, "--"]),
+        }
+      : newBranchRange(root, endpoint, remote, tip);
     process.stdout.write(
-      `Branch: ${branch}\nRemote: ${remote}\nRange: ${base ? range : `(new branch) ${tip}`}\nCommits: ${count}\n`,
+      `Branch: ${branch}\nRemote: ${remote}\nRange: ${range}\nCommits: ${count}\n`,
     );
     if (options.dryRun) {
       process.stdout.write("Dry run: nothing pushed\n");
