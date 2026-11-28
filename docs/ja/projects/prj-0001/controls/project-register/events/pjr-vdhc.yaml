@@ -100,3 +100,35 @@
       from: ""
       to: 対応結果
   previous_event_id: reg_3de2021519e9495b9b7ce3b7ec406002
+- v: 1
+  id: reg_30b2450c1cb44ec2966b93934755a72c
+  ts: "2026-11-28T13:12:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容の表を終えた状態にする
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_4f49b861ba2146f0b8ac3828ba49da39
+- v: 1
+  id: reg_bd1a0edc247c4fafb75199cfa6d9b860
+  ts: "2026-11-28T13:12:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 完了条件を 1 項目ずつ確かめた。範囲・CHANGELOG の照合・検査・配布物と WSL の導入・PR の merge と公開・公開後の npm と workflow と導入の確認が済んだ
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: "SpecDojo 0.10.0 を公開した（PR #43、merge commit ebf2692e0c、タグ v0.10.0）。docs-lint 0.5.1 と、型の誤りを直した docs-site 0.7.1（PR #45、merge commit 70ddba79e9）も公開した。npm の latest は 3 つとも新しい版で、provenance 付き"
+  previous_event_id: reg_30b2450c1cb44ec2966b93934755a72c
