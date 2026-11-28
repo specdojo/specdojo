@@ -38,3 +38,22 @@
     - field: commit_type
       from: ""
       to: docs
+- v: 1
+  id: reg_ba87c734c10f4917a35f379feab0c31c
+  ts: "2026-11-28T13:48:54Z"
+  action: reject
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: rejected
+  reason: PJR-9GB9（LP を理解の負債を中心のメッセージに書き直す）に含めた（indie の指示、2026-11-28）。完了条件は 9GB9 に移した
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: PJR-9GB9 に含めて追跡する
+  previous_event_id: reg_5b7b60045d834d20b9bbe506bc779faf

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-t1th-lp-cse-positioning
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: rejected
   priority: medium
   owner: BA
   registered_at: "2026-11-21T09:48:26Z"
   due_on: null
+  completed_at: "2026-11-28T13:48:54Z"
+  conclusion: PJR-9GB9 に含めて追跡する
   derived_from:
     - PJR-PW1Y
   commit_type: docs
