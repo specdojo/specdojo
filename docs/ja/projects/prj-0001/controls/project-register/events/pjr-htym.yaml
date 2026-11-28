@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fb45f5c5b89a411697e5ba8bf52ac899
+  ts: "2026-11-28T15:47:54Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 2026-11-28 の夜の 5 件の review で出た、後続の起票と未決の扱いをどうするか
+    - field: description
+      from: ""
+      to: 756E・6V26・3R7V の対応結果に残った後続の作業と未決、PJR-4EFH・0FBB の担当と期限を indie が決める
+    - field: input
+      from: ""
+      to: '["PJR-756E の残課題: CDFD の template（cdfd-overview-template・cdfd-template・cdfd-uc-template）と recipe は rulebook の新しい描き方とそろっていない。cdfd-uc-template の D2 は direction: down のまま。別の todo にするか","PJR-756E の決めた点: レーンは grid-rows の帯にせず ELK の囲みで上から並べた（grid では線がノードを横切ったため）。帯の形が要るかは indie が文書サイトで見て決める","PJR-6V26 の案: シビックテック入門ガイドの理解の負債の定義の文が正本より狭い。正本に合わせて置き換える案が個票の対応結果にある。直すか","PJR-3R7V の残課題: 登録簿の個票の英語の見出しへの対応（5 か所と exec plan の文言）と、maintenance 系の commit 許可範囲 kataDirsForKinds への docs/en の追加を、別の todo にするか","PJR-3R7V の未決: init の既定を LANG に合わせるか、CLI・オーケストレーターの案内の言語も切り替えるか","PJR-4N4K の結果: 英語版の古い翻訳が 2 件（civic-tech-starter-guide・pjr-rulebook）、`translated_from` のないものが 1 件（docs/en/index.md）。直す todo を起票するか","PJR-4EFH（記帳が遅い調査）と PJR-0FBB（exec smoke の reopen が取り込まれない）の担当と期限"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-29"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-756E","PJR-6V26","PJR-3R7V"]'
