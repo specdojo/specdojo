@@ -135,3 +135,16 @@
       from: "-"
       to: hard
   previous_event_id: reg_6085edd849e84db7af7aeb6a8aa9b790
+- v: 1
+  id: reg_9b7e464c3de342ce9c791ca0bb0f5cfc
+  ts: "2026-11-28T14:52:34Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e2fc7a993071458785be1f2f6f23c2fe
