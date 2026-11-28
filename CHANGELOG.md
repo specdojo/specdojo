@@ -4,7 +4,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
-## [0.10.0] - 未公開
+## [0.10.0] - 2026-11-28
 
 ### 移行の注意
 
@@ -16,10 +16,13 @@ SpecDojo の利用者に影響する変更を記録します。
 - 単独で書く pm-change-request-log・pm-issue-log・pm-risk-register・pm-decision-log の型は非推奨です。登録簿の change-request・issue・risk・decision を正本とし、一覧は `register build` で作ってください。一覧の生成に使う枠は残ります（PJR-X141、PJR-SJR7）。
 - `update` を持たない版（0.9.2 まで）から上げる最初の 1 回は、`npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼んでください。`--dry-run` で事前に確かめられます。配った skill・agent 定義・rules の差分は確かめてから適用し、設定ファイルは示された CHANGELOG の行を見て自分で直してください。stdin が TTY でないときと `--no-interactive` のときは書き換えません（PJR-MS7X）。
 - approach を `--approach - --target - --source -` で外した個票には、authoring の approach を `register update` で戻せません。作成済みの kata を直すときは `*-maintenance` の approach を使ってください。`init --lefthook` が作る markdownlint の構成（`.markdownlintrc` と、それを読む `.markdownlint-cli2.yaml`）は既存の設定を書き換えないため、そのままで使えます。生成物にそろえる場合は `config scaffold --lefthook --slidev --dry-run` の案内に従ってください。markdownlint-cli2 と VS Code の拡張は `.markdownlintignore` を読みません（PJR-XC5P）。
+- 同期のブランチを種類ごとに分ける設定 `sync` を足しました。`register_sync` は 1 本のブランチにまとめる互換の形として残り、`sync` と同時には書けません。`sync` へ移すときは、実行中の run がないときに登録簿運用ガイドの手順で新しいブランチを作ってから設定を書き換えてください。`external_projects` で起票する相手の project も同じ版へ上げ、設定をそろえてください（PJR-VKY2、PJR-VM2S）。
+- Copilot の executor の起動の雛形から、今の Copilot CLI で廃止された `--no-remote`・`--no-remote-export` を外しました。既存の `.specdojo/exec-defaults.yaml` の `providers.copilot.command_template` は、配布の雛形と同じ形に手で直してください（PJR-DV1R）。
+- grade の rubric が `grade-rubric-v3` になりました。v2 で評価した結果は `grade list --rubric-outdated` で選べます（PJR-2Q0G）。
 
 ### 削除
 
-- Antigravity（agy）の provider の実装、`templates/antigravity/`、`init`・`config scaffold`・`devcontainer scaffold`・`orchestrator launch` の `antigravity`、内部用の `agent launch`、`init` が作る名簿と起動設定の agy の部分を消しました。ユーザー設定を持つ provider が無くなったため、`config scaffold --provider <name> --global` はリポジトリへ書き込む前にエラーになります（PJR-N6FQ）。
+- Antigravity（agy）の provider の実装、`init`・`config scaffold`・`devcontainer scaffold`・`orchestrator launch` の `antigravity`、内部用の `agent launch`、`init` が作る名簿と起動設定の agy の部分を消しました。ユーザー設定を持つ provider が無くなったため、`config scaffold --provider <name> --global` はリポジトリへ書き込む前にエラーになります（PJR-N6FQ）。
 - `timeline where`・`timeline build`・`exec note`・`exec link`・`exec estimate`・`exec migrate-records`・`grade migrate`・`register migrate`・`config migrate-members` と、`exec`・`catalog`・`schedule`・`job`・`routine` の `where` の別名を削除しました。代わりは `specdojo where <種類>`（`where` の別名）、`dashboard build`（`timeline build`）、個票の対応結果や実行記録（`exec note`）、個票の `depends_on` やカタログ（`exec link`）、個票の `difficulty` と `priority`（`exec estimate`）です。移行用の 4 コマンドに代わるコマンドはなく、旧記録は `git mv` で移し、agent 定義は `.specdojo/agent-members.yaml` へ直接書きます（PJR-GV43）。
 
 ### 非推奨
@@ -48,6 +51,21 @@ SpecDojo の利用者に影響する変更を記録します。
 - 文書サイトの公開のパスと版の種類を環境変数（`SPECDOJO_DOCS_BASE`・`SPECDOJO_DOCS_CHANNEL`・`SPECDOJO_DOCS_STABLE_URL`）で変えられるようにしました。開発中の版では帯とリリースの版へのリンクを出し、検索エンジンに載せません（PJR-98HS）。
 - SpecDojo の VS Code 拡張の Markdown プレビューで、`chat` の吹き出し表示と `chat tui` の表示に対応しました（PJR-WNQJ）。
 - README に英語の短い概要を足しました（PJR-82H2）。実践の型活用ガイドに、kata を agent でレビューする段の組み方を足しました（PJR-F4TG、review 中）。
+- project の develop / feature ブランチだけを fast-forward で送る `specdojo guarded-push` を追加しました。送るブランチ・remote・範囲・件数を示す `--dry-run` があり、exec の executor・reporter からの呼び出しを拒みます。配る権限設定とオーケストレーターの指示は、オーケストレーターにだけ毎回の承認つきで許し、executor・reporter には拒む形にしました（PJR-GDMB）。
+- agy を利用者が直接起動して対話のオーケストレーターに使うための本文のラッパーと権限設定（`templates/antigravity/`）を戻しました。SpecDojo から agy を起動する provider・launch・scaffold の対応は戻しません（PJR-D5RS）。
+- `exec stop` を追加しました。走っている `exec run --auto`（`--loop`）・`exec cycle`・予約の列に、新しいタスクを claim せず、走っているタスクを統合まで終えてから止まるよう指示できます。止まった run は終了コード 76 で終わり、予約の列は同じ `exec queue run` で止めた段から再開します（PJR-32PN）。
+- `specdojo register branch-push` を追加しました。登録簿の同期のブランチだけへ push し、初回のブランチの作成と、止まった同期の復旧を受け持ちます。push の前に `register branch-check` と同じ検査を流します（PJR-M120）。
+- 同期のブランチを種類ごとに分ける設定 `sync` を足しました。登録簿の記帳は `project/<project-id>/sync/register`、schedule の実行イベントは `project/<project-id>/sync/exec-events` へ載せます。`register branch-push` は `--sync <種類>` で 1 本に絞れます（PJR-EVWA、PJR-VKY2）。
+- 見張りの手当てを足しました。exec-defaults の `watch.remedies` で選んだ種類（使用量の上限・負荷による時間切れ・統合先の同期）に、既存の再開のコマンドで手当てを打ちます。`orchestrator watch-scan` に `--exec-defaults`・`--no-remedy`・`--if-busy` を足しました（PJR-3M4M、PJR-T4E0）。
+- `specdojo exec watch` と `orchestrator watch-pause`・`watch-resume`・`watch-status` を追加しました。見張りの記録の新しいイベントを待って出力し、見張りを全体または対象ごとに止め・再開できます（PJR-T4E0）。
+- 見張りで判断が要る止まりに、設定で選んだヘッドレスの agent の診断の案を朝報告へ載せられるようにしました。既定は無効で、回数・時間の上限と同じ止まりの重複起動の防止を備え、agent は再開や記帳をしません（PJR-YNQG）。
+- grade が文書の大きさ（宣言された sample との比・前回からの増え方・運用と検証の章の割合）を LLM を使わずに測って `size_metrics` に記録し、`grade_rubric.size_limits` を超えると `vp-arc-conciseness` に指摘を付けるようにしました（PJR-2Q0G）。
+- exec の reporter の出力に任意の欄 `findings` を足し、runner が result の実施内容の後に指摘の表として描くようにしました（PJR-ANF0）。
+- `exec queue` の段に `exec resume --task <task-id>` を置けるようにしました（PJR-XEKV）。
+- 文書サイトが、project の `repos` で宣言したプロダクトのリポジトリの `docs/ja/product/` を取り込み、`external_projects` の `source_url` で別のリポジトリの project の wikilink を相手の URL へ解決するようにしました。開発中の版（`/specdojo/next/`）に prj-0002 の文書を出し、文書のある project が複数あるときは「プロジェクト」のメニューをドロップダウンにします（PJR-FZQA、PJR-66ER、PJR-6XG2）。
+- 英語のクイックスタート、シビックテック入門ガイド、最初に使う 5 つの型の英語版を文書サイトに足し、翻訳文書の frontmatter に翻訳元を記録する `translated_from` を足しました（PJR-F4MG）。
+- シビックテックの小さなチーム向けに、最初に使う 5 つの型と、理解の負債を減らすために残す順番・確認状態の目印の使い方を示す「シビックテック入門ガイド」を足しました（PJR-BXYM）。
+- dashboard の「人の対応が要るもの」の表に「内容」の列を足しました（PJR-G5DY）。
 
 ### 利用者から見て動きが変わる点
 
@@ -59,6 +77,13 @@ SpecDojo の利用者に影響する変更を記録します。
 - 親の検証の記録（`parent-validation-metrics.jsonl`）に、テストのファイルごとの時間を残すようにしました（PJR-EZ4Z）。
 - CLI の出力とエラーの「Job Run」を「job run」にそろえました（PJR-2RHB）。
 - 導入のパターン（Linux の Dev Container と macOS）を CI で確かめ、WSL のリリース前の確認を足しました（PJR-F636、review 中）。
+- `register close` で、使い終わった note を `done` にできるようにしました。移した先または古くなった理由を `--conclusion` に必須とし、`register reopen` で戻せます。note の reject・defer は引き続き拒みます（PJR-CA6G、PJR-AVCB）。
+- `exec release --force` は、claim した runner が止まっていると CLI が確かめられる場合に限り、`specdojo-orchestrator` からも使えるようにしました。止まったことを確かめた PID と元の持ち主を release の event に残します（PJR-ZFCA）。
+- exec のイベントの書き込みは、同期のブランチが使用中でもすぐ失敗せず、最大 120 秒待ってから書きます（PJR-7VTZ）。
+- `orchestrator watch-scan` は、手で付けた印・人やオーケストレーターの claim・動いているプロセスに当たる対象を見張りの対象外とし、朝報告の「見張りの対象外」に載せます。朝報告の「手当て」以降の章番号が 1 つずつ下がります（PJR-T4E0）。
+- `register update` / `register add` の `--section-file` で、章の本文に `###` の小節の見出しを含められるようにしました（PJR-XEKV）。
+- 配るオーケストレーターの指示に、別の project への起票、再開の前の追加の指示（`--resume-note`）、close の前の確かめ方、完了条件の書き方を足しました（PJR-69ZX）。
+- `register add --dry-run` の ID が仮であることを出力に示し、`--commit -m` の `{id}` を実際の項目の ID に置き換えるようにしました（PJR-V8ND）。
 
 ### 性能
 
@@ -68,6 +93,8 @@ SpecDojo の利用者に影響する変更を記録します。
 ### セキュリティ
 
 - Dependabot が示した依存の脆弱性を、`vite`・`esbuild`・`minimatch`・`glob`・`katex` の更新で解消しました（PJR-PXNQ、review 中）。
+- `specdojo git` が `push`・`send-pack` などの送信の操作を、git を起動する前に拒むようにしました。global option を前に置いた呼び出しも拒み、alias・外部コマンドを経た迂回を防ぐため、実行できるコマンドを許した組み込みのコマンドに限りました（PJR-HPAW）。
+- Copilot の executor の雛形の `shell(...)` の許可と拒否を、素の形と `:*` 付きの形の両方にし、引数付きのコマンドにも当たるようにしました（PJR-DV1R）。
 
 ### 型と文書
 
@@ -77,6 +104,9 @@ SpecDojo の利用者に影響する変更を記録します。
 - sample の作成標準に、表の前に何を示す表かを 1 文で書く決まりと、列名を中身の分かる言葉にする決まりを足し、最終チェックから `docs:build` を外しました（PJR-C7WD、PJR-RPNF）。
 - `sysd-critical-flows-template` の未決事項と後続作業の表に「受入や運用への影響」「当面の扱い」の列を足しました（PJR-QHES）。
 - Git CLI と GitHub CLI の外部コマンド連携仕様（`ifx-cmd-git-cli`・`ifx-cmd-github-cli`）を足し、`git-branching-standard` を register 専用ブランチの方式へ改訂しました。SpecDojo のプロダクト文書 7 件の id から名前空間を外しました（PJR-CJMN、PJR-SJC7、PJR-E4MW）。
+- `prj-overview` の rulebook・template・recipe で、AI Agent の役割を業務の中で AI Agent を使う場合だけ書く条件付きにし、sample から AI Agent の記述を外しました（PJR-EJFF）。
+- ifx-file の sample を Markdown から YAML に改め、rulebook の参照キー・照合先・検証コマンド・追従対象の記述を整えました（PJR-QR23）。
+- 外部結合テストカタログの sample で、保全・復元の経路と内部結合テストとの分担を明示しました（PJR-22XE）。
 
 ### 不具合修正
 
@@ -116,6 +146,25 @@ SpecDojo の利用者に影響する変更を記録します。
   - Claude の edit executor の既定の設定に、作業場所を保つ設定と git の読み取り・`git rm`・`git mv` の許可を足しました（PJR-1HJH）。
   - `catalog generate` が雛形の `based_on` と自分の id に、プロダクト文書の名前空間を付けないようにしました（PJR-KYG4）。
   - 外部の project への `register add --commit -m` で、複数の段落をカンマでつながないようにしました。commit-msg hook の失敗の理由をエラーの出力に含めます（PJR-QTZ7）。
+- 見張りと同期:
+  - 同期のブランチへ記帳を commit するとき、同期用の worktree に登録簿の一覧が無いと pre-commit の `index build` で止まる問題を直しました（PJR-MACP）。
+  - 見張りの診断の途中でプロセスが落ちた記録を中断として回復し、同じ止まりを晩ごとの上限内で 1 回だけ診断し直せるようにしました（PJR-0WE7）。
+  - 見張りの報告の診断の章が、引用の間に空行を入れて markdownlint の MD028 に当たる問題を直しました（PJR-ZF6Q）。
+  - `exec run` が claude の 5 時間の利用枠の上限を session limit として検出し、`--on-rate-limit fallback` で代わりの agent に切り替えるようにしました（PJR-AEGN）。
+  - `external_projects` の置き場がないとき、設定の読み込みを警告にとどめ、外部の project を使わないコマンドを流せるようにしました（PJR-PS0R）。
+  - `register_sync` を有効にした project で、`--section-file` の相対パスを、記帳の場所へ移る前に呼び出し元の cwd から解決するようにしました（PJR-MWKE）。
+- exec run と予約の列:
+  - `exec stop` の前に失敗したタスクがあっても、止めた段を止めた扱いにし、同じ `exec queue run` で再開できるようにしました（PJR-1TYG）。
+  - worktree の準備で止まった run の `--resume` が、統合済みの前の run を拾わず、同じ run を準備からやり直すようにしました（PJR-AEWP）。
+  - `exec run --parallel` の統合の段で、commit の hook の間も runner が止まらず、親の検証の枠を長く持ち続けないようにしました（PJR-P8SX）。
+  - kata のレビューの段で、表に移した指摘が申し送りに重ならないようにしました（PJR-QCJ5）。
+  - reporter の出力の bare URL と、空白で始まるコードの書式で、書式のやり直しを使い切って止まる問題を直しました（PJR-5C3M）。
+  - `exec queue status` と `exec status` の出力を `head` で切っても EPIPE で落ちないようにしました（PJR-XEKV）。
+  - `guarded-push` で remote にまだないブランチを示すとき、件数を remote のどのブランチにもない commit の数にしました（PJR-AG0C）。
+- 文書:
+  - 文書サイトのビルドが、長い名前の grade の作業ディレクトリのページで `ENAMETOOLONG` により止まる問題を直しました（PJR-NM7E）。
+  - 文書サイトの開発中の版で、広い画面でも帯がメニューに隠れないようにしました（PJR-86RK）。
+  - frontmatter の型の照合で言語を見て、同じ ID の日英の rulebook を参照の競合として扱わないようにしました（PJR-F4MG）。
 
 ## [0.9.2] - 2026-11-21
 
