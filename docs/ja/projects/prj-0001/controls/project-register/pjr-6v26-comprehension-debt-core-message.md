@@ -28,6 +28,10 @@ specdojo:
 - 位置づけは PJR-Y5RD で決めた（kata による理解の負債の解消で、シビックテックを持続可能にする）。測り方は PJR-Q5YP、Gas Town との対比は PJR-Q3W9 で扱う
 - 全体的に記述の見直しが要る。まずは忘れないように起票し、見直しの範囲（README・英語版を含めるかなど）と完了条件は後で決める。それまで exec に流さない（indie の指示、2026-11-28）
 - 担当 BA・期限 2026-12-31 は indie の指示（2026-11-28）
+- 範囲は日本語の 4 文書（prj-0001 の `prj-overview`、`specdojo-overview-guide`、`specdojo-philosophy`、`needs-to-implementation-philosophy`）とする。README と英語版（`docs/en/`）は含めず、英語版は翻訳の古さの検査で追う（indie の決定、2026-11-28）。
+- indie が作った LP の文案（2026-11-28）を参考にする。理解の負債の定義、「記して・形にして・磨き続ける」の 3 段、既存の道具と「競うよりつなぐ」関係を使う。「人類最大の借金」はブランドの比喩のため、文書には持ち込まない。文案の本文は prj-0002 の LP の書き直しの todo の入力に載せた。
+- Continuous Specification Engineering の略称は CSpE とする。CSE などの別の略称は使わない（indie の指示、2026-11-28）。
+- exec に流す前に、この完了条件を indie が確かめる。
 
 ## 3. 完了条件
 
