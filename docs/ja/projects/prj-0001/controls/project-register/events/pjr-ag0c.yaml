@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_846983767e774990a75df32a240c8137
+  ts: "2026-11-28T08:48:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: guarded-push の dry-run が、新しいブランチの commit の件数に全部の履歴を数える
+    - field: description
+      from: ""
+      to: remote にないブランチを guarded-push --dry-run で示すと、送る範囲を (new branch) とし、Commits に全履歴の件数（17597）を出す。remote にまだない commit だけを数えて示すように直す
+    - field: input
+      from: ""
+      to: '["2026-11-28 に feature/prj-0001/guarded-push-permissions で npx specdojo guarded-push --project prj-0001 --branch feature/prj-0001/guarded-push-permissions --dry-run を流すと Range: (new branch) 1b159b605f…、Commits: 17597 と出た","push の動き自体には影響しないが、承認の前に示す範囲と件数が分かりにくく、利用者が送る中身を判断できない","担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GDMB"]'
