@@ -12,7 +12,7 @@ specdojo:
   priority: high
   owner: BA
   registered_at: "2026-11-17T14:12:51Z"
-  due_on: "2026-11-30"
+  due_on: "2026-12-31"
   derived_from:
     - PJR-0T83
     - PJR-8S4T
