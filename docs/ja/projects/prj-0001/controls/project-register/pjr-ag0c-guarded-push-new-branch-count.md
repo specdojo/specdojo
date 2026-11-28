@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ag0c-guarded-push-new-branch-count
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-28T08:48:25Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T11:00:40Z"
+  conclusion: remote にないブランチの guarded-push の表示で、Commits を remote のどのブランチにもない commit の数にし、基準にした remote のブランチを Range に示すようにした
   derived_from:
     - PJR-GDMB
 ---
