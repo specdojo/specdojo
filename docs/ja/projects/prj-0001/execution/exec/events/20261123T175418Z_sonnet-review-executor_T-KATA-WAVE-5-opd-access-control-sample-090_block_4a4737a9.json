@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T17:54:18Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-opd-access-control-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 41 MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。']: \"### approach に応じた確認 - `plan` で求められた磨き込みの実施: `grade` の結果および本文の記述に基づき、指示された内容が反映されていることを確認しました。\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-090/T-KATA-WAVE-5-opd-access-control-sample-090-20261123T174213Z-3aedf076/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-090/T-KATA-WAVE-5-opd-access-control-sample-090-20261123T174213Z-3aedf076/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-opd-access-control-sample-090-20261123T174213Z-3aedf076"
+  }
+}

@@ -37,6 +37,7 @@ export const DEFAULT_GITIGNORE_PATTERNS = [
   "docs/**/generated/*",
   "!docs/**/generated/.gitkeep",
   "docs/**/execution/exec/.locks/",
+  "docs/**/execution/runs/**/post-integration.log",
   "/.vitepress/dist/",
   "/.vitepress/cache/",
   "/.vitepress/mermaid/",
@@ -87,7 +88,10 @@ export function gitignorePatternsForLayouts(layouts: ProjectGitignoreLayout[]): 
     if (!executionPath) continue;
     const coveredByDefault =
       isUnderDocs(executionPath) && posix.basename(executionPath) === "execution";
-    if (!coveredByDefault) push(`${executionPath}/exec/.locks/`);
+    if (!coveredByDefault) {
+      push(`${executionPath}/exec/.locks/`);
+      push(`${executionPath}/runs/**/post-integration.log`);
+    }
   }
   return patterns;
 }

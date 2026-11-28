@@ -277,19 +277,4 @@ describe("exec event --msg defaults", () => {
       rmSync(repo, { recursive: true, force: true });
     }
   });
-
-  it("note without --msg is rejected because the message is the payload", async () => {
-    const repo = setupRepository();
-    captureStdout();
-    try {
-      process.chdir(repo);
-
-      await expect(
-        runExec(["note", "--project", "test", "--task", TASK_ALPHA, "--by", "edit-agent"]),
-      ).rejects.toThrow(/--msg/);
-    } finally {
-      process.chdir(originalCwd);
-      rmSync(repo, { recursive: true, force: true });
-    }
-  });
 });

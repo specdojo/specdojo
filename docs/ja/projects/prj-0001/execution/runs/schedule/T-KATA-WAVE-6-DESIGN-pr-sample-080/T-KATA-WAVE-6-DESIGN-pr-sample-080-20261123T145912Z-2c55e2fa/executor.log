@@ -1,0 +1,7 @@
+`docs/ja/specdojo/samples/pr-sample.md` は変更していません。冗長さの候補は4件見つかりましたが、どれも削る理由がなく、すべて `retain` と判断しました。`vp-arc-conciseness` と rulebook は読んでいないので、この判断は文書本文だけを根拠にしています。
+
+静的検査は実行していません。文書を変更しておらず、`lint:md` などは親 runner が実行するためです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書は変更不要と判断した。候補4件はいずれも判断に要る情報、または意味の異なる記述のため retain とした。","handoff":[],"condense_records":[{"location":"冒頭の導入文（H1 直後の段落）","category":"repetition","action":"retain","reason":"報告の目的と、リスク・課題・判断待ちを個票 ID で参照する方針を示す1文だけで、他の章と重複しない。","cause":{"type":"document"}},{"location":"2.〜5. の各表の導入文（次の表は…を示す）","category":"table-prose","action":"retain","reason":"表が何を示すかと、進み具合や影響度の判定基準を補う。表の内容の繰り返しではない。","cause":{"type":"document"}},{"location":"4. リスク・課題の対応方針セルと 5. 次期予定 No.1 の PJR-KP23","category":"repetition","action":"retain","reason":"4章は判断待ちの個票への参照で、5章は期日付きの次の行動を示す。目的が異なり、意味の重複ではない。","cause":{"type":"document"}},{"location":"3. 進行中事項 No.2 と 5. 次期予定 No.3 の T-15","category":"repetition","action":"retain","reason":"3章は現状と遅れの理由、5章は次期の作業・担当・期日を示す。役割が異なる。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"文書を変更していないため。親 runner が実行する検査でもある。"}]}
+</specdojo_executor_evidence>

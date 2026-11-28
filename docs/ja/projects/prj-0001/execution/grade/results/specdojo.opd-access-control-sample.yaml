@@ -4,11 +4,11 @@ document: specdojo:opd-access-control-sample
 path: docs/ja/specdojo/samples/opd-access-control-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-10-15T21:22:37.995Z"
-graded_by: agy-expert-executor
-content_hash: 063127697a378f915bb70ad090b546cae9791980ac22537b000e873c0b8f4ede
+verdict: pass
+score: 100
+graded_at: "2026-11-23T17:39:29.465Z"
+graded_by: sonnet-review-executor
+content_hash: 95ce830dd94714812287cfbebe04a86009ee2199c04ed6855f9c4a527a5dc57d
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -103,35 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 2
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用方針・設計: 権限・アカウント サンプル"
-    message: Frontmatter の必須項目 `title` が不足している。
-    message_ja: Frontmatter の必須項目 `title` が不足している。
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 7
-    anchor: 権限付与/剥奪、棚卸し、監査ログ、緊急権限を `opd-index` の差分として定義する。
-    message: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 5, 6, 7, 8, 10, 11）が不足している。"
-    message_ja: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 5, 6, 7, 8, 10, 11）が不足している。"
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 12
-    anchor: "- 棚卸しは月次で実施し、結果は監査ログ保管領域に保存する"
-    message: "見出し番号が `opd-rulebook` の定義する順序（## 9. 権限・アカウント運用... ## 12. 関連ドキュメント導線...）と不一致である。"
-    message_ja: "見出し番号が `opd-rulebook` の定義する順序（## 9. 権限・アカウント運用... ## 12. 関連ドキュメント導線...）と不一致である。"
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 7
-    anchor: 権限付与/剥奪、棚卸し、監査ログ、緊急権限を `opd-index` の差分として定義する。
-    message: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    message_ja: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+findings: []

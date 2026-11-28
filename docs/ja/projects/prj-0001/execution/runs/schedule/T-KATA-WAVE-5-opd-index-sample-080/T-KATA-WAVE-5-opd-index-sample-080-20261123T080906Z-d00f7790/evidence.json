@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opd-index-sample-080",
+  "run_id": "T-KATA-WAVE-5-opd-index-sample-080-20261123T080906Z-d00f7790",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T08:10:07.371Z",
+    "completed_at": "2026-11-23T08:11:34.433Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opd-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/opd-index-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "親 runner が実行する allowlist 検査のため executor では実行しない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:opd-index-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:opd-index-rulebook\n  based_on: []\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム 運用方針・設計（全体構成）\n\n## 1. 概要（index）\n\n初期リリース後の駄菓子屋きぬや 販売管理システムを、店主が不在でも店番担当が同じ判断で動かし続けるための運用方針の正本である。運用の目的は、販売・在庫・つけの記録を営業日ごとに欠かさず残し、店主代表の最終判断に必要な記録をそろえることとする。監視・障害対応・権限の差分は `opd-monitoring`・`opd-incident-management`・`opd-access-control` に分冊し、作\n… output omitted …\nの要望 | 欠品の多い商品を一覧で見たい | 次の月次点検で `PO` が採否を決める |\n\n障害にあたる問い合わせは、体制・責任分界のエスカレーション表で扱う。\n\n## 12. 関連ドキュメント導線（`opr-index` 等）\n\n次の表は、本書の方針を具体化する分冊と、手順を置く文書の対応を示す。\n\n| 種別 | ドキュメントID | 役割 | 状態 |\n| - | - | - | - |\n| 方針 | `opd-monitoring` | 監視の閾値と初動の具体化 | 予定 |\n| 方針 | `opd-incident-management` | 優先度ごとの停止判断と周知の具体化 | 予定 |\n| 方針 | `opd-access-control` | 付与・剥奪と棚卸しの具体化 | 予定 |\n| 手順 | `opr-index` | 日次締め・月次点検・復元確認の手順の入口 | 予定 |\n| 手順 | `opr-incident` | 紙の販売控えへの切替と転記の手順 | 予定 |\n\nバックアップ、定期運用、問い合わせの方針は本書で完結し、分冊を置かない。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6122 file(s), 92 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 68 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6122 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opd-index-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 10ms\n[pa\n… output omitted …\nter-plan-escape.test.ts\",\"duration_ms\":1988}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  17:25:53\n   Duration  3.96s (transform 11.83s, setup 1.56s, import 16.49s, tests 8.54s, environment 2ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opd-index-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opd-index-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "2. 運用の範囲・前提 導入文の 2 文目",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "対象外の列挙が直後の表の「対象外」行と同一で、削っても意味は変わらない",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3. SLO・SLA・KPI 導入文の「SLA は初期リリースでは置かない」",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "表の SLA 行（対象外）が同じ内容を示しているため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "8. バックアップ・リストア方針 末尾の RPO 補足文",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "表にない当日分の戻し方という判断情報を含むため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "6. 障害対応方針 冒頭の優先度の参照文",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "再掲ではなく正本の表への参照で、判断に必要な導線であるため",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "opd-index-sample.md の冗長な 2 文を削除（表との二重説明）。意味・必須情報は維持。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-index-sample-080/T-KATA-WAVE-5-opd-index-sample-080-20261123T080906Z-d00f7790/executor.log",
+      "bytes": 2317,
+      "truncated": false
+    }
+  ]
+}

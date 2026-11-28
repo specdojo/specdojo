@@ -1,0 +1,25 @@
+`docs/ja/specdojo/samples/cop-index-sample.md` を、駄菓子屋きぬやの切替日を値で埋めたカットオーバー計画の完成例に書き直しました。rulebook が定める 10 章をこの順序ですべて入れ、prettier による整形と markdownlint-cli2 の確認はエラーなしで通っています。残りの検査は親 runner の実行結果を待ちます。
+
+**中身**
+- 時刻、判定点 GO1〜GO4、ロールバック方針、休業の告知は、既存の `mip-index` サンプルと値をそろえました。
+- 切替日の 9:00 を T+0:00 とし、タイムラインは分単位で書きました。
+- 人物名は使わず、役割名（店主代表・開発担当など）と窓口（店の連絡用グループチャット、店頭窓口など）で書いています。個人の電話番号は、リポジトリ外の連絡網に置く形にしました。
+- 文書を作る・確かめる・承認する役割の割り当てや、承認の進み具合は書いていません。
+- sample の本文から rulebook への参照と `specdojo:deliverables-reference` の記述を消し、各章の具体的な内容で置き換えました。
+
+**指摘への対応**
+- 章の欠落、タイムラインの欠落、ロールバック・周知・障害時判断の不足（F001〜F002・F004〜F006・F009〜F029）は、本文を書き直して対応しました。
+- 未解決事項の 3 件（F003・F007・F008）は、指摘とは違う形で対応しました。「未解決事項」の章を消し、未定の値を本文の `_UNDECIDED_` に置き換えています。sample の記述標準が、rulebook にない章を作ることを禁じているためです。判断者・期限・影響を持つ表として残すかどうかは、未決のままです。
+
+**決めてもらう必要がある値**
+- 切替日は `_UNDECIDED_` のままです。店主代表が移行リハーサルの結果を見て決める前提です。
+- 作業の所要時間（取り込み 30 分、取り込み直しの締め切り T+2:10 など）は `_ASSUMPTION_` です。移行リハーサル（`mtp-index`）の結果で確かめる必要があります。
+- 営業時間（9 時開始・18 時閉店）、障害判断の 15 分、告知を 1 週間前から出すことも推測の値です。
+
+**rulebook と他のサンプルについて**
+- rulebook の全体方針では、未決事項を登録簿へ転記するのは当日の判定結果と障害だけです。切替日のような計画段階の未決事項をどう扱うかは書かれていないので、補う案を出しておきます。
+- 対になる `cop-sample.md` は、今回直す前のこの sample と同じく中身のない状態です。同じ方針で直す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/cop-index-sample.md` を rulebook の 10 章構成で、駄菓子屋きぬやの切替日を値で埋めた完成例に書き直した。値は `mip-index` サンプルとそろえ、人物名と文書の役割の割り当ては書いていない。prettier と markdownlint-cli2 は 0 件。","handoff":["F003・F007・F008（未解決事項の表）: sample の記述標準が rulebook にない章を禁じるため「未解決事項」の章を削除し、未定の値を本文の `_UNDECIDED_` / `_ASSUMPTION_` に置き換えた。判断者・期限・影響を持つ表として残すかは未決。","利用者が決める値: 切替日（`_UNDECIDED_`、店主代表が移行リハーサルの結果を見て決める）。作業の所要時間（T+0:10〜T+2:30）は `_ASSUMPTION_` で、`mtp-index` の結果で確かめる必要がある。営業時間（9 時開始・18 時閉店）、障害判断の 15 分、告知を 1 週間前から出すことも推測の値。","rulebook の変更案: 全体方針は当日の判定結果と障害だけを登録簿への転記対象としている。切替日のような計画段階の未決事項の扱い（`_UNDECIDED_` で本文に残すか、登録簿へ転記するか）を記述ガイドに足す。","申し送り: 分冊の `cop-sample.md` は、今回直す前のこの sample と同じく中身のない状態で、同じ方針で直す必要がある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/cop-index-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cop-index-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

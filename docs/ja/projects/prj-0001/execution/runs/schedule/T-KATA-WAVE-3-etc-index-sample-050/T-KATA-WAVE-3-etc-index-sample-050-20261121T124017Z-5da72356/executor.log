@@ -1,0 +1,31 @@
+`docs/ja/specdojo/samples/etc-index-sample.md` を、駄菓子屋きぬやの外部結合テストカタログ概要の完成例として書き直しました。変更したファイルはこの1つで、prettier による整形と `npm run docs:build` は成功しています。cspell は実行の承認が下りず、走らせていません。lint などの検査は親 runner が実行します。
+
+**主な変更**
+
+- **frontmatter と見出し**: `based_on` に `specdojo:tsp-index-sample` と `specdojo:ifd-sample` を加えました。H1 は「外部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」にし、相対パスのリンクは外しました。
+- **章構成**: rulebook の本文構成に合わせ、必須の1〜8章と任意の「メモ / 将来課題」の9章にしました。「入力情報」「記述内容」といった書き方の説明の章はなくしています。
+- **題材**: `tsp-index-sample` と `ifd-sample` が外部結合テストの範囲としている2つに揃えました。
+  - レシート印刷連携（`etc-receipt-print`）
+  - 復元用保管サービス連携（`etc-backup-storage`、経路 `PATH-05`・`PATH-06`）
+- **中身**: 章ごとに、駄菓子屋の値で埋めました。
+  - 防ぐ業務リスク（売上と在庫の二重計上、二重印刷、不完全なコピーを「復元できる」と通知すること）
+  - 分割基準と、主担当・運用責任・確認者
+  - 対象外の4列表
+  - 観点と条件の立て方、分配表
+  - 外部依存の扱い（スタブとの使い分け、secret 管理、タイムアウトと再送の値、テストデータの分離、証跡）
+  - 数値で判定できる合格基準
+  - ケース表の共通カラムと記入例（`et-receipt-print-failure-handling-010`）
+  - `case_id` を変えない規律
+  - 未決の3論点（影響・当面の扱い・担当つき）
+
+**finding の扱い**
+F001〜F027 はすべて本文で対応しました。ただし F004・F008・F013 が例に挙げた決済連携・仕入れ先連携・`et-payment-gateway-*` は、そのままは採っていません。共通サンプル文脈と `tsp-index-sample` では、どちらも初期リリースの対象外だからです。代わりに印刷と保管サービスの例で同じ指摘に応え、決済・仕入れ先連携は対象外の表に入れました。
+
+**引き継ぎ事項**
+
+- rulebook 6.3・6.6・6.8 の良い例・悪い例は決済 API を使っていて、sample の題材と食い違います。rulebook を印刷か保管サービスの例に直す案を、result に記録してください。
+- 兄弟の `etc-sample.md` はまだ古い「最小サンプル」の形のままです。今回の `etc-receipt-print` などの分割に揃えて厚くする必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"etc-index-sample.md を rulebook の本文構成（必須1〜8章＋任意9章）に沿って、駄菓子屋きぬやの外部結合テストカタログ概要の完成例として全面的に書き直した。題材は tsp-index-sample / ifd-sample が外部結合テストの範囲とする receipt-print と復元用保管サービス（PATH-05・PATH-06）に揃え、F001〜F027 に対応した。","handoff":["rulebook への変更案: etc-index-rulebook の記述ガイド 6.3・6.6・6.8 の良い例・悪い例は決済連携（本番決済口座、`etc-payment-gateway`、`et-payment-gateway-retry-idempotency-010`）を使っている。共通サンプル文脈と tsp-index-sample では、キャッシュレス決済と仕入れ先連携は初期リリースの対象外である。そのため sample では receipt-print と復元用保管サービスの例に置き換え、決済・仕入れ先連携は対象外の表に入れた。rulebook の例も印刷か保管サービスに揃えるかを判断してほしい。","F004・F008・F013 が例として挙げた決済端末連携・仕入れ先への発注ファイル連携・`et-payment-gateway-idempotency-001` は、題材の整合を優先して採用しなかった。指摘の趣旨（`<term>` の分割と主担当、対象外の4列表、`case_id` の記入例）は、印刷と保管サービスの例で満たした。","兄弟の etc-sample.md（specdojo:etc-sample）は旧来の「最小サンプル」形式のまま残っている。本 sample で決めた分割（`etc-receipt-print` / `etc-backup-storage`）に合わせて厚くする後続タスクが必要である。","cspell は実行の承認が下りず、走らせていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"整形が成功した"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 179.92s、エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/etc-index-sample.md だけで、plan・result・個票などの履歴ファイルを変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下だけで、docs/ja/projects/ 配下の成果物に変更がないため"}]}
+</specdojo_executor_evidence>

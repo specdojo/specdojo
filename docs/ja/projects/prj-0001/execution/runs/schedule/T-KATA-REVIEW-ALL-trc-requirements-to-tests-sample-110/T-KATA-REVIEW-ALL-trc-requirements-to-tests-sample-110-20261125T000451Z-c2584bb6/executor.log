@@ -1,0 +1,17 @@
+R1（目的の過不足）のレビューを終えました。sample の変更は 1 か所、1 文の削除だけです。
+
+**読んだ資料:** 対象の sample、rulebook（`specdojo:trc-requirements-to-tests-rulebook`）、Sample 記述標準、カタログの `done_criteria`（`dct-kata.yaml` の `trc-requirements-to-tests-sample` と `dct-test-specs.yaml` の `trc-requirements-to-tests`）、kata ガイドの「kata を agent でレビューする」です。
+
+**指摘:**
+
+1. 削った内容: 「ギャップと対応方針」の末尾にあった「実案件の PJR 個票は未同梱である。」は、sample の作り方についての注記でした。派生ビューとしての目的にも、rulebook のどの章の要件にも当たらないため削りました。担当と期限を登録簿で追う旨の文は残しています。
+2. 足りない内容: なし。rulebook の必須章（目的と適用範囲、トレース対象の前提、トレースマトリクス、充足状況サマリ、ギャップと対応方針）と、条件付きの「変更履歴と更新ルール」はすべてあります。各章が求める項目も埋まっています。`done_criteria` も満たしています（ギャップ表に担当・期限の列がない、生成の手段と生成日を書いている、対応テストのある要求を `未着手` にしていない）。
+3. 迷ったが残した内容（要判断）: 「トレース対象の前提」の「確認の手順」は rulebook の必須項目ではありません。同じ版で再生成して照合できることは、レビューで照合するという本書の使い道に直接役立つため残しました。「本書を直さずに再生成する」は本文の他の箇所とも重なるので、R3（簡潔さ）で見直すかどうかの判断をお願いします。
+
+**grade の F001 は手を付けていません:** 観点は `vp-ux-language-consistency` で、ガイドの組み分けでは R3 の担当です。ギャップ表「対象」列で 2 件目以降の項目 ID に文書 ID がなく、区切りの `,` と `・` も混ざっている点が残っており、R3 に引き継ぎます。
+
+**検証:** `npx prettier --check` は通りました。lint などは親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認しました。rulebook の必須章、各章の要件、カタログの `done_criteria` を満たしていました。目的に要らない注記を 1 文削り、sample のその他の部分は維持しました。grade の F001 は R3 の観点なので引き継ぎます。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md「ギャップと対応方針」の表の後の段落 / 指摘: 「実案件の PJR 個票は未同梱である。」は sample の作り方についての注記で、派生ビューの目的にも rulebook のどの章の要件にも当たらない / 直した案: この文を削り、「担当と期限は各行を PJR 登録候補として登録簿で追跡し、本書には持たない。」だけを残した / 根拠: rulebook「記述ガイド」の「ギャップと対応方針」（担当・期限は登録簿で追跡する）、Sample 記述標準「サンプル群の目的」（説明に必要な範囲に記述を限る） / 印: なし","No: 2 / 段: R1 / 箇所: sample 全体 / 指摘: 足りない内容はない。rulebook の本文要件の必須章と、条件付きの「変更履歴と更新ルール」がそろい、各章の受入条件（対象外とその理由、母集団と件数、抽出条件、生成の手段・生成日・生成元の版、標準 6 列と母集団外の参照の表、件数と優先理由、直す生成元と判定条件）を満たす。カタログの `done_criteria`（ギャップ表に担当・期限の列がない、生成の手段と生成日、対応テストのある要求を `未着手` にしない、`based_on` に直接の生成元を持つ）も満たす / 直した案: 変更なし / 根拠: rulebook の本文要件と記述ガイド、dct-kata.yaml の `trc-requirements-to-tests-sample` の `done_criteria`、dct-test-specs.yaml の `trc-requirements-to-tests` の `done_criteria` / 印: なし","No: 3 / 段: R1 / 箇所: 「トレース対象の前提」の「確認の手順」 / 指摘: rulebook の必須項目ではない。ただし同じ版で再生成して照合できることは、本書をレビューで照合するという使い道に直接役立つため残した。「本書を直さずに再生成する」は「目的と適用範囲」「変更履歴と更新ルール」と重なる / 直した案: 変更なし。重なりを削るかどうかは R3（`vp-arc-conciseness`）で判断する / 根拠: rulebook「記述ガイド」の「トレース対象の前提」の判断基準（別の人が同じ表を得られること） / 印: 要判断","No: 4 / 段: R1 / 箇所: grade の F001（ギャップと対応方針の表の「対象」列） / 指摘: 観点 `vp-ux-language-consistency` は kata ガイドの観点の組で R3 に当たるため、R1 では直していない。2 件目以降の項目 ID に要求文書 ID がなく、区切りも `,` と `・` が混ざっている状態が残っている / 直した案: R3 で各項目に要求文書 ID を付け、区切りを `,` にそろえる（例: `bac-sample BAC-02`, `bac-sample BAC-03`） / 根拠: rulebook「ファイル命名・ID規則」の要求項目の表記、kata ガイドの「kata の観点の組」 / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

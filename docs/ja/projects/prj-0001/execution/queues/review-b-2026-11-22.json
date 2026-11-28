@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "queue_id": "review-b-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T01:04:00.585Z",
+  "updated_at": "2026-11-22T02:38:02.259Z",
+  "state": "cancelled",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-etc-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T01:04:21.091Z",
+      "completed_at": "2026-11-22T01:48:35.094Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-etc-index-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T01:48:35.097Z",
+      "completed_at": "2026-11-22T02:06:29.945Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-atc-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T02:06:29.948Z",
+      "completed_at": "2026-11-22T02:38:02.256Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-atc-index-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ],
+  "reason": "090 の段が grade の対象種別の食い違いで止まるため、残りを止める"
+}

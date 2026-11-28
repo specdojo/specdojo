@@ -1,0 +1,13 @@
+`pipeline-state.schema.yaml` に `artifacts` を足し、追跡済みの register の `pipeline-state.json` 973 件がすべて schema に通ることを確認しました。`package.json` は保護設定のため触っていません。
+
+- **schema の変更:** `artifacts` は `plan_ref` と `result_ref`（どちらも 1 文字以上の文字列、追加項目なし）にしました。`src/exec/pipeline-state.ts` の `PipelineArtifactRefs` と同じ形です。
+- **過去の記録:** 書き換えていません。不合格は 0 件だったので、schema を広げる・古い形として外す対応は不要でした。
+- **単体テスト:** 足していません。上の全件検証で schema の変更を確かめました。
+- **個票:** 対応結果に、解決内容、確認結果、`package.json` の変更案、CHANGELOG に書く事項（区分 Fixed）、決定事項を書きました。
+- **検証:** `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` は実行していません。親 runner が実行します。
+
+`package.json` の変更案は個票の対応結果と `handoff` に書きました。`validate:schema:pipeline-state` を足し、`validate:schema` から呼ぶ案です。対象は `runs/**` にしていますが、register 以外の記録は確認していません。反映前に確認し、通らなければ `runs/register/**` に絞ってください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pipeline-state.schema.yaml に artifacts を追加し、追跡済みの register の pipeline-state.json 973 件がすべて valid になった。個票の対応結果を更新した。package.json は変更していない。","handoff":["package.json の変更案: \"validate:schema:pipeline-state\": \"node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml --data \\\"docs/ja/**/execution/runs/**/pipeline-state.json\\\" --allow-empty\" を追加し、validate:schema の validate:schema:grade-pipeline の後ろに && npm run validate:schema:pipeline-state を足す。register 以外の origin の記録は未確認のため、反映前に確認し、通らなければ runs/register/** に絞る。","CHANGELOG 文案: 区分 Fixed。pipeline-state.schema.yaml に runner が記録する artifacts を追加し、既存の記録が schema に合うようにした。利用者への影響なし。","決定事項: 単体テストは足さず、全件の検証コマンドで schema の変更を確かめた。不合格は 0 件で、schema を広げる・外す対応は不要だった。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml --data \"docs/ja/**/execution/runs/register/**/pipeline-state.json\"","status":"passed","summary":"973 件すべて valid、不合格 0 件"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"変更した個票 pjr-yy0p-pipeline-state-schema-mismatch.md は Markdown リンクを書いていない。実行は省略した。"}]}
+</specdojo_executor_evidence>

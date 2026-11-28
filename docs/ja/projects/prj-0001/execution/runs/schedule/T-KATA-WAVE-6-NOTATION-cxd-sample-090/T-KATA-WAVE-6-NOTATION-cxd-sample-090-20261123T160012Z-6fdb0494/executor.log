@@ -1,0 +1,60 @@
+## レビュー結果（T-KATA-WAVE-6-NOTATION-cxd-sample-090）
+
+verdict は `complete-with-findings` です。
+
+### 評価結果の確認
+
+- 実行コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cxd-sample.md --changed-only`
+- 出力は空で終了コードは 0 でした。評価対象のパスは出力されていないため、評価結果は最新です。
+- `git status` に出た差分は、run の `pipeline-state.json` が未追跡で見えるだけでした。成果物の変更は見つかっていません。
+- grade の結果は次のとおりです。
+  - sample: `verdict` は `pass`、`score` は 98、finding は minor 1 件です。
+  - rulebook: `pass`、97、minor 2 件です。
+  - recipe: `pass`、100、finding なしです。
+  - template: `pass`、93、minor 3 件です。
+- 鮮度の確認は、sample の評価結果についてだけ実行しました。rulebook・recipe・template は、plan に記載された鮮度「最新」を信頼しています。
+- verdict を記録する直前の再確認は行っていません。最初の確認の後に成果物が変更された形跡はなく、git の差分でも変更は見つかっていません。
+
+### 判断根拠
+
+- sample を通読しました。
+  - 章構成は概要、C4 コンテキスト図、要素と境界の定義、技術前提・制約と検証観点、メモ / 将来課題です。DC-001 に沿っています。
+  - 題材は駄菓子屋きぬやで、店主代表と家族利用者代表が登場します。DC-002 を満たします。
+  - 図の要素と表の要素が対応しています。
+    - Person 2 件、対象システム 1 件、外部システム 2 件があります。
+    - 関係は `REL-01` から `REL-04` の 4 本で、図の矢印 4 本と一致します。
+  - 禁止事項に当たる記述は見つかりませんでした。DC-003 を満たします。
+  - 未同梱の契約（`ifx-api-kinuya-*.yaml`）は「架空」「未同梱」と明記され、「メモ / 将来課題」へ引き継がれています。確認済みの保証との区別も 4.2 の冒頭にあります。
+- Mermaid の図は `flowchart` で、`classDef` と `subgraph` を使っています。構文は目視で確認しました。実際の lint と描画は親 runner が実行する `lint-mermaid` の結果が正で、私は実行していません。DC-004 は目視の範囲で満たしています。
+- grade の finding は `F001`（minor）1 件です。指摘は、Person 表の列名が template の「境界上の接点」と、sample・rulebook の「境界上の接点・確認責務」で一致しないことです。
+  - 原因は template 側の列名です。sample 自体は rulebook に沿っています。
+  - sample の完了条件には影響しないため、完了は妨げません。
+
+### 未充足事項・改善指示
+
+- sample 側の修正は不要です。
+- 型の整備として、次の改善を別タスクで行ってください。
+  - template の Person 表の列名を「境界上の接点・確認責務」に揃える。これは sample の `F001`、rulebook の `F001`、template の `F003` に共通の指摘です。
+  - template 4.2 に、期待結果の記入誘導と、「検証設計へ渡す確認事項と確認済みの保証」の区別の注記を足す（template の `F001`・`F002`）。
+  - rulebook の理由欄にある「PJR-2GD6」の登録簿 ID を削除するか、文章で説明する（rulebook の `F002`）。
+- 型のうち rulebook と template の grade も `pass` です。plan の追加完了条件（全対象が `pass`）は満たしています。
+
+### approach に応じた確認
+
+- fully-guided の磨き込み後の sample について、章構成、図と表の対応、禁止事項の不在を確認しました。
+- 実行記録（先行する edit タスクの result）は読んでいません。確認できなかった範囲として記録します。
+- 人の確定は plan のとおり対象外です。横串の確認の前に確かめる点は、template の列名統一と、`ifx-api-kinuya-*` 契約が未同梱であることです。
+
+### 確認できなかった範囲
+
+- `lint-mermaid` による Mermaid の構文・描画の実測（親 runner が実行します）。
+- 先行 edit タスクの実行記録の内容。
+- rulebook・recipe・template の鮮度の再確認。
+
+### decision
+
+`verdict: complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。sample の grade は最新で pass（98、minor 1 件）。完了条件 DC-001〜DC-004 は目視で充足。finding は template の列名不一致が原因で、完了を妨げない。確認できなかった範囲: lint-mermaid による Mermaid の構文・描画の実測（親 runner が実行）、先行 edit タスクの実行記録、rulebook・recipe・template の鮮度の再確認。","handoff":["template の Person 表の列名を「境界上の接点・確認責務」に統一する（sample・rulebook・template の各 F001/F003 に共通）","template 4.2 に期待結果の記入誘導と、検証設計へ渡す確認事項と確認済みの保証の区別の注記を足す","rulebook の理由欄にある登録簿 ID「PJR-2GD6」を削除するか、文章で説明する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cxd-sample.md --changed-only","status":"passed","summary":"出力なし（終了コード 0）。評価結果は最新。"}]}
+</specdojo_executor_evidence>

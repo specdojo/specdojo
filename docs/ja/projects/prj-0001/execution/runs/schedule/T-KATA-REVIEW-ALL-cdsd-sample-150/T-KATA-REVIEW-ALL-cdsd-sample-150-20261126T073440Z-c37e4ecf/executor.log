@@ -1,0 +1,29 @@
+R5（整合）を終え、`docs/ja/specdojo/samples/cdsd-sample.md` を 2 か所直しました。相手側の文書を直すべき食い違いは、変更せずに直す案として 4 件残しています。
+
+照らし合わせた相手は次のとおりです。
+
+- 参照先: `cdfd-overview-sample`、`bdd-sample.yaml`
+- この sample を参照する側: `sld-sample`、`bds-sample`
+- 担当の対応を確かめた先: `pm-members-sample`
+- 用語: `gl-sample.yaml`、Sample 記述標準の `共通サンプル文脈`
+
+同じ接頭辞の sample は `cdsd-sample.md` だけで、index はありません。製品の用語集（`docs/ja/product/010-business-specs/060-glossary/`）は SpecDojo 自体の用語で、駄菓子屋の語を持たないため、駄菓子屋の用語は `gl-sample.yaml` で確かめました。
+
+**sample を直した点**
+- **R5-1（担当の表記）:** 「生成元と利用制約」の担当欄に PO・OPS・BA・QE が説明なしで出ていました。`sld-sample` に合わせ、`pm-members-sample` の Role code と役割名の対応（PO・OPS は店主代表、BA は開発担当、QE は同行レビュー担当）を表の前の 1 文に足しました。
+- **R5-2（保管場所一覧を未作成と扱っていた）:** 「確認事項と変更影響」は保存・保持・復旧方式の正本を未作成の `specdojo:sld-sales-closing` としていました。実際には `sld-sample` が保管場所・削除条件・復旧手順を持ち、未決なのは販売記録の正本保存先と保持期間だけです。論点をその 2 点に絞り、`[[specdojo:sld-sample|保管場所一覧]]` へ参照を替えました。`sld-sample` はこの sample を `based_on` に持つため、循環を避けて `based_on` には足していません。
+
+**相手側を直す案（変更していない点）**
+- **R5-3:** `cdfd-overview-sample` の販売記録は「支払区分（現金・つけ）」、`bdd-sample.yaml` とこの sample は「支払方法」です。`cdfd-overview-sample` を「支払方法」へそろえる案です。
+- **R5-4（要判断）:** 「補充基準」（`cdfd-overview-sample` とこの sample）と「発注点」（`bdd-sample.yaml` の `reorder_point`、`gl-sample` の `tm-reorder-point`）が食い違っています。どちらかにそろえるか、`gl-sample` の別名に「補充基準」を足す案です。`bdd-sample.yaml` は定番商品の在庫不足判定にしか使わない語なので、同じ概念か判断できず、この sample は直していません。
+- **R5-5（要判断）:** この sample を含め多くの sample が「つけ上限」と書きますが、`gl-sample` の正式な語は「つけ限度額」（別名「つけ上限額」）です。`gl-sample` の別名に「つけ上限」を足す案を選び、全 sample を「つけ限度額」へ直す案は選びませんでした。変更の範囲が大きいためです。
+- **R5-6:** `sld-sample` の「隣接仕様の記録・状態と保管場所の対応」は、この sample が「結果不明の取引は照合待ち」を決めているように読めます。この sample の販売記録は確定した会計だけで、結果不明は `bdd-sample.yaml` の本部売上受付の概念です。`sld-sample` の該当セルの根拠を `bdd-sample` と書き分ける案です。
+
+**検証**
+- `npx prettier --write` で整形し、表の列幅が揃い直りました。
+- `npx markdownlint` はエラーなしでした。
+- それ以外の lint・検査は、あとで親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合を完了。cdsd-sample に Role code と役割名の対応を足し、保管場所一覧（sld-sample）を未作成扱いしていた点を直した。相手側を直す案 4 件（うち要判断 2 件）を handoff に残した。","handoff":["R5-1: 段 R5 / 箇所 3.1. 生成元と利用制約 / 指摘: 担当欄の PO・OPS・BA・QE が Role code のまま説明なく使われ、役割名で書く sld-sample と読み合わせられない / 直した案: 表の前に、Role code が `specdojo:pm-members-sample` のもので PO・OPS は店主代表、BA は開発担当、QE は同行レビュー担当が担うという 1 文を足した / 根拠: `vp-qe-kata-conformance`（kata 相互）、sld-sample の概要の担当欄の説明、pm-members-sample の roles / 印: -","R5-2: 段 R5 / 箇所 5. 確認事項と変更影響 / 指摘: 保存・保持・復旧方式の正本を未作成の `specdojo:sld-sales-closing` としている。実際には sld-sample が保管場所・削除条件・復旧手順を持ち、sld-sample の確認事項は販売記録の正本保存先と保持期間を CDSD で未決としている / 直した案: 論点を「システム化後の販売記録の正本保存先と保持期間」に絞り、保管場所・削除条件・復旧手順は `[[specdojo:sld-sample|保管場所一覧]]` に従い、決まったら同書を書き換える形にした（sld-sample がこの sample を `based_on` に持つため、循環を避けて `based_on` には足していない） / 根拠: `vp-dev-change-impact`、sld-sample の「削除・退避・復旧の判断基準」と「確認事項と変更影響」 / 印: -","R5-3: 段 R5 / 箇所 2. 概念データストア一覧（販売記録） / 指摘: cdfd-overview-sample の販売記録は「支払区分（現金・つけ）」、bdd-sample.yaml とこの sample は「支払方法」で、用語が食い違う / 直した案: - / 根拠: `vp-qe-kata-conformance`。相手側の cdfd-overview-sample の「トランザクションデータ」表の販売記録の主な内容を「支払方法（現金・つけ）」へそろえる案 / 印: -","R5-4: 段 R5 / 箇所 2. 概念データストア一覧（商品台帳） / 指摘: 「補充基準」（cdfd-overview-sample とこの sample）と「発注点」（bdd-sample.yaml の `reorder_point`、gl-sample の `tm-reorder-point`）が並び立つ / 直した案: - / 根拠: `vp-qe-kata-conformance`。相手側の案は、cdfd-overview-sample と bdd-sample をどちらかの語へそろえるか、gl-sample の `tm-reorder-point` の aliases に「補充基準」を足すこと。bdd-sample.yaml の発注点は定番商品の在庫不足判定に限るため同じ概念か判断できず、cdfd-overview-sample に合わせているこの sample は直さなかった / 印: 要判断","R5-5: 段 R5 / 箇所 2. 概念データストア一覧、3.1. 生成元と利用制約 / 指摘: この sample を含む多数の sample が「つけ上限」と書くが、gl-sample の正式な語は「つけ限度額」（aliases は「つけ上限額」）で、「つけ上限」は別名にない / 直した案: - / 根拠: `vp-qe-kata-conformance`（用語集）。相手側の gl-sample の `tm-sales-credit-limit` の aliases に「つけ上限」を足す案を選んだ。全 sample を「つけ限度額」へ直す案は変更の範囲が大きいため選ばなかった / 印: 要判断","R5-6: 段 R5 / 箇所 2. 概念データストア一覧（販売記録） / 指摘: sld-sample の「隣接仕様の記録・状態と保管場所の対応」は、この sample の対応に「販売記録は `data/sales/`（結果不明の取引は照合待ち）」と書くが、この sample の販売記録は確定した会計だけを含み、本部受付の結果不明は bdd-sample.yaml の本部売上受付の概念である / 直した案: - / 根拠: `vp-dev-change-impact`。相手側の sld-sample の該当セルで、結果不明の取引の根拠を bdd-sample（本部売上受付）として書き分ける案 / 印: -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/cdsd-sample.md","status":"passed","summary":"整形済み（表の列幅を再整形）"},{"command":"npx markdownlint docs/ja/specdojo/samples/cdsd-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/cdsd-sample.md のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>

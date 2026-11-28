@@ -1,0 +1,16 @@
+`docs/ja/specdojo/samples/tsp-index-sample.md` の冗長な箇所を 1 件削りました。変更したのはこのファイルだけで、Prettier の検査は通っています。lint と schema の検査は、このあと親 runner が実行します。
+
+**削った箇所**
+- 場所:「テストレベル一覧」の表の直後にあった 1 文（隣接レベルとの分担）。
+- 削った理由: 外部結合テストで印刷・保管の契約を確かめ、総合テストではスモークに限るという内容が、「テスト環境・テストデータ」の章の外部I/F の段落と重なっていました。
+- 意味を保てる根拠: 同じ内容は外部I/F の段落と、表の「やらないこと（非目的）」の列に残っています。
+
+**そのまま残した箇所**
+- **概要の「単体→内部結合→外部結合→総合→受入の順に確認する」**: rulebook の概要の良い例にある必須要素（レベルの進め方）です。
+- **概要の非機能の基準を仮置きとする記述**: 前提の制約を短く参照しているだけで、詳細は「メモ / 将来課題」にあります。
+- **レベル一覧の「実施体制・備考」の列にある接続の扱い**: rulebook の必須列です。単体テストのモックと内部結合テストの実接続のように、レベルごとの違いがあります。環境の表は 1 つの環境に 2 つのレベルをまとめているので、ここを消すと情報が減ります。
+- **不具合管理方針の例外承認の記述**: すでに品質ゲートの章を参照する形になっていて、再掲ではありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsp-index-sample.md のテストレベル一覧の直後にあった、外部I/F の分担を繰り返す 1 文を削除した。同じ内容は「テスト環境・テストデータ」の外部I/F の段落と、表の「やらないこと（非目的）」の列に残っている。ほかの候補は判断に必要なため残した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/tsp-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"}],"condense_records":[{"location":"テストレベル一覧と観点/条件設計の共通原則 > テストレベル一覧（表の直後の段落「隣接レベルとの分担として…」）","category":"repetition","action":"delete","reason":"外部結合テストで印刷・保管の契約を確かめ、総合テストはスモークに限るという分担は、「テスト環境・テストデータ」の外部I/F の段落と、表の「やらないこと（非目的）」の列で同じ意味を保っているため削除した","cause":{"type":"document"}},{"location":"概要 第1段落「単体→内部結合→外部結合→総合→受入の順に確認する」","category":"repetition","action":"retain","reason":"rulebook が概要に求めるレベルの進め方の要素で、記述ガイドの良い例にも含まれるため残した","cause":{"type":"document"}},{"location":"概要 第3段落（非機能の基準を「メモ / 将来課題」の仮置きとする記述）","category":"canonical-restatement","action":"retain","reason":"判定の前提となる制約を短く参照しているだけで、詳細は「メモ / 将来課題」にあり、再掲には当たらないため残した","cause":{"type":"document"}},{"location":"テストレベル一覧の表「実施体制・備考」の列（モック・スタブ・実接続の扱い）と「テスト環境・テストデータ」の環境の表","category":"repetition","action":"retain","reason":"rulebook の必須列（ツール・除外）で、単体テストのモックと内部結合テストの実接続のようにレベルごとの違いがある。環境の表は 2 つのレベルをまとめているため、片方へ寄せると情報が減る","cause":{"type":"document"}},{"location":"不具合管理方針 最終文（既知不具合は品質ゲートの例外承認に従う）","category":"canonical-restatement","action":"retain","reason":"すでに品質ゲートの章を参照する形になっていて、rulebook が求める既知不具合の扱いを示すため残した","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

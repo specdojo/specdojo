@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-28T11:05:26Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150",
+  "by": "opus-executor",
+  "msg": "R5 の流し直し（PJR-QCJ5 の確かめ）の結果を記録する",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "OPS"
+  }
+}

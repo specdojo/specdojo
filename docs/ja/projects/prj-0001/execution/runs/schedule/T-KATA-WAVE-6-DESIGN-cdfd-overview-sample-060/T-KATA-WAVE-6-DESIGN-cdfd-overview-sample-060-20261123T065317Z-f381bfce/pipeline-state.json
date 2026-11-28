@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060",
+  "run_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce",
+  "updated_at": "2026-11-23T19:45:22.395Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T06:54:02.709Z",
+      "completed_at": "2026-11-23T06:56:54.046Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T06:58:17.162Z",
+      "completed_at": "2026-11-23T07:02:39.984Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 3,
+      "started_at": "2026-11-23T19:44:25.976Z",
+      "completed_at": "2026-11-23T19:45:22.395Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded source for prj-0001--ifx-file-agent-evidence.md.snap; Test Files  1 failed | 288 passed (289); Tests  2 failed | 4764 passed (4766)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce/result.md"
+  }
+}

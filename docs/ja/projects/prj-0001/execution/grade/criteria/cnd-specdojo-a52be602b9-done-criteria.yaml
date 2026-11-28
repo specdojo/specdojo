@@ -2,12 +2,12 @@
 id: cnd-specdojo-grade-criteria
 document: cnd-specdojo
 path: docs/ja/product/030-architecture/010-c4/cnd-specdojo.md
-graded_at: "2026-11-15T21:51:26.906Z"
-graded_by: sol-review-executor
-content_hash: 6e40a05a5dd0ffd611abfb31d9f997326c15d4d5097ab23b463a7a61238d4ce1
+graded_at: "2026-11-21T08:57:12.825Z"
+graded_by: opus-executor
+content_hash: d279f2bc195ec0e38ed400bb10f85081de8f59edb929163ac48f811d4d6bbe1c
 summary:
-  satisfied: 4
-  unsatisfied: 1
+  satisfied: 5
+  unsatisfied: 0
   total: 5
 criteria:
   - id: DC-001
@@ -21,10 +21,7 @@ criteria:
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: unsatisfied
-    reason: >-
-      Line 135 explicitly keeps DC-002 outstanding until human PO judgment, and line 139 states that approval of the
-      revised baseline has not yet been recorded.
+    status: satisfied
   - id: DC-003
     text: インフラ設計・デプロイ構成の入力として参照できること
     roles:

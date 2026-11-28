@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-080",
+  "run_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-080-20261123T191102Z-e9e9cfe8",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T19:11:41.018Z",
+    "completed_at": "2026-11-23T19:14:10.950Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md | 6 +++---\n 1 file changed, 3 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:trc-requirements-to-specs-sample\n  type: project\n  status: draft\n  rulebook: specdojo:trc-requirements-to-specs-rulebook\n  based_on:\n    - req-2026-r1\n    - sf-pos-checkout\n    - sf-discount-apply\n    - bes-pos-operation\n    - bes-stock-allocation\n    - bes-audit-log\n    - bes-product-master\n    - ifx-msg-stock\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 要求と仕様の対応（第 1 リリース）\n\n## 1. 目的と適用範囲\n\n本書は、仕様\n… output omitted …\nには持たない。実案件の PJR 個票は未同梱である。\n\n## 6. 変更履歴と更新ルール\n\n次のいずれかが起きたら、本書を直さずに「生成の手順」で再生成し、生成日と生成元の版を改める。再生成後は、「トレース対象の前提」の確認の手順で照合する。\n\n- 要求一覧 `req-2026-r1` で要求項目が追加・削除された。\n- 抽出範囲の仕様が追加された、または仕様の `relations.satisfies` が変わった。\n- 対応仕様の `status` が変わった。\n\n次の表は、生成ごとの版と、前回から充足状況が変わった要求の対応を示す。\n\n| 生成日 | 生成元の版 | 前回から充足状況が変わった要求 ID | 契機 |\n| - | - | - | - |\n| 2026-05-08 | `7c41e9d` | `req-r1-003`: `一部充足` → `充足` | `sf-discount-apply` の `status` を `ready` へ |\n| 2026-04-24 | `e2b6f18` | なし（初回生成） | 第 1 リリースの仕様の作成 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6468 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6468 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-trc-requirements-to-specs-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-sch\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1808}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  04:15:53\n   Duration  2.94s (transform 7.84s, setup 3.84s, import 9.20s, tests 6.24s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-trc-requirements-to-specs-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-trc-requirements-to-specs-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "2. トレース対象の前提 / 要求の母集団",
+      "category": "unneeded-background",
+      "action": "delete",
+      "reason": "要求 ID の命名規則の説明は、母集団の追跡に不要。要求 ID の指す先は `req-2026-r1` の項目と母集団の記述で足りる。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "2. トレース対象の前提 / 生成の手段と生成日",
+      "category": "canonical-restatement",
+      "action": "reference",
+      "reason": "導出と判定の方法は rulebook「生成の手順」と「充足状況の判定」の再掲。手作業で生成したこと、「生成の手順」に従うこと、生成日は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 充足状況サマリ / 優先して解消する要求 1 番目",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "「対応仕様が 1 件もない」はトレースマトリクスの `req-r1-004` 行（対応仕様 `なし`）の言い直し。優先する理由である業務影響は残した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "sample の冗長な 3 文を削除した。トレース表の前提（生成元・生成手段・生成日）と、表の各行で要求と仕様の対応と抜けを判定できる点は維持した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-trc-requirements-to-specs-sample-080/T-KATA-WAVE-4-trc-requirements-to-specs-sample-080-20261123T191102Z-e9e9cfe8/executor.log",
+      "bytes": 1618,
+      "truncated": false
+    }
+  ]
+}

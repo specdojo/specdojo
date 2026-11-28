@@ -1,0 +1,34 @@
+日英のシビックテック入門ガイドを 2 回目の完了条件どおりに直しました。残りは英語版の `translated_from` の版で、統合の後に小さな直しが要ります。
+
+**ガイドで直したこと（日英とも）**
+- `何をどの順で残すか` の先頭に `基本の流れ` を足しました。利用者がオーケストレーターに頼んで todo を起票させ、`exec run` で agent に作らせ、人が確かめて close する流れです。型が複数なら epic と子の todo に分けます。
+- 人の役割は「話す・確かめる・決める・目印を解く」の 4 つとして表にしました。
+- 新しく作る場合と既存のシステムから始める場合（復元）の手順を、agent に作らせる書き方に直しました。
+- 新しく作る場合に `chat` の例を 1 つ置きました。epic と子の todo 3 つに分けて起票し、`_ASSUMPTION_` を確かめて再実行するまでを示しています。
+- `全部の型を求めない` の役割の分け方を、書くのは agent、人は 4 つの役割を分担して一人に集めない、という形に直しました。
+- `確認状態の目印を使う` では「AI」を「agent」に揃えました。「次に読む文書」にはオーケストレーター運用ガイドを足しました。
+
+個票には、作業内容の表に 5〜7 行目（すべて `done`）と、対応結果に `5.4. 2 回目の実行` を足しました。CHANGELOG の文案もそこで書き直しています。
+
+**決めたことと理由**
+- `chat` の例は新しく作る場合の 1 つだけにしました。復元でも分け方は同じなので、復元の節では「同じく分ける」と書くだけにしています。
+- epic の起票オプション（`--track` など）は例に書かず、登録簿運用ガイドの該当の章を参照させました。英語の登録簿運用ガイドはまだないので、英語版では日本語の章名を併記しています。
+- 目印を外すのは、人が確かめた結果を伝え、完了条件に足して agent に再実行させる形にしました。
+
+**英語版の `translated_from.commit`**
+前の版（`a9ab7fd`）のままです。日英の文書は同じ commit に入るので、その hash を作業中には書けません。統合の後に、今回の commit の hash へ直す必要があります。
+
+**検証**
+- `npx prettier --write` と `npx markdownlint-cli2` は、変更した 3 ファイルでどちらも指摘なしです。
+- `npm run validate:history-links` は全件 `valid` でした。
+- `lint:md`・`lint:fm` などは、この後に親の runner が流します。
+- `CHANGELOG.md` と保護された設定は変えていません。
+
+変更したファイルは次の 3 つです。
+- `docs/ja/specdojo/guides/civic-tech-starter-guide.md`
+- `docs/en/specdojo/guides/civic-tech-starter-guide.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-bxym-civic-tech-starter-kata.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"日英のシビックテック入門ガイドを、オーケストレーターが起票し exec run で agent に作らせ、人が話す・確かめる・決める・目印を解く流れに直した。epic と子 todo の chat の例を足し、個票に 2 回目の実行の小節と作業内容の行を足した。","handoff":["2 回目の実行で直した点: 日英のガイドに `基本の流れ`（起票→`exec run`→人が確かめて close、人の 4 つの役割の表）を足した。新しく作る場合・復元の手順を agent に作らせる書き方に直し、epic と子 todo 3 つの `chat` の例を足した。`全部の型を求めない` の役割の分け方も直した。","判断: `chat` の例は新しく作る場合の 1 つだけにした。復元では同じく epic に分けると書き、`retrofit` の起票例を残した（二重の説明を避けるため）。epic の起票オプションは書かず、登録簿運用ガイドの `track の仕事を epic と子 todo で管理する` を参照させた。","判断: 目印を外すのは、人が確かめた結果を伝え、完了条件に足して agent に再実行させる形にした。","要対応: 英語版の `translated_from.commit` は前の版（a9ab7fd04621afceba67e6b8a365ac9618a9aee0）のまま。日英が同じ commit に入るため作業中に hash を書けない。統合の後、今回の commit の hash へ直す小さな commit が要る。","CHANGELOG に書く事項（区分 Added）の文案は、個票の 5.4 に書き直した版を正とする。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/civic-tech-starter-guide.md docs/en/specdojo/guides/civic-tech-starter-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bxym-civic-tech-starter-kata.md","status":"passed","summary":"変更した 3 ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-bxym-civic-tech-starter-kata.md docs/ja/specdojo/guides/civic-tech-starter-guide.md docs/en/specdojo/guides/civic-tech-starter-guide.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"全件 valid（PJR-BXYM の個票を含む）"}]}
+</specdojo_executor_evidence>

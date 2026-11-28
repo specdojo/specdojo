@@ -1,0 +1,8 @@
+対象文書の冗長さを 1 箇所だけ直しました。他の候補は、判断に要る内容なので残しました。Markdown の検査は親 runner が実行するため、ここでは実行していません。
+
+- **修正:** 「影響分析サマリ」の初動開始の上限の項目で、`_UNDECIDED_` の再掲を削りました。「未決（`PJR-O4Q1`、「未解決事項」を参照）」に置き換え、「閉店までに把握する」という下限の扱いは残しています。上限の未決は、変更要求の概要にある `_UNDECIDED_` と「未解決事項」の表が持っています。
+- **残した箇所:** 影響度の集計表は、判定の尺度を示す表と役割が違うため残しました。「対応方針」の再評価条件は、影響詳細一覧の対応方針だけでは足りない完了条件なので残しました。背景の記述は、判断に要る前提なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"1 件を `reference` で修正し、他の候補は意味維持のため `retain` とした。","handoff":[],"condense_records":[{"location":"3. 影響分析サマリ の「初動開始の上限」の項目","category":"repetition","action":"reference","reason":"`_UNDECIDED_` の説明が「変更要求の概要」と「未解決事項」の表に既にあるため、未決の旨と参照に置き換えた。下限の扱いは判定に要るため維持した。","cause":{"type":"document"}},{"location":"3. 影響分析サマリ の影響度集計表と評価観点の表","category":"table-prose","action":"retain","reason":"集計表は判定結果、評価観点の表は判定の尺度であり、役割が異なる。意味を保つため残した。","cause":{"type":"document"}},{"location":"5. 対応方針 の再評価条件","category":"table-prose","action":"retain","reason":"影響詳細一覧には再評価の日付と閾値がなく、完了条件として必要なため残した。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため、executor では実行しない。"}]}
+</specdojo_executor_evidence>

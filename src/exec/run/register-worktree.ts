@@ -1,4 +1,8 @@
+import { registerGradeResultPaths } from "./register-grade-scope.js";
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
+import { mergeRegisterBranch } from "../../shared/register-merge.js";
+import { publishRegisterTicket } from "./register-sync.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -12,12 +16,19 @@ import {
 } from "../../shared/specdojo-config.js";
 import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
+import {
+  createPipelineState,
+  pipelineStateLocation,
+  readPipelineState,
+  updatePipelineStage,
+  writePipelineState,
+  type PipelineState,
+} from "../pipeline-state.js";
 import { integratedCommitRange, runPostIntegration } from "../post-integration.js";
 import { buildInPlaceStem } from "../plans.js";
 import { resolveProductBranches } from "../product-branches.js";
-import { registerProductMessage } from "../register-product-message.js";
-import { findResumableRegisterRun } from "../register-resume.js";
+import { countPriorItemCommits, registerProductMessage } from "../register-product-message.js";
+import { findResumableRegisterRun, type RegisterResumeArtifacts } from "../register-resume.js";
 import {
   generateRegisterPlan,
   requireRunnableRegisterItem,
@@ -30,6 +41,7 @@ import {
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
+  withTaskIntegrationLock,
   PROJECT_REPO_NAME,
   projectMergeBlockers,
   RepoIntegrationError,
@@ -53,7 +65,7 @@ import {
   checkpointAndEnsureWorktree,
   assertCommitScope,
   commitTargetPaths,
-  commitWorktreeChanges,
+  commitWorktreeChangesAsync,
   discardStaleExecWorktree,
   isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
@@ -103,13 +115,14 @@ import {
 } from "./register-core.js";
 import { runRegisterPostReview } from "./register-post-review.js";
 import {
-  commitRegisterState,
+  commitRegisterStateAsync,
   rebuildRootRegisterViews,
   registerPathsInsideWorktree,
   registerWaitSummary,
 } from "./register-state.js";
 import { downgradeUnfilledResult } from "./schedule-prepare.js";
 import { appendScopeWaitNotes } from "./change-scope.js";
+import { appendResumeNotesToPlan, nextResumeNotes } from "./resume-notes.js";
 import {
   rateLimitRecoveryReason,
   resolvePinnedRateLimitRunOptions,
@@ -297,6 +310,12 @@ async function integrateRegisterWorktreeRun(
     baseCommit: string,
     outputCommit: string,
   ): RegisterItemSummary | DeferredCleanup<RegisterItemSummary> => {
+    try {
+      // Intake must succeed before removing the worktree needed for integration resume.
+      mergeRegisterBranch(projectId);
+    } catch (error) {
+      return blockedInReview(error, "register intake failed");
+    }
     const worktreeTaskId = qualifyTaskId(projectId, item.id);
     const cleanupLock = tryAcquireWorktreeCleanupLock(executionPath, worktreeTaskId, actor);
     if (!cleanupLock) {
@@ -322,11 +341,10 @@ async function integrateRegisterWorktreeRun(
           }
           process.stderr.write(`Warning: ${outcome.error.message}; run exec worktree prune.\n`);
         }
-        // review は merge で root の個票に入る。非追跡の派生ビューだけ root で作り直す。
         rebuildRootRegisterViews(projectId, item.id);
         const reviewed = await postReview(baseCommit, outputCommit);
         if (reviewed) return reviewed;
-        const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+        const sha = outputCommit.slice(0, 12);
         process.stdout.write(
           `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
         );
@@ -425,6 +443,8 @@ async function integrateRegisterWorktreeRun(
         projectConfig,
         product,
         kind,
+        priorCommitCount:
+          kind === "commit" ? countPriorItemCommits(product.path, projectId, item.id) : 0,
         repoConfig: projectConfig?.repos?.find((repo) => repo.name === product.name),
       });
     const integrateStartedAt = new Date().toISOString();
@@ -435,6 +455,7 @@ async function integrateRegisterWorktreeRun(
       started_at: integrateStartedAt,
       completed_at: null,
     }));
+    let outputCommit: string;
     try {
       const productNames = (worktree.repos ?? []).map((product) => product.name);
       try {
@@ -453,7 +474,8 @@ async function integrateRegisterWorktreeRun(
         const productRootNewFiles = productOutcomes.flatMap((outcome) =>
           outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
         );
-        commitWorktreeChanges({
+        await publishRegisterTicket(projectId, worktree.path, worktreeTicketPath);
+        await commitWorktreeChangesAsync({
           context: wtContext,
           worktree,
           taskId: stem,
@@ -500,79 +522,84 @@ async function integrateRegisterWorktreeRun(
         projectId,
         itemId: item.id,
       });
-      integrateTaskRepositories({
-        worktree,
-        mergeMessage,
-        productMergeMessage: (product) => productMessage(product, "merge"),
-        checkProject: () =>
-          projectMergeBlockers({
-            context: wtContext,
-            worktree,
-            taskId: stem,
-            releasePaths: bookkeepingPaths,
-            ownedPaths: bookkeepingPaths,
-          }),
-        beforeProjectMerge: () => {
-          // review は exec branch 側（worktree）で記録し、最後の project merge commit に
-          // 同梱する。統合ブランチで遷移すると first-parent に独立した commit が増える。
-          if (
-            !spawnRegisterTransition(
-              projectId,
-              [
-                "review",
-                "--id",
-                item.id,
-                "--by",
-                actor,
-                ...(params.transitionReason ? ["--reason", params.transitionReason] : []),
-              ],
+      // PJR-P8SX: 統合の commit を非同期にしたため、統合と直後の HEAD の取得を、同じ process の
+      // 他のタスクの統合と排他にする。
+      outputCommit = await withTaskIntegrationLock(async () => {
+        await integrateTaskRepositories({
+          worktree,
+          mergeMessage,
+          productMergeMessage: (product) => productMessage(product, "merge"),
+          checkProject: () =>
+            projectMergeBlockers({
+              context: wtContext,
+              worktree,
+              taskId: stem,
+              releasePaths: bookkeepingPaths,
+              ownedPaths: bookkeepingPaths,
+            }),
+          beforeProjectMerge: async () => {
+            // review は exec branch 側（worktree）で記録し、最後の project merge commit に
+            // 同梱する。統合ブランチで遷移すると first-parent に独立した commit が増える。
+            if (
+              !spawnRegisterTransition(
+                projectId,
+                [
+                  "review",
+                  "--id",
+                  item.id,
+                  "--by",
+                  actor,
+                  ...(params.transitionReason ? ["--reason", params.transitionReason] : []),
+                ],
+                worktree.path,
+              )
+            ) {
+              throw new Error(`register review transition failed: ${item.id}`);
+            }
+            // プロダクトの統合後・プロジェクトの統合前に、統合先の commit snapshot を result の
+            // trace 表へ記録し、プロジェクト側の merge commit に同梱する。宣言の無い project では
+            // 記録せず、result は従来どおりになる。
+            const products = worktree.repos ?? [];
+            const tracePaths: string[] = [];
+            if (products.length > 0 && existsSync(worktreeResultPath)) {
+              recordResultTrace({
+                resultPath: worktreeResultPath,
+                traceKey: itemTraceKey,
+                traces: products.map(productIntegrationTrace),
+              });
+              tracePaths.push(worktreeResultPath);
+            }
+            const integrateCompletedAt = new Date().toISOString();
+            recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
+              status: "succeeded",
+              completed_at: integrateCompletedAt,
+            }));
+            await commitRegisterStateAsync(
               worktree.path,
-            )
-          ) {
-            throw new Error(`register review transition failed: ${item.id}`);
-          }
-          // プロダクトの統合後・プロジェクトの統合前に、統合先の commit snapshot を result の
-          // trace 表へ記録し、プロジェクト側の merge commit に同梱する。宣言の無い project では
-          // 記録せず、result は従来どおりになる。
-          const products = worktree.repos ?? [];
-          const tracePaths: string[] = [];
-          if (products.length > 0 && existsSync(worktreeResultPath)) {
-            recordResultTrace({
-              resultPath: worktreeResultPath,
-              traceKey: itemTraceKey,
-              traces: products.map(productIntegrationTrace),
-            });
-            tracePaths.push(worktreeResultPath);
-          }
-          const integrateCompletedAt = new Date().toISOString();
-          recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
-            status: "succeeded",
-            completed_at: integrateCompletedAt,
-          }));
-          commitRegisterState(
-            worktree.path,
-            worktreeRegisterPaths,
-            `exec(register ${item.id}): review`,
-            worktreeTicketPath,
-            [...(params.pipelineStatePath ? [params.pipelineStatePath] : []), ...tracePaths],
-            integrateLogPath(params.pipelineStatePath),
-          );
-        },
-        mergeProject: () =>
-          mergeWorktreeIntoCurrent({
-            context: wtContext,
-            worktree,
-            taskId: stem,
-            message: mergeMessage,
-            releaseRootPaths: [...bookkeepingPaths],
-            // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
-            // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は exec branch 側で解決する。
-            resolveConflictsWithBranchPaths: [...bookkeepingPaths],
-            failureLogPath: integrateLogPath(params.pipelineStatePath),
-          }),
-        record: (repo, patch) => recordRepoIntegration(params.pipelineStatePath, repo, patch),
-        failureLogPath: integrateLogPath(params.pipelineStatePath),
-        lockPath: schedulePath,
+              worktreeRegisterPaths,
+              `exec(register ${item.id}): review`,
+              worktreeTicketPath,
+              [...(params.pipelineStatePath ? [params.pipelineStatePath] : []), ...tracePaths],
+              integrateLogPath(params.pipelineStatePath),
+            );
+          },
+          mergeProject: () =>
+            mergeWorktreeIntoCurrent({
+              context: wtContext,
+              worktree,
+              taskId: stem,
+              message: mergeMessage,
+              releaseRootPaths: [...bookkeepingPaths],
+              // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
+              // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は exec branch 側で解決する。
+              resolveConflictsWithBranchPaths: [...bookkeepingPaths],
+              failureLogPath: integrateLogPath(params.pipelineStatePath),
+            }),
+          record: (repo, patch) => recordRepoIntegration(params.pipelineStatePath, repo, patch),
+          failureLogPath: integrateLogPath(params.pipelineStatePath),
+          lockPath: schedulePath,
+        });
+        return gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
       });
     } catch (error) {
       // The merge may already have succeeded and only a later step failed. Root now contains the
@@ -604,7 +631,6 @@ async function integrateRegisterWorktreeRun(
       };
     }
 
-    const outputCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
     await postIntegration(baseCommit, outputCommit);
     await params.opts.onScopeIntegrated?.();
     // post-review の差分範囲は、撤去を待つ間に別項目の commit が積まれても変わらないよう、
@@ -642,6 +668,7 @@ export async function runSingleRegisterItemWorktree(
   opts: RunOpts,
   pjrId: string,
   lifecycleLock?: AsyncLock,
+  preparation?: { state: PipelineState; artifacts: RegisterResumeArtifacts },
 ): Promise<RegisterItemSummary> {
   const { projectId, schedulePath, executionPath, repoRoot, worktreeBase } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
@@ -677,7 +704,7 @@ export async function runSingleRegisterItemWorktree(
         provider: undefined as AgentProvider | undefined,
       };
   const resolvedProvider = provider ?? resolveAgentMember(context.roster, actor)?.provider;
-  const stem = buildInPlaceStem(pjrId.toLowerCase());
+  const stem = preparation?.state.run_id ?? buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
   const pipelineRunId = pipelineAgents ? stem : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
@@ -691,9 +718,11 @@ export async function runSingleRegisterItemWorktree(
       ticketPath,
       projectConfig: loadConfig().config?.projects[projectId],
       overrides: opts.branch,
+      resume: !!preparation,
     },
   );
   const integrationBranchOverrides = integrationBranchOverrideRecord(opts.integrationBranch);
+  let preparationState: PipelineState | undefined;
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -707,6 +736,30 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
+    // PJR-1JF6・PJR-VKY2: sync（register_sync）の project では、develop の作業の前に専用の
+    // ブランチ（register → exec-events の順）を一方向に取り込む。未設定なら何もしない。
+    // 取り込めないときは worktree を作らずに止める。
+    try {
+      const intake = mergeRegisterBranch(projectId);
+      for (const entry of intake.status === "checked" ? intake.branches : []) {
+        if (entry.status === "merged") {
+          process.stdout.write(
+            `  [run] merged sync branch ${entry.source}: ${entry.commit.slice(0, 12)}\n`,
+          );
+        }
+      }
+    } catch (error) {
+      const message = `register branch merge failed: ${error instanceof Error ? error.message : String(error)}`;
+      process.stderr.write(`${message}\n`);
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "failure",
+        transition: "none",
+        commit: "off",
+        reason: sanitizeRegisterConclusion(message),
+      };
+    }
     // Recheck after acquiring the lifecycle lock: dependencies may change while waiting.
     const current = resolveRegisterRunTarget(projectId, pjrId);
     const reason = registerDependencyBlockReason(current.registerPaths, current.item);
@@ -735,7 +788,9 @@ export async function runSingleRegisterItemWorktree(
     // executor が成功した run の worktree を、全体再実行が破棄しないよう保護する。
     // discardStaleExecWorktree は worktree と exec ブランチを強制削除するため、未コミットの
     // executor 成果が失われる。この場合は何も壊さずに中断し、再開か明示的な破棄を促す。
-    const protection = protectResumableRegisterWorktree(context, opts, item.id, worktreeTaskId);
+    const protection = preparation
+      ? null
+      : protectResumableRegisterWorktree(context, opts, item.id, worktreeTaskId);
     if (protection) {
       process.stderr.write(`${protection}\n`);
       return {
@@ -748,42 +803,62 @@ export async function runSingleRegisterItemWorktree(
       };
     }
 
-    const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
+    const discarded = preparation
+      ? null
+      : discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
 
     reserveProductBranches(products, worktreeTaskId);
 
-    const { planPath } = await generateRegisterPlan({
-      executionPath,
-      projectId,
-      ...(context.catalogPath ? { catalogPath: context.catalogPath } : {}),
-      ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
-      ...(context.viewpointsPath ? { viewpointsPath: context.viewpointsPath } : {}),
-      ...(context.projectContext ? { projectContext: context.projectContext } : {}),
-      registerPaths,
-      item,
-      stem,
-    });
-    appendScopeWaitNotes(planPath, opts.changeScopeWaits);
+    const { planPath } = preparation
+      ? { planPath: resolve(repoRoot, preparation.artifacts.planRef) }
+      : await generateRegisterPlan({
+          executionPath,
+          projectId,
+          ...(context.catalogPath ? { catalogPath: context.catalogPath } : {}),
+          ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
+          ...(context.viewpointsPath ? { viewpointsPath: context.viewpointsPath } : {}),
+          ...(context.projectContext ? { projectContext: context.projectContext } : {}),
+          registerPaths,
+          item,
+          stem,
+        });
+    if (!preparation) appendScopeWaitNotes(planPath, opts.changeScopeWaits);
+    const resumeNoteEntry =
+      preparation && opts.resumeNote?.length
+        ? { at: new Date().toISOString(), notes: opts.resumeNote }
+        : undefined;
+    if (resumeNoteEntry) appendResumeNotesToPlan(planPath, resumeNoteEntry);
     const prompt = expandPromptRefs(readPlanFile(planPath));
-    const { resultPath, supersededPaths } = await scaffoldResult({
-      executionPath,
-      taskId: item.id,
-      mode: "edit",
-      projectId,
-      origin: "register",
-      planRef: recordRef(executionPath, planPath),
-      agent: actor,
-      startedAt: new Date().toISOString(),
-      stem,
-      ...(item.approach ? { approach: item.approach } : {}),
-      ...(item.targets && item.targets.length > 0
-        ? { targets: isAuthoringApproach(item.approach) ? item.targets.slice(0, 1) : item.targets }
-        : {}),
-    });
+    const { resultPath, supersededPaths } = preparation
+      ? {
+          resultPath: resolve(repoRoot, preparation.artifacts.resultRef),
+          supersededPaths: [],
+        }
+      : await scaffoldResult({
+          executionPath,
+          taskId: item.id,
+          mode: "edit",
+          projectId,
+          origin: "register",
+          planRef: recordRef(executionPath, planPath),
+          agent: actor,
+          startedAt: new Date().toISOString(),
+          stem,
+          ...(item.approach ? { approach: item.approach } : {}),
+          ...(item.targets && item.targets.length > 0
+            ? {
+                targets: isAuthoringApproach(item.approach)
+                  ? item.targets.slice(0, 1)
+                  : item.targets,
+              }
+            : {}),
+        });
     const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
-    process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+    process.stdout.write(
+      `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+    );
     process.stdout.write(`  Agent: ${actor}\n`);
     if (!spawnRegisterTransition(projectId, ["start", "--id", item.id, "--by", actor])) {
       throw new Error(`register start failed: ${item.id}`);
@@ -800,8 +875,61 @@ export async function runSingleRegisterItemWorktree(
     );
     const checkpointPaths = [
       ...checkpointRel.map((rel) => resolve(repoRoot, rel)),
-      ...gradeCheckpointPaths({ repoRoot, executionPath }),
+      ...gradeCheckpointPaths(
+        { repoRoot, executionPath },
+        registerGradeResultPaths({
+          repoRoot,
+          projectId,
+          catalogPath: context.catalogPath,
+          item,
+        }),
+      ),
     ];
+    const preparationLocation = pipelineRunId
+      ? pipelineStateLocation({
+          repoRoot,
+          worktreePath: repoRoot,
+          executionPath,
+          taskId: item.id,
+          runId: pipelineRunId,
+        })
+      : undefined;
+    if (preparationLocation) {
+      const startedAt = new Date().toISOString();
+      preparationState = updatePipelineStage(
+        preparation?.state ??
+          createPipelineState({
+            taskId: item.id,
+            runId: pipelineRunId!,
+            updatedAt: startedAt,
+            executorActor: actor,
+            reporterActor: pipelineAgents?.reporterCandidates[0]?.actor,
+            artifacts: {
+              plan_ref: repoRelativePath(repoRoot, planPath),
+              result_ref: repoRelativePath(repoRoot, resultPath),
+            },
+            ...(integrationBranchOverrides
+              ? { integrationBranches: integrationBranchOverrides }
+              : {}),
+          }),
+        "prepare",
+        {
+          status: "running",
+          actor,
+          started_at: startedAt,
+          completed_at: null,
+          attempts: (preparation?.state.stages.prepare?.attempts ?? 0) + 1,
+        },
+        startedAt,
+      );
+      if (resumeNoteEntry)
+        preparationState.resume_notes = nextResumeNotes(
+          preparationState.resume_notes,
+          resumeNoteEntry,
+        );
+      writePipelineState(preparationLocation.path, preparationState);
+      checkpointPaths.push(preparationLocation.path);
+    }
     const checkpointFailureLogPath = pipelineRunId
       ? integrateLogPath(
           pipelineStateLocation({
@@ -814,7 +942,7 @@ export async function runSingleRegisterItemWorktree(
         )
       : undefined;
     try {
-      const worktree = checkpointAndEnsureWorktree({
+      const worktree = await checkpointAndEnsureWorktree({
         context: wtContext,
         worktreeTaskId,
         base: worktreeBase,
@@ -822,7 +950,18 @@ export async function runSingleRegisterItemWorktree(
         commitMessage: `exec(register ${item.id}): start`,
         products,
         failureLogPath: checkpointFailureLogPath,
+        resumeCheckpoint: !!preparation,
       });
+      if (preparationState && preparationLocation) {
+        const completedAt = new Date().toISOString();
+        preparationState = updatePipelineStage(
+          preparationState,
+          "prepare",
+          { status: "succeeded", completed_at: completedAt },
+          completedAt,
+        );
+        writePipelineState(resolve(worktree.path, preparationLocation.ref), preparationState);
+      }
       const setupAction = worktree.created ? "setup" : "reuse";
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
@@ -837,6 +976,19 @@ export async function runSingleRegisterItemWorktree(
         bookkeepingPaths: checkpointPaths,
       };
     } catch (error) {
+      if (preparationState && preparationLocation) {
+        const failedAt = new Date().toISOString();
+        preparationState = updatePipelineStage(
+          preparationState,
+          "prepare",
+          { status: "failed", completed_at: failedAt },
+          failedAt,
+        );
+        writePipelineState(preparationLocation.path, preparationState);
+        const existing = findExecWorktree(repoRoot, worktreeTaskId);
+        if (existing)
+          writePipelineState(resolve(existing.path, preparationLocation.ref), preparationState);
+      }
       // checkpoint 失敗時は exec branch に commit が無く、root の実行管理ファイルが正本のまま。
       // start を巻き戻して waiting にし、その状態を root の wait commit 1件にまとめる
       // （作りかけの worktree は次回実行の discardStaleExecWorktree が片付ける）。
@@ -860,6 +1012,7 @@ export async function runSingleRegisterItemWorktree(
 
   const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
   if ("outcome" in prepared) return prepared;
+  opts.onScopePrepared?.();
   const { worktree, planPath, resultPath, resultScaffold, prompt, bookkeepingPaths } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
@@ -901,6 +1054,8 @@ export async function runSingleRegisterItemWorktree(
       productWorktrees: worktree.repos,
       ...(integrationBranchOverrides ? { integrationBranchOverrides } : {}),
       runId: pipelineRunId,
+      preparationStage: preparationState?.stages.prepare,
+      resumeNotes: preparationState?.resume_notes,
       executorRateLimitOptions: opts.executorBy
         ? resolvePinnedRateLimitRunOptions(
             opts,

@@ -1,0 +1,14 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/nfr-index-sample.md` の「分冊ドキュメント一覧」表の 2 行を直しました。どちらも分冊が持つべき内容を本書から外す変更で、rulebook などほかの文書は変えていません。
+
+1. **機密性・安全性の行（F002 の指摘）**：備考に書いていた「監査ログの保管期間 1 年」から目標値を削り、「監査ログの保管期間は `opd-index` と揃える」にしました。rulebook は「本書に要求本文や目標値を再掲しない」としており、これに当たる不要な内容と判断しました。この変更は今回の実行の前からこの作業コピーに入っていて、内容が正しいことを確かめたうえでそのまま残しています。
+2. **運用の行（F001 の指摘・要判断）**：備考の `_UNDECIDED_: 営業時間外の緊急連絡手段` を `-` にしました。これは目標値ではない運用の細かい中身で、同じ表の下にある「目標値が未決のときの扱い」の決まりにも当てはまらないため、本書ではなく `nfr-operations` が持つべき内容と見ました。
+   - F001 の観点 `vp-po-decision-readiness` は、kata-guide で kata のレビューに使わないことになっています。そのため指摘どおり決める時期を書き足す案は採らず、R1 の観点で削りました。
+   - 書き足して残すか削るかは人が決めてください。残す場合は、可用性の行と同じように決める時期か同時に決める文書を添える案が考えられます。
+
+ほかの章（概要、カテゴリ一覧、変更の入口、関連ドキュメント導線）は rulebook の受入条件を満たしており、足す・削る内容はありませんでした。
+
+確認として Prettier と markdownlint をこのファイルにかけ、どちらもエラーなしでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施した。nfr-index-sample の分冊ドキュメント一覧で、機密性・安全性の行の備考から再掲していた目標値（監査ログの保管期間 1 年）を削り（F002）、運用の行の備考にあった目標値ではない未決の細かい中身を削った（F001・要判断）。rulebook など sample 以外は変更していない。","handoff":["No: 1 / 段: R1 / 箇所: `docs/ja/specdojo/samples/nfr-index-sample.md` の「分冊ドキュメント一覧（ID/参照先）」の機密性・安全性の行の備考 / 指摘: 分冊が正本とする目標値（監査ログの保管期間 1 年）を本書に再掲していた（grade F002）。 / 直した案: 備考を「監査ログの保管期間は `opd-index` と揃える」にし、値を削った（この変更は今回の実行の前から作業コピーに入っており、内容を確かめて維持した）。 / 根拠: [[specdojo:nfr-index-rulebook]] の全体方針の責務境界（`nfr-index` は詳細要求を再掲しない）と禁止事項（`nfr-index` にカテゴリ詳細要求を記述する）。 / 印: -","No: 2 / 段: R1 / 箇所: `docs/ja/specdojo/samples/nfr-index-sample.md` の「分冊ドキュメント一覧（ID/参照先）」の運用の行の備考 / 指摘: `_UNDECIDED_: 営業時間外の緊急連絡手段` は目標値ではない運用カテゴリの細かい中身で、索引の責務を超える。同じ章の「目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、発生の記録だけを残す」という扱いの決まりにも当てはまらない。grade F001 は決める時期を足すよう求めているが、その観点 `vp-po-decision-readiness` は kata-guide の「kata を agent でレビューする」で kata の段のレビューに使わない観点とされている。 / 直した案: 備考を `-` にした。未決事項は `nfr-operations` 分冊で扱う。残す場合は、可用性の行と同じように決める時期か同時に決める文書（例: `opd-incident-management` と同時に決める）を添える。 / 根拠: [[specdojo:nfr-index-rulebook]] の責務境界・禁止事項、[[specdojo:kata-guide]] の「kata の観点の組」。 / 印: 要判断","No: 3 / 段: R1 / 箇所: 概要、カテゴリ一覧、変更の入口、関連ドキュメント導線 / 指摘: rulebook の本文要件の受入条件（分冊管理の目的と正本、8 カテゴリの目的と代表指標、5 種類の変更の更新対象と完了条件、導線と `（なし）` の明示）を満たしており、足す・削る内容はなかった。 / 直した案: 変更なし（維持）。 / 根拠: [[specdojo:nfr-index-rulebook]] の本文要件と記述ガイド、[[specdojo:sample-authoring-standard]]。 / 印: -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/nfr-index-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample だけで、plan・result・個票などの履歴ファイルを変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

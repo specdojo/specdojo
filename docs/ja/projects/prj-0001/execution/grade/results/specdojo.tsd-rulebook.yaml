@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/tsd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-27T20:07:39.496Z"
-graded_by: flash-high-executor
-content_hash: 87c0a8a6e033dcdcd307233bbcfc5844a1daba4bee3f9ca7cc1210bf01a98c12
+score: 97
+graded_at: "2026-11-23T17:33:19.460Z"
+graded_by: sonnet-review-executor
+content_hash: 12a7538afce15f67dc96cf885c41ce07d8c5fe14853819c8a1b1fbbc2b7cb6be
 categories:
   purpose:
     score: 100
@@ -17,15 +17,15 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -54,14 +54,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,13 +104,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 1
-    anchor: "# 技術領域別 技術スタック詳細定義（TSD）作成ルール"
-    message: 成果物を作成・維持する担当者（Role code）や想定読者を明記してください。
-    message_ja: 成果物を作成・維持する担当者（Role code）や想定読者を明記してください。
+    rule: vp-arc-conciseness
+    line: 118
+    anchor: "- 良い例: `<TOKEN>` を置き、実行時にシークレット管理から注入する方法を示す。悪い例: 実トークン付きの URL や認証設定の全文を貼る。"
+    message: 秘密情報・既存設定統合・継続利用の良い例／悪い例が recipe の「良い例 / 悪い例」表と重複しているため、rulebook 側は判定基準だけに絞るか recipe への参照に置き換えてください。
+    message_ja: 秘密情報・既存設定統合・継続利用の良い例／悪い例が recipe の「良い例 / 悪い例」表と重複しているため、rulebook 側は判定基準だけに絞るか recipe への参照に置き換えてください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 55
+    anchor: "| 接続設定と秘密情報の扱い | 条件付き | 外部サービスや別の実行環境へ接続する場合、接続方式、認証方法、識別子の対応、秘密情報の取得・保存・参照方法を示す |"
+    message: 本文要件の「接続設定と秘密情報の扱い」に対し sample が「接続情報と秘密情報の管理」、recipe が「別冊」（rulebook は「分冊」）と名称が揃っていないため、Kata 間で章名と用語を統一してください。
+    message_ja: 本文要件の「接続設定と秘密情報の扱い」に対し sample が「接続情報と秘密情報の管理」、recipe が「別冊」（rulebook は「分冊」）と名称が揃っていないため、Kata 間で章名と用語を統一してください。

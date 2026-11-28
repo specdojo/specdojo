@@ -9,7 +9,7 @@ Usage: tools/grade/run-per-document.sh --run-id <id> [options]
 Run the configured grade pipeline to completion for one document before moving
 to the next document. Completed stages are persisted below --work-dir so the
 same command resumes after an interruption. Incomplete pipelines are also
-persisted below the project execution path so a later Job Run can retry them.
+persisted below the project execution path so a later job run can retry them.
 
 Options:
   --run-id <id>                 Stable id used for resume state (required)

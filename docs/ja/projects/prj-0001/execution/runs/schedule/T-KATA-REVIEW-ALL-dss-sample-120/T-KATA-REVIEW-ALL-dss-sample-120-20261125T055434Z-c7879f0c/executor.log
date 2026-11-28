@@ -1,0 +1,11 @@
+R2（構成）のレビューで直したのは、「検証・変更管理と関連文書」の章の 1 か所だけです。変更したのは `docs/ja/specdojo/samples/dss-sample.md` だけで、rulebook など sample 以外は変えていません。章の順と粒度は rulebook の本文構成（8 章）どおりでした。rulebook が template を `not-needed` としているため、template との照合はしていません。
+
+- **何が問題だったか**: 「検証」の節にあった、まだない入力文書がそろわないときに止める段階の表です。この表は次節「検証の節目と基準版の採用」で定める節目を、定める前に別の名前で参照していました。
+- **どう直したか**: 表を次節の節目の表の後ろへ移し、前に一文を足しました。列名は「未確定時に止める節目」にして、値を節目の名前（1. 試作確認〜4. 実装への採用）にそろえ、節目の順に並べ替えました。
+- **人に決めてほしい点**: 「試作の採用判断」を「1. 試作確認」に読み替えた点に「要判断」を付けました。元の言い回しを残す案は、次節の節目とずれたままになるので採っていません。
+
+検証は `npx prettier --write` の整形だけを行い、成功しました。lint や schema の検査は、この後に親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）として dss-sample.md の「検証・変更管理と関連文書」を見直し、未作成の入力の表を「検証の節目と基準版の採用」の節目の表の後ろへ移し、止める段階の名前を節目の名前にそろえた。ほかの章の順・粒度・表と本文の配置は rulebook の本文構成に沿っており維持した。sample 以外は変更していない。","handoff":["No: R2-1 / 段: R2 / 箇所: 8.1. 検証、8.2. 検証の節目と基準版の採用 / 指摘: 「検証」の冒頭にあった「想定する入力・記録」の表が、次節で定める節目を定める前に別の名前（試作の採用判断、該当処理の実装採用、利用者評価と受入）で参照していて、前提から結論の順に読めなかった / 直した案: 表を「検証の節目と基準版の採用」の節目の表の後ろへ移して前置きの一文を足した。列名を「未確定時に止める節目」にし、値を「1. 試作確認」「2. 規則検証」「3. 利用者評価」「4. 実装への採用（該当処理）」にそろえて節目の順に並べた。想定 ID の注記は初めて使う「検証」の冒頭に残した / 根拠: `vp-arc-document-structure`（前提から結論への順序）、`vp-qe-omissions-consistency`（同じ節目の呼び方の不一致）、dss-rulebook の記述ガイド「検証・変更管理と関連文書」（節目の順と終了条件の後に、未作成の入力の想定 ID と止める段階を示す） / 印: 要判断（元の「試作の採用判断」を節目の「1. 試作確認」に読み替えた。元の言い回しを残す案は、節目の表と呼び方がずれたままになるため採らなかった）","No: R2-2 / 段: R2 / 箇所: 1.〜7. の各章、8.3. 変更・不適合・例外、8.4. 関連文書への導線 / 指摘: 章の順と粒度は rulebook の本文要件の 8 章と一致した。各章では前置き、規則の表、補足の順に配置されている。推奨列の順・統合の違い（トークンは 名前 / 値 / 用途・制約、状態は 通知・フォーカスと注意 を 1 列）は推奨の範囲内と判断した / 直した案: - / 根拠: `vp-arc-document-structure`。rulebook の template は `not-needed` のため template との照合は対象外 / 印: -","確かめた資料: dss-rulebook（本文要件・記述ガイド・禁止事項）、kata-guide の「kata を agent でレビューする」、R1（T-KATA-REVIEW-ALL-dss-sample-110）の result。展開された finding はなし。R1 の指摘 4 件は繰り返していない。rulebook を直す案はなし"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/dss-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/dss-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

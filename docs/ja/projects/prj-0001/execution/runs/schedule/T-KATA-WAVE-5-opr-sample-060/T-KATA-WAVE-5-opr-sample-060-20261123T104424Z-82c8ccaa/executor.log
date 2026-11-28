@@ -1,0 +1,23 @@
+`docs/ja/specdojo/templates/opr-template.md` を rulebook に合わせて直し、grade の指摘 8 件はすべて片付けました。rulebook と sample は変えていません。
+
+変更点（指摘番号ごと）:
+
+- **F007**（概要）: `opr-<term>` で作業がない章も省かず、`なし`・`opr-index 参照`・`本書の範囲外` のどれかと理由を書くよう指示を足しました。運用方針の未決の値について、決まるまでの扱いと影響する章を示すよう求める文も加えています。
+- **F001**（障害対応手順）: 表の後に指示を足しました。「エスカレーション」には条件と判断者を書き、停止やロールバックが関わる優先度には判断条件と承認者を書きます。
+- **F008**（アラート対応手順）: 段階の列に「確認・暫定対応・恒久対応・誤検知」の 4 行を書き込みました。「誤検知」の行には、終える条件と閾値の調整・抑止の条件を書くよう指示しています。
+- **F002**（バックアップ確認・リストア手順）: 演習の頻度を書くことと、演習の結果と所要時間を証跡に残すことを求める文を足しました。
+- **F003・F004**（運用変更作業）: 表の後に、実施手順（適用前の確認・適用・ロールバックの操作）と、重大な変更の事前周知の要否と手段を書く指示を足しました。
+- **F005・F006**（関連ドキュメント導線）: 表の 1 行目を「方針 / `opd-index`」としました。表の後に次の指示を足しています。
+  - `opd-index` への導線は必ず残す。
+  - `mip-*` / `otp-*` / `cop-*` は必要なときだけ行を足す。
+  - 分冊がなければ `（本書のみ）` か `（なし）` と書く。
+  - 前の章に書いた参照先は章タイトルで指して、同じものを繰り返さない。
+- **condense の指摘**（`_DELIVERABLE_OVERVIEW_` が H1 直下と「概要」の 2 か所にある件）: 今の template では H1 直下の導入文はもうなく、「概要」の 1 か所だけです。そのため構成は変えていません。
+
+表の列名は sample と同じで、sample の記入例は写していません。文書の役割の割り当てや承認の進み具合を書く欄も置いていません（PJR-76N9）。
+
+確認は、prettier で整形し、markdownlint で問題 0 件でした。`npm run` の検査は親 runner が流すため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Updated docs/ja/specdojo/templates/opr-template.md to resolve grade findings F001-F008: added instructions for escalation conditions and decision makers, stop/rollback approvers, fixed alert stages including false positives, restore drill frequency, change procedures and advance notice, the required opd-index row, the (本書のみ)/(なし) notation, and how to mark chapters that do not apply. The condense finding about the duplicated _DELIVERABLE_OVERVIEW_ placement was already resolved in the current template (no intro text under H1), so that structure was kept. Rulebook and sample were not changed.","handoff":["condense finding (cause=kata:template, location opr-template.md:18-23): the current template has no intro text under H1 and `_DELIVERABLE_OVERVIEW_` appears only in the overview chapter, so this was treated as already resolved and no change was made."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/templates/opr-template.md","status":"passed","summary":"Formatted the changed template"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/opr-template.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only docs/ja/specdojo/templates/opr-template.md changed; no plan/result/pjr history files were edited"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML file changed","reason":"Only a Markdown file changed"}]}
+</specdojo_executor_evidence>

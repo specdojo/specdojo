@@ -6,7 +6,7 @@ _FRONTMATTER_
 
 _JOB_DESCRIPTION_
 
-## 2. Job Run
+## 2. job run
 
 - `job_id`: _JOB_ID_
 - `run_id`: _RUN_ID_
@@ -38,6 +38,6 @@ _JOB_EXECUTION_
 ## 5. 異常終了の条件
 
 - 入力不足、対象不明、検査未解消の場合は異常終了する。
-- agent自身はJob Runの状態やcheckpointを変更しない。runnerが終了結果を反映する。
+- agent自身はjob runの状態やcheckpointを変更しない。runnerが終了結果を反映する。
 
 _COMMON_CONVENTIONS_

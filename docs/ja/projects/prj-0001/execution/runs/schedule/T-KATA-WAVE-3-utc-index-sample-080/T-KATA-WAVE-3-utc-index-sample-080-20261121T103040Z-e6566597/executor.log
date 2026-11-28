@@ -1,0 +1,20 @@
+`docs/ja/specdojo/samples/utc-index-sample.md` の冗長な箇所を 1 件整理しました。ほかの文書と result は触っていません。
+
+**直した箇所（1件）**
+- 「ケース表の共通カラム」の導入文で、rulebook の 10 カラム名を全部書き並べていました。これは正本の再掲で、直後の記入例の表の見出しとも重なります。列挙を消し、「rulebook の定める10カラムを定められた順で置く（並びは後述の記入例のとおり）」に置き換えました。カラムの数・順序・必須であることは rulebook と記入例の表に残るので、意味は変わりません。
+
+**候補として見たが残した箇所（6件）**
+- 目的と適用対象の合否判定の段落（CI ジョブで失敗 0 件、DEV が判定）：受け入れ基準と判定者を書いた唯一の場所のため。
+- 括り方の「画面の部品では切らない」：rulebook の規則を、会計ボタン・数量入力欄という具体例と代わりのテストレベルに当てはめた判断のため。
+- 対象外・除外理由の表の後の一文：例外をどのカラムに書くかを、このシステムで決めているため。
+- 観点の立て方の「受領額60円のケース」を統合する例：命名規則を当てはめた例で、表の内容とは重なっていないため。
+- 条件の立て方の追加順の段落：C-01・C-02 という具体例と「全組合せは作らない」という制約があるため。
+- 採用基準と分配方針の冒頭の段落：表の「採用理由」「主担当」の列がどの基準で決まったかの根拠のため。
+
+**検証**
+- `npx prettier --check` と `npx markdownlint-cli2`（対象ファイルのみ）はどちらも通りました。
+- `npm run lint:md` などのチェックは、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"utc-index-sample の冗長箇所1件（ケース表の共通カラムで rulebook の10カラム名を再掲していた箇所）を参照に置き換え、ほかの候補6件は判断情報として残した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/utc-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/utc-index-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは docs/ja/specdojo/samples 配下の sample だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更はない","reason":"変更したファイルに *.yaml / *.yml はない"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"プロジェクト成果物は変更していない","reason":"変更は docs/ja/specdojo/ 配下だけで、docs/ja/projects/ には及ばない"}],"condense_records":[{"location":"「ケース表の共通カラム」導入文","category":"canonical-restatement","action":"reference","reason":"rulebook の10カラム名の列挙を消し、rulebook と直後の記入例の表への参照に置き換えた。カラムの数・順序・必須であることは参照先に残るので、意味は変わらない","cause":{"type":"document"}},{"location":"「本ドキュメントの目的と適用対象」最終段落（合否判定）","category":"canonical-restatement","action":"retain","reason":"受け入れ基準と判定者（CI ジョブで失敗0件・DEV が判定）を書いた唯一の場所で、判定に必要なため","cause":{"type":"document"}},{"location":"「テスト対象の括り方と分割基準」の箇条書き「画面の部品では切らない」","category":"canonical-restatement","action":"retain","reason":"rulebook の規則を本システムの具体的な部品と代わりのテストレベル（総合テスト）に当てはめた判断のため","cause":{"type":"document"}},{"location":"「対象外・除外理由（共通）」表の後の一文","category":"table-prose","action":"retain","reason":"例外をどのカラム（境界/依存）に書くかという、表にない記入先の決定を示すため","cause":{"type":"document"}},{"location":"「観点の立て方（共通）」表の後の段落（受領額60円の例）","category":"table-prose","action":"retain","reason":"命名規則を本システムに当てはめた統合例で、表の内容とは重なっていないため","cause":{"type":"document"}},{"location":"「条件の立て方（共通）」表の後の段落（追加順）","category":"canonical-restatement","action":"retain","reason":"BAC-01 の C-01・C-02 という具体的な条件と、全組合せは作らないという制約を示すため","cause":{"type":"document"}},{"location":"「観点/条件の採用基準と対象別への分配方針（共通）」冒頭段落","category":"table-prose","action":"retain","reason":"表の採用理由・主担当がどの基準で決まったかを示す根拠で、表だけでは読み取れないため","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

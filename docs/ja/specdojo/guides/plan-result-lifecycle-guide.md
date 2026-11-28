@@ -107,22 +107,11 @@ state と evidence は元も残し、ログは退避先へ移します。退避�
 
 ### 2.3. 既存記録の移行
 
-`exec migrate-records` は非推奨であり、次の版（0.10.0）で削除予定です。現在は新形式の実行記録配置（`execution/runs/`）が標準形式であり、通常の運用や検査を通すためにも本コマンドの実行は不要です。旧配置の記録を CLI の通常の探索で使う場合に移行します。移さない場合の制約は次のとおりです。
+旧配置（`exec/plans/`・`exec/results/`・`exec/evidence/`）の記録は CLI の通常の探索では使いません。移行コマンド `exec migrate-records` は 0.10.0 で削除しました。現在は新形式の実行記録配置（`execution/runs/`）が標準形式であり、通常の運用や検査を通すために旧記録の移行は不要です。旧記録を使う場合は、`git mv` で `runs/` へ手で移してください。移さない場合の制約は次のとおりです。
 
 - `exec run --register ... --resume` と schedule の executor 再開は、`runs/` 内の checkpoint を候補にするため旧 `exec/evidence/` の run を発見しません。schedule の通常実行・統合再開も、plan・result の通常の探索では旧配置を参照しません。保存済みイベントや checkpoint の明示的なパス参照を読む経路はありますが、旧配置を自動探索する互換機能ではありません。
 - `dashboard build` の実行記録一覧と plan・result 件数には、旧配置の記録が含まれません。`exec archive` や task ID からの plan・result の取得も `runs/` のみを探索します。
 - `register build` は個票とイベントから派生ビューを作り、旧記録の探索やリンクの移行はしません。個票にある既存リンクは元ファイルが残れば利用できますが、検査の成功によって補完・更新されることはありません。
-
-移行対象の run を完了または破棄し、対応する worktree を撤去してから、Git index に書き込める環境で移行します。プロセスを止めただけで worktree が残っている場合は、`--dry-run` でも項目 ID・worktree のパス・ブランチを示して処理前に停止します。進行中の run の移行と再開は対象外です。
-
-```bash
-specdojo exec migrate-records --project <project-id> --dry-run
-specdojo exec migrate-records --project <project-id>
-```
-
-コマンドは移動先と参照の更新対象、対になる plan または result が欠けた記録を表示します。移動には `git mv` を使い、ログ本文と文書 ID を保持してパスの欄と旧形式の共通規約への相対参照を更新します。ルート相対パスの新形式は移動しても変更しません。移動先の衝突・追跡されていない移動元は処理前に拒否します。移行済みの状態で再実行すると移動は 0 件です。
-
-checkpoint に同じ plan / result を参照する試行が複数ある場合、対は最新の checkpoint の run に置き、先行試行の evidence とログはそれぞれの run に残します。対応が特定できない記録は元の stem を run ID とし、欠けた記録を捏造しません。比較実験の `exec/trials/` は独立した保存形式のため移行対象から外します。通常の読み取りは `runs/` のみを対象にします。
 
 ### 2.4. deliverable指定の解決
 

@@ -4,28 +4,29 @@ document: specdojo:sysd-rulebook
 path: docs/ja/specdojo/rulebooks/sysd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 93
-graded_at: "2026-10-09T21:19:00.991Z"
-graded_by: agy-expert-executor
-content_hash: 6bd9b649216f82bc700b5b881fdf6d7f394aa4fe94a621a076330744cc49f609
+score: 88
+graded_at: "2026-11-21T05:56:16.191Z"
+graded_by: opus-executor
+content_hash: edd8b3ccc131d4445225aeb51531067eb51d6e5b2bc5970d6a7d0651b8948888
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -51,8 +52,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,8 +76,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -87,11 +88,11 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,27 +105,70 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 8
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 個別システム設計（SYSD）作成ルール"
-    message: rulebook としての完備性を確保するため、作成者が参照すべき recipe および sample の定義を Frontmatter に追加することを推奨する。
-    message_ja: rulebook としての完備性を確保するため、作成者が参照すべき recipe および sample の定義を Frontmatter に追加することを推奨する。
+    rule: vp-ba-requirements-completeness
+    line: 47
+    anchor: "| 設定・インターフェース       | 導線のみ | 必要時○          | SSOT の所在、解決規則、互換性          |"
+    message: 観点表の「必要時○」（設定・インターフェース、失敗時・再実行・セキュリティ）に該当条件がなく、子設計で省略してよいかを判定できないため、「外部設定を持つ場合」「永続化・外部呼び出しを伴う場合」のように必要とする条件を明記すべきである。
+    message_ja: 観点表の「必要時○」（設定・インターフェース、失敗時・再実行・セキュリティ）に該当条件がなく、子設計で省略してよいかを判定できないため、「外部設定を持つ場合」「永続化・外部呼び出しを伴う場合」のように必要とする条件を明記すべきである。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
+    rule: vp-dev-implementation-readiness
     line: 49
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 「標準テンプレ」という表記と、「章構成は柔軟に決められる」という記述が矛盾しているため、整合性をとり「推奨構成」や「必須観点」等の適切な表記に修正すべきである。
-    message_ja: 「標準テンプレ」という表記と、「章構成は柔軟に決められる」という記述が矛盾しているため、整合性をとり「推奨構成」や「必須観点」等の適切な表記に修正すべきである。
+    anchor: "| 子設計一覧                   | ○        | -                | 選択条件、責務、参照先                 |"
+    message: 観点表の子設計一覧の内容「選択条件、責務、参照先」と、記述ガイドの列定義「子設計 ID、対象、固有責務、選択条件」（本文68行目）が一致しないため、どちらかに統一すべきである。
+    message_ja: 観点表の子設計一覧の内容「選択条件、責務、参照先」と、記述ガイドの列定義「子設計 ID、対象、固有責務、選択条件」（本文68行目）が一致しないため、どちらかに統一すべきである。
   - id: F003
     severity: minor
+    rule: vp-qe-verifiability
+    line: 91
+    anchor: "| 失敗・再実行・権限・検証観点を省略する        | 実装とテストの判断材料が欠落するため |"
+    message: >-
+      禁止事項「失敗・再実行・権限・検証観点を省略する」が、観点表の hub
+      は「導線のみ」、子設計は「必要時○」という扱い（本文48行目）と衝突し、違反かどうか判定できないため、「該当する場合に記載も導線も欠く」のように禁止の条件を絞るべきである。
+    message_ja: >-
+      禁止事項「失敗・再実行・権限・検証観点を省略する」が、観点表の hub
+      は「導線のみ」、子設計は「必要時○」という扱い（本文48行目）と衝突し、違反かどうか判定できないため、「該当する場合に記載も導線も欠く」のように禁止の条件を絞るべきである。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 68
+    anchor: "- 子設計一覧の列は子設計 ID、対象、固有責務、選択条件とする。"
+    message: 記述ガイドで定める子設計一覧の列（子設計 ID、対象、固有責務、選択条件）が、観点表の内容欄（本文49行目「選択条件、責務、参照先」）と一致せず、必須の列に抜けや矛盾が出るため、列定義をどちらか一方にそろえるべきである。
+    message_ja: 記述ガイドで定める子設計一覧の列（子設計 ID、対象、固有責務、選択条件）が、観点表の内容欄（本文49行目「選択条件、責務、参照先」）と一致せず、必須の列に抜けや矛盾が出るため、列定義をどちらか一方にそろえるべきである。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 個別システム設計（SYSD）作成ルール"
+    message: >-
+      Frontmatter の `sample: undecided` は要否が未判断の状態であり、同じ系統の tsd-rulebook は sample を整備済みなので、ready 化の前に sample の要否を決めて完全
+      ID か `not-needed` を宣言すべきである。
+    message_ja: >-
+      Frontmatter の `sample: undecided` は要否が未判断の状態であり、同じ系統の tsd-rulebook は sample を整備済みなので、ready 化の前に sample の要否を決めて完全
+      ID か `not-needed` を宣言すべきである。
+  - id: F006
+    severity: minor
     rule: vp-ux-readability
-    line: 62
-    anchor: "| 子設計一覧 | ○ | - | 選択条件、責務、参照先 |"
-    message: 表のヘッダー行および区切り行が存在しないため、Markdown の表として正しくレンダリングされません。直前の表に統合するか、正しい表の構文に修正してください。
-    message_ja: 表のヘッダー行および区切り行が存在しないため、Markdown の表として正しくレンダリングされません。直前の表に統合するか、正しい表の構文に修正してください。
+    line: 58
+    anchor: "- 現行と将来構想を分け、未確定事項は共通ラベルで論点と影響を示す。"
+    message: 「共通ラベル」「共通の未確定ラベル」（本文82行目）が何を指すかが示されていないため、`_TODO_`／`_UNDECIDED_` などの具体名を書くか、ドキュメントメタ情報標準の該当箇所への参照を添えるべきである。
+    message_ja: 「共通ラベル」「共通の未確定ラベル」（本文82行目）が何を指すかが示されていないため、`_TODO_`／`_UNDECIDED_` などの具体名を書くか、ドキュメントメタ情報標準の該当箇所への参照を添えるべきである。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 82
+    anchor: "- 参照先がなければ `（なし）` または共通の未確定ラベルを記す。"
+    message: 「共通の未確定ラベル」と本文58行目の「共通ラベル」で表記が揺れているため、一つの用語に統一すべきである。
+    message_ja: 「共通の未確定ラベル」と本文58行目の「共通ラベル」で表記が揺れているため、一つの用語に統一すべきである。
+  - id: F008
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 個別システム設計（SYSD）作成ルール"
+    message: "`sample: undecided` が未決のまま ready 化すると、Kata の対応関係が確定しないため、ready 化の前に sample の要否を決めるべきである。"
+    message_ja: "`sample: undecided` が未決のまま ready 化すると、Kata の対応関係が確定しないため、ready 化の前に sample の要否を決めるべきである。"

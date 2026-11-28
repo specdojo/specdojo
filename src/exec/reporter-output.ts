@@ -6,6 +6,30 @@ import type { ReviewVerdict } from "../review/types.js";
 
 export const MAX_TEXT_LENGTH = 4_000;
 
+// レビューの段の指摘 1 件。runner が result の実施内容の後に表の 1 行として描く。
+// 列は kata-guide の「人への報告の形」の指摘の表（No・段・箇所・指摘・直した案・根拠・印）と対応する。
+export type ReporterFinding = {
+  no: string;
+  stage: string;
+  location: string;
+  finding: string;
+  fix: string;
+  basis: string;
+  mark: string;
+};
+
+export const REPORTER_FINDING_KEYS = [
+  "no",
+  "stage",
+  "location",
+  "finding",
+  "fix",
+  "basis",
+  "mark",
+] as const satisfies readonly (keyof ReporterFinding)[];
+
+export const MAX_REPORTER_FINDINGS = 100;
+
 export type EditReporterOutput = {
   schema_version: 1;
   mode: "edit";
@@ -13,6 +37,8 @@ export type EditReporterOutput = {
   changed_files: Array<{ path: string; summary: string }>;
   handoff: string[];
   approach: string;
+  // 任意。欄が無い出力は従来どおり描く。
+  findings?: ReporterFinding[];
 };
 
 // review の verdict の正本は review-types.ts であり、verdict_definitions と同じ語彙を使う。
@@ -58,6 +84,24 @@ export const REPORTER_OUTPUT_SCHEMA = {
         },
         handoff: { type: "array", maxItems: 100, items: { $ref: "#/$defs/text" } },
         approach: { $ref: "#/$defs/text" },
+        findings: {
+          type: "array",
+          maxItems: MAX_REPORTER_FINDINGS,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: [...REPORTER_FINDING_KEYS],
+            properties: {
+              no: { $ref: "#/$defs/text" },
+              stage: { $ref: "#/$defs/text" },
+              location: { $ref: "#/$defs/text" },
+              finding: { $ref: "#/$defs/text" },
+              fix: { $ref: "#/$defs/text" },
+              basis: { $ref: "#/$defs/text" },
+              mark: { $ref: "#/$defs/text" },
+            },
+          },
+        },
       },
     },
     {
@@ -151,7 +195,9 @@ function validateCommon(value: Record<string, unknown>, mode: TaskMode): string 
 
 function validateEdit(value: Record<string, unknown>): string | undefined {
   const keys = ["schema_version", "mode", "summary", "changed_files", "handoff", "approach"];
-  if (!exactKeys(value, keys)) return "edit output has missing or additional properties";
+  if (!exactKeys(value, Object.hasOwn(value, "findings") ? [...keys, "findings"] : keys)) {
+    return "edit output has missing or additional properties";
+  }
   const common = validateCommon(value, "edit");
   if (common) return common;
   if (!isTextArray(value.summary, 100, 1)) return "summary must contain 1-100 bounded strings";
@@ -165,6 +211,20 @@ function validateEdit(value: Record<string, unknown>): string | undefined {
     }
     if (!isText(file.path)) return "changed_files path must be a non-empty bounded string";
     if (!isText(file.summary)) return "changed_files summary must be a non-empty bounded string";
+  }
+  return Object.hasOwn(value, "findings") ? validateFindings(value.findings) : undefined;
+}
+
+function validateFindings(findings: unknown): string | undefined {
+  if (!Array.isArray(findings) || findings.length > MAX_REPORTER_FINDINGS) {
+    return `findings must be an array with at most ${MAX_REPORTER_FINDINGS} items`;
+  }
+  for (const finding of findings) {
+    if (!isRecord(finding) || !exactKeys(finding, REPORTER_FINDING_KEYS)) {
+      return "findings entries have missing or additional properties";
+    }
+    const invalid = REPORTER_FINDING_KEYS.find((key) => !isText(finding[key]));
+    if (invalid) return `findings ${invalid} must be a non-empty bounded string`;
   }
   return undefined;
 }

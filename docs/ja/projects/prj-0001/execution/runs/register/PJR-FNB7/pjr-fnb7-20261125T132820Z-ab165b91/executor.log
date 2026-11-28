@@ -1,0 +1,24 @@
+Quick Start の起票の対話を実オーケストレーターで流すテストは書き終えました。ただし、5 回流して合格率・所要時間・費用を取ることはまだしていません。実 agent の起動と利用枠の消費が要るため、executor の sandbox では流せません。そのため PJR-3R8F の採択理由も、まだ結果を書けていません。
+
+**作ったもの**
+- **シナリオ**: Quick Start「機能追加を起票する（todo）」の利用者の発言 3 つ（依頼 → 項目の回答 → 承認）を固定しました。2 つ目の発言には、期待する個票の名前を決めるため topic `add-faq-section` を足しています。
+- **流し方**: 一時 Git リポジトリで `specdojo init --yes --provider claude` を実行して commit します。そのうえで `claude -p --output-format json --agent specdojo-orchestrator` を `--session-id` / `--resume` で 1 つの会話として続けます。オーケストレーターが Bash で使えるのは、`npx specdojo`・`specdojo` と読み取りの git だけです。
+- **承認の前の検査**: 1・2 つ目の発言の後に、HEAD、作業ツリー、個票とイベントの内容が初期状態と同じかを比べます。
+- **承認の後の検査**: 新しい個票とイベントがそれぞれ 1 つあること、個票の優先度・担当・期日・難しさなどの値、最初のイベントが `add` であることを確かめます。HEAD が進んで両ファイルが commit に入り、作業ツリーがきれいであることも確かめます。
+- **記録**: run ごとの合否・失敗理由・返答・所要時間・費用と合格率を `tmp/agent-test/` に JSON で書きます。回数は `SPECDOJO_AGENT_TEST_RUNS`（既定 5）、モデルは `SPECDOJO_AGENT_TEST_MODEL`（既定 `sonnet`）で変えられます。
+- **`npm test` から外す**: `*.agent.test.ts` を unit の対象から外し、新しい `vitest.agent.config.ts` だけで流します。
+
+**確かめたこと**: 実 agent を呼ばない判定部分の単体テストと、config・Git 環境隔離のテストを対象を絞って流し、通りました。`tsc -p tsconfig.test.json`、eslint、prettier、markdownlint、`validate:history-links` もエラーはありません。fixture の準備と実オーケストレーターとの接続は、まだ一度も動かしていません。
+
+**変更したファイル**
+- 追加: `tests/agent/helpers/orchestrator-scenario.ts`、`tests/agent/helpers/orchestrator-scenario.test.ts`、`tests/agent/orchestrator-quick-start.agent.test.ts`、`vitest.agent.config.ts`
+- 変更: `vitest.unit.config.ts`、`tests/vitest-config.test.ts`、`.github/instructions/vitest.instructions.md`（`*.agent.test.ts` の区分を追記）
+- 個票: FNB7 は作業内容 No.1・2 を done、No.3 は理由を書いて open のままにし、対応結果を書きました。3R8F は採択理由の `_TODO_` に、まだ計測していないことを書き足しました。
+
+**お願いしたいこと**
+1. `package.json` は executor から編集できない保護ファイルでした。script `"test:agent": "npm run build && vitest run --config vitest.agent.config.ts"` を足してください。それまでは `npm run build && npx vitest run --config vitest.agent.config.ts` で流せます。
+2. 上のコマンドで 5 回流し、合格率・所要時間・費用を PJR-3R8F の採択理由に書いて、3R8F を決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Quick Start の todo 起票の対話（固定の 3 発言）を実オーケストレーター（claude CLI の会話の継続）で一時 Git リポジトリに流すテストを追加した。承認の前は状態が変わっていないこと、承認の後は個票・イベント・commit があることを機械的に確かめ、N 回分の合格率・所要時間・費用を tmp/agent-test/ に JSON で記録する。npm test から外し、vitest.agent.config.ts で流す。実 agent での N 回の実行と PJR-3R8F への結果の記載は利用者に任せる。package.json の script 追加は保護ファイルのため申し送りにした。","handoff":["package.json は executor から編集できない保護ファイルのため、script `\"test:agent\": \"npm run build && vitest run --config vitest.agent.config.ts\"` の追加を利用者に任せる。追加までは `npm run build && npx vitest run --config vitest.agent.config.ts` で流す。","N 回（既定 5、`SPECDOJO_AGENT_TEST_RUNS`、モデルは `SPECDOJO_AGENT_TEST_MODEL` 既定 sonnet）の実行は未実施。claude CLI へのログインと利用枠の消費が要るため、利用者が流し、tmp/agent-test/orchestrator-quick-start-*.json の合格率・所要時間・費用を PJR-3R8F の採択理由に書いて 3R8F を決める。個票 PJR-FNB7 の作業内容 No.3 は理由を書いて open のまま残した。","fixture の準備（init と npx specdojo の symlink）と claude の引数（`--agent`、`--settings`、`--setting-sources project`、`--strict-mcp-config`、`--allowedTools`、`--session-id` / `--resume`）は実機で未確認。初回の実行で起動エラーが出たら tests/agent/helpers/orchestrator-scenario.ts の runOrchestratorTurn を直す。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/agent/helpers/orchestrator-scenario.test.ts tests/vitest-config.test.ts tests/src/shared/git-environment-isolation.test.ts","status":"passed","summary":"対象を絞った単体テスト 20 件が成功（判定部分、config、Git 環境隔離の静的検査）"},{"command":"npx tsc -p tsconfig.test.json --noEmit","status":"passed","summary":"tests の型エラーなし"},{"command":"npx eslint tests/agent vitest.agent.config.ts tests/vitest-config.test.ts","status":"passed","summary":"エラーなし（vitest.agent.config.ts は eslint の対象外という警告のみ）"},{"command":"npx prettier --write tests/agent/helpers/orchestrator-scenario.ts tests/agent/helpers/orchestrator-scenario.test.ts tests/agent/orchestrator-quick-start.agent.test.ts vitest.agent.config.ts vitest.unit.config.ts tests/vitest-config.test.ts","status":"passed","summary":"変更した TS を整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-fnb7-orchestrator-test-minimal-check.md docs/ja/projects/prj-0001/controls/project-register/pjr-3r8f-orchestrator-agent-test-tool-selection.md .github/instructions/vitest.instructions.md","status":"passed","summary":"変更した Markdown にエラーなし（prettier で整形済み）"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含む履歴ファイルに違反なし"},{"command":"npm run build && npx vitest run --config vitest.agent.config.ts","status":"requires_human","summary":"実 claude CLI を起動して利用枠を消費するため sandbox では流せない。利用者が 5 回流し、合格率・所要時間・費用を PJR-3R8F の採択理由に書く"}]}
+</specdojo_executor_evidence>

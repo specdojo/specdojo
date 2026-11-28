@@ -1,0 +1,21 @@
+R5（整合）の段として `opr-sample.md` を直しました。markdownlint のエラーは 0 件です。opr 系列の sample（index と分冊 8 本）、`opd-index`・`opd-monitoring`・`opd-access-control` の sample、`opr-rulebook` と `opr-index-rulebook`、用語集、共通サンプル文脈と照らし合わせています。
+
+**直した点**
+
+- **入口の位置づけ**: 分冊 8 本はどれも本書を「`opr-index`」（手順群の入口）として参照しています。ところが本書は入口を別の `opr-index-sample` としていました。そこで本書を入口（`opr-index`）と書き直し、関連導線の表から `opr-index-sample` の行を除きました。この直しは「要判断」です。
+- **欠品記録**: 月次の重要業績評価指標（KPI）で欠品記録を集計しているのに、記録を作る手順と保存先が本書にありませんでした。閉店後の欠品の記録を日次点検の表に、保存先を証跡の表に足しました。
+- **関連導線の不足**: 9 章が参照している方針の分冊（権限・アカウント）の行を関連導線の表に足しました。
+
+ほかの値（権限変更記録・棚卸し記録の呼び方、アカウントを付与する役割、誤検知の閾値「月 3 件以上」、9:30 のバックアップ確認、再実行の上限、監査ログの保管期間）は分冊・方針と一致していました。用語集は SpecDojo 自体の用語を扱っており、食い違いはありません。
+
+**plan の finding の扱い**
+
+- F003 は 1 つ目の直しで本書側を解消しました。ただし `opr-index-sample` 側の古い記述は残っています（下の handoff の 2 番）。
+- F001・F004 は、`kata-guide` が kata のレビューでは使わないとしている観点（`vp-po-decision-readiness`・`vp-ops-release-readiness`）なので、この段では扱っていません。
+- F002 は本書がすでに未決事項の表に保管期間の行を持っており、解消済みと判断しました。
+
+他の文書を直すべき点は、変更せずに handoff に書きました。markdownlint 以外の検査は、この後に実行環境が回します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）として docs/ja/specdojo/samples/opr-sample.md を修正した。分冊が本書を `opr-index` として参照する系列に合わせて入口の記述と関連導線を直し、欠品記録の日次手順と証跡の行、opd-access-control-sample への導線を足した。相手側の文書を直す案は handoff に記載した。","handoff":["R5-1: R5 / 1. 概要、12. 関連ドキュメント導線 / 分冊 8 本（opr-incident・opr-monitoring・opr-batch・opr-backup-restore・opr-change・opr-access-control・opr-support）はすべて本書を `[[specdojo:opr-sample|運用手順]]`（`opr-index`）として参照するが、本書は「手順群の入口は opr-index-sample」としていた / 概要を「本書は手順群の入口（`opr-index`）であり」に直し、関連導線の表から opr-index-sample の行を除いた / `vp-qe-kata-conformance`（kata 相互）、`opr-rulebook` の「`opr-index` が実行手順の SSOT であることを明示する」、grade F003 / 要判断（opr-sample と opr-index-sample が同じ店の同じ文書の完成例として 2 本並んでいる。選ばなかった案は、本書を分冊扱いのまま残し分冊 8 本の参照を opr-index-sample へ付け替える案。分冊の数と based_on の付け替えが大きく、本書が rulebook の SSOT 明示を満たせなくなるため選ばなかった）","R5-2: R5 / 相手側 opr-index-sample 12. 関連ドキュメント導線 / opr-index-sample が「分冊は障害対応だけとし、ほかの作業領域は本書で完結する」と書くが、分冊 sample は 7 領域ある / - / `vp-qe-kata-conformance`。相手側 docs/ja/specdojo/samples/opr-index-sample.md を直す案: opr-index-rulebook と opr-rulebook のどちらの sample を opr-index の完成例とするかを決め、残す側の導線表へ分冊 7 本を載せる。もう一方は廃止するか、役割の違い（index 専用の rulebook の例）を冒頭で明示する / 要判断","R5-3: R5 / 相手側 opr-index-sample 9. アカウント付与/剥奪手順・11. 証跡 / opr-index-sample は付与・剥奪の実施者を `DEV`、証跡名を「権限の記録」「棚卸しの記録」とし、本書・opr-access-control-sample（実施者 `OPS`、「権限変更記録」「棚卸し記録」）、opd-index-sample の RACI（権限の付与・剥奪の R は `OPS`）と食い違う。誤検知の閾値も「月 3 回を超えたら」で、本書・opr-monitoring・opd-monitoring の「月 3 件以上」と違う / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。相手側 opr-index-sample を、実施者 `OPS`、証跡名「権限変更記録」「棚卸し記録」、閾値「月 3 件以上」に揃える案 / -","R5-4: R5 / 3. 日次・週次・月次点検手順、11. 証跡 / 月次で欠品記録から KPI を集計するのに、欠品記録を作る手順と保存先が本書になかった（opd-index-sample の KPI「人気商品の欠品」、共通サンプル文脈の「欠品発生を日次で記録する」） / 日次（閉店後）の欠品の記録の行を点検表に、欠品記録の行（在庫の画面、`closing_date`・商品コード）を証跡表に足し、証跡表の後の文から欠品記録の記述を除いた / `vp-qe-kata-conformance`（適用先）、共通サンプル文脈の期待効果 / -","R5-5: R5 / 12. 関連ドキュメント導線 / 9 章で参照する opd-access-control-sample が関連導線の表になかった / 方針の行として opd-access-control-sample を足した / `vp-dev-change-impact` / -","R5-6: R5 / 相手側 opd-index-sample 1. 概要・9. 権限・アカウント運用・12. 関連ドキュメント導線 / opd-index-sample は「アカウントは店番担当と `DEV` に限り」とするが、opd-access-control-sample は運用の区分（`OPS`）を定めている。未決事項の表に、opr-change-sample と本書が持つ「変更の凍結期間」がない。関連導線の手順の行も opr-index-sample と opr-incident-sample の 2 本だけで、opr-sample と他の分冊がない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。相手側 docs/ja/specdojo/samples/opd-index-sample.md に次を入れる案: 9 章に `OPS` の運用の区分を足す、未決事項に凍結期間の行を足す、関連導線に opr-sample と分冊を載せる / -","grade finding の扱い: F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は、kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点とされているため、この段では扱っていない。F002 は、本書の未決事項の表に「監査ログ以外の証跡の保管期間」の行がすでにあり、証跡表の後の文もその扱いを指しているので、解消済みと判断した。F003 は R5-1 で解消した。ただし相手側の opr-index-sample は R5-2 で扱う。","用語集（docs/ja/product/010-business-specs/060-glossary/）は SpecDojo プロダクトの用語を扱い、店舗業務の語（店番担当・つけ・日次締めなど）を定義していないため、表記の食い違いはなかった。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npx prettier --write docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"表の整形を適用した"}]}
+</specdojo_executor_evidence>

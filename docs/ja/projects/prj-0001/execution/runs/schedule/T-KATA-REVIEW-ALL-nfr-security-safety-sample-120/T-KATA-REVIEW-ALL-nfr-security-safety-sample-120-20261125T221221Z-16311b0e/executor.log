@@ -1,0 +1,26 @@
+R2（構成）のレビューを終え、sample（`docs/ja/specdojo/samples/nfr-security-safety-sample.md`）を 2 か所直しました。章の移動・分割・統合はしていません。rulebook の本文構成と照らすと、6 章の順、各表の列、表の前の 1 文と本文の分け方がすでに合っていて、前提から結論の順にも読めます。template は rulebook で `undecided` なので、比べる相手がありませんでした。
+
+**直した 2 か所**
+
+- **R2-1（測定・検証方法）:** `nfr-sec-003` の母数は主体の表の「許可しない操作」すべてですが、測定方法の対象が店番・運用・保守だけでした。管理（監査ログの削除）と本部連携（顧客情報の受け渡し）が抜けていたので、「店番・管理・運用・保守のアカウントと本部連携の認証値で」に直しました（F003、`vp-qe-omissions-consistency`）。
+- **R2-2（関連ドキュメント導線）:** 運用手順の行に 2 つの食い違いがありました。
+  - 測定・検証方法の表で `nfr-sec-001` は月次点検と棚卸し記録を使うのに、この行の対象から漏れていた。
+  - `nfr-sec-011` は「緊急権限の使用ごと」に判定するのに、行の説明が「月次点検の手順」だった。
+  - 対象に `nfr-sec-001` を足し、説明を「点検と記録の手順」に直しました（`vp-qe-omissions-consistency`）。
+
+**直さなかった指摘**
+
+- **F004（`stc-*` への導線がない）:** すでに直っていました。導線の表に「総合テスト（なし）… `stc-*` を置かない」の行があり、rulebook の求めを満たしています。
+- **F001・F005（`nfr-sec-012` の未決日数の決定者・期限と、解消の条件）:** kata のレビューでは使わない観点（`vp-po-decision-readiness`、`vp-ops-release-readiness`）なので扱っていません。kata の承認と ready 化は登録簿で追うと kata-guide.md に書かれています。
+- **F002（`nfr-sec-ex-001` の期限「初期リリースの 30 日後」が相対的な書き方）:** `vp-qe-verifiability` の指摘なので R4（正しさ）に任せます。rulebook の「期限切れの例外が表から判別できること」に関わるので、R4 で日付に置き換えるか、起算日を明記する見込みです。
+
+**確かめたこと**
+
+- `npx prettier --write` で整形しました。
+- `npx markdownlint` はエラーなしです。
+
+lint などのほかの検査は、この後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）で sample の 2 か所を直した（`nfr-sec-003` の測定方法に抜けていた管理・本部連携を足した、導線の表の運用手順の行の対象と説明を測定・検証方法の表に合わせた）。章の移動・分割・統合は不要。F004 は直し済みを確認、F001・F005 は kata では使わない観点、F002 は R4 に任せた。","handoff":["R2-1: R2 / 4. 測定・検証方法 / `nfr-sec-003` の母数は主体の表の「許可しない操作」すべてだが、測定方法の対象が店番・運用・保守だけで、管理（監査ログの削除）と本部連携（顧客情報の受け渡し）が抜けている / 測定方法を「店番・管理・運用・保守のアカウントと本部連携の認証値で、主体の表の「許可しない操作」をすべて試す」に直した / `vp-qe-omissions-consistency`（grade F003） / -","R2-2: R2 / 6. 関連ドキュメント導線 / 運用手順の行の対象に、棚卸し記録で月次に点検する `nfr-sec-001` が入っていない。また「緊急権限の使用ごと」に判定する `nfr-sec-011` を含むのに、説明が「月次点検の手順」になっていて、測定・検証方法の表と食い違う / 対象に `nfr-sec-001` を足し、説明を「点検と記録の手順」に直した / `vp-qe-omissions-consistency` / -","R2-3: R2 / 6. 関連ドキュメント導線 / `stc-*` への導線がないという grade の指摘（F004）は、総合テストの行（「（なし）」と `stc-*` を置かない理由）がすでにあり、rulebook の求めを満たしている / - / `vp-qe-omissions-consistency`（grade F004）、rulebook の本文要件 / -","R2-4: R2 / 3. 機密性・安全性要件一覧 / `nfr-sec-012` の `_UNDECIDED_` に決定者・期限・解消の条件がないという grade の指摘（F001・F005）は、kata の段のレビューでは使わない観点（`vp-po-decision-readiness`、`vp-ops-release-readiness`）に当たるので扱わない / - / kata-guide.md の「kata の観点の組」（kata の承認と ready 化は登録簿で追う） / -","R2-5: R2 / 5. 例外運用 / `nfr-sec-ex-001` の期限「初期リリースの 30 日後」は相対的な書き方で、期限切れを表から判別しにくい（grade F002、`vp-qe-verifiability`）。R4 の観点なので R2 では直さない / - / R4 で rulebook の「期限切れの例外が表から判別できること」と照らし、日付に置き換えるか起算日を明記する案を検討する / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したのは Markdown だけで、`*.yaml`・`*.yml` の変更がない"}]}
+</specdojo_executor_evidence>

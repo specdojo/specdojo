@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-ifx-file-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-ifx-file-sample-110-20261125T103624Z-6081b0d7",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T10:37:16.483Z",
+    "completed_at": "2026-11-25T10:40:38.277Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/ifx-file-sample.md | 154 ++++------------------------\n 1 file changed, 21 insertions(+), 133 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:ifx-file-sample\n  type: api\n  status: ready\n  rulebook: specdojo:ifx-file-rulebook\n  part_of: []\n  based_on: []\n---\n\n# 駄菓子屋きぬや 外部ファイル連携仕様 サンプル\n\n## 1. 概要\n\n店主代表（`PO`）と家族利用者代表（`PO` 業務助言）が日々の店頭販売と在庫把握を行う「駄菓子屋きぬや」において、\\[\\[specdojo:ifx-file-rulebook|外部ファイル連携仕様作成ルール]] に従う 2 つの代表的なファイル受け渡し契約（**単一ファイル・インライン定義**および**複数ファイル・正本スキーマ参照**）を示す完成例である。外部取引先へ送付するバッチファイルと、店頭 CLI の実行段階間で授受・照合する状態・証跡ファイルの\n… output omitted …\n、未受付時のみ再登録を実施する |\n\n## 4. メモ / 将来課題\n\n| 項目 | 未整備事項と影響 | 担当・解消条件・引き継ぎ先 |\n| - | - | - |\n| 次期拡張（週次発注連携）の採否と契約 | 仕入れ先連携は初期スコープ外であり、問屋側の SFTP 接続条件と受領確認（ACK）仕様が未確定 | 店主代表（`PO`）が次期フェーズでの着手可否を判断し、着手決定後に `BA` と `DEV` が問屋担当者と接続・ACK 仕様を合意して \\[\\[specdojo:ifx-index-sample\\|外部システムI/F一覧]] へ追加する |\n| 本部売上登録 API との回復照合接続 | `TX-YYYYMMDD-NNNN.json` の `api_sync_status` と照合する `ifx-api-kinuya-sales.yaml` の重複排除・受付照会仕様が未整備 | `ARC` と `DEV` が本部 API 契約で受付照会方式を確定し、`QE` が受付済み・未受付・結果不明の期待結果を確認するまで自動再送を行わず店頭保留運用を維持する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7210 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7210 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-file-sample-110\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/sch\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1669}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  19:46:36\n   Duration  2.86s (transform 6.74s, setup 900ms, import 9.74s, tests 6.64s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-file-sample-110/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-file-sample-110/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R1（目的の過不足）として ifx-file-sample.md を直した。正本スキーマ全文を required_fields で表せない制約の抜粋に置き換え（F005・F001）、承認・ready 昇格の担当の記述を削除し（F003、F007・F008 も解消）、文書を確かめる役割を並べた章「利用目的と対象ユーザー」と、進み具合だけを書いた将来課題 2 行を削った。YAML 形式への作り直し（F004）は handoff で要判断とした。",
+  "completion_status": "complete",
+  "handoff": [
+    "R1-1: R1 / 2.3. 参照する正本スキーマの制約と検証 / rulebook の禁止事項（正本スキーマの全文の再掲）に当たる JSON Schema 2 件の全文を載せていた / 全文を削り、`required_fields` で表せない制約（`additionalProperties: false`、`status` の 2 値と `payment_requested` での `line_items` 1 件以上、`TX-*.json` の `line_items` 1 件以上と `print_status` の組み合わせ）だけの箇条書きにした。小節名を「参照する正本スキーマの制約と検証」に改め、YAML コメントの参照先も合わせた / `vp-qe-kata-conformance`（F005・F001） / -",
+    "R1-2: R1 / 1. 概要、2.1・2.2 の YAML コメント / 本文と YAML コメントに文書の承認・`status: ready` への昇格の担当を書いていた（Sample 記述標準の禁止事項） / 概要の `_UNDECIDED_` 段落を削った。週次発注のコメントは「問屋と接続先・ACK の形式を合意すれば解消する」という業務の未決事項だけにし、取引状態のコメントからは ARC の管理と PO の ready 昇格の文を削った。これで F007・F008 の状態表記の食い違いもなくなった / `vp-qe-kata-conformance`（種別の責務、F003） / -",
+    "R1-3: R1 / （旧）2. 利用目的と対象ユーザー / rulebook にない章で、文書を確かめ・合意する役割の割り当て（公開採否を含む）を並べており、ファイル受け渡し契約の例という目的に要らない / 章を削った。CLI 仕様・ifx-cmd・ifx-index との責務境界の段落は「概要」へ移し、後ろの章番号を振り直した / `vp-po-purpose-alignment`、`vp-arc-single-responsibility` / -",
+    "R1-4: R1 / 4. メモ / 将来課題 / 「ローカル JSON スキーマ正本の配置」と「Schedule・プロジェクト登録簿への接続」の行は、作業の割り当てと進み具合（未登録・未実施）で、契約の未決事項ではない / 2 行を削り、業務・契約の未決事項（次期の週次発注連携、本部 API との照合）の 2 行を残した / `vp-qe-kata-conformance`（種別の責務） / -",
+    "R1-5: R1 / ファイル全体（形式） / rulebook の `target_format` は yaml で、ほかの ifx sample（ifx-api・ifx-cmd・ifx-index・ifx-msg）も `.yaml` だが、本 sample は `.md` で rulebook にない章を持つ（F004） / - / Sample 記述標準の「出力フォーマットと命名」。YAML にすると成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml` の `path` と rulebook の `sample` 宣言の確かめが要り、R1 の sample の差分の範囲を超えるので直していない。案 A: 2 つの契約を `ifx-file-sample.yaml`（1 契約）に絞り、補足は YAML コメントへ移す。案 B: 2 つの契約の見本を残すため、`.md` とする例外を ifx-file-rulebook に宣言する / 要判断",
+    "R1-6: R1 / 3. 異常時の判断と利用者の次の手 / rulebook にない章で、内容の多くは YAML の `error_handling` の言い直しである / - / `vp-po-purpose-alignment`。店頭の次の手は契約の外の利用者の手順として読む価値があり、形式の判断（R1-5）次第で残すかが変わるので削っていない。R1-5 の結論に合わせて残すかを決め、重複は R3（`vp-arc-conciseness`）で詰める案 / 要判断",
+    "この段で扱わない finding: F002（`vp-qe-verifiability`）は R4、F006（`vp-ux-language-consistency`）は R3 に任せた。F007（`vp-ux-language-consistency`）と F008（`vp-ops-release-readiness`、kata のレビューでは使わない観点）は R1-2 の削除で解消した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-ifx-file-sample-110/T-KATA-REVIEW-ALL-ifx-file-sample-110-20261125T103624Z-6081b0d7/executor.log",
+      "bytes": 7118,
+      "truncated": false
+    }
+  ]
+}

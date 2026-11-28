@@ -4,16 +4,16 @@ document: specdojo:pm-issue-log-rulebook
 path: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 91
-graded_at: "2026-11-10T20:36:47.472Z"
-graded_by: flash-high-executor
-content_hash: 5a0a162fa02aa0af929d5f571aa0c08d11349f17896968daf0ee07bb99c3cdce
+verdict: pass
+score: 98
+graded_at: "2026-11-23T11:37:50.923Z"
+graded_by: sonnet-review-executor
+content_hash: 6d9e1813e45e8a3914dc1cb35f75f676aff02bdeeb15a93213416f4fb34ada67
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -33,11 +33,11 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -81,14 +81,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,42 +103,29 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 3
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 73
-    anchor: ""
-    message: 課題の優先度変更や完了判定、期限超過時のエスカレーション先において、PO等の意思決定者がどのように関与するか（承認プロセス）が定義されていない。
-    message_ja: 課題の優先度変更や完了判定、期限超過時のエスカレーション先において、PO等の意思決定者がどのように関与するか（承認プロセス）が定義されていない。
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 課題ログ 作成ルール"
+    message: >-
+      連携する template が登録簿からの生成ビュー（`rulebook: specdojo:pjr-rulebook`）の枠だけを定義しており、単独の課題ログ（本文要件の6章）の骨組みがないため、単独ログ用の template
+      または骨組みの所在を明記する。
+    message_ja: >-
+      連携する template が登録簿からの生成ビュー（`rulebook: specdojo:pjr-rulebook`）の枠だけを定義しており、単独の課題ログ（本文要件の6章）の骨組みがないため、単独ログ用の template
+      または骨組みの所在を明記する。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 16
-    anchor: "- `pm-risk-register`: 潜在リスクの管理。"
-    message: 課題ログに含まれる可能性のある機密情報や個人情報の取り扱い、および公開可否の判断基準に関する言及がない。
-    message_ja: 課題ログに含まれる可能性のある機密情報や個人情報の取り扱い、および公開可否の判断基準に関する言及がない。
-  - id: F003
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 課題ログ 作成ルール"
-    message: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
-    message_ja: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 課題ログ 作成ルール"
-    message: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
-    message_ja: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 62
-    anchor: "- 優先度基準、期限設定ルール、期限超過時対応を明記する。"
-    message: 課題のステータスの標準値（未着手、対応中など）が定義されておらず、運用時に表記ゆれが生じるおそれがある。
-    message_ja: 課題のステータスの標準値（未着手、対応中など）が定義されておらず、運用時に表記ゆれが生じるおそれがある。
+    line: 74
+    anchor: "- 根拠、影響先、課題から起票したリスク・変更要求・決定記録を project 修飾の文書 ID（例: `<project-id>:pm-risk-register`）で示す。なければ `（本書のみ）` と書く。"
+    message: >-
+      sample の関連ドキュメントが `kinuya-decision-log` や「操作メモ」のように project 修飾の文書 ID でない表記を含み、規定と一致しないため、sample を project 修飾の文書 ID
+      表記へ修正する。
+    message_ja: >-
+      sample の関連ドキュメントが `kinuya-decision-log` や「操作メモ」のように project 修飾の文書 ID でない表記を含み、規定と一致しないため、sample を project 修飾の文書 ID
+      表記へ修正する。

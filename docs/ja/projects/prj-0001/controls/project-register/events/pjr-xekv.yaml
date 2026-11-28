@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_952b0283b3a64f18b44ba3557ce9165e
+  ts: "2026-11-24T23:02:52Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 運用メモで手作業で回避している CLI の不足を 3 つ直す
+    - field: description
+      from: ""
+      to: prj-0001 の運用メモ（`pm-orchestrator-playbook`）で、オーケストレーターが手作業で回避している CLI の不足のうち、まだ項目のない 3 つを直す。手作業の回避はコマンドへ移す方針（オーケストレーターの回避策はコマンドへ）に沿う。
+    - field: input
+      from: ""
+      to: '["運用メモの第 3 章（exec queue status の EPIPE、exec resume --task を列の段にできない）と第 6.3 節（--section-file が見出しを含むファイルを拒む）の回避（オーケストレーターの調べ、2026-11-25）","担当と期限は利用者の確認待ち"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-69ZX"]'
+- v: 1
+  id: reg_2bb979c8bdd843928dcc432dd0be0e02
+  ts: "2026-11-25T00:04:13Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_952b0283b3a64f18b44ba3557ce9165e
+- v: 1
+  id: reg_e5ebf57bb3f840e1bf2ba62700e9b74a
+  ts: "2026-11-25T00:11:03Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2bb979c8bdd843928dcc432dd0be0e02
+- v: 1
+  id: reg_98e0e1cd183649b48ffe4f8e2fe0ca78
+  ts: "2026-11-25T00:13:20Z"
+  action: update
+  actor: SpecDojo
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_e5ebf57bb3f840e1bf2ba62700e9b74a
+- v: 1
+  id: reg_c9b453dda68d4b31b4b0685eb9ca3959
+  ts: "2026-11-25T00:13:37Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_98e0e1cd183649b48ffe4f8e2fe0ca78
+- v: 1
+  id: reg_d301394cbbcb410fac641215f2322e3a
+  ts: "2026-11-25T00:19:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c9b453dda68d4b31b4b0685eb9ca3959
+- v: 1
+  id: reg_18c13a22325f46c6aea6a9f3a1c72357
+  ts: "2026-11-25T00:19:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "exec run --register（sonnet-executor、2 回、統合先は feature/prj-0001/playbook-cli-gaps）で実装。EPIPE（develop の dist は終了コード 1、直した版は 0）、列の段の予約、### の受け入れと ## の拒否のメッセージを手元で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: "exec queue status と exec status が EPIPE で落ちないようにし、exec resume --task を列の段に置けるようにし、--section-file で ### の小節の見出しを使えるようにした"
+  previous_event_id: reg_d301394cbbcb410fac641215f2322e3a

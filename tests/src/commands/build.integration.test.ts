@@ -159,12 +159,12 @@ describe("specdojo build without --project", () => {
   it(
     "lets exec worktree preparation generate artifacts for the same two-project fixture",
     { timeout: 120_000 },
-    () => {
+    async () => {
       const root = createTwoProjectFixture();
       // worktree の checkout にある CLI として、このリポジトリの src を参照させる。
       symlinkSync(join(REPO_ROOT, "src"), join(root, "src"), "dir");
 
-      expect(() => generateWorktreeArtifacts(root)).not.toThrow();
+      await expect(generateWorktreeArtifacts(root)).resolves.toBeUndefined();
 
       for (const id of PROJECT_IDS) {
         expect(existsSync(generatedRegisterIndex(root, id))).toBe(true);

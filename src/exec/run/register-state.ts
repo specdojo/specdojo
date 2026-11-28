@@ -16,25 +16,28 @@ import {
 import { isRunRecordPath } from "../run-records.js";
 import {
   abortMerge,
+  assertHookCommitSucceeded,
   currentBranch,
   normalizeResultWhitespace,
   releaseRootWorkingCopies,
   stabilizeCommitTargets,
+  stabilizeCommitTargetsAsync,
   stageCommitTargets,
   unstageCommitTargets,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
+import { gitResultAsync } from "../../shared/git.js";
 import {
-  appendGitFailureLog,
   appendGitResultFailureLog,
   formatGitResultFailure,
   gitOutput,
   gitResult,
-  summarizeGitHookFailure,
   type ExecWorktree,
 } from "../worktree.js";
 import { pathInsideWorktree } from "./agent.js";
 import { repoRelativePath } from "./mode-shared.js";
+import { isSyncedRegisterPath } from "./register-sync.js";
+import { resolveRegisterBranchTarget } from "../../shared/register-branch.js";
 import {
   registerEventPathForTicket,
   registerRunnerManagedPaths,
@@ -64,8 +67,60 @@ export function registerStatePaths(
       selected.add(path);
     }
   }
-  return [...selected].sort();
+  return [...selected]
+    .filter((path) => !isSyncedRegisterPath(registerPaths.projectId, repoRoot, path))
+    .sort();
 }
+
+type RegisterStateCommit = {
+  paths: string[];
+  remainingPaths: () => string[];
+};
+
+// commit の対象を stage する。commit するものが無ければ undefined を返す。
+function stageRegisterState(
+  repoRoot: string,
+  registerPaths: RegisterPaths,
+  ticketPath: string | null | undefined,
+  additionalPaths: readonly string[],
+  failureLogPath: string | undefined,
+): RegisterStateCommit | undefined {
+  const paths = [
+    ...new Set([
+      ...registerStatePaths(repoRoot, registerPaths, ticketPath),
+      ...additionalPaths.map((path) => repoRelativePath(repoRoot, path)),
+    ]),
+  ].filter((path) => !isSyncedRegisterPath(registerPaths.projectId, repoRoot, path));
+  if (paths.length === 0) return undefined;
+  const remainingPaths = (): string[] => registerStatePaths(repoRoot, registerPaths, ticketPath);
+  const commit = { paths, remainingPaths };
+  try {
+    stageCommitTargets(repoRoot, paths);
+    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+    const staged = gitResult(repoRoot, stagedArgs);
+    if (staged.status === 0) return undefined;
+    if (staged.status !== 1) {
+      appendGitResultFailureLog(failureLogPath, "git diff register-state inspection", staged);
+      throw new Error(
+        `Failed to inspect staged register-state changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+      );
+    }
+    return commit;
+  } catch (error) {
+    unstageRegisterState(repoRoot, commit);
+    throw error;
+  }
+}
+
+function unstageRegisterState(repoRoot: string, commit: RegisterStateCommit): void {
+  unstageCommitTargets(repoRoot, [...commit.paths, ...commit.remainingPaths()]);
+}
+
+function registerStateCommitArgs(message: string, paths: readonly string[]): string[] {
+  return ["commit", "-m", message, "--", ...paths];
+}
+
+const REGISTER_STATE_COMMIT_LABEL = "git commit register state";
 
 // register 状態遷移の pjr-index / 派生ビュー変更を root へ 1 コミットする。hook が対象を
 // 整形した場合は同じ commit へ収束するまで amend する。commit 対象が無ければ何もしない。
@@ -77,44 +132,58 @@ export function commitRegisterState(
   additionalPaths: readonly string[] = [],
   failureLogPath?: string,
 ): void {
-  const paths = [
-    ...new Set([
-      ...registerStatePaths(repoRoot, registerPaths, ticketPath),
-      ...additionalPaths.map((path) => repoRelativePath(repoRoot, path)),
-    ]),
-  ];
-  if (paths.length === 0) return;
-  const remainingPaths = (): string[] => registerStatePaths(repoRoot, registerPaths, ticketPath);
+  const staged = stageRegisterState(
+    repoRoot,
+    registerPaths,
+    ticketPath,
+    additionalPaths,
+    failureLogPath,
+  );
+  if (!staged) return;
   try {
-    stageCommitTargets(repoRoot, paths);
-    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
-    const staged = gitResult(repoRoot, stagedArgs);
-    if (staged.status === 0) return;
-    if (staged.status !== 1) {
-      appendGitResultFailureLog(failureLogPath, "git diff register-state inspection", staged);
-      throw new Error(
-        `Failed to inspect staged register-state changes: ${formatGitResultFailure(stagedArgs, staged)}`,
-      );
-    }
-    const commit = gitResult(repoRoot, ["commit", "-m", message, "--", ...paths]);
-    if (commit.status !== 0) {
-      const output = [commit.stdout, commit.stderr]
-        .filter((part): part is string => typeof part === "string" && part.length > 0)
-        .join("\n");
-      appendGitFailureLog(failureLogPath, [
-        `=== ${new Date().toISOString()} git commit register state ===`,
-        `exit: ${commit.status ?? "unknown"}`,
-        "--- stdout ---",
-        typeof commit.stdout === "string" ? commit.stdout : "",
-        "--- stderr ---",
-        typeof commit.stderr === "string" ? commit.stderr : "",
-        "",
-      ]);
-      throw new Error(`git commit failed: ${summarizeGitHookFailure(output)}`);
-    }
-    stabilizeCommitTargets(repoRoot, remainingPaths, undefined, failureLogPath);
+    const commit = gitResult(repoRoot, registerStateCommitArgs(message, staged.paths));
+    assertHookCommitSucceeded(
+      commit,
+      failureLogPath,
+      REGISTER_STATE_COMMIT_LABEL,
+      "git commit failed",
+    );
+    stabilizeCommitTargets(repoRoot, staged.remainingPaths, undefined, failureLogPath);
   } catch (error) {
-    unstageCommitTargets(repoRoot, [...paths, ...remainingPaths()]);
+    unstageRegisterState(repoRoot, staged);
+    throw error;
+  }
+}
+
+// commitRegisterState と同じ commit を、hook が走る間 event loop を止めずに行う。exec run の
+// 統合段で使う（PJR-P8SX）。
+export async function commitRegisterStateAsync(
+  repoRoot: string,
+  registerPaths: RegisterPaths,
+  message: string,
+  ticketPath?: string | null,
+  additionalPaths: readonly string[] = [],
+  failureLogPath?: string,
+): Promise<void> {
+  const staged = stageRegisterState(
+    repoRoot,
+    registerPaths,
+    ticketPath,
+    additionalPaths,
+    failureLogPath,
+  );
+  if (!staged) return;
+  try {
+    const commit = await gitResultAsync(repoRoot, registerStateCommitArgs(message, staged.paths));
+    assertHookCommitSucceeded(
+      commit,
+      failureLogPath,
+      REGISTER_STATE_COMMIT_LABEL,
+      "git commit failed",
+    );
+    await stabilizeCommitTargetsAsync(repoRoot, staged.remainingPaths, undefined, failureLogPath);
+  } catch (error) {
+    unstageRegisterState(repoRoot, staged);
     throw error;
   }
 }
@@ -235,7 +304,7 @@ export function registerTransitionPaths(
   const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
   if (eventPath) paths.push(eventPath);
   if (existsSync(registerPaths.pjrIndexPath)) paths.push(registerPaths.pjrIndexPath);
-  return paths;
+  return resolveRegisterBranchTarget(registerPaths.projectId) ? [] : paths;
 }
 
 // register 項目の実行管理ファイル（root 側の絶対パス）。再開時は plan / result /
@@ -248,6 +317,8 @@ export function registerBookkeepingPaths(params: {
   planPath: string;
   resultPath: string;
   ticketPath: string | null;
+  /** Repo-relative grade result sidecars of the item's own targets (PJR-NRWJ). */
+  ownGradeResultPaths: readonly string[];
 }): string[] {
   const { repoRoot, registerPaths, planPath, resultPath, ticketPath } = params;
   return registerRunnerManagedPaths(
@@ -259,7 +330,7 @@ export function registerBookkeepingPaths(params: {
     ticketPath,
   )
     .map((path) => resolve(repoRoot, path))
-    .concat(gradeCheckpointPaths(params));
+    .concat(gradeCheckpointPaths(params, params.ownGradeResultPaths));
 }
 
 // root の登録簿派生ビュー（pjr-index / generated）は非追跡の生成物で、merge や複製では更新され

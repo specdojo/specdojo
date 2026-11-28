@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-atc-index-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-24T15:20:20.421Z",
+    "completed_at": "2026-11-24T17:17:04.607Z",
+    "exit_code": 1,
+    "attempts": 2
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [],
+  "rate_limit_events": [
+    {
+      "action": "wait",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "sol-executor",
+      "resume_at": "2026-11-24T17:17:00.000Z",
+      "resumed_at": "2026-11-24T17:17:02.268Z"
+    }
+  ],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-110/T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961/executor.attempt-1.log",
+      "bytes": 21884,
+      "truncated": false
+    }
+  ]
+}

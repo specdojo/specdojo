@@ -1,0 +1,23 @@
+R5（整合）のレビューを終えました。`docs/ja/specdojo/samples/bdd-sample.yaml` に修正を 2 件入れ、変えずに残した食い違いを 2 件、要判断の指摘として申し送ります。schema 検査と Prettier の整形チェックはどちらも通っています。
+
+**sample を直した点**
+- **価格の税の扱い（R5-1、要判断）:** `bdd-sample` だけが価格を税抜で書いていました。本部売上登録 API（`ifx-api-sample`）、画面仕様（`uis-sample`）、データ移行設計（`dmd-sample`）・`cdr-sample` は税込です。`sf-sample` の `Q-01` も、この食い違いを未決事項として挙げています。
+  - そこで、標準販売価格と販売単価を税込に変えました。
+  - 合計金額の例は 108 を 100（100 円 × 1 個）にしました。
+  - 迷った理由は、業務上の意味が変わることと、税抜のまま残してほかの 3 つの sample を直す案もあったことです。
+- **つけは常連客に限る（R5-2）:** 用語集の見本（`gl-sample`）では、つけを使えるのは店主代表が認めた常連客だけです。
+  - 支払方法 `credit` の表記を「常連客のつけとして後日受領する」にしました。
+  - 顧客IDの説明を「請求先の常連客を特定する」にしました。
+  - 売上記録の `related_terms` に `tm-sales-regular-customer` を足しました。
+
+**sample を直していない点（handoff に記載）**
+- **相手側の文書（R5-3）:** R5-1 を採る場合、`sf-sample` の `Q-01` にある「業務データ辞書の税抜の販売単価」が古い記述になります。「業務データ辞書も税込の販売単価」に直すか、`Q-01` から税抜との対応の項目を外す案を書きました。
+- **ID の例（R5-4、要判断）:** 売上IDの例 `SALE-001` と商品IDの例 `PRD-001` が、周りの sample と合っていません。取引番号は `TX-YYYYMMDD-NNNN`、本部 API の商品コードは 4〜13 桁の数字です。ただし、売上IDを取引番号や商品コードと同じものとしてよいかの根拠が見つからず、例は変えていません。
+
+参照先の `ccd-sample`・`br-sample`・`clis-sample`・`ifx-api-sample`・`gl-sample` も読みました。上の点以外、それぞれの記述や wikilink の表示名、`related_terms` の ID とは食い違いがありませんでした。プロダクトの用語集（`docs/ja/product/010-business-specs/060-glossary/`）には、駄菓子屋の業務の用語はありませんでした。
+
+作業用に作った `tmp/r5edit.py` が残っています。中身は使っておらず、`tmp/` は commit されません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）で bdd-sample.yaml の食い違いを 2 件直した（価格を税込に統一・合計例を 100 に変更、つけの対象を常連客に限定し related_terms に常連客を追加）。相手側の文書を直す案（sf-sample の Q-01）と、ID の例の扱い（要判断）を handoff に残した。schema 検査と prettier は通過した。","handoff":["R5-1: 段 R5 / 箇所 商品.標準販売価格、売上明細.販売単価、売上記録.合計金額 / 指摘 標準販売価格と販売単価を税抜としており、ifx-api-sample の unit_price（税込みの円）、uis-sample の税込単価、dmd-sample・cdr-sample の税込の円と食い違う。合計金額の例 108 は税抜 100 円に税を足した値で、ほかの sample の税込単価と合わない / 直した案 標準販売価格と販売単価の説明を一個あたりの税込価格に変え、合計金額の例を 108 から 100（100 円×1 個）に変えた / 根拠 vp-qe-kata-conformance（kata 相互）、vp-dev-change-impact。税込とする sample が 4 つで、sf-sample の Q-01 もこの食い違いを未決として挙げていた。選ばなかった案は、bdd-sample を税抜のまま残し、ifx-api・uis・dmd・cdr の sample を税抜に直す案。業務上の意味が変わるため人が確かめる / 印 要判断","R5-2: 段 R5 / 箇所 売上記録.支払方法、売上記録.顧客ID、売上記録.related_terms / 指摘 用語集（gl-sample）では、つけ（tm-accounts-receivable）を使えるのは店主代表が認めた常連客（tm-sales-regular-customer）だけ。bdd-sample の credit の表記と顧客IDの説明は「顧客のつけ」となっており、対象が常連客に限られることが読めない / 直した案 credit の label を「常連客のつけとして後日受領する」、顧客IDの説明を「請求先の常連客を特定する」にし、売上記録の related_terms に tm-sales-regular-customer を足した / 根拠 vp-qe-kata-conformance（kata 相互）。gl-sample の tm-sales-regular-customer の定義「顧客のうち、店主代表がつけの利用を認めた人」 / 印 -","R5-3: 段 R5 / 箇所 sf-sample の Q-01（相手側） / 指摘 R5-1 を採った場合、sf-sample の Q-01 の「画面の税込単価と業務データ辞書の税抜の販売単価の対応」が古い記述になる / 直した案 - / 根拠 vp-dev-change-impact。相手側の文書は docs/ja/specdojo/samples/sf-sample.md。直す案は、Q-01 の該当部分を「業務データ辞書も税込の販売単価とし、税区分と端数処理の条件は未決」に直すか、税抜との対応の項目を Q-01 から外すこと。R5-1 を戻す場合は不要 / 印 -","R5-4: 段 R5 / 箇所 売上記録.売上ID、商品.商品ID の example / 指摘 売上IDの例 SALE-001 と商品IDの例 PRD-001 が、ほかの sample の ID の形と合わない。uis-sample・ifx-file-sample・etc-sample・bes-sample は取引番号を TX-YYYYMMDD-NNNN とし、ifx-api-sample の商品コードは 4〜13 桁の数字、uis-sample は 8 桁の数字としている。本部売上受付では、店舗の売上IDと本部売上IDの照合の手がかり（API の transaction_id）が bdd-sample から読めない / 直した案 - / 根拠 vp-qe-kata-conformance（kata 相互）。売上IDを取引番号と同じものとしてよいか、商品IDを商品コードと同じものとしてよいかの根拠が見つからず（取り消した取引にも取引番号は振られ、ccd-sample も売上ID・商品IDの名前を使う）、例を変えなかった。選ばなかった案は、売上IDの例を TX-20261108-0012、商品IDの例を 8 桁の数字に変え、本部売上IDの説明に照合は店舗の取引番号（transaction_id）で行うと足す案。人が同じものとしてよいかを決めたら bdd-sample と ccd-sample を一緒に直す / 印 要判断"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/bdd-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

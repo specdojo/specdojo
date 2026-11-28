@@ -1,0 +1,20 @@
+R2（構成）の見直しが終わりました。構成に直すべき点は見つからず、sample は変更していません。そのため、この段の commit に差分はありません。
+
+確かめた結果は次のとおりです。
+
+- **メタ項目の並び:** `id`・`type`・`status`・`title`・`rulebook`・`based_on`・`version`・`project_id` の順で、template の `metadata_template` と同じです。rulebook の推奨メタ項目もそろっています。
+- **コメントの位置:** template と同じく、メタ項目の後、`roles` の前にあります。採用 8 ロールという前提を先に書き、組織定義・メンバー定義・RACI の参照を後に置いているので、前提から順に読めます。
+- **`roles` の並び:** PO・PM・BA・ARC・DEV・QE・UX・OPS の順で、上位標準の「標準ロール」の表（`people-and-organization-definition-standard.md` 115〜122 行）と同じです。rulebook の `roles` の採用範囲が勧める順に沿っています。
+- **各要素のキー:** `code`・`name`・`project_note` の順で、rulebook の本文要件の表と template に沿っています。要素の粒度も「1 ロール 1 要素、`project_note` は 1 行」で、template と同じです。
+- **R1 の結果:** R1 が直した版を読みました。R1 が削った ARC・UX・OPS の `project_note` に、構成上の問題は残っていません。R1 の指摘は繰り返していません。
+- **R5 に回す点:** `based_on` に上位標準を含め、template と違う点は整合の観点なので、この段の指摘にしていません。sample の `status: ready` は人が決めることなので触っていません。
+
+検査について:
+
+- YAML を変えていないため、schema 検査（`npm run validate:schema:file`）は適用外です。
+- Prettier と markdownlint も、対象のファイルを変えていないので適用外です。
+- lint などの全体の検査は、後で親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）として pm-roles-sample.yaml のメタ項目の順、コメントの位置、roles の並び、要素のキーの順と粒度を、rulebook の本文要件・template・上位標準と照合した。いずれも沿っており、章の移動・分割・統合に当たる差分はないため sample は変更していない。","handoff":["R2-1: R2 / メタ項目とコメントの配置 / メタ項目は id・type・status・title・rulebook・based_on・version・project_id の順で template の `metadata_template` と同じ。コメントも template と同じくメタ項目の後、`roles` の前にあり、採用 8 ロールの前提から正本の参照の順に読める。構成の問題はない / - / vp-arc-document-structure / -","R2-2: R2 / `roles` の並び / PO・PM・BA・ARC・DEV・QE・UX・OPS の順で、上位標準の「標準ロール」の表の定義順と同じであり、rulebook の `roles` の採用範囲が勧める記載順に沿っている / - / vp-arc-document-structure / -","R2-3: R2 / `roles[]` の要素 / キーは `code`・`name`・`project_note` の順で、rulebook の本文要件の表と template に沿っている。1 ロール 1 要素、`project_note` は 1 行の粒度で、必須キーの欠けや矛盾はない。R1 が直した後の版にも構成上の問題は残っていない / - / vp-qe-omissions-consistency / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-roles.schema.yaml --data docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"not_applicable","summary":"YAML を変更していない","reason":"executor は *.yaml / *.yml を変更していないため、validate:schema:file の適用条件（変更した YAML がある）を満たさない"},{"command":"npx prettier --check docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"not_applicable","summary":"対象ファイルを変更していない","reason":"executor が変更したファイルがないため、Prettier の適用条件（変更した md/ts/js/json/yaml/yml がある）を満たさない"},{"command":"npx markdownlint","status":"not_applicable","summary":"Markdown を変更していない","reason":"executor は *.md を変更していないため、markdownlint の適用条件を満たさない"}]}
+</specdojo_executor_evidence>

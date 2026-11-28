@@ -140,6 +140,8 @@ root にある無関係な未commit変更は checkpoint commit に含めませ�
 
 作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev --prefer-offline --no-audit --no-fund` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。lock から入る依存は主の作業ツリーと同じになるため、npm cache にある tarball を再検証せずに使い、準備に要らない audit と fund の問い合わせは省きます（PJR-T01P）。
 
+依存の導入、生成、checkpoint commit は順に非同期で待ちます。同じ runner の別タスクでは、その間も親の検証の終了を処理できます。プロダクトリポジトリも宣言順に準備します（PJR-CSRM）。
+
 過去のバージョンが作成した `node_modules` シンボリックリンクを検出した場合は、リンク先へ変更を加えずリンクだけを削除してから `npm ci` で置き換えます。install に失敗した場合は agent を起動せず、調査できるよう task worktree を保持したままエラー終了します。依存取得に必要な registry と npm cache は、`exec run` を起動する環境から利用できる必要があります。
 
 依存の install に続けて、`docs/**/generated` と `.specdojo/doc-index.json` の生成物を worktree 内で作り直します。これらは `.gitignore` の対象で worktree の checkout に含まれないため、生成物の存在を前提とするテストや検証が、タスクの成果物と無関係に失敗するからです。生成は worktree 内の CLI（SpecDojo 自身のリポジトリでは `src/specdojo.ts`、依存として利用するリポジトリでは `node_modules/.bin/specdojo`）を worktree を作業ディレクトリとして実行し、scope を絞らず全ステップを通します。生成対象が増えても準備処理側の追従は不要です。
@@ -243,6 +245,10 @@ specdojo exec worktree merge \
 stage 済み変更は merge 対象との重複にかかわらず、複製の解放前に対象パスと復旧手順を示して停止します。表示された worktree で commit するか、各パスに `git restore --staged -- <path>` を実行して本文を残してから再開します。複数リポジトリの統合も、いずれかの統合先に stage 済み変更があれば全体の事前検査で停止します。
 
 通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
+
+merge とその後の dist 更新も非同期で待ち、完了まで scheduler lock とタスク統合の排他を保持します。lock の取得待ちも event loop を止めません。処理別の所要時間は runner の標準エラーへ JSON の `worktree-operation-timing` として記録します。`operation` は `npm-ci`・`specdojo-build`・`yaml-pages-build`・`root-merge`・`product-merge`・`build-if-stale`、`at` は開始時刻、`duration_ms` は所要時間、`event_loop_delay_max_ms` は待機中の最長の停止時間です（PJR-CSRM）。
+
+`sync.enabled: true`（または `register_sync.enabled: true`）の場合、個票・イベントと exec のイベントは専用ブランチへ書き、exec の commit から除きます。統合先には exec の merge のほかに専用ブランチの取り込みが増えます。転送と復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] に従います。以下の個票・イベントの競合解決は専用ブランチを使わない場合の処理です。
 
 register 項目の統合で競合したのが項目自身の記帳ファイル（個票・イベント・plan・result）だけの場合は、記帳ファイルを次のように解決して merge commit を作ります。`waiting` を複数回経た項目では、wait 時の同期 merge の後も統合先と exec branch の双方で記帳ファイルが変わるためです。解決後の commit は通常の `git merge` と同じく pre-commit hook を実行しません。
 

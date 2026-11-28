@@ -4,30 +4,30 @@ document: specdojo:mip-index-rulebook
 path: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 86
-graded_at: "2026-11-02T20:25:04.437Z"
-graded_by: flash-high-executor
-content_hash: e6b870e9e556e52c9ff25e0b63297ce7348511fcdd896e6615f46321efcfd3fa
+verdict: pass
+score: 98
+graded_at: "2026-11-23T15:36:39.173Z"
+graded_by: sonnet-review-executor
+content_hash: 6e60913cb6848f89fb5d5a92248c80e7cfeac8aaa0561d71c1ed73265962ad68
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
     score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
     score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,36 +100,21 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 41
-    anchor: "### 4.1. 設定内容"
-    message: >-
-      Section 4.1 specifies a flat Frontmatter structure lacking the specdojo: namespace and the mandatory rulebook key,
-      conflicting directly with docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml.
-    message_ja: >-
-      Section 4.1 specifies a flat Frontmatter structure lacking the specdojo: namespace and the mandatory rulebook key,
-      conflicting directly with docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml.
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 45
-    anchor: "| 項目       | 説明                                         | 必須 |"
-    message: >-
-      Section 4.1 and Section 8 omit the mandatory rulebook key and specdojo: namespace required by
-      document-metadata-standard.md, while improperly defining title as a required Frontmatter field.
-    message_ja: >-
-      Section 4.1 と Section 8 では、document-metadata-standard.md で要求されている必須の rulebook key および specdojo: namespace
-      が省略されており、一方で title が必須の Frontmatter フィールドとして不適切に定義されています。
-  - id: F003
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 移行計画 作成ルール"
-    message: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
-    message_ja: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
+    message: "`recipe` と `template` が `undecided` のままです。対応する recipe と template を確定して宣言するか、不要なら不要である旨を整理してください。"
+    message_ja: "`recipe` と `template` が `undecided` のままです。対応する recipe と template を確定して宣言するか、不要なら不要である旨を整理してください。"
+  - id: F002
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 移行計画 作成ルール"
+    message: "`status` が draft で、`recipe` と `template` が未確定です。ready 化の前に、これらを確定する条件を明確にしてください。"
+    message_ja: "`status` が draft で、`recipe` と `template` が未確定です。ready 化の前に、これらを確定する条件を明確にしてください。"

@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "queue_id": "q9df-3rd-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T08:44:40.736Z",
+  "updated_at": "2026-11-21T08:53:13.045Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-Q9DF",
+        "--executor-by",
+        "sonnet-executor",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--reporter-by",
+        "gemma26-reporter",
+        "--fallback-reporter-by",
+        "sonnet-reporter",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T08:44:41.150Z",
+      "completed_at": "2026-11-21T08:53:13.041Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

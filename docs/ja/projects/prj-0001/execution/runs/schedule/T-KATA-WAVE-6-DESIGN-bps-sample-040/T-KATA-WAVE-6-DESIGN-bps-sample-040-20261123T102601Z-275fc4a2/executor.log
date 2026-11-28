@@ -1,0 +1,22 @@
+`bps-rulebook.md` を直して、grade の指摘 F001〜F004 に対応しました。template 側の列のずれ（F003 の残り）は、この段では template を変更できないため残っています。prettier と markdownlint を `bps-rulebook.md` に流して、エラーはありませんでした。sample・recipe・template は変更していません。
+
+**直した内容**
+
+- **F004（略称のみ）**: 位置づけに表を足しました。CDFD・BES・BR・STSD・BDD・CDSD の正式名称、各 rulebook へのリンク、BPS での使い方を並べています。位置づけの文も「どの利用場面で何を判断するための文書か」の形にしました（PJR-76N9）。
+- **F001（列定義の二重管理）**: トリガー表と処理表の推奨列の表、例外表の列の列挙を消しました。列は template に任せ、代わりに判断の基準と良い例・悪い例を書いています（受領情報、出力・完了条件、停止範囲）。
+- **F002（形式の検査手段）**: 完成判定に、形式は `npm run lint:md` と `npm run lint:fm` で確かめ、業務の受入確認には含めない、と足しました。全体方針にあった同じ趣旨の文は、重なるので消しています。
+- **F003（未決事項の記入欄）**: rulebook は「当面の扱い」を正とし、書く中身をはっきりさせました。決定の担当と期限は登録簿の個票で追い、本文に書かないとしています。
+
+**残っている作業**
+
+template の未決事項表には「当面の扱い」の列がありません。逆に「区分」「決定者」「決定時期」の列があり、rulebook とずれています。template を直す段で「区分」「決定者」「決定時期」を消し、「当面の扱い」の列を足す必要があります。
+
+**変えなかった箇所**
+
+上記以外は、grade の指摘や冗長な記述にあたらないため、そのまま残しました。全体方針、ファイル命名・ID規則、推奨 Frontmatter 項目、本文要件の表、ほかの記述ガイドの各節、禁止事項が該当します。
+
+作業用に書いたスクリプト `tmp/edit.py` が `tmp/` に残っています。削除に承認が要ったため消していません（`tmp/` はコミット対象外です）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`bps-rulebook.md` を直し、grade の指摘 F001〜F004 に対応した。位置づけに略称の正式名称と各 rulebook への参照の表を足し（F004）、列定義の再掲を判断の基準と良い例・悪い例に置き換え（F001）、完成判定に形式の検査コマンドを足した（F002）。未決事項は rulebook 側の要件を明確にした（F003）。template の列の不一致は、この段で template を変更できないため申し送る。","handoff":["F003 の残り: `bps-template` の未決事項表には「当面の扱い」の列がなく、rulebook にない「区分」「決定者」「決定時期」の列がある。rulebook は「当面の扱い」を要件とし、決定の担当と期限は登録簿の個票で追うと定めた。template を直す段で「区分」「決定者」「決定時期」を消し、「当面の扱い」の列を足す必要がある。","直さなかった箇所: 全体方針、ファイル命名・ID規則、推奨 Frontmatter 項目、本文要件の表、記述ガイドの導入文と概要・入力・出力・検証・受入観点、禁止事項。grade の指摘や冗長な記述にあたらないため、そのまま残した。","全体方針にあった「文書の整形・lint・Frontmatter 検証はリポジトリの検証で扱い、業務の受入確認に含めない」の文は、完成判定に移した記述と重なるため消した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/bps-rulebook.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint docs/ja/specdojo/rulebooks/bps-rulebook.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

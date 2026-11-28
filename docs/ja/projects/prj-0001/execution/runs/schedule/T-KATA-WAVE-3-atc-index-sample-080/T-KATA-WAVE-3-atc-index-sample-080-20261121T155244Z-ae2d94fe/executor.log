@@ -1,0 +1,16 @@
+`docs/ja/specdojo/samples/atc-index-sample.md` の冗長さを 2 か所整理しました。変更はこの 1 ファイルだけです。Prettier の書式確認と markdownlint はどちらも問題なしでした。
+
+**直した箇所**
+
+1. **「対象外・除外理由（共通）」の通信不能時の行**: 例外の列が「メモ / 将来課題」の見直し方針と同じことを書いていたので、「決定後の扱いは「メモ / 将来課題」に従う」という参照に置き換えました。
+2. **「条件の立て方（共通）」の障害経路の記述**: 「障害経路は AT で作らない」が「対象外・除外理由（共通）」と重複していたので、その章への参照にまとめました。在庫と同数の境界を作らないという判断はそのまま残しています。
+
+**直さずに残した候補（3 件）**
+
+- **判定の記録に残す人の記述**: 「判定の流れ」の末尾と「環境/データ/外部依存」の証跡の行に、似た内容があります。rulebook は判定の流れ（実施者・証跡確認者を辿れること）と証跡（証跡確認者・判定責任者を追跡できること）の両方でこれを求めているので、残しました。
+- **未実施・判定保留を Pass に数えない一文**: P0 の行と一部重なりますが、P1・P2 にもかかる共通ルールなので残しました。
+- **実在の顧客データを使わない制約**: データの行の「架空の常連顧客」と近い内容ですが、判断に必要な制約なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Condensed two redundant passages in docs/ja/specdojo/samples/atc-index-sample.md by replacing them with references to existing sections. Retained three candidates with reasons. Prettier and markdownlint checks passed.","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"0 issues in 1 file"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only a sample under docs/ja/specdojo/samples/ was changed; no plan/result/pjr ticket was edited"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML changed","reason":"No *.yaml or *.yml file was changed"}],"condense_records":[{"location":"「対象外・除外理由（共通）」の表、通信不能時の販売継続の行の例外列","category":"canonical-restatement","action":"reference","reason":"決定後に `atc-sale-hold` へ観点を追加する方針は「メモ / 将来課題」の見直し方針（観点と条件の追加・分配表の更新）と重複していた。同じ行の代替列も「メモ / 将来課題」を指しているので、参照に置き換えても判断情報は失われない","cause":{"type":"document"}},{"location":"「条件の立て方（共通）」の表の後の段落、在庫と同数の境界と障害経路を AT で作らないとする文","category":"repetition","action":"reference","reason":"障害経路を AT で扱わないことは「対象外・除外理由（共通）」の障害パターンの行（代替は ET・ST）で定義済み。境界を ST で確定済みとする判断は残し、障害経路はその章への参照にまとめた","cause":{"type":"document"}},{"location":"「判定の流れ」末尾の段落と「環境/データ/外部依存の扱い（共通）」の証跡の行","category":"repetition","action":"retain","reason":"rulebook は判定の流れ（判定者が実施者・証跡確認者とその記録を辿れること）と証跡（証跡確認者・判定責任者を追跡できること）の両方で記述を求めており、どちらも各章の必須内容なので残す","cause":{"type":"document"}},{"location":"「合格基準」の表の後の段落、未実施と判定保留を Pass に数えない文","category":"repetition","action":"retain","reason":"P0 の行と一部重なるが、P1・P2 の集計にもかかる共通ルールのため判断に必要","cause":{"type":"document"}},{"location":"「環境/データ/外部依存の扱い（共通）」の表の後の段落、実在の顧客名とつけ残高を使わない文","category":"repetition","action":"retain","reason":"データの行の架空の常連顧客と近い内容だが、実データを使わない制約と、データ状態が異なる場合の判定保留・再実施という例外の扱いを含み、判断に必要","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

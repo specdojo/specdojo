@@ -25,12 +25,25 @@ import { mermaidAssets } from "./mermaid-assets";
 import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
 import {
-  EXEC_RECORD_SRC_EXCLUDE,
+  resolveExecRecordSrcExclude,
   isExecPlanLink,
   isExecResultLink,
   isExecRecordPath,
 } from "./exec-record-paths";
 import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
+import { channelHeadTags, resolveSiteChannel } from "./site-channel";
+import {
+  buildProductRepoSidebarSection,
+  collectProductDocIndex,
+  loadProductRepos,
+} from "./product-repos";
+import {
+  classifyDocLink,
+  collectExternalDocLinks,
+  createUnresolvedWikilinkReporter,
+  loadExternalProjectLinkSources,
+  selectExternalDocLinks,
+} from "./external-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -48,13 +61,22 @@ const GITHUB_SOURCE = {
 
 // package 参照中の kata をページ走査より前にステージングへ複製する。
 // VitePress は設定の読み込み後にページを走査するため、build / dev の両方でここが先に動く。
-const kataStaging = stageBundledKata(WORKSPACE_ROOT);
+// repos で宣言したプロダクトのリポジトリの docs/ja/product/ も同じステージングの
+// docs/ja/product/<リポジトリ名>/ へ取り込む（PJR-FZQA）。repos が無ければ何もしない。
+const kataStaging = stageBundledKata(WORKSPACE_ROOT, {
+  productRepos: loadProductRepos(WORKSPACE_ROOT),
+});
 if (kataStaging.packageRoot) {
   console.log(
     `[kata] staged ${kataStaging.staged} file(s) from ${kataStaging.packageRoot} (ejected: ${kataStaging.ejected})`,
   );
 }
 const SITE_CONTENT_ROOT = path.join(kataStaging.stagingRoot, "docs");
+for (const repo of kataStaging.productRepos) {
+  console.log(
+    `[product-repos] staged ${repo.files.length} file(s) from ${repo.root} to /${repo.docsRelativeDir}/`,
+  );
+}
 
 // [[id]] wikilink index — loaded once at build/dev startup
 function loadDocIndex(workspaceRoot: string): Record<string, string> {
@@ -74,8 +96,27 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
     return {};
   }
 }
-const docIndex = loadDocIndex(WORKSPACE_ROOT);
+// 取り込んだ product の文書の id は doc-index.json に無いため、ステージングの frontmatter から
+// 補う。同じ id が project の索引にある場合は project 側を優先する。
+const projectDocIndex = loadDocIndex(WORKSPACE_ROOT);
+const docIndex: Record<string, string> = {
+  ...collectProductDocIndex(
+    kataStaging.stagingRoot,
+    kataStaging.productRepos,
+    new Set(Object.keys(projectDocIndex)),
+  ),
+  ...projectDocIndex,
+};
 const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
+// 別リポジトリの project の doc id は、external_projects の source_url から URL へ引く（PJR-66ER）。
+// 手元の doc index にある id は手元の文書を優先する。
+const localDocIds: ReadonlySet<string> = new Set(Object.keys(docIndex));
+const externalDocLinks = selectExternalDocLinks(
+  collectExternalDocLinks(loadExternalProjectLinkSources(WORKSPACE_ROOT)),
+  localDocIds,
+);
+// 手元にも external_projects にも無い修飾付きの wikilink は、ビルドを止めずに警告する。
+const reportUnresolvedWikilink = createUnresolvedWikilinkReporter();
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
 function stripEntryLineSuffix(entry: string): string {
@@ -95,7 +136,10 @@ function toRenderableEntryPath(entryPath: string): string | undefined {
     "generated",
     path.posix.basename(entryPath).replace(/\.ya?ml$/, ".md"),
   );
-  return existsSync(path.join(WORKSPACE_ROOT, pagePath)) ? pagePath : undefined;
+  return existsSync(path.join(WORKSPACE_ROOT, pagePath)) ||
+    existsSync(path.join(kataStaging.stagingRoot, pagePath))
+    ? pagePath
+    : undefined;
 }
 
 // doc id を doc-index で docs ルート相対パス（"ja/..."）へ解決する。
@@ -121,6 +165,11 @@ function collectFrontmatterDocLinks(
 
   const addCandidate = (candidate: string): void => {
     if (links[candidate]) return;
+    const external = externalDocLinks[candidate];
+    if (external) {
+      links[candidate] = external.href;
+      return;
+    }
     const docsRelPath = resolveDocRelPath(candidate);
     if (!docsRelPath || docsRelPath === currentRelPath) return;
     links[candidate] =
@@ -267,7 +316,18 @@ function renderSearchHtml(
 ): string {
   if (env.frontmatter?.search === false || isExcludedSearchPath(env.relativePath)) return "";
 
-  const html = md.render(src, env);
+  // dev の起動を速くするため、索引の描画ではコードブロックの色付け（Shiki）を省く。
+  // 検索で引ける文字は変わらない（色付けは span の包みだけを足す）。
+  const options = (md as { options?: { highlight?: unknown } }).options;
+  const originalHighlight = options?.highlight;
+  const skipHighlight = process.env.SPECDOJO_DOCS_COMMAND === "dev" && options !== undefined;
+  if (skipHighlight) options.highlight = undefined;
+  let html: string;
+  try {
+    html = md.render(src, env);
+  } finally {
+    if (skipHighlight) options.highlight = originalHighlight;
+  }
   const docId = getSpecdojoDocId(env.frontmatter);
   return docId ? injectSearchDocId(html, docId) : html;
 }
@@ -283,7 +343,9 @@ const specdojoItems = {
 };
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
-const base = "/specdojo/";
+// 開発中の版は SPECDOJO_DOCS_CHANNEL=next と SPECDOJO_DOCS_BASE=/specdojo/next/ でビルドする（PJR-98HS）。
+const siteChannel = resolveSiteChannel();
+const base = siteChannel.base;
 
 // 日本語トップ（docs/ja/index.md）が無い利用リポジトリでは、「ホーム」と言語メニューを
 // ステージングに必ずあるサイトのトップへ向け、404 にしない。
@@ -386,7 +448,11 @@ const docsPathFromLink = (link: string): string | undefined => {
   const clean = link.split("#")[0].replace(/^\/+/, "").replace(/\/+$/, "");
   if (!clean) return undefined;
 
-  return path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
+  const workspacePath = path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
+  // 取り込んだ product の文書は workspace に無く、ステージングにだけある。
+  if (existsSync(workspacePath)) return workspacePath;
+  const stagedPath = path.join(SITE_CONTENT_ROOT, `${clean}.md`);
+  return existsSync(stagedPath) ? stagedPath : workspacePath;
 };
 
 // result frontmatter（specdojo: 名前空間配下）の started_at を読む。
@@ -658,9 +724,12 @@ const transformSidebar = (
   items: SidebarItem[],
   locale: Locale,
   contentTree?: ContentTree,
+  // 取り込んだ product の文書（/ja/product/<name>/...）は、リポジトリ名が specdojo でも
+  // handbook と取り違えないよう、この除外をしない。
+  excludeHandbook = true,
 ): SidebarItem[] => {
   const transformed = items
-    .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
+    .filter((it) => !excludeHandbook || !isHandbookTop(it)) // handbook トップは自動生成側に含めない
     // 実行記録（plan / result / events）は件数が多く、サイドバーに載せると全ページの HTML が
     // 肥大化してビルドがメモリ不足になる。plan / result は生成一覧から GitHub の正本へ辿る。
     // 表示名の解決（ファイル読み込み）より前に除外し、不要な I/O も避ける。
@@ -692,7 +761,7 @@ const transformSidebar = (
 
       // 子も同じルールで処理
       if (next.items) {
-        next.items = transformSidebar(next.items, locale, currentTree);
+        next.items = transformSidebar(next.items, locale, currentTree, excludeHandbook);
         if (currentTree === "projects") {
           next.items = promoteProjectRegisterViews(next.items);
           next.items = promoteProjectDashboard(next.items);
@@ -743,6 +812,22 @@ const makeSidebar = (locale: Locale): SidebarItem[] =>
   );
 
 const sidebarJaAuto = makeSidebar("ja");
+
+// 取り込んだ product の文書は workspace の docs/ に無いため、ステージング側を走査する。
+// 走査先は generateSidebar と同じく process.cwd() からの相対で渡す。
+const makeProductRepoSidebarItems = (): SidebarItem[] =>
+  kataStaging.productRepos.map((repo) => {
+    const scanned = generateSidebar({
+      documentRootPath: path.relative(process.cwd(), SITE_CONTENT_ROOT),
+      scanStartPath: repo.docsRelativeDir,
+      useTitleFromFileHeading: false,
+      collapseDepth: 2,
+      collapsed: true,
+    }) as SidebarItem[];
+    const section = buildProductRepoSidebarSection(repo, scanned);
+    return { ...section, items: transformSidebar(section.items ?? [], "ja", "product", false) };
+  });
+const productRepoSidebarJa = makeProductRepoSidebarItems();
 const sidebarEnAuto = makeSidebar("en");
 
 type SidebarMulti = Record<string, SidebarItem[]>;
@@ -774,6 +859,7 @@ const makeSidebarMulti = (
   locale: Locale,
   autoItems: SidebarItem[],
   handbookItem?: SidebarItem,
+  productRepoItems: SidebarItem[] = [],
 ): SidebarMulti => {
   const sections: { key: string; items: SidebarItem[]; entry: SidebarItem }[] = [];
 
@@ -811,6 +897,13 @@ const makeSidebarMulti = (
     });
   }
 
+  // 取り込んだ product の文書は、リポジトリごとの節（/<locale>/product/<name>/）にする。
+  // VitePress は長いキーを優先するため、project 自身の /<locale>/product/ の節とは分かれる。
+  for (const item of productRepoItems) {
+    if (!item.link) continue;
+    sections.push({ key: item.link, items: [item], entry: { text: item.text, link: item.link } });
+  }
+
   const multi: SidebarMulti = {};
   for (const section of sections) {
     multi[section.key] = [...(multi[section.key] ?? []), ...section.items];
@@ -821,8 +914,32 @@ const makeSidebarMulti = (
   return multi;
 };
 
-const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja);
+const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja, productRepoSidebarJa);
 const sidebarEn = makeSidebarMulti("en", sidebarEnAuto);
+
+// 上のメニューの project の入口。文書のある project が 1 つなら従来の入口（prj-0001 の概要）、
+// 2 つ以上なら project ごとのドロップダウンにする。prj-0001 以外の project は、その project の
+// トップ（/ja/projects/<id>/）へ向ける。開発中の版では、公開の workflow が prj-0002 の文書を重ねる。
+const PRJ_0001_ENTRY_LINK = "/ja/projects/prj-0001/020-project-definition/prj-overview";
+function projectNavItem():
+  { text: string; link: string } | { text: string; items: { text: string; link: string }[] } {
+  const projectsRoot = path.join(WORKSPACE_ROOT, "docs", "ja", "projects");
+  const ids = existsSync(projectsRoot)
+    ? readdirSync(projectsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .sort()
+    : [];
+  const others = ids.filter((id) => id !== "prj-0001");
+  if (others.length === 0) return { text: "プロジェクト", link: PRJ_0001_ENTRY_LINK };
+  return {
+    text: "プロジェクト",
+    items: ids.map((id) => ({
+      text: id,
+      link: id === "prj-0001" ? PRJ_0001_ENTRY_LINK : `/ja/projects/${id}/`,
+    })),
+  };
+}
 
 export default defineConfig({
   title: "SpecDojo",
@@ -847,7 +964,11 @@ export default defineConfig({
     "templates/**",
     "logs/**",
     "packages/**",
-    ...EXEC_RECORD_SRC_EXCLUDE,
+    // dev では plan / result 以外の実行記録も外す（--with-exec-records で含める）。build は変えない。
+    ...resolveExecRecordSrcExclude({
+      command: process.env.SPECDOJO_DOCS_COMMAND,
+      includeExecRecords: process.env.SPECDOJO_DOCS_WITH_EXEC_RECORDS === "1",
+    }),
   ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
@@ -861,6 +982,7 @@ export default defineConfig({
       {},
       `(function(){try{if(localStorage.getItem('vp-sidebar-collapsed')==='true'){document.documentElement.classList.add('vp-sidebar-collapsed')}}catch(e){}})()`,
     ],
+    ...channelHeadTags(siteChannel),
   ],
 
   // 物理パスは docs/ja, docs/en のままで、
@@ -877,6 +999,9 @@ export default defineConfig({
   ...(kataStaging.staged > 0 ? { ignoreDeadLinks: [...STAGED_PACKAGE_DEAD_LINK_PATTERNS] } : {}),
 
   themeConfig: {
+    // 開発中の版の帯とリリースの版へのリンクに使う（theme/index.ts の NextChannelBanner）。
+    specdojoChannel: siteChannel.channel,
+    specdojoStableUrl: siteChannel.stableUrl,
     // ビルド時に生成したインデックスでブラウザ内検索を行う（外部サービス不要）
     search: {
       provider: "local",
@@ -926,10 +1051,10 @@ export default defineConfig({
         nav: [
           { text: "ホーム", link: jaHomeLink },
           { text: "SpecDojo", link: "/ja/specdojo/guides/specdojo-overview-guide" },
-          {
-            text: "プロジェクト",
-            link: "/ja/projects/prj-0001/020-project-definition/prj-overview",
-          },
+          projectNavItem(),
+          ...(siteChannel.channel === "next"
+            ? [{ text: "リリースの版", link: siteChannel.stableUrl }]
+            : []),
         ],
         sidebar: sidebarJa,
         langMenuLabel: "言語",
@@ -1077,7 +1202,8 @@ export default defineConfig({
         if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false;
 
         if (!silent) {
-          const entry = docIndex[id];
+          const target = classifyDocLink(id, localDocIds, externalDocLinks);
+          const entry = target.kind === "local" ? docIndex[id] : undefined;
           const sourceLink =
             resolveArchiveWikilink(inner, archiveLinks, GITHUB_SOURCE) ??
             resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
@@ -1116,7 +1242,16 @@ export default defineConfig({
             token = state.push("text", "", 0);
             token.content = displayText;
             state.push("link_close", "a", -1);
+          } else if (target.kind === "external") {
+            let token = state.push("link_open", "a", 1);
+            token.attrSet("href", target.href);
+            token.attrSet("target", "_blank");
+            token.attrSet("rel", "noreferrer");
+            token = state.push("text", "", 0);
+            token.content = displayText;
+            state.push("link_close", "a", -1);
           } else {
+            reportUnresolvedWikilink(id, state.env?.relativePath as string | undefined);
             const token = state.push("text", "", 0);
             token.content = `[[${inner}]]`;
           }

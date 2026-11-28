@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-ifx-api-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-ifx-api-sample-150-20261126T151423Z-59076ae4",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T15:15:13.059Z",
+    "completed_at": "2026-11-26T15:17:34.122Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/ifx-api-sample.yaml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "node -e (yaml.parse で ifx-api-sample.yaml を読む)",
+      "status": "passed",
+      "summary": "編集後の YAML を読み込め、500 の description が反映されていることを確かめた"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "schema の対象外",
+      "reason": "sample の先頭に `specdojo-schema: none reason=external-openapi` の宣言があり、照合する SpecDojo の schema がない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7858 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7858 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-api-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[p\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1817}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  00:18:53\n   Duration  2.60s (transform 5.13s, setup 751ms, import 7.64s, tests 6.43s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\ns-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-api-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-ifx-api-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 整合: ifx-api-sample.yaml を同じ系列の sample・参照先・用語集と突き合わせ、預かり金の扱い（2 か所）と 429・500 の再送の記述（2 か所）を関連 sample に合わせて直した。外部 I/F 一覧側を直す案を 1 件 handoff に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/ifx-api-sample.yaml 4 行目の `_ASSUMPTION_` と `SaleLine.description` / 指摘: 預かり金を「本部が商品マスタから計算する」と書いていた。ifx-file-sample の `TX-*.json` は預かり金・釣銭（`tendered_yen`・`change_yen`）を店舗側の記録とし、ifx-index-sample の timing でも店番担当が店舗で確かめる値としており、本部が計算できる値ではない / 直した案: 「税区分・税額・合計は送らず本部が計算する。預かり金・釣銭は店舗端末の記録だけに残して送らない」に分けた（反映済み） / 根拠: [[specdojo:ifx-file-sample]] の `TX-YYYYMMDD-NNNN.json` の description と `required_fields`、[[specdojo:ifx-index-sample]] の「本部への売上登録」の timing / 印: 反映済み",
+    "No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/ifx-api-sample.yaml の 429 と 500 の応答の description / 指摘: 「同じ取引 ID で送り直す」とだけあり自動で再送するように読めた。sysd-cross-cutting-policy-sample の `scp-IDM-001`（重複排除が保証されても自動再送を追加しない、未受付を確かめた場合だけ同じ取引で再開する）、`scp-RET-001`（会計登録は自動 retry しない）、ifx-file-sample の `_UNDECIDED_`（自動再送せず店頭で保留する）と食い違う / 直した案: 429 は「未受付。自動では送り直さず、`Retry-After` の秒数が過ぎた後に店番担当の操作で同じ取引 ID を送り直す」、500 は「自動では送り直さない。PO（店主代表）と DEV が本部受付とローカル記録を照合し、未受付と確かめた場合だけ同じ取引 ID で送り直す」とした（反映済み） / 根拠: [[specdojo:sysd-cross-cutting-policy-sample]] の `scp-IDM-001`・`scp-RET-001`、[[specdojo:ifx-file-sample]] の 183〜184 行目、[[specdojo:ifx-index-sample]] の error_handling（店主代表と開発担当が照合する） / 印: 反映済み",
+    "No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/ifx-index-sample.yaml 57 行目の `_UNDECIDED_`（相手側。変更していない） / 指摘: 一覧側は「結果不明時の受付照会と保存失敗後の回復方式が未決」としている。詳細契約の ifx-api-sample は 409 で既存の `sale_id` を返すため、ローカル保存に失敗した後でも同じ取引 ID の再送で受付済みを回復できる。契約の未決は受付照会だけ（ifx-api-sample 3 行目）で、両者の未決の範囲が食い違う / 直す案: ifx-index-sample の 57 行目を「結果不明時の受付照会が未決（保存失敗後の回復は同契約の 409 による既存 `sale_id` の返却で扱う）」へ狭める。回復の手順（いつ再送してよいか）を未決として残すなら、ifx-api-sample の `_UNDECIDED_` に「保存失敗後の回復手順」を足して両者をそろえる / 根拠: [[specdojo:ifx-api-sample]] の 409 の応答と info.description の冪等性、[[specdojo:ifx-index-sample]] の 57 行目 / 印: 要判断",
+    "No: 4 / 段: R5 / 箇所: 確かめて食い違いがなかった項目 / 指摘: 次は食い違いがなく変更していない。取引 ID の形式 `TX-YYYYMMDD-NNNN` と `maxLength: 16`（ifx-file-sample のファイル名と一致）、201 で `sale_id` を保存してから会計を確定する順序（`scp-ERR-001` と一致）、409 を受付済みとして扱うこと（ifx-file-sample の `api_sync_status` が accepted）、bdd-sample の `schema_ref`（`CreateSaleResponse` は存在し `sale_id` と `status: ACCEPTED` が一致）、開発担当の表記（pm-members-sample の developer は PM・BA・DEV を兼ねる）、用語集（取引・冪等などの kata 固有の項目なし）、共通サンプル文脈（単一店舗・現金販売） / 直した案: なし / 根拠: 各 sample の該当箇所と docs/ja/product/010-business-specs/060-glossary/ の grep / 印: なし",
+    "grade の指摘 F001〜F006 は前の段の版で解消済み（`_ASSUMPTION_` の分離、Role code、`details` の構造、コメントの重複の削除）で、R5 では繰り返していない。F005（docs/ja/specdojo/samples/generated/ifx-api-sample.md が古い）は R5 の観点の外で、git 管理外の生成物のため作業の対象外とした。yaml-pages で作り直す必要がある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-ifx-api-sample-150/T-KATA-REVIEW-ALL-ifx-api-sample-150-20261126T151423Z-59076ae4/executor.log",
+      "bytes": 8289,
+      "truncated": false
+    }
+  ]
+}

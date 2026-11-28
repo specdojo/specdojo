@@ -1,0 +1,37 @@
+R4（正しさ）のレビューを終え、`docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md` を直しました。根拠となるサンプルとの食い違いが 4 件あり、どれも直しています。直した後、prettier と markdownlint は通っています。
+
+**確かめの表**
+
+| No | 主張（場所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 初期受入に必須なのは SC-01・AC-01〜AC-04（トレース対象の前提） | `prj-success-criteria-and-acceptance-criteria-sample.md` | 読み取り | 不一致→修正 | 17 行目では必須が「SC-01・SC-07・SC-09 と AC-01〜AC-05」 |
+| 2 | 対象外は SC-02〜SC-06（目的と適用範囲） | 同上 | 読み取り | 不一致→修正 | 17 行目では運用開始後に判定するのが SC-02〜SC-06・SC-08・SC-10 |
+| 3 | 性能試験は受入判断に使わず、TSP の方針で 1 ケースだけ測る（目的と適用範囲） | `tsp-index-sample.md` | 読み取り | 不一致→修正 | 25・106 行目で性能（`SAC-PERF-01`〜`04`）が総合テストの出口条件に入っている |
+| 4 | 母集団外の参照は 4 件 | `stc-sample.md` のトレース | 読み取り | 不一致→修正 | TR-06・TR-07 が `sac-sample` の `SAC-PERF-02`・`SAC-PERF-01` を指すのに、表に載っていなかった |
+| 5 | BAC-01〜03 の項目と要約 | `bac-sample.md` | 読み取り | 一致 | 40・66・90 行目 |
+| 6 | atc の TR-01〜05 と、TR-01 を BAC-01 に読み替えること | `atc-sample.md`、rulebook の生成の手順 | 読み取り | 一致 | トレースの表。下位項目は上位項目に読み替える規則どおり |
+| 7 | stc の TR-01〜05 | `stc-sample.md` | 読み取り | 一致 | トレースの表 |
+| 8 | ケースが全 `trace_key` を参照し、検証ケース未記載がない | atc・stc のケース表 | 読み取り | 一致 | 両カタログとも全 TR がどこかのケースで参照されている |
+| 9 | atc・stc の状態はどちらも `draft` | 両サンプルの frontmatter | 読み取り | 一致 | `status: draft` |
+| 10 | 総合テストは `relations.verifies` を定めない | `stc-rulebook.md`、`atc-rulebook.md` | grep | 一致 | 定めているのは atc-rulebook の 63 行目だけ |
+| 11 | 生成コマンドがない | `src/` | grep | 一致 | 該当する実装なし |
+| 12 | `ifx-cmd-sample`、atc-index の分割基準・合格基準、stc-index の分配方針が実在する | 各サンプル | 読み取り | 一致 | いずれも該当の id と章がある |
+| 13 | 変更履歴の生成元の版（`4f9e2c1`・`b83d0a7`） | なし | — | 確かめられない | 架空の版で正本がないため、対象にしていない |
+
+**sample の直し**
+
+- **母集団：** 8 件から 11 件にしました。SC-07・SC-09・AC-05 の 3 行を `未着手` として足しています。
+- **対象外：** SC-02〜SC-06・SC-08・SC-10 に改めました。性能の条件（`sac-sample`）は分冊 `trc-requirements-to-tests-performance` で扱う、単体テストは要求項目でなくモジュールを確かめる段階だから、という理由に書き直しています。
+- **母集団外の参照：** stc の TR-06・TR-07 の 2 行を足して 6 件にしました。
+- **サマリ：** 未着手 6・合計 11 に直しました。
+- **ギャップと対応方針：** SC-09・AC-02・AC-05 をまとめた行と SC-07 の行を足しました。取消の行の判定条件は「母集団が 12 件になる」に直しています。
+- **grade の指摘 F001（表記のゆれ）：** この版ではすでに直っていました。
+
+**人に決めてほしいこと**
+
+- 性能を分冊に分ける方針は、共通サンプル文脈の中で置いた仮定です。正本にはありません。性能を同じ母集団に入れる案もあるので、採るかどうかを決めてください。
+- SC-07 の直し方（「`atc-index` の分割基準で受け持つ受入テストを決める」）は、正本の裏付けがない対応方針です。妥当かどうか確かめてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: trc sample の母集団（SC-07・SC-09・AC-05 の追加で 11 件）、対象外、母集団外の参照（stc の TR-06・TR-07 を追加して 6 件）、サマリ、ギャップと対応方針を正本に合わせて直した。F001 は前の段で解消済み。","handoff":["[R4/vp-qe-verifiability] 母集団が prj-success-criteria-and-acceptance-criteria-sample の初期受入の必須（SC-01・SC-07・SC-09・AC-01〜AC-05）と合わず SC-07・SC-09・AC-05 が欠けていた。3 行を `未着手` として足し、母集団を 11 件、サマリを未着手 6・合計 11 に直した。","[R4/vp-arc-technical-constraints] 対象外の SC-02〜SC-06 を正本どおり SC-02〜SC-06・SC-08・SC-10 に直した。","[R4/vp-qe-verifiability] 「性能試験は受入判断に使わず 1 ケースだけ測る方針（tsp）」は、性能（`SAC-PERF-01`〜`04`）を総合テストの出口条件に入れている tsp-index-sample と食い違っていた。性能は分冊 `trc-requirements-to-tests-performance` で扱う、単体テストは要求項目でなくモジュールを確かめる段階、という理由に直した。分冊に分ける方針は共通サンプル文脈の中で置いた仮定であり、採るかどうかは人が決める。","[R4/vp-dev-testability] stc-sample の TR-06・TR-07（`sac-sample` の `SAC-PERF-02`・`SAC-PERF-01`）が母集団外の参照の表に漏れていたので 2 行足し、件数を 6 に直した。","[R4] ギャップと対応方針に SC-09・AC-02・AC-05 をまとめた行（`atc-stock-credit-check`）と SC-07 の行を足し、取消の行の判定条件を「母集団が 12 件になる」に直した。SC-07 の直し方は正本の裏付けがない対応方針なので、人が確かめる。","[F001] ギャップと対応方針の対象列は、この版ではすでに各項目に要求文書 ID が付き、区切りも `, ` にそろっていた（解消済み）。","確かめられない主張: 変更履歴の生成元の版（`4f9e2c1`・`b83d0a7`）は架空の版で正本がないため、確かめの対象外とした。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは samples 配下の sample だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

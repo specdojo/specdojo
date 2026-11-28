@@ -1,0 +1,45 @@
+cpd-sample は rulebook・recipe・template の4件とも最新の評価結果を持ち、完了を妨げる未充足事項はありません。verdict は `complete-with-findings` です。
+
+**評価結果の確認**
+- 鮮度確認は4件とも出力が空で終了コード 0 でした。対象は cpd-sample（`--changed-only` と `--incomplete`）、cpd-rulebook、cpd-recipe、cpd-template（いずれも `--changed-only`）です。
+- cpd-sample は `verdict` pass、score 100、finding 0 件です。
+- 型の他3件も `verdict` は pass でした。
+  - cpd-rulebook は score 94 で minor 4 件です。
+  - cpd-recipe は score 90 で minor 7 件です。
+  - cpd-template は score 94 で minor 3 件です。
+- 未コミットの変更は `pipeline-state.json` だけで、成果物に review 中の変更はありません。
+
+**判断根拠**
+- DC-001（章立てと必須の表）: cpd-sample を読み、概要、図、要素と境界の定義、技術前提と検証観点、メモの各章がそろっていることを確認しました。定義表と関係表は図の要素 8 個と `REL-01`〜`REL-09` に過不足なく対応しています。
+- DC-002（Sample 記述標準と共通サンプル文脈）: 駄菓子屋きぬやの文脈で、店主代表・家族利用者代表を使っています。上位図 cnd-sample への関係の対応も本文にあります。評価結果にも指摘はありません。
+- DC-003（rulebook の禁止事項）: 評価結果で指摘はなく、本文でも抵触する記述は見当たりません。
+- DC-004（Mermaid の記法と前提）: `node tools/lint-mermaid.mjs` は終了コード 0 で、`flowchart: 1 passed, 0 error` でした。
+
+**未充足事項・改善指示**
+- 完了を妨げる未充足事項はありません。型側の minor finding はどれも rulebook・recipe・template の改善候補で、sample の完了条件には影響しません。
+- 型の整備として次の改善を勧めます。
+  - cpd-template の5章の表は4列で、sample の6列と構成が違います（template の `F002`・`F003`）。列構成をそろえてください。
+  - rulebook の概要に公開範囲を加えてください（`F001`）。
+  - 良い例・悪い例を recipe へ寄せてください（`F002`）。
+  - 検証手順の具体コマンドを示してください（`F003`）。
+  - 判定条件を客観化してください（`F004`）。
+  - recipe の minor 7 件も同様に改善候補です。
+- cpd-recipe の評価結果は 2026-11-19 のもので、鮮度の確認では最新でした。
+
+**確認できなかった範囲**
+- 描画後の SVG の目視確認は行っていません。
+- 先行する edit タスクの result は参照していません。
+
+**確定前に人が確かめる点**
+- sample 本文は `status: ready` です。これは既存の値で、このレビューでは変更していません。確定は横串の確認で行ってください。
+- 参照先の `kinuya-*` 文書と PJR は、本文に未同梱の架空名と明記されています。
+
+**approach（fully-guided）に応じた確認**
+- 宣言された文書だけを参照しました。
+- フェーズが求めた磨き込みは、sample の本文に反映されています。
+
+**decision**: `verdict: complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。cpd-sample・rulebook・recipe・template の4件の評価結果は最新で、すべて pass でした。sample は score 100 で finding 0 件、他3件は minor のみで、cpd-sample の完了条件 DC-001〜DC-004 を妨げません。型側の minor は改善指示として残します（template の5章の表を sample の6列とそろえる、rulebook の概要に公開範囲を加える、など）。確認できなかった範囲: 描画後の SVG の目視確認、先行する edit タスクの result の参照。","handoff":["型の改善指示: cpd-template の5章の表の列を cpd-sample の6列とそろえる（template の F002・F003）","型の改善指示: cpd-rulebook の概要に公開範囲を加える（F001）。良い例・悪い例を recipe へ寄せる（F002）。検証手順の具体コマンドを示す（F003）。判定条件を客観化する（F004）","型の改善指示: cpd-recipe の minor 7 件（F001〜F007）を改善候補として扱う","cpd-sample 本文は status が ready になっている。確定は横串の確認でまとめて行う"],"validations":[{"command":"node tools/lint-mermaid.mjs docs/ja/specdojo/samples/cpd-sample.md","status":"passed","summary":"flowchart: 1 passed, 0 error, 0 未検査"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cpd-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0 で、評価結果は最新（他の3件も同様）"}]}
+</specdojo_executor_evidence>

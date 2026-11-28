@@ -1,0 +1,11 @@
+dashboard の「人の対応が要るもの」の表で、schedule の task の行の「内容」を、対象の文書の名前に直しました。dashboard の単体テスト（34 件）と `npm run typecheck` は通り、`npm run lint:ts` はエラーなし（警告 43 件）でした。`npm run lint:md` などの親の検証は、runner が実行します。
+
+- **1 回目の原因:** 型の task ID（`T-KATA-WAVE-3-atc-index-sample-140`）は `extractLocalId` では `WAVE-3-atc-index-sample` と誤って引かれていました。そのため文書名が引けず、task 名が出て「次にすること」と重なっていました。
+- **今回の修正:** `buildScheduleIndex` の task 定義から `local_id` と成果物名を引くようにしました。ready.json の task は、その `local_id` を優先します。ready.json にない blocked・doing の task も、task 定義から同じように引けます。
+- **選ぶ順:** task 定義の成果物名、成果物カタログのファイル名、`local_id`、task 名、`-` の順です。task 名は、「次にすること」に含まれるときは出しません。
+- **テスト:** 型の task と blocked の task の行を確かめる場合を足しました。既存の human の行は task 名が出なくなったため、期待値を `-` に変えました。
+- **文書:** `command-reference.md` の説明を新しい選び方に合わせました。個票には、2 回目の対応結果の小節を足しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"schedule の task の行の「内容」を、task 定義の成果物名・カタログのファイル名・local_id の順に引く形へ直した。task 名は「次にすること」と重なるときは出さない。単体テストと説明、個票の対応結果を更新した。","handoff":["type 系の task の内容は、strategy のカタログに載る場合は成果物名、載らない場合は local_id が出る。CHANGELOG に書く事項は個票の対応結果の小節にある（CHANGELOG.md は変えていない）。"],"validations":[{"command":"npx vitest run tests/src/dashboard/dashboard.test.ts","status":"passed","summary":"34 件通過"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0、警告 43"}]}
+</specdojo_executor_evidence>

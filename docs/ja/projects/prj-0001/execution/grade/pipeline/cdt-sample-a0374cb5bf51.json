@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/samples/cdt-sample.md",
+  "content_hash": "16ed21316b836e44c6c4e5f352a84c262bb1db42b8292f62c282a3bef881c226",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "phy7-sample-20261123",
+  "updated_at": "2026-11-23T05:09:49.495Z"
+}

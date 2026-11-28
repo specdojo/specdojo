@@ -2,6 +2,7 @@ export { toArtifactPath, toPortablePath } from "../shared/artifact-path.js";
 export { ensureDir, listFilesRecursive, readJson, readYaml, writeJson } from "../shared/fs.js";
 export {
   displayWidth,
+  encloseBareHttpUrls,
   escapeMarkdownInline,
   expandTemplate,
   inlineCodeAnglePlaceholders,
@@ -9,6 +10,8 @@ export {
   padEndDisplay,
   redactSensitiveText,
   stripTerminalControlSequences,
+  trimCodeSpanPadding,
+  unescapeBackticksWhenUniform,
 } from "../shared/text.js";
 export {
   formatDateOnlyUtc,

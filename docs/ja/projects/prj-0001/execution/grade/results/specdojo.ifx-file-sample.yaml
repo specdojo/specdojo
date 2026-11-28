@@ -1,14 +1,14 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
 version: 1
 document: specdojo:ifx-file-sample
-path: docs/ja/specdojo/samples/ifx-file-sample.md
+path: docs/ja/specdojo/samples/ifx-file-sample.yaml
 target: kata
-rubric: grade-rubric-v2
+rubric: grade-rubric-v3
 verdict: pass
-score: 100
-graded_at: "2026-11-16T01:24:10.110Z"
-graded_by: sol-review-executor
-content_hash: e7ee4c81df954e29ac1d350980fafc1fcd00b934358ab80203982bdd5927c863
+score: 92
+graded_at: "2026-11-27T12:10:40.942Z"
+graded_by: opus-review-executor
+content_hash: 2abadbefb9b77454fc11c07915f0f435a04133223aac0d853d5a4b979c49f665
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +104,61 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 5
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 50
+    anchor: "# 異常時の利用者の次の手:"
+    message: >-
+      冒頭コメント「異常時の利用者の次の手」の 51・52 行は error_handling.missing.current_tx_json（152〜157
+      行）と同じ停止条件・終了コードを言い直しているため、error_handling 側に利用者の次の手を寄せ、コメントは error_handling にない取引の二重開始（53 行）の扱いだけに絞る。
+    message_ja: >-
+      冒頭コメント「異常時の利用者の次の手」の 51・52 行は error_handling.missing.current_tx_json（152〜157
+      行）と同じ停止条件・終了コードを言い直しているため、error_handling 側に利用者の次の手を寄せ、コメントは error_handling にない取引の二重開始（53 行）の扱いだけに絞る。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 171
+    anchor: "action: >-"
+    message: >-
+      malformed.sales_record_json の action（受入ケース 44・47
+      行も同様）は退避と引き継ぎだけを定め、コマンドを停止するか継続するか、その際の終了コードを示していないため、current_tx_json の malformed（exit code
+      2）と同様に停止か継続かと終了コードを明記して期待結果を一意にする。
+    message_ja: >-
+      malformed.sales_record_json の action（受入ケース 44・47
+      行も同様）は退避と引き継ぎだけを定め、コマンドを停止するか継続するか、その際の終了コードを示していないため、current_tx_json の malformed（exit code
+      2）と同様に停止か継続かと終了コードを明記して期待結果を一意にする。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 154
+    anchor: 「売上登録失敗（exit code 3、受付結果不明）」で停止して店主代表（PO）と開発担当（DEV）の本部受付照合へ引き継ぐ。
+    message: >-
+      sales start で rejected の控えを検出した場合にも「受付結果不明」の表示で停止するとしており、24 行の rejected の定義（未受付と確認済み）と矛盾するため、rejected
+      の場合は受付結果不明を付けない表示に分けるか、表示を状態に依存しない文言にする。
+    message_ja: >-
+      sales start で rejected の控えを検出した場合にも「受付結果不明」の表示で停止するとしており、24 行の rejected の定義（未受付と確認済み）と矛盾するため、rejected
+      の場合は受付結果不明を付けない表示に分けるか、表示を状態に依存しない文言にする。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 94
+    anchor: "writer: 販売管理 CLI（sales complete の送信前に pending で新規生成し、本部受付応答受領・receipt-print 実行後にアトミック更新）"
+    message: >-
+      31 行の再開判定で sales add / cancel が open / pending の控えを削除するとしているが、TX-*.json の writer
+      には新規生成と更新しか書かれておらず削除の主体と契機が抜けているため、writer に会計要求前の控えの削除を追記する。
+    message_ja: >-
+      31 行の再開判定で sales add / cancel が open / pending の控えを削除するとしているが、TX-*.json の writer
+      には新規生成と更新しか書かれておらず削除の主体と契機が抜けているため、writer に会計要求前の控えの削除を追記する。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 52
+    anchor: >-
+      # - 未解決の控えがある（sales start で pending / unknown / rejected の控えがある）: 新規取引を始めず exit code 3 で停止。店主代表と DEV が data/sales/
+      の控えを本部受付と照合して解決する。
+    message: 「店主代表と DEV」と役割名と Role code を混ぜて書いており、154・162・169 行の「店主代表（PO）と開発担当（DEV）」と表記がそろっていないため、同じ形式に統一する。
+    message_ja: 「店主代表と DEV」と役割名と Role code を混ぜて書いており、154・162・169 行の「店主代表（PO）と開発担当（DEV）」と表記がそろっていないため、同じ形式に統一する。

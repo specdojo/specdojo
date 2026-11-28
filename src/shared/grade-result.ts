@@ -54,6 +54,22 @@ export type GradeResult = {
   findings: StoredGradeFinding[];
   level_corrections?: StoredGradeLevelCorrection[];
   done_criteria?: Record<string, unknown>;
+  /** Size metrics measured without an LLM. Omitted by results recorded before PJR-2Q0G. */
+  size_metrics?: GradeSizeMetrics;
+};
+
+export type GradeSizeMetrics = {
+  /** Non-whitespace characters of the body, excluding table separator rows and finding comments. */
+  characters: number;
+  /** Declared sample (doc id) and its characters; omitted when no sample is declared. */
+  sample?: string;
+  sample_characters?: number;
+  sample_ratio?: number;
+  /** Characters recorded by the previous grade; omitted when it has no size metrics. */
+  previous_characters?: number;
+  growth_ratio?: number;
+  operations_characters?: number;
+  operations_ratio?: number;
 };
 
 const DOCUMENT_ID_RE = /^[a-z0-9][a-z0-9-:]*$/;
@@ -178,6 +194,16 @@ export function parseGradeResult(content: string, path: string): GradeResult {
       ))
   ) {
     throw new Error(`${path}: source_hashes must map sources to SHA-256 hex digests`);
+  }
+  if (
+    result.size_metrics !== undefined &&
+    (!isRecord(result.size_metrics) ||
+      !Number.isSafeInteger(result.size_metrics.characters) ||
+      Object.entries(result.size_metrics).some(([key, value]) =>
+        key === "sample" ? typeof value !== "string" : typeof value !== "number",
+      ))
+  ) {
+    throw new Error(`${path}: size_metrics must record numeric size metrics`);
   }
   for (const finding of result.findings) {
     if (finding.cause !== undefined && !isFindingCause(finding.cause)) {

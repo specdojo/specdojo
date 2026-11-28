@@ -1,0 +1,68 @@
+---
+specdojo:
+  id: prj-0001:xer-t-kata-review-all-tsp-index-sample-140-20261124t144314z-10640aaa
+  type: exec-result
+  task_id: T-KATA-REVIEW-ALL-tsp-index-sample-140
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: runs/schedule/T-KATA-REVIEW-ALL-tsp-index-sample-140/T-KATA-REVIEW-ALL-tsp-index-sample-140-20261124T144314Z-10640aaa/plan.md
+  started_at: "2026-11-24T14:43:22.932Z"
+  completed_at: "2026-11-24T14:55:44.471Z"
+  agent: sol-executor
+  execution: agent
+  approach: sample-maintenance
+  targets:
+    - specdojo:tsp-index-sample
+    - specdojo:tsp-index-sample
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- kata レビューの段 R4（正しさ）として、tsp-index-sample の事実主張を schema、他 sample、契約 YAML と突き合わせた。誤り2件を直し、確かめた主張は18件（V01〜V18）。V18 は確かめられなかった。
+- 指摘は次の2件。 | No | 段 / 場所 | 指摘 | 直し | viewpoint | 根拠 | 備考 | | --- | --- | --- | --- | --- | --- | --- | | R4-1 | R4 / 1. 概要 / ifd-sample | `ifd-sample` を「情報流れ図」と記載していたが、参照先はインフラ構成図だった | リンクの表示名を「インフラ構成図」に修正した | `vp-arc-technical-constraints` | `docs/ja/specdojo/samples/ifd-sample.md:13` の H1 と2章・4章 | - | | R4-2 | R4 / 1. 概要、8. メモ / 将来課題 / SAC・NFR | SAC・NFR を条件 ID 未整備または NFR 自体が未整備と説明していたが、`SAC-PERF-01`〜`04` と `nfr-perf-001`〜`006` は定義済みだった | 条件・要件 ID が定義済みであること、会計確定応答の正式な閾値が未確定であること、TSP 出口条件への対応付けが未反映であることを区別した。性能の仮置き値と R1 が追加した根拠は維持した | `vp-dev-implementation-readiness`、`vp-qe-verifiability` | `docs/ja/specdojo/samples/sac-sample.md:20` 以降、`docs/ja/specdojo/samples/nfr-performance-sample.md:48` 以降 | - |
+- 主張ごとの確かめは次のとおり。 | No | 主張 | 正本 | 確かめ方 | 結果 | 根拠 | | --- | --- | --- | --- | --- | --- | | V01 | Frontmatter を `specdojo:` 配下に置く | `deliverable-frontmatter.schema.yaml`、`src/shared/frontmatter-namespace.ts` | schema と実装を読み取り、sample 先頭と照合 | 一致 | schema の必須ルートが `specdojo` で、実装も同名オブジェクトを読む | | V02 | `id: specdojo:tsp-index-sample` の形式 | `common-frontmatter.schema.yaml` | `$defs.idRef` を読み取り | 一致 | 許可パターンに合致する | | V03 | `type: test` | `deliverable-frontmatter.schema.yaml`、`tsp-index-rulebook.md` | enum と rulebook 宣言を読み取り | 一致 | test は許可値で、rulebook の `deliverable_type` も test | | V04 | `status: draft` | `common-frontmatter.schema.yaml` | `properties.status` を読み取り | 一致 | 列挙値に含まれ、変更後も draft を維持 | | V05 | `rulebook: specdojo:tsp-index-rulebook` が対応する | `tsp-index-rulebook.md` | 参照先の Frontmatter を読み取り | 一致 | 参照先の id が一致する | | V06 | `based_on` の5参照が同梱文書を指す | `docs/ja/specdojo/samples/` の5文書 | 各 Frontmatter を読み取り | 一致 | 5ファイルとも存在し、id が一致する | | V07 | ifd-sample は情報流れ図 | `ifd-sample.md:13` | H1 と2章・4章を確認 | 不一致 | H1 は「インフラ構成図」。修正済み | | V08 | SAC の条件 ID は未整備 | `sac-sample.md:20`〜`25` | 受入条件一覧を読み取り | 不一致 | `SAC-PERF-01`〜`04` が定義済み。修正済み | | V09 | NFR は条件 ID 未整備、または NFR 自体が未整備 | `nfr-index-sample.md` 3章、`nfr-performance-sample.md:48`〜`55` | 分冊一覧と要件一覧を読み取り | 不一致 | 性能分冊と `nfr-perf-001`〜`006` が存在する。修正済み | | V10 | 会計確定応答の正式な閾値は未確定 | `nfr-performance-sample.md:50`、`sac-sample.md:115` | 当該要件と未決事項を読み取り | 一致 | P95・P99 の正式な閾値は未決で、2秒以内は仮置き | | V11 | PATH-02 は記録・照会の経路 | `ifd-sample.md:77`、`103` | 通信経路と検証対象を読み取り | 一致 | 応答欠落時に照合待ちを識別する期待結果がある | | V12 | PATH-04 は保全処理と DB の間の取得経路 | `ifd-sample.md:79` | 経路を読み取り | 一致 | R2 の内部結合への修正を維持 | | V13 | PATH-07 は復元処理と DB の間の回復経路 | `ifd-sample.md:82` | 経路を読み取り | 一致 | R2 の内部結合への修正を維持 | | V14 | PATH-05 は保管サービスへの転送経路 | `ifd-sample.md:80` | 経路を読み取り | 一致 | 保管サービスへコピーを送る経路 | | V15 | PATH-06 は保管サービスからの読取経路 | `ifd-sample.md:81` | 経路を読み取り | 一致 | 復元時にコピーを読む経路 | | V16 | 印刷コマンド名は `receipt-print` | `ifx-cmd-sample.yaml:11`〜`20` | コマンド契約を読み取り | 一致 | `command.executable` が `receipt-print`。学習用の架空 CLI | | V17 | 印刷失敗時も会計を維持する | `ifx-cmd-sample.yaml:17`〜`21` | `command.purpose` を読み取り | 一致 | 会計を取り消さず、警告と未印字の控えを保持する契約 | | V18 | `receipt-print` の実機印字・失敗・タイムアウトの挙動を確認できる | `ifx-cmd-sample.yaml`、未同梱の `receipt-print-reference` | 契約と未同梱参照の宣言を確認 | 確かめられない | 文書上の契約照合までで、実機・実装・提供元リファレンスによる実行確認はできない |
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/samples/tsp-index-sample.md`: R4 の事実照合に基づき2点を修正した。(1) 1章の `ifd-sample` リンクの表示名を「情報流れ図」から「インフラ構成図」へ直した。(2) 1章と8章の SAC・NFR に関する記述を、`SAC-PERF-01`〜`04` と `nfr-perf-001`〜`006` は定義済み、会計確定応答の正式な閾値は未確定、TSP 出口条件への対応付けは未反映、と区別する内容に改めた。性能の仮置き基準と R1 の根拠、R2 の内部結合の扱い、`status: draft` は維持した。
+
+## 3. 申し送り
+
+- F002（`vp-qe-kata-conformance`）は R4 では未変更で、R5 に引き継ぐ。F001 は R2、F003 は R1 で修正済みのため再指摘しない。
+- R5 への申し送り: TSP 4.1 の印刷スタブと `utc-index-sample.md:100` の印刷要求 Mock を照合し、単体・内部結合の扱いと rulebook 6.4 の既定から外れる理由を書き分ける。定義済み SAC 条件と TSP 出口条件の対応付けも整理する。成功基準 `sample.md:17` は初期受入に SC-07・SC-09・AC-05 も必須としており、TSP の SC-01・AC-01〜04 との範囲差も確認する。
+- grade result サイドカーと result は編集していない。
+- R4-1: R4 / 1. 概要 / ifd-sample を「情報流れ図」と記載していたが、参照先はインフラ構成図である / リンクの表示名を「インフラ構成図」に修正した / `vp-arc-technical-constraints`。docs/ja/specdojo/samples/ifd-sample.md:13 の H1 と2章・4章を確認した / -
+- R4-2: R4 / 1. 概要、8. メモ / 将来課題 / SAC・NFR を条件 ID 未整備または NFR 自体が未整備と説明していたが、SAC-PERF-01〜04 と nfr-perf-001〜006 は定義済みだった / 条件・要件 ID の定義済み、会計確定応答の正式な閾値の未確定、TSP 出口条件への対応付けの未反映を区別した。性能の仮置き値と R1 が追加した根拠は維持した / `vp-dev-implementation-readiness`、`vp-qe-verifiability`。docs/ja/specdojo/samples/sac-sample.md:20 以降、docs/ja/specdojo/samples/nfr-performance-sample.md:48 以降を確認した / -
+- reporter 記録用: 変更ファイルは docs/ja/specdojo/samples/tsp-index-sample.md のみ。上記2件を result の実施内容に指定7列の Markdown 表として1回だけ記載し、その後に以下の確認 V01〜V18 を No・主張・正本・確かめ方・結果・根拠の6列で記載する。各確認項目は1行とし、申し送りに表を重ねない。result と grade サイドカーは編集していない。
+- 判断根拠: kata-guide 6章、共通規約2文書、Sample 記述標準、TSP rulebook、ドキュメントメタ情報標準、テストドキュメントスコープ定義標準、共通レビュー観点、成果物カタログ dct-kata.yaml:22〜47、grade result、R1〜R3 result を確認した。schema は deliverable-frontmatter と common-frontmatter、実装は src/shared/frontmatter-namespace.ts、コマンドリファレンスは docs/ja/specdojo/references/command-reference.md を参照した。rulebook の `recipe`・`template` は `undecided` のため参照対象なし。章構成・必須表・禁止事項・品質ゲート・回帰範囲と `status: draft` を維持した。
+- grade の扱い: 展開元 docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-sample.yaml の F001〜F003 を確認した。plan の入力は `source=grade` で、condense の記録と `cause.location` はない。F001 は R2、F003 は R1 で修正済みのため再指摘しない。F002 は `vp-qe-kata-conformance` の kata 相互整合であり R5 に引き継ぐ。
+- R5 への次のアクション: F002 は未変更。TSP 4.1 の印刷スタブと utc-index-sample.md:100 の印刷要求 Mock を照合し、単体・内部結合の扱いと TSP rulebook 6.4 の既定から外れる理由を書き分ける。また、定義済み SAC 条件と TSP 出口条件の対応付けを整理する。成功基準 sample.md:17 では初期受入に SC-07・SC-09・AC-05 も必須としており、TSP の SC-01・AC-01〜04 との範囲差も R5 で確認する。
+- 確認 V01: 主張=Frontmatter を `specdojo:` 配下に置く（先頭）。正本=docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、src/shared/frontmatter-namespace.ts。確かめ方=cat で schema と実装を読み取り、sample 先頭と照合。結果=一致。根拠=schema の必須ルートが specdojo、実装の specdojoFromBlock も同名オブジェクトを読む。
+- 確認 V02: 主張=`id: specdojo:tsp-index-sample` の形式（先頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=cat で $defs.idRef を読み取り。結果=一致。根拠=英小文字・数字・ハイフン・コロンの許可パターンに一致する。
+- 確認 V03: 主張=`type: test`（先頭）。正本=docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、docs/ja/specdojo/rulebooks/tsp-index-rulebook.md。確かめ方=cat で enum と rulebook 宣言を読み取り。結果=一致。根拠=test は許可値で、rulebook の `deliverable_type` も test。
+- 確認 V04: 主張=`status: draft`（先頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=cat で properties.status を読み取り。結果=一致。根拠=draft・ready・deprecated の列挙に含まれ、変更後も draft を維持。
+- 確認 V05: 主張=`rulebook: specdojo:tsp-index-rulebook` が対応する（先頭）。正本=docs/ja/specdojo/rulebooks/tsp-index-rulebook.md。確かめ方=cat で参照先の Frontmatter を読み取り。結果=一致。根拠=参照先の id が一致し、sample 宣言は specdojo:tsp-index-sample。
+- 確認 V06: 主張=`based_on` の5参照が同梱文書を指す（先頭）。正本=docs/ja/specdojo/samples/ の bac-sample.md、sac-sample.md、nfr-index-sample.md、prj-success-criteria-and-acceptance-criteria-sample.md、ifd-sample.md。確かめ方=cat で各ファイルの Frontmatter を読み取り。結果=一致。根拠=5ファイルとも存在し、宣言された id と参照値が一致する。依存閉包の変更は行っていない。
+- 確認 V07: 主張=ifd-sample は情報流れ図（旧1章）。正本=docs/ja/specdojo/samples/ifd-sample.md:13。確かめ方=rg で H1 を確認し、2章・4章を読み取り。結果=不一致。根拠=H1 は「インフラ構成図」。表示名を修正済み。
+- 確認 V08: 主張=SAC の条件 ID は未整備（旧1章・8章）。正本=docs/ja/specdojo/samples/sac-sample.md:20〜25。確かめ方=cat と rg で受入条件一覧を読み取り。結果=不一致。根拠=SAC-PERF-01〜04 が定義済み。ID の存在と TSP 出口条件への未対応付けを区別する記述に修正済み。
+- 確認 V09: 主張=NFR は条件 ID 未整備、または NFR 自体が未整備（旧1章・8章）。正本=docs/ja/specdojo/samples/nfr-index-sample.md 3章、docs/ja/specdojo/samples/nfr-performance-sample.md:48〜55。確かめ方=cat と rg で分冊一覧・要件一覧を読み取り。結果=不一致。根拠=性能分冊と nfr-perf-001〜006 は存在する。未確定なのは会計確定応答の正式な閾値と明記した。
+- 確認 V10: 主張=会計確定応答の正式な閾値は未確定（修正後1章・8章）。正本=docs/ja/specdojo/samples/nfr-performance-sample.md:50、docs/ja/specdojo/samples/sac-sample.md:115。確かめ方=cat と rg で当該要件・未決事項を読み取り。結果=一致。根拠=P95・P99 の正式な閾値は未決で、P95 は TSP の2秒以内を仮置きとして使う。
+- 確認 V11: 主張=PATH-02 は記録・照会の経路で、応答欠落時に照合待ちを識別する（4.2）。正本=docs/ja/specdojo/samples/ifd-sample.md:77、103。確かめ方=cat と rg で通信経路と検証対象を読み取り。結果=一致。根拠=端末から記録サービスへの依頼経路であり、受付と保存結果の照合待ちを識別する期待結果がある。
+- 確認 V12: 主張=PATH-04 は保全処理と DB の間の取得経路（2.1・4.2）。正本=docs/ja/specdojo/samples/ifd-sample.md:79。確かめ方=cat と rg で経路を読み取り。結果=一致。根拠=保全・復元処理から業務記録 DB へ復元に必要な記録を取得する経路。R2 の内部結合への修正を維持。
+- 確認 V13: 主張=PATH-07 は復元処理と DB の間の回復経路（2.1・4.2）。正本=docs/ja/specdojo/samples/ifd-sample.md:82。確かめ方=cat と rg で経路を読み取り。結果=一致。根拠=保全・復元処理から業務記録 DB へ記録を回復する経路。R2 の内部結合への修正を維持。
+- 確認 V14: 主張=PATH-05 は保管サービスへの転送経路（2.1）。正本=docs/ja/specdojo/samples/ifd-sample.md:80。確かめ方=cat と rg で経路を読み取り。結果=一致。根拠=保全・復元処理から復元用保管サービスへコピーを送る経路。
+- 確認 V15: 主張=PATH-06 は保管サービスからの読取経路（2.1）。正本=docs/ja/specdojo/samples/ifd-sample.md:81。確かめ方=cat と rg で経路を読み取り。結果=一致。根拠=復元時に選んだコピーを保管サービスから読む経路。
+- 確認 V16: 主張=レシート印刷のコマンド名は receipt-print（2.1・5章）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml:11〜20。確かめ方=sed でコマンド契約を読み取り。結果=一致。根拠=command.executable が receipt-print。学習用の架空 CLI との宣言があり、SpecDojo の実装コマンドとして扱わない。
+- 確認 V17: 主張=印刷失敗時も会計を維持する（3章・6章）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml:17〜21。確かめ方=sed で command.purpose を読み取り。結果=一致。根拠=印字失敗時も会計を取り消さず、警告と未印字の控えを保持する契約が記載されている。
+- 確認 V18: 主張=receipt-print の実機印字・失敗・タイムアウトの挙動を確認できること（2.1・4.2 の計画）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml、未同梱の receipt-print-reference。確かめ方=契約を読み取り、架空 CLI と未同梱参照の宣言を確認。結果=確かめられない。根拠=文書上の契約照合までで、実機・実装・提供元リファレンスによる実行確認はできない。実案件へ適用する際にそれらを用意して確認する。学習用 sample の修正を妨げる未完了作業ではない。
+- 確認範囲: 商品単価・在庫数・ピーク負荷・不具合許容件数・架空の CI ジョブ名など、正本のない業務仮定は共通サンプル文脈との矛盾がないため真偽検証の対象外とした。SpecDojo の実行オプション・既定値・実ファイルパスの操作例は sample 本文にない。Frontmatter の自動 schema 検証と Markdown 等の親検証は runner に委ねる。
+- 適用外の検証: `npm run validate:schema:file`（変更は Markdown sample のみで、YAML ファイルを変更していない。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は docs/ja/specdojo/samples/ 配下のみで、docs/ja/projects/ 配下を変更していない。）
+- 適用外の検証: `npm run validate:history-links`（登録簿個票および既存 plan/result を変更していない。）
+
+## 4. 進め方と実践の型の適用
+
+kata-guide の R4（正しさ）に従い、sample の事実主張（Frontmatter の schema 適合、`based_on` の参照、`PATH-02`・`PATH-04`〜`PATH-07`、`receipt-print` の契約、SAC・NFR の整備状況）を、schema、`src/shared/frontmatter-namespace.ts`、同梱 sample、`ifx-cmd-sample.yaml` と突き合わせた。誤りは2件で、いずれも最小の差分で直した。rulebook の `recipe` と `template` は `undecided` のため参照対象がない。rulebook を正として、章構成、必須表、禁止事項、品質ゲート、回帰範囲を維持した。plan に展開された F001〜F003 は、R4 の観点に当たるものがなかった。F001 と F003 は前の段で解消済みで、F002 は kata 相互整合のため R5 に委ねた。商品単価、在庫数、ピーク負荷など正本のない業務仮定は、共通サンプル文脈と矛盾しないため真偽検証の対象外とした。runner の検証は、`lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` が passed、変更種別により非適用の検査は `not_applicable` だった。

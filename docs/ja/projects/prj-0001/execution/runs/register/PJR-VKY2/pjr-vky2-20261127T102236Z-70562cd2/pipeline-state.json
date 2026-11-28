@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VKY2",
+  "run_id": "pjr-vky2-20261127T102236Z-70562cd2",
+  "updated_at": "2026-11-27T11:28:41.292Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T11:22:03.272Z",
+      "completed_at": "2026-11-27T11:23:32.367Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-27T11:27:13.871Z",
+      "completed_at": "2026-11-27T11:27:13.871Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T11:27:17.028Z",
+      "completed_at": "2026-11-27T11:28:41.292Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-27T11:22:03.241Z",
+      "notes": [
+        "完了条件のうち保護された設定（.github/workflows/check-register-push.yml と .specdojo/specdojo.config.json）は、変更案を個票の対応結果と報告の handoff に書けば満たす条件である。1 回目で案は書けているので、この 2 つを理由に incomplete としない。残りの検査を流し、ほかに未達がなければ complete として報告する。"
+      ]
+    }
+  ]
+}

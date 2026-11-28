@@ -1,0 +1,23 @@
+`docs:dev` のときだけ、実行記録のページを走査から外すようにしました。ただし plan と result は `docs:build` でも `docs:dev` でも既に外れていたため、起動の短縮幅は小さい可能性があります。
+
+追加した単体テスト 4 件を含め、`tests/packages/docs-site/exec-record-paths.test.ts` は 16 件通りました。`eslint` は `packages/docs-site` と同テストに対してエラーなしでした。`npm run typecheck`・`npm run test:unit`・`npm run lint:md` などの親の検証は、runner の実行に任せています。
+
+## 変更内容
+
+- **外す範囲の判定:** `exec-record-paths.ts` に `resolveExecRecordSrcExclude` を追加しました。dev で指定が無いときだけ、`execution/` 配下の `runs/`、`exec/`、`jobs/runs/`、`routines/failures/`、`grade/results/` を足します。build の除外は変えていません。
+- **含める指定:** 名前は `--with-exec-records` にしました。`bin/specdojo-docs-site.js` が環境変数で `config.mts` に渡し、VitePress にはこのフラグを渡しません。ルートの `npm run docs:dev -- --with-exec-records` は npm のオプション扱いになるため `npm_config_with_exec_records` も受け付け、`package.json` は変えていません。
+- **外したページへのリンク:** dev では dead link の検査が無いので、クリック時に 404 になるだけで表示は崩れません。plan と result へのリンクは従来どおり GitHub の正本へ付け替わります。
+- **README と個票:** `packages/docs-site/README.md` に外すページと含め方を書きました。個票の対応結果には実施内容、判断、「CHANGELOG に書く事項」を書きました。
+- **CHANGELOG:** `CHANGELOG.md` は変えていません。
+
+## 未実施・要確認
+
+起動時間の測定は sandbox で測れないため、個票の作業内容に `open` のまま残しています。最後の `npx prettier --write` で個票が整形され、続けて走らせた `npm run lint:md:changed` は何も出力しませんでした。個票を整形後に読み直していないので、反映内容は未確認です。
+
+- 作業ツリーの `runs/` 配下で、plan と result 以外の Markdown は 0 件でした。dev で新たに減るのは `exec/` や `grade/results/` の少数のページだけです。
+- 起動時間を測るのはオーケストレーターで、統合後に変更前後を測って個票へ追記し、close します。
+- 効果が小さければ、`controls/project-register/pjr-*.md`（約 1,181 ページ）を dev で外す案を別項目として検討してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs:dev のときだけ実行記録を走査から外す判定と、--with-exec-records での含め方を実装した。plan と result は既に build でも dev でも外れていたため、新たに減るのは exec/ や grade/results/ などの少数のページで、短縮幅は小さい可能性がある。起動時間の測定は統合後にオーケストレーターが行う。","handoff":["起票時の入力にある execution/ の 5,179 ページの大半（runs 配下の plan.md と result.md）は PJR-T4X7 の時点で srcExclude により dev・build とも走査から外れている。この作業ツリーで plan と result 以外の runs 配下の Markdown は 0 件だった。dev で新たに減るのは exec/、grade/results/ などの少数のページで、効果が小さい可能性がある。","判断: 含める指定の名前は --with-exec-records とした。ルートの npm run docs:dev -- --with-exec-records は末尾の npm 呼び出しに付き npm のオプション扱いになるため、npm_config_with_exec_records も受け付けるようにした。これで package.json の変更は不要。","保護された設定（package.json など）の変更は不要。CHANGELOG.md は変更しておらず、区分 Changed と文案は個票の対応結果「CHANGELOG に書く事項」に記載した。","統合後に、オーケストレーターが変更前後の docs:dev 起動時間を測って個票の対応結果へ追記してから close する。効果が小さければ、controls/project-register/pjr-*.md（約 1,181 ページ）を dev で外す案を別項目で検討する。","個票は prettier で整形した後に読み直していない。"],"validations":[{"command":"npx vitest run tests/packages/docs-site/exec-record-paths.test.ts","status":"passed","summary":"16 件通過（追加した 4 件を含む）"},{"command":"npx eslint packages/docs-site tests/packages/docs-site/exec-record-paths.test.ts","status":"passed","summary":"エラー出力なし"},{"command":"npx prettier --write tests/packages/docs-site/exec-record-paths.test.ts packages/docs-site/bin/specdojo-docs-site.js packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/exec-record-paths.ts packages/docs-site/README.md","status":"passed","summary":"対象 5 ファイルは unchanged"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-bbtw-docs-dev-skip-exec-records.md","status":"passed","summary":"個票を整形した"},{"command":"docs:dev の起動時間の測定","status":"requires_human","summary":"executor の sandbox では測れない。統合後にオーケストレーターが変更前後を測り、個票の対応結果に書いてから close する。"}]}
+</specdojo_executor_evidence>

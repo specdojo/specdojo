@@ -4,16 +4,16 @@ document: specdojo:dmd-index-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-10-31T20:32:50.094Z"
-graded_by: flash-high-executor
-content_hash: b6d56780cf154fa0de2da59fdfd3c629b45d25f1fd90e303b3bed00c845c5c75
+verdict: pass
+score: 94
+graded_at: "2026-11-23T09:44:56.595Z"
+graded_by: sonnet-review-executor
+content_hash: e9dc1094bf1bbff3e408e9a5d7478f31b9cae86ae2b8591b67ddb0028fb14826
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -78,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
-  vp-ux-language-consistency:
-    level: 3
-    score: 75
-  vp-ops-release-readiness:
     level: 4
     score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,28 +100,39 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: "| supersedes | 置き換え関係（ID配列。未指定は `[]` 可） | 任意 |"
-    message: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
-    message_ja: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。判断までは「本文要件」を作成時の構成の正とし、ready 化前に解消する。"
+    message: "`recipe`・`template` の未決事項について、判断者と判断期限が示されていません。PJR-WYTX への参照だけでは、承認や差し戻しの判断に使えません。"
+    message_ja: "`recipe`・`template` の未決事項について、判断者と判断期限が示されていません。PJR-WYTX への参照だけでは、承認や差し戻しの判断に使えません。"
   - id: F002
     severity: minor
-    rule: vp-ux-readability
-    line: 38
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
-    message_ja: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
+    rule: vp-dev-testability
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: 作成後に実行する検証コマンド（`npm run lint:md` や `validate:schema` など）と、エラー時の対応が示されていません。
+    message_ja: 作成後に実行する検証コマンド（`npm run lint:md` や `validate:schema` など）と、エラー時の対応が示されていません。
   - id: F003
     severity: minor
-    rule: vp-ux-language-consistency
+    rule: vp-qe-kata-conformance
     line: 23
-    anchor: "- `id` は `dmd-index` を使用する。"
-    message: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
-    message_ja: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
+    anchor: "- ID はプロダクト仕様では `dmd-index`、プロジェクトでは `<project-id>:dmd-index`（例: `prj-0001:dmd-index`）。sample の ID は共通標準に従う。"
+    message: >-
+      `recipe` と `template` が undecided のままで、Kata の一式（rulebook・recipe・sample・template）が揃っていません。PJR-WYTX で解消するまで、ready
+      化できない状態です。
+    message_ja: >-
+      `recipe` と `template` が undecided のままで、Kata の一式（rulebook・recipe・sample・template）が揃っていません。PJR-WYTX で解消するまで、ready
+      化できない状態です。
+  - id: F004
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 23
+    anchor: "- ID はプロダクト仕様では `dmd-index`、プロジェクトでは `<project-id>:dmd-index`（例: `prj-0001:dmd-index`）。sample の ID は共通標準に従う。"
+    message: ready 化の条件が「ready 化前に解消する」とだけ書かれています。未決事項のほかに満たすべき条件は、列挙されていません。
+    message_ja: ready 化の条件が「ready 化前に解消する」とだけ書かれています。未決事項のほかに満たすべき条件は、列挙されていません。

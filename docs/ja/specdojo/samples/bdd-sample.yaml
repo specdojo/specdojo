@@ -12,7 +12,7 @@ entities:
     description: >-
       店舗で販売対象として管理する商品の種類。一個ずつの現物や販売時の明細とは区別する。
       商品・売上記録・売上明細は実装前の業務モデルとして本辞書で定義し、管理単位と関連は [[specdojo:ccd-sample|概念クラス図 サンプル]] に合わせる。
-      用語参照は [[specdojo:gl-sample|用語集 在庫・調達]] を対象とする。
+      用語は [[specdojo:gl-sample|用語集（駄菓子屋きぬやの販売・在庫・つけ管理）]] を参照する。
     related_terms: [tm-standard-product]
     key_fields: [product_id]
     fields:
@@ -34,7 +34,7 @@ entities:
       - logical_name: 標準販売価格
         physical_name: standard_price
         type: money
-        description: 現在の商品案内に使う税抜価格。過去の売上明細に残す販売単価とは区別する。
+        description: 現在の商品案内に使う一個あたりの税込価格。過去の売上明細に残す販売単価とは区別する。
         unit: 円
         constraints:
           required: true
@@ -55,9 +55,9 @@ entities:
   - logical_name: 売上記録
     physical_name: sale
     description: >-
-      一回の店頭販売で確定した会計の管理単位。一件以上の売上明細を持ち、入力途中や取り消した取引は含めない。
-      顧客が特定されない現金販売も記録する。顧客の基本情報とつけ残高の台帳は本辞書の対象外とする。
-    related_terms: [tm-sales, tm-accounts-receivable]
+      一回の店頭販売で確定した会計の管理単位。一件以上の売上明細を持ち、入力途中の取引と取り消した取引は含めない。
+      顧客を特定しない現金販売も記録する。顧客の基本情報とつけ残高の台帳は本辞書の対象外とする。
+    related_terms: [tm-sales, tm-accounts-receivable, tm-sales-regular-customer]
     key_fields: [sale_id]
     fields:
       - logical_name: 売上ID
@@ -71,7 +71,7 @@ entities:
       - logical_name: 売上日時
         physical_name: sold_at
         type: datetime
-        description: 販売を確定した時点。入力を開始した時点や外部決済の応答時点とは区別する。
+        description: 販売を確定した時点。入力を開始した時点や本部が売上を受け付けた時点とは区別する。
         constraints:
           required: true
         example: "2026-11-08T10:00:00+09:00"
@@ -84,25 +84,25 @@ entities:
         unit: 円
         constraints:
           required: true
-        example: 108
+        example: 100
       - logical_name: 支払方法
         physical_name: payment_method
         type: enum
-        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。決済サービスの処理状態とは別の判断軸。
+        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。本部売上受付の受付状態とは別の判断軸とする。
         constraints:
           required: true
+        example: cash
         allowed_values_detailed:
           - value: cash
             label: 店頭で現金を受領する
           - value: credit
-            label: 顧客のつけとして後日受領する
-        example: cash
+            label: 常連客のつけとして後日受領する
       - logical_name: 顧客ID
         physical_name: customer_id
         type: string
         description: >-
           購入者として特定した顧客の識別子。一見客の現金販売では省略できる。
-          つけ販売では請求先を特定するために必要であり、未設定を現金販売と読み替えない。
+          つけ販売では請求先の常連客を特定するために必要とする。未設定を現金販売と読み替えない。
         constraints:
           required: false
         example: CUS-001
@@ -139,7 +139,7 @@ entities:
       - logical_name: 販売単価
         physical_name: unit_price
         type: money
-        description: この販売で適用した一個あたりの税抜価格。販売後に商品の標準販売価格が変わっても変更しない。
+        description: この販売で適用した一個あたりの税込価格。販売後に商品の標準販売価格が変わっても変更しない。
         unit: 円
         constraints:
           required: true
@@ -147,33 +147,29 @@ entities:
       - logical_name: 販売数量
         physical_name: quantity
         type: integer
-        description: この行で販売する商品の個数。販売対象のない行や返品の数量は含めない。
+        description: この行で販売した商品の個数。販売対象のない行や返品の数量は含めない。
         unit: 個
         constraints:
           required: true
           min: 1
         example: 1
 
-  - logical_name: 支払い
-    physical_name: payment
+  - logical_name: 本部売上受付
+    physical_name: hq_sale_acceptance
     description: >-
-      決済サービス連携を検討する際に扱う支払い応答の管理単位。店頭販売の売上確定やつけ残高の管理とは区別する。
-      応答の識別と受領状況の判断に必要な項目のみ注釈し、通信仕様・応答構造は [[specdojo:ifx-api-sample|決済サービスAPI]] を正本とする。
-    schema_ref: docs/ja/specdojo/samples/ifx-api-sample.yaml#/components/schemas/CreatePaymentResponse
-    key_fields: [payment_id]
+      会計確定した現金販売を本部へ登録したときに本部が返す受付結果の管理単位。店舗での売上の確定とは区別し、本部へ登録できたかの確認に使う。
+      店舗側の照合と受付状況の判断に必要な項目のみ注釈し、要求・応答の構造は [[specdojo:ifx-api-sample|本部売上登録API]] を正本とする。
+    schema_ref: docs/ja/specdojo/samples/ifx-api-sample.yaml#/components/schemas/CreateSaleResponse
+    key_fields: [sale_id]
     fields:
-      - logical_name: 支払ID
-        physical_name: payment_id
-        description: 決済サービス側で支払いを識別する番号。店舗の売上IDとは別の識別子として照合に使う。
-      - logical_name: 支払ステータス
+      - logical_name: 本部売上ID
+        physical_name: sale_id
+        description: 本部が採番した売上の識別子。本部は店舗の売上記録の売上IDとは別に採番するため、店舗側は両者を同じ値と読み替えずに照合する。
+      - logical_name: 受付状態
         physical_name: status
         description: >-
-          決済サービスが返す支払いの処理結果。未処理や失敗を支払済みと扱わず、売上の確定とは別に確認する。
-          許容値は応答スキーマに合わせ、ここでは業務上の意味を対応付ける。
+          本部が売上を受け付けたかを表す。本部は拒否を応答コードで返すため、受付状態の値がないことを受付済みと扱わない。
+          許容値は応答スキーマに合わせ、本辞書では業務上の意味を対応付ける。
         allowed_values_detailed:
-          - value: PENDING
-            label: 未処理で支払済みを確認できない
-          - value: PAID
-            label: 決済サービスで支払済みと確認された
-          - value: FAILED
-            label: 決済処理に失敗し支払済みを確認できない
+          - value: ACCEPTED
+            label: 本部が売上を受け付け、重複なく登録した

@@ -1,0 +1,34 @@
+R4（正しさ）の確かめが終わりました。参照先の sample と食い違っていた 2 か所を `docs/ja/specdojo/samples/nfr-usability-sample.md` で直しました。ほかの主張はすべて正本と一致しています。変更したのはこのファイルだけで、result には手を付けていません。
+
+grade の指摘 F001・F002 は、前の段の版ですでに解消されていました。`sac-store-sales` は「（未作成）」と明示済みで、判定者の列は `BA・QE` の Role code になっています。
+
+**直した 2 か所**
+
+- **`nfr-usb-006` の `備考`**: 「確定済み会計の取消」を破壊的操作に含めていましたが、`uis-sample` は確定後の取消を別業務としています。この業務は本書の対象画面のどれにもなく、「対象画面の操作から洗い出す」という測定方法では数えられません。そこで対象を「取引中止、つけ記録の取消」とし、確定済み会計の取消は対象画面の外の業務として対象外にしました。
+- **関連ドキュメント導線の「総合テスト」行**: `stc-sample` を「エラー表示と確認」の文書としていましたが、`stc-sample` が扱うのは確定前の取消と印刷失敗の警告です。入力エラーの表示や中止確認ダイアログのケースはありません。目的を「`nfr-usb-005`・`nfr-usb-006` を判定する総合テストの会計の経路」に改めました。
+
+表の列幅は `npx prettier --write` で整え直したため、diff は 16 行に及びます。
+
+**確かめの表**
+
+| No | 主張 | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `type: requirement`・`rulebook`・`part_of`・`based_on` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` | grep で読み取り | 一致 | schema の 8 行目に `requirement`、common の 69 行目と 72 行目にキーの定義、rulebook の 38〜39 行目 |
+| 2 | wikilink 先の id（`nfr-index-sample`・`prj-overview-sample`・`uis-sample`・`stc-sample`）とその表示名 | 各 sample の frontmatter と H1 | grep で読み取り | 一致 | 4 件とも存在し、表示名は H1 と合う |
+| 3 | つけ残高を 1 分以内で確認する目標（`nfr-usb-003` の 60 秒・全試行） | `prj-overview-sample` | 70 行目を読み取り | 一致 | 「すべての試行で1分以内」「検索開始から残高表示まで」 |
+| 4 | 画面 id `uis-sales-register`、販売完了画面、預かり金入力 | `uis-sample` | 87・99・110 行目を読み取り | 一致 | 該当の記述がある |
+| 5 | `uis-credit-ledger`・`uis-stock-list`・`sac-store-sales` は未作成 | `docs/ja/specdojo` 全体 | grep で検索 | 一致 | 実体はなく、ほかの sample でも仮置きとして使われている |
+| 6 | 判定者の Role code `BA`・`QE`、役割名「店主代表」「家族利用者代表」 | `docs/ja/specdojo/standards/sample-authoring-standard.md` | 94・100 行目を読み取り | 一致 | 共通登場人物と Role code の規定に合う |
+| 7 | `nfr-usb-005` の「画面仕様のエラー表示の一覧」 | `uis-sample` | 7 章を読み取り | 一致 | 「エラー表示と利用者の次の手」の表があり、次の手の列もある |
+| 8 | `nfr-usb-006`: 取引中止は確認を求める破壊的操作 | `uis-sample` | 107〜109 行目を読み取り | 一致 | 中止確認ダイアログがある |
+| 9 | `nfr-usb-006`: 確定済み会計の取消は対象画面の操作 | `uis-sample` | 21 行目を読み取り | 不一致（直した） | 「確定後の取消は別業務」 |
+| 10 | `nfr-usb-006`: 明細削除は確定前に直せる | `uis-sample` | 86 行目を読み取り | 一致 | 登録中の操作 |
+| 11 | `stc-sample` が会計画面のエラー表示と確認を扱う | `stc-sample` | 16・82・96〜97 行目を読み取り | 不一致（直した） | 確定前の取消と印刷失敗の警告だけを扱う |
+| 12 | 取消理由「誤登録」とつけ記録の取消の確認 | なし（`uis-credit-ledger` などは未作成） | 該当なし | 確かめられない | 確かめるには取消業務とつけの画面仕様が要る。共通サンプル文脈とは食い違わない |
+| 13 | タブレットの大きさ、被験者数、90 秒・30 分などの業務の値 | なし（`_ASSUMPTION_` の仮定） | 該当なし | 対象外 | 共通サンプル文脈と食い違わない |
+
+この段で実行した検査は prettier の整形だけです。markdownlint とリンクの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめが終わった。参照先の sample と食い違う 2 か所を `docs/ja/specdojo/samples/nfr-usability-sample.md` で直した。1 つ目は `nfr-usb-006` の `備考` で、確定済み会計の取消を対象画面の外の業務として対象外にした。2 つ目は「総合テスト」行の目的を `stc-sample` の実際の範囲に合わせた。F001・F002 は前の段の版ですでに解消されていた。表の列幅は prettier で整えた。確かめの表（13 行）は最終応答にある。","handoff":["[minor/vp-qe-verifiability] 「操作性要件一覧」の `nfr-usb-006` の `備考` は、破壊的操作に「確定済み会計の取消」を含めていた。`specdojo:uis-sample` の「確定後の取消は別業務とする」（21 行目）と食い違い、対象画面のどれにもこの業務がないため、測定方法の「対象画面の操作から洗い出す」では数えられない。対象を「取引中止、つけ記録の取消」とし、確定済み会計の取消は対象画面の外の業務として対象外にした。","[minor/vp-arc-technical-constraints] 「関連ドキュメント導線」の「総合テスト」行は、`specdojo:stc-sample` の目的を「会計画面でのエラー表示と確認」としていた。`stc-sample` が扱うのは確定前の取消と印刷失敗の警告だけで（16・82・96〜97 行目）、入力エラーの表示や中止確認ダイアログのケースはない。目的を「`nfr-usb-005`・`nfr-usb-006` を判定する総合テストの会計の経路」に改めた。","確かめられない主張: `nfr-usb-002` の取消理由「誤登録」と、`nfr-usb-006` のつけ記録の取消の確認には正本がない。`uis-credit-ledger` と取消業務の画面仕様が未作成のためである。共通サンプル文脈とは食い違わないので仮定として残した。画面仕様ができた後に照合し直す。","grade の finding F001・F002 は前の段の版ですでに解消されていた。F001 は `sac-store-sales` に「（未作成）」が明示済み、F002 は判定者が Role code の `BA・QE` になっている。この段では追加の修正をしていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-usability-sample.md","status":"passed","summary":"表の列幅を整形した（1 ファイル、エラーなし）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは sample 1 件だけで、plan・result・個票の履歴蓄積ファイルを変更していないため"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,26 @@
+R4（正しさ）の確かめでは、sample に誤りは見つかりませんでした。直す箇所がないため、`docs/ja/specdojo/samples/pm-raci-sample.md` は編集していません。
+
+**F001（成果物ID との対応）**: 指摘はすでに解消されています。「成果物別 RACI」の表には「対象 ID」の列があり、各行が成果物 ID か接頭辞（`bps-*` など）を持つため、成果物から行を一意に辿れます。直しは不要です。
+
+**主張ごとの確かめ（result の表の材料）**
+
+| No | 主張 | 正本 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- |
+| 1 | 成果物 ID `prj-overview`・`prj-scope`・`prj-success-criteria-and-acceptance-criteria` | `docs/ja/specdojo/templates/dct-project-definition-template.yaml` | 一致 | 同じ `local_id` がある |
+| 2 | 成果物 ID `pm-plan`・`pm-communication-plan`・`pm-quality-management-plan`・`pm-organization`・`pm-roles`・`pm-members`・`pm-raci` | `docs/ja/specdojo/templates/dct-project-management-template.yaml` | 一致 | 同じ `local_id` がある |
+| 3 | 接頭辞 `bps-*`・`uis-*`・`bdd-*` と ID `sysd-index` | templates 配下の `dct-*` | 一致 | `bps-_TERM_`・`uis-_TERM_`・`bdd-_TERM_`・`sysd-index` がある |
+| 4 | 架空の記録名 `kinuya-st-report`・`kinuya-acceptance-record`・`kinuya-schedule`・`kinuya-app` | `stc-index-sample`・`pm-quality-management-plan-sample`・`pm-plan-sample`・`tsd-sample` | 一致 | どれもほかの sample で同じ名前が使われている |
+| 5 | 専門支援の `ARC`・`UX`・`OPS` は列を省き、助言はそれぞれ `DEV`・`BA`・`PM` が取り込む | `pm-organization-sample.md` | 一致 | 41〜43 行目と 47・49 行目に同じ扱いがある |
+| 6 | 人と組織の定義標準に「Schedule への担当展開」の章がある。WBS の明示 `owner` を先に見る、`A`・`C` が承認やレビューの別タスクを持つ | `people-and-organization-definition-standard.md` | 一致 | 7.1 の手順 1・5 に書かれている |
+| 7 | agent の割り当て先の正本は `.specdojo/agent-members.yaml` | 同じ標準と実ファイル | 一致 | 標準の 272 行目にあり、ファイルも存在する |
+| 8 | 管理計画の判断ゲートで必須条件を免除しない | `pm-plan-sample.md` | 一致 | 56 行目に「免除の例外は設けない」とある |
+| 9 | 個別タスクの正本は `kinuya-schedule` | `pm-plan-sample.md` | 一致 | 69 行目で `kinuya-schedule`（`PM`）としている |
+| 10 | 各行に `A` が 1 つ、`R` が 1 つ以上ある | `pm-raci-rulebook.md` の本文要件と禁止事項 | 一致 | 両表の全行を目で確かめた |
+
+`kinuya-app` は `tsd-sample` では Fly.io のアプリ名です。この sample では「コード」や「対象版タグ」の対象として使っていますが、架空のアプリ名なので食い違いとはしていません。
+
+検査について：編集したファイルがないため、Prettier・markdownlint・`npm run validate:history-links` は対象外です。markdown の lint などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめで、sample の成果物 ID・接頭辞・架空の記録名・専門支援の扱い・Schedule への担当展開・agent の割り当て先・判断ゲート・A と R の配置を正本と突き合わせ、すべて一致した。F001 は対象 ID の列ですでに解消されている。誤りがないため sample は編集していない。","handoff":["F001 [minor/vp-qe-kata-conformance; line=15]: 解消済み。「成果物別 RACI」の表に対象 ID の列（成果物 ID か `bps-*` などの接頭辞）があり、統合した行も各成果物から一意に照合できる。直しは不要。","R4 確かめ: 成果物 ID の `prj-overview`・`prj-scope`・`prj-success-criteria-and-acceptance-criteria` は `dct-project-definition-template.yaml` の `local_id` と、`pm-plan`・`pm-communication-plan`・`pm-quality-management-plan`・`pm-organization`・`pm-roles`・`pm-members`・`pm-raci` は `dct-project-management-template.yaml` の `local_id` と一致する。接頭辞の `bps-*`・`uis-*`・`bdd-*` と `sysd-index` も templates の `dct-*` と一致する。","R4 確かめ: `ARC`・`UX`・`OPS` を列から省いて主導ロールが助言を取り込む扱いは `pm-organization-sample.md` の 41〜49 行目と一致する。「Schedule への担当展開」の章と、WBS の明示 `owner` を先に見る・承認とレビューを別タスクにする手順は `people-and-organization-definition-standard.md` の 7.1 と一致する。`.specdojo/agent-members.yaml` は標準に書かれており、実ファイルもある。","R4 確かめ: 判断ゲートで必須条件を免除しないことは `pm-plan-sample.md` の 56 行目と、`kinuya-schedule` を個別タスクの正本とすることは同じ文書の 69 行目と一致する。`kinuya-st-report`・`kinuya-acceptance-record`・`kinuya-app` はほかの sample でも同じ名前が使われている。`kinuya-app` は `tsd-sample` では Fly.io のアプリ名だが、架空のアプリ名なので食い違いとはしない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-raci-sample.md","status":"not_applicable","summary":"変更ファイルなし","reason":"executor は *.md などのファイルを変更していないため"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan・result・個票の履歴ファイルを変更していないため"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,21 @@
+`docs/ja/specdojo/samples/opr-sample.md` を全面的に書き直しました。以前は「何を書くか」を並べただけの文書でしたが、駄菓子屋きぬや 販売管理システムの運用手順（`opr-index`）を、値を埋めた完成例にしています（160 行）。私が実行した検査は prettier と markdownlint の 2 つで、どちらも問題は出ていません。`npm run lint:md` などの検査は、このあと runner が実行します。
+
+**主な変更点**
+
+- **章立て:** opr-template と rulebook が必須とする 12 章（概要から関連ドキュメント導線まで）に合わせました。H1 のリンクと、「目的と適用範囲」「最小記述例」の重複していた章は削除しています。
+- **Frontmatter:** `based_on: [specdojo:opd-index-sample]` と `supersedes: []` を追加し、`status` は `draft` のままです。
+- **概要:** 本書が実行手順の正本であること、店主代表が不在でも家族の店番担当が同じ手順で記録・連絡できるようにする目的、分冊が本書の共通規約を参照することを書きました。運用方針で未決の値については、手順上の扱いと影響する章を表にしています。
+- **各章の中身:** 点検、障害対応（P1〜P3 の初動期限・切替判断者・エスカレーション）、アラート対応（誤検知の終了条件を含む）、バックアップ確認・復元・演習、バッチ再実行（`run_id`・1 日 2 回まで・同じ日付は上書きで重複を防ぐ）を具体的な値で書きました。運用変更（承認者・ロールバック条件）、アカウント付与・剥奪の 5 段階、問い合わせ一次対応、証跡（保存先・識別子）も同様です。
+- **値の出どころ:** 優先度・承認者などの値は既存の `opd-index-sample` と `opr-index-sample` に合わせ、新しい数値は作っていません。
+- **未決の値:** RTO/RPO、バックアップと証跡の保管期間、オフライン時の記録方法、営業時間外の緊急連絡手段は推測で埋めず、`_UNDECIDED_` のまま残しました。
+- **書かなかったこと:** PJR-76N9 の決まりに従い、この文書自体の作成・確認・承認の役割分担や承認の進み具合は書いていません。F003 と F025 が求める「draft から ready に進める基準・承認者」はこれに当たるため、本文には入れていません。
+
+**引き継ぎ事項**
+
+- `opr-sample` と `opr-index-sample` は中身がほぼ同じになりました。役割を分けるか一方へまとめるかの判断が必要です。
+- rulebook の変更案です。sample 一覧の `opr-incident-sample` は、frontmatter の `rulebook` が `specdojo:opd-rulebook` になっており、対応関係が合っていません。
+- RTO/RPO、保管期間、オフライン時の記録方法、営業時間外の緊急連絡手段の 4 つは、利用者が決める必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/opr-sample.md` を opr-template の 12 章構成に沿って、駄菓子屋きぬや 販売管理システムの `opr-index` 完成例として書き直した。based_on と supersedes を追加し、利用者が決める値は `_UNDECIDED_` のまま残した。prettier と markdownlint は問題なし。","handoff":["F003・F025（draft から ready に進める基準・承認者・判断の段取り）は PJR-76N9 の決まりにより sample 本文に書いていない。文書の承認と留保は登録簿の個票で追う。","利用者が決める値: RTO/RPO、バックアップと各証跡の保管期間、オフライン時の記録方法、営業時間外の緊急連絡手段。決まったら、opd-index-sample・opr-index-sample・opr-sample の該当する章を同時に差し替える。","`opr-sample`（opr-rulebook の sample）と `opr-index-sample`（opr-index-rulebook の sample）は中身がほぼ同じになった。役割を分ける（たとえば opr-sample を term の分冊の例にする）か一方へまとめるかを判断する必要がある。","rulebook の変更案: opr-rulebook の sample 一覧にある `opr-incident-sample` は frontmatter の `rulebook` が `specdojo:opd-rulebook` で、based_on が project 修飾されていない。分冊の sample の rulebook 宣言と中身を opr-rulebook に合わせて見直す。","F004・F028（承認の境界）は、運用作業の承認者（変更・権限付与は `PO`、停止・紙の控えへの切替判断は `PO`）を手順の表に Role code で書いて対応した。文書そのものの承認者は書いていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"0 issues in 1 file"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/opr-sample.md だけで、plan・result・個票は変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した `*.yaml` / `*.yml` ファイルがないため"}]}
+</specdojo_executor_evidence>

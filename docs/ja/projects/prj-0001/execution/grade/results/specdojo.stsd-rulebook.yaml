@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-11-13T06:03:38.514Z"
-graded_by: sol-review-executor
-content_hash: f39590c23d2bc208253068c6fd6331bced9327177a3cc34a9bdf3e21a17dce0c
+graded_at: "2026-11-23T20:27:38.493Z"
+graded_by: sonnet-review-executor
+content_hash: c46f3fd50972739b5bce9de75970e2c10eb4e9e611ebc13b1d683fab47c1d0fa
 categories:
   purpose:
     score: 100
@@ -111,7 +111,7 @@ findings:
     severity: minor
     rule: vp-arc-conciseness
     line: 110
-    anchor: "- `値` は文書内で重複させず、外部参照から対応する状態を一意に特定できるようにします。`-` はコードを持たないことを表し、複数行で使用できます。"
+    anchor: "### 6.5. 状態遷移"
     message: >-
       Section 6.4 repeats the state-value uniqueness requirement and the `-` exception already defined in Section 3.
       Replace this repeated normative statement with a reference to the naming and ID rules, retaining the column
@@ -124,14 +124,12 @@ findings:
     severity: minor
     rule: vp-qe-kata-conformance
     line: 137
-    anchor: "- 分岐は同じ遷移元から出る複数の遷移として表し、各矢印へ同じイベントと相互排他的な条件を記載します。`<<choice>>` など、状態一覧にない疑似状態は使用しません。"
+    anchor: "| イベント | 状態変更の契機となる業務上の出来事または操作                      |"
     message: >-
-      Section 6.5.1 requires the same event and mutually exclusive conditions on all branches from a state, whereas
-      Section 6.5.2 and the included Mermaid rulebook apply that requirement to branches triggered by the same event.
-      Add the same-event qualifier here so authors can represent different outgoing business events without treating
-      them as a violation.
+      6.5.1 節は「同じ遷移元から出る複数の遷移」に同じイベントと相互排他的な条件を求める表現でしたが、現在は同じイベントの限定が付いています。template
+      の図コメント（分岐は同じ遷移元からの複数矢印）には同じイベントの限定がなく、rulebook・mermaid rulebook と表現が食い違います。template
+      のコメントにも同じイベントの限定を足し、異なる業務イベントで出る遷移が分岐の違反と誤解されないようにしてください。
     message_ja: >-
-      Section 6.5.1 requires the same event and mutually exclusive conditions on all branches from a state, whereas
-      Section 6.5.2 and the included Mermaid rulebook apply that requirement to branches triggered by the same event.
-      Add the same-event qualifier here so authors can represent different outgoing business events without treating
-      them as a violation.
+      6.5.1 節は「同じ遷移元から出る複数の遷移」に同じイベントと相互排他的な条件を求める表現でしたが、現在は同じイベントの限定が付いています。template
+      の図コメント（分岐は同じ遷移元からの複数矢印）には同じイベントの限定がなく、rulebook・mermaid rulebook と表現が食い違います。template
+      のコメントにも同じイベントの限定を足し、異なる業務イベントで出る遷移が分岐の違反と誤解されないようにしてください。

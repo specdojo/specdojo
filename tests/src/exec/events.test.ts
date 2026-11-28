@@ -186,6 +186,25 @@ describe("foldEventsToState", () => {
     expect(snapshot.tasks["T-001"].last_by).toBe("agent-1");
   });
 
+  it("予約名 specdojo-orchestrator の release event も エラーなく todo に戻す", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const events = [
+      { path: "1.json", event: makeEvent({ type: "claim", task_id: "T-001", by: "agent-1" }) },
+      {
+        path: "2.json",
+        event: makeEvent({
+          type: "release",
+          task_id: "T-001",
+          by: "specdojo-orchestrator",
+          msg: "rerun",
+        }),
+      },
+    ];
+    const snapshot = foldEventsToState(events, schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
+    expect(snapshot.tasks["T-001"].last_by).toBe("specdojo-orchestrator");
+  });
+
   it("complete で doing → done に遷移する", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const events = [
@@ -697,6 +716,31 @@ describe("canCancelTask", () => {
 // ---- canReleaseTask ----------------------------------------------------
 
 describe("canReleaseTask", () => {
+  it("limits the stopped-run exception to a forced orchestrator release", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });
+    const override = { force: true, stoppedRun: { pid: 123, lock_token: "verified" } };
+    expect(canReleaseTask(schedule, snapshot, "T-001", "specdojo-orchestrator", override).ok).toBe(
+      true,
+    );
+    expect(canReleaseTask(schedule, snapshot, "T-001", "agent-2", override).ok).toBe(false);
+    expect(
+      canReleaseTask(schedule, snapshot, "T-001", "specdojo-orchestrator", {
+        ...override,
+        force: false,
+      }).ok,
+    ).toBe(false);
+    expect(
+      canReleaseTask(schedule, snapshot, "T-001", "specdojo-orchestrator", { force: true }).ok,
+    ).toBe(false);
+    expect(canCompleteTask(schedule, snapshot, "T-001", "specdojo-orchestrator", override).ok).toBe(
+      false,
+    );
+    expect(canBlockTask(schedule, snapshot, "T-001", "specdojo-orchestrator", override).ok).toBe(
+      false,
+    );
+  });
+
   it("doing かつ同一 actor で release できる", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const snapshot = makeSnapshot({ "T-001": { state: "doing", last_by: "agent-1" } });

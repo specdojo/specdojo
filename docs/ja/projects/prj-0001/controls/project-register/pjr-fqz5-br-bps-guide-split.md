@@ -25,6 +25,7 @@ specdojo:
 - 業務仕様の代表を種類ごとに 1 件作る方針で、実装と同じことを 2 回書く文書を調べた（2026-11-08）。cld・ifx-cmd・sf は bdd・ccd と同じく型の手入れで参照に寄せる（indie が決定）。
 - br・bps は規範文書・ガイドとの役割の分け方を先に決める。決まるまでは代表 1 件も今の型のまま作る（indie が決定）。
 - 例: br-review-verdict は review-guide の verdict の説明と、br-branch-integration-direction はブランチ運用のガイドと重なる。
+- PJR-T2X5 の決定（2026-11-25）: v1.0 まで破壊的な変更をしない。CLI・設定・記録の形・型（kata の id と rulebook の必須の章）・生成物の場所を壊さず、消す・変えるときは先に非推奨にして少なくとも 1 つの minor の版のあいだ残す
 
 ## 3. 検討した選択肢
 

@@ -2,9 +2,11 @@ import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import {
+  gitResultAsync,
   repoRelative,
   stageCommitTargets,
   worktreeStatusPaths as statusPaths,
+  type GitCommandOutcome,
 } from "../shared/git.js";
 import {
   DEFAULT_MARKDOWNLINT_CONFIG,
@@ -18,8 +20,10 @@ import {
   qualifiedRepoPaths,
   type AgentRepoPathChanges,
 } from "./agent-protected-config.js";
+import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import {
   deliverableDocPath,
+  deliverableDocPathByDocId,
   parsePlanTaskIdentity,
   targetReferenceDirsForApproach,
 } from "./plans.js";
@@ -161,6 +165,16 @@ export function deliverableStatus(content: string, relPath: string): string | un
   return typeof status === "string" ? status : undefined;
 }
 
+// Project deliverables and kata documents live under docs/. Other trees may contain
+// copies or test data with the same frontmatter and are not human approval targets.
+export function isAgentReadyPromotion(relPath: string, current: string, base?: string): boolean {
+  if (!relPath.replaceAll("\\", "/").startsWith("docs/")) return false;
+  return (
+    deliverableStatus(current, relPath) === "ready" &&
+    (base === undefined || deliverableStatus(base, relPath) !== "ready")
+  );
+}
+
 // Promotion of a deliverable's frontmatter status to "ready" is a human-only gate.
 // Agents commit their changes through commitWorktreeChanges, so reject (block) any run
 // that transitions a deliverable to "ready" here; humans promote out-of-band via a direct
@@ -179,15 +193,15 @@ function assertNoAgentReadyPromotion(
   const promoted: string[] = [];
   for (const relPath of paths) {
     if (relPath === resultRel || relPath === planRel) continue;
+    if (!relPath.replaceAll("\\", "/").startsWith("docs/")) continue;
     const absPath = resolve(worktree.path, relPath);
     if (!existsSync(absPath)) continue; // deletion is not a promotion
-    if (deliverableStatus(readFileSync(absPath, "utf8"), relPath) !== "ready") continue;
+    const content = readFileSync(absPath, "utf8");
+    if (deliverableStatus(content, relPath) !== "ready") continue;
     const base = gitResult(worktree.path, ["show", `HEAD:${relPath}`]);
-    const baseStatus =
-      base.status === 0 && typeof base.stdout === "string"
-        ? deliverableStatus(base.stdout, relPath)
-        : undefined;
-    if (baseStatus !== "ready") promoted.push(relPath);
+    const baseContent =
+      base.status === 0 && typeof base.stdout === "string" ? base.stdout : undefined;
+    if (isAgentReadyPromotion(relPath, content, baseContent)) promoted.push(relPath);
   }
   if (promoted.length > 0) {
     throw new Error(
@@ -308,6 +322,24 @@ function headDocIndexLookup(worktreePath: string): (id: string) => string | unde
   };
 }
 
+function isForeignNamespaceId(target: string, projectId: string | undefined): boolean {
+  return target.includes(":") && !(projectId && target.startsWith(`${projectId}:`));
+}
+
+// HEAD の文書の frontmatter（specdojo: 名前空間）の id。agent の working tree 改変で
+// 別の文書を target に見せかけられないよう、checkpoint 済みの版から読む。
+function headDocumentId(worktreePath: string, relPath: string): string | undefined {
+  const content = readWorktreeHeadFile(worktreePath, relPath);
+  if (!content) return undefined;
+  try {
+    const id = readSpecdojoNamespace(content).id;
+    return typeof id === "string" ? id.trim() : undefined;
+  } catch {
+    // frontmatter の壊れた文書は照合対象にしない。
+    return undefined;
+  }
+}
+
 // commit を許可する範囲。mode 別の許可リスト（review は result のみ、edit は result と
 // 対象成果物、maintenance / bootstrap 系 approach は参考資料ディレクトリも追加）。
 export type CommitScope = {
@@ -386,6 +418,18 @@ export function resolveCommitScope(
       : undefined;
     if (fromCatalog) {
       allowedFiles.add(fromCatalog);
+      continue;
+    }
+    // project 以外の名前空間の id（kata ドメインの specdojo:<name>-sample など）は、catalog の
+    // 成果物の文書 id と HEAD の frontmatter で照合する。catalog に無い型の文書は解決しない。
+    const fromCatalogDocId =
+      context.catalogPath && isForeignNamespaceId(target, identity.projectId)
+        ? deliverableDocPathByDocId(context.catalogPath, target, (path) =>
+            headDocumentId(worktree.path, path),
+          )
+        : undefined;
+    if (fromCatalogDocId) {
+      allowedFiles.add(fromCatalogDocId);
       continue;
     }
     unresolvedTargets.push(target);
@@ -694,6 +738,69 @@ export function assertResultMarkdownlint(
   throw new Error(`Failed to run markdownlint on ${resultRel} before commit: ${detail}`);
 }
 
+// hook を走らせた commit の失敗を、秘匿済みの出力とともに run 単位のログへ残して投げる。
+export function assertHookCommitSucceeded(
+  commit: GitCommandOutcome,
+  failureLogPath: string | undefined,
+  label: string,
+  errorPrefix: string,
+): void {
+  if (commit.status === 0) return;
+  const output = [commit.stdout, commit.stderr]
+    .filter((part): part is string => typeof part === "string" && part.length > 0)
+    .join("\n");
+  appendGitFailureLog(failureLogPath, [
+    `=== ${new Date().toISOString()} ${label} ===`,
+    `exit: ${commit.status ?? "unknown"}`,
+    "--- stdout ---",
+    typeof commit.stdout === "string" ? commit.stdout : "",
+    "--- stderr ---",
+    typeof commit.stderr === "string" ? commit.stderr : "",
+    "",
+  ]);
+  throw new Error(`${errorPrefix}: ${summarizeGitHookFailure(output)}`);
+}
+
+// hook の後に残った commit 対象を stage し、amend すべき path を返す。収束していれば undefined。
+function stageRemainingCommitTargets(
+  repoRoot: string,
+  listRemainingPaths: () => string[],
+  failureLogPath: string | undefined,
+): string[] | undefined {
+  const paths = listRemainingPaths();
+  if (paths.length === 0) return undefined;
+
+  stageCommitTargets(repoRoot, paths);
+  const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+  const staged = gitResult(repoRoot, stagedArgs);
+  if (staged.status === 0) {
+    // pathspec commit は hook が再stageした内容を commit した後、元の index を復元して
+    // HEAD と逆向きの差分を残す場合がある。この場合は add が index を HEAD へ揃えて
+    // 差分を解消するため、再取得して消えていれば正常な収束として扱う。
+    const remaining = listRemainingPaths();
+    if (remaining.length === 0) return undefined;
+    throw new Error(`Failed to stage post-hook commit-target changes: ${remaining.join(", ")}`);
+  }
+  if (staged.status !== 1) {
+    appendGitResultFailureLog(failureLogPath, "git diff post-hook worktree inspection", staged);
+    throw new Error(
+      `Failed to inspect post-hook worktree changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+    );
+  }
+  return paths;
+}
+
+function amendArgs(paths: readonly string[]): string[] {
+  return ["commit", "--amend", "--no-edit", "--", ...paths];
+}
+
+function assertStabilized(listRemainingPaths: () => string[]): void {
+  const dirty = listRemainingPaths();
+  if (dirty.length > 0) {
+    throw new Error(`Pre-commit hooks kept changing commit-target files: ${dirty.join(", ")}`);
+  }
+}
+
 export function stabilizeCommitTargets(
   repoRoot: string,
   listRemainingPaths: () => string[],
@@ -701,50 +808,38 @@ export function stabilizeCommitTargets(
   failureLogPath?: string,
 ): void {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const paths = listRemainingPaths();
-    if (paths.length === 0) return;
-
-    stageCommitTargets(repoRoot, paths);
-    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
-    const staged = gitResult(repoRoot, stagedArgs);
-    if (staged.status === 0) {
-      // pathspec commit は hook が再stageした内容を commit した後、元の index を復元して
-      // HEAD と逆向きの差分を残す場合がある。この場合は add が index を HEAD へ揃えて
-      // 差分を解消するため、再取得して消えていれば正常な収束として扱う。
-      const remaining = listRemainingPaths();
-      if (remaining.length === 0) return;
-      throw new Error(`Failed to stage post-hook commit-target changes: ${remaining.join(", ")}`);
-    }
-    if (staged.status !== 1) {
-      appendGitResultFailureLog(failureLogPath, "git diff post-hook worktree inspection", staged);
-      throw new Error(
-        `Failed to inspect post-hook worktree changes: ${formatGitResultFailure(stagedArgs, staged)}`,
-      );
-    }
-
-    const commitArgs = ["commit", "--amend", "--no-edit", "--", ...paths];
-    const commit = gitResult(repoRoot, commitArgs);
-    if (commit.status !== 0) {
-      const output = [commit.stdout, commit.stderr]
-        .filter((part): part is string => typeof part === "string" && part.length > 0)
-        .join("\n");
-      appendGitFailureLog(failureLogPath, [
-        `=== ${new Date().toISOString()} git commit --amend ===`,
-        `exit: ${commit.status ?? "unknown"}`,
-        "--- stdout ---",
-        typeof commit.stdout === "string" ? commit.stdout : "",
-        "--- stderr ---",
-        typeof commit.stderr === "string" ? commit.stderr : "",
-        "",
-      ]);
-      throw new Error(`git commit --amend failed: ${summarizeGitHookFailure(output)}`);
-    }
+    const paths = stageRemainingCommitTargets(repoRoot, listRemainingPaths, failureLogPath);
+    if (!paths) return;
+    const commit = gitResult(repoRoot, amendArgs(paths));
+    assertHookCommitSucceeded(
+      commit,
+      failureLogPath,
+      "git commit --amend",
+      "git commit --amend failed",
+    );
   }
+  assertStabilized(listRemainingPaths);
+}
 
-  const dirty = listRemainingPaths();
-  if (dirty.length > 0) {
-    throw new Error(`Pre-commit hooks kept changing commit-target files: ${dirty.join(", ")}`);
+// stabilizeCommitTargets と同じ手順で、hook を走らせる amend だけを非同期に待つ（PJR-P8SX）。
+export async function stabilizeCommitTargetsAsync(
+  repoRoot: string,
+  listRemainingPaths: () => string[],
+  maxAttempts = MAX_COMMIT_STABILIZATION_ATTEMPTS,
+  failureLogPath?: string,
+): Promise<void> {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const paths = stageRemainingCommitTargets(repoRoot, listRemainingPaths, failureLogPath);
+    if (!paths) return;
+    const commit = await gitResultAsync(repoRoot, amendArgs(paths));
+    assertHookCommitSucceeded(
+      commit,
+      failureLogPath,
+      "git commit --amend",
+      "git commit --amend failed",
+    );
   }
+  assertStabilized(listRemainingPaths);
 }
 
 export function zeroSeparatedPaths(repoRoot: string, args: string[]): string[] {
@@ -836,7 +931,7 @@ export function recordRootNewFilesHandoff(
 // The commit is limited to the mode-based allowlist (resolveCommitScope); out-of-scope
 // changes block agent commits. Excludes plans, events,
 // generated files, and other tasks' results (see isCommitTargetPath).
-export function commitWorktreeChanges(params: {
+export type CommitWorktreeChangesParams = {
   context: WorktreeOpsContext;
   worktree: ExecWorktree;
   taskId: string;
@@ -856,7 +951,79 @@ export function commitWorktreeChanges(params: {
   // 統合の commit で流し直さない hook のコマンド名（PJR-T01P）。親の検証で通った検査だけを
   // 呼び出し側が渡す。手動の `exec worktree commit` は渡さず、hook をすべて流す。
   skipHooks?: readonly string[];
-}): { targets: string[]; committed: boolean } {
+};
+
+export type CommitWorktreeChangesOutcome = { targets: string[]; committed: boolean };
+
+// hook を走らせる commit の直前までの検査・stage。commit が要らなければ outcome を返す。
+type PreparedWorktreeCommit =
+  | { outcome: CommitWorktreeChangesOutcome }
+  | { paths: string[]; commitArgs: string[]; hookEnvironment?: Readonly<Record<string, string>> };
+
+export function commitWorktreeChanges(
+  params: CommitWorktreeChangesParams,
+): CommitWorktreeChangesOutcome {
+  const prepared = prepareWorktreeCommit(params);
+  if ("outcome" in prepared) return prepared.outcome;
+  const commit = gitResult(
+    params.worktree.path,
+    prepared.commitArgs,
+    undefined,
+    prepared.hookEnvironment,
+  );
+  assertTaskCommitSucceeded(params, commit);
+  stabilizeCommitTargets(
+    params.worktree.path,
+    remainingWorktreeCommitTargets(params),
+    undefined,
+    params.failureLogPath,
+  );
+  assertCommitScope(params.context, params.worktree, params.taskId, params);
+  return { targets: prepared.paths, committed: true };
+}
+
+// commitWorktreeChanges と同じ commit を、hook が走る間 event loop を止めずに行う。exec run の
+// 統合段は並行する別タスクの親の検証と同じ process で動くため、こちらを使う（PJR-P8SX）。
+export async function commitWorktreeChangesAsync(
+  params: CommitWorktreeChangesParams,
+): Promise<CommitWorktreeChangesOutcome> {
+  const prepared = prepareWorktreeCommit(params);
+  if ("outcome" in prepared) return prepared.outcome;
+  const commit = await gitResultAsync(
+    params.worktree.path,
+    prepared.commitArgs,
+    undefined,
+    prepared.hookEnvironment,
+  );
+  assertTaskCommitSucceeded(params, commit);
+  await stabilizeCommitTargetsAsync(
+    params.worktree.path,
+    remainingWorktreeCommitTargets(params),
+    undefined,
+    params.failureLogPath,
+  );
+  assertCommitScope(params.context, params.worktree, params.taskId, params);
+  return { targets: prepared.paths, committed: true };
+}
+
+function remainingWorktreeCommitTargets(params: CommitWorktreeChangesParams): () => string[] {
+  const { context, worktree, taskId, allowEditedPlan } = params;
+  return () => commitTargetPaths(context, worktree, taskId, { allowEditedPlan });
+}
+
+function assertTaskCommitSucceeded(
+  params: CommitWorktreeChangesParams,
+  commit: GitCommandOutcome,
+): void {
+  assertHookCommitSucceeded(
+    commit,
+    params.failureLogPath,
+    "git commit task changes",
+    "git commit failed",
+  );
+}
+
+function prepareWorktreeCommit(params: CommitWorktreeChangesParams): PreparedWorktreeCommit {
   const { context, worktree, taskId, allowEditedPlan } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
   if (!params.productsIntegratedByCaller) assertNoPendingProductChanges(worktree);
@@ -911,11 +1078,11 @@ export function commitWorktreeChanges(params: {
   const paths = partition.targets;
   if (paths.length === 0) {
     process.stdout.write("No commit-target changes.\n");
-    return { targets: [], committed: false };
+    return { outcome: { targets: [], committed: false } };
   }
   assertNoAgentReadyPromotion(context, worktree, taskId, paths);
   process.stdout.write(`commit-targets:\n${paths.map((path) => `  ${path}`).join("\n")}\n`);
-  if (params.dryRun) return { targets: paths, committed: false };
+  if (params.dryRun) return { outcome: { targets: paths, committed: false } };
 
   assertResultMarkdownlint(context, worktree, taskId);
   stageCommitTargets(worktree.path, paths);
@@ -923,7 +1090,7 @@ export function commitWorktreeChanges(params: {
   const staged = gitResult(worktree.path, stagedArgs);
   if (staged.status === 0) {
     process.stdout.write("No staged commit-target changes.\n");
-    return { targets: paths, committed: false };
+    return { outcome: { targets: paths, committed: false } };
   }
   if (staged.status !== 1) {
     appendGitResultFailureLog(params.failureLogPath, "git diff staged worktree inspection", staged);
@@ -944,28 +1111,5 @@ export function commitWorktreeChanges(params: {
       `commit hooks skipped (covered by passed parent validations): ${(params.skipHooks ?? []).join(", ")}\n`,
     );
   }
-  const commit = gitResult(worktree.path, commitArgs, undefined, hookEnvironment);
-  if (commit.status !== 0) {
-    const output = [commit.stdout, commit.stderr]
-      .filter((part): part is string => typeof part === "string" && part.length > 0)
-      .join("\n");
-    appendGitFailureLog(params.failureLogPath, [
-      `=== ${new Date().toISOString()} git commit task changes ===`,
-      `exit: ${commit.status ?? "unknown"}`,
-      "--- stdout ---",
-      typeof commit.stdout === "string" ? commit.stdout : "",
-      "--- stderr ---",
-      typeof commit.stderr === "string" ? commit.stderr : "",
-      "",
-    ]);
-    throw new Error(`git commit failed: ${summarizeGitHookFailure(output)}`);
-  }
-  stabilizeCommitTargets(
-    worktree.path,
-    () => commitTargetPaths(context, worktree, taskId, { allowEditedPlan }),
-    undefined,
-    params.failureLogPath,
-  );
-  assertCommitScope(context, worktree, taskId, params);
-  return { targets: paths, committed: true };
+  return { paths, commitArgs, ...(hookEnvironment ? { hookEnvironment } : {}) };
 }

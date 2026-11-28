@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VCER",
+  "run_id": "pjr-vcer-20261121T073459Z-eb4e6cf7",
+  "updated_at": "2026-11-21T08:06:20.596Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T08:00:23.707Z",
+      "completed_at": "2026-11-21T08:02:28.272Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-21T08:06:10.615Z",
+      "completed_at": "2026-11-21T08:06:10.615Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T08:06:12.574Z",
+      "completed_at": "2026-11-21T08:06:20.596Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-21T08:00:23.697Z",
+      "notes": [
+        "親の検証の test-unit で tests/src/docs/yaml-tables.test.ts のスナップショット（tests/fixtures/yaml-pages/prj-0001--sch-milestones.md.snap）が落ちた。schedule build が sch-milestones.yaml に第 3 波のマイルストーンを足したためで、変更は正しい。スナップショットを作り直し（npx vitest run --config vitest.unit.config.ts tests/src/docs/yaml-tables.test.ts -u）、そのテストが通ることを確かめる。",
+        "完了条件にない src/catalog/build-references.ts と tests/src/catalog/based-on.test.ts を変えている。kata ドメインのために要った理由と、変えなかった場合に何が起きるかを個票の対応結果と handoff に書く。要らない変更なら戻す。"
+      ]
+    }
+  ]
+}

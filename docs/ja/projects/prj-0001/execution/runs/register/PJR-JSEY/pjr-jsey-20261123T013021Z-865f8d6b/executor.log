@@ -1,0 +1,11 @@
+個票に 1 行を追記しました。変更したのは `pjr-jsey-exec-run-split-smoke.md` だけです。親 runner の検証は実行していません。
+
+- **追記した行:** 2026-11-23 10:32 JST、確認対象 PJR-0JVB、agent `sonnet-executor`。
+- **確認対象の根拠:** 完了条件の一覧のうち最も新しく統合されたのは PJR-0JVB です。review 遷移 commit `1eaed0c60`(10:27 JST)で、この worktree の HEAD に含まれます。
+- **本文の修正:** 確認対象の説明文を、前回の commit `b98a462d0` から今回の `1eaed0c60` に書き換えました。
+
+親の検証(lint・typecheck・test・validate-schema)、reporter の result 記入、統合は後続の段で確認します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果に実行日時・確認対象 PJR-0JVB・agent を 1 行追記し、確認対象の説明文を更新した。変更は個票のみ。","handoff":["親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[]}
+</specdojo_executor_evidence>

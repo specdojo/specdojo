@@ -16,6 +16,7 @@ type Item = {
   based_on?: string[];
   path?: string;
   kind?: string;
+  doc_id?: string;
 };
 
 type FileSpec = { name: string; items: Item[] };
@@ -71,7 +72,7 @@ function setup(files: FileSpec[]): { catalogPath: string } {
       const fm = [
         "---",
         "specdojo:",
-        `  id: ${PROJECT_ID}:${item.local_id}`,
+        `  id: ${item.doc_id ?? `${PROJECT_ID}:${item.local_id}`}`,
         "  type: project",
         "  status: draft",
       ];
@@ -185,6 +186,24 @@ describe("validateBasedOn", () => {
     expect(result.ok).toBe(true);
     expect(result.warnings).toHaveLength(1);
     expect(result.warnings[0]).toContain("a:");
+  });
+
+  it("文書の id が別の名前空間（実践の型の sample など）なら based_on を閉包検査しない", () => {
+    const { catalogPath } = setup([
+      dct("dct-a", [
+        { local_id: "a" },
+        {
+          local_id: "a-sample",
+          doc_id: "specdojo:a-sample",
+          based_on: ["a", "cr-2026-004"],
+        },
+      ]),
+    ]);
+
+    const result = validateBasedOn(catalogPath, rootDir, new Set());
+
+    expect(result.ok).toBe(true);
+    expect(result.errors).toEqual([]);
   });
 
   it("based_on が自分自身を参照するとエラー", () => {

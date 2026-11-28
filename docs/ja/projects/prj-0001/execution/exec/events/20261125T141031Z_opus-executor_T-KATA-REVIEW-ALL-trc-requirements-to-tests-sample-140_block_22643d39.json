@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T14:10:31Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140",
+  "by": "opus-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 49 MD038/no-space-in-code Spaces inside code span elements: \"- [F001] ギャップと対応方針の対象列は、この版ではすでに各項目に要求文書 ID が付き、区切りも `, ` にそろっていた（解消済み）。\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140-20261125T135722Z-a0e47cd1/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140-20261125T135722Z-a0e47cd1/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140-20261125T135722Z-a0e47cd1"
+  }
+}

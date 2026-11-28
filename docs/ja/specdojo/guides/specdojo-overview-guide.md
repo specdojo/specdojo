@@ -185,7 +185,7 @@ flowchart LR
 | ------------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | register（親: 起点・承認・完了）     | 起票し、完了条件を書く。track ごとに epic を起票し子 todo でカタログ・strategy を計画する | `exec run --register` で executor が実行する                                     | reporter が result を書いて review へ進め、人が確かめる  | runner が commit・統合する。close するか、reopen・change-request で直す（epic は人が判断） |
 | schedule（子: 途中の進捗・依存実行） | 成果物カタログから Schedule へ展開する                                                    | `exec run --track` / `--auto` で実行する                                         | grade（評定）と review                                   | 統合して `ready` へ確定する。直して次の反復へ                                              |
-| routine + Job                        | Job に「何を・誰が確かめるか（`task.review`）」を、routine に「いつ」を書く               | `routine run --due` が Job Run を作り、worktree で実行して runner が commit する | Job で指名した review agent が review し、verdict を出す | verdict に従って統合し、成功したときだけ checkpoint を進める                               |
+| routine + Job                        | Job に「何を・誰が確かめるか（`task.review`）」を、routine に「いつ」を書く               | `routine run --due` が job run を作り、worktree で実行して runner が commit する | Job で指名した review agent が review し、verdict を出す | verdict に従って統合し、成功したときだけ checkpoint を進める                               |
 
 A 列はいずれも、runner が確定して commit し、次の周回の起点にする点でそろっています。C 列は、誰が確かめるかの違いとして読めます。どの行でも、タスクの流（`approach`）が型をどこまで基準にするかを決めます。
 
@@ -237,11 +237,12 @@ CLI の導入は
 
 ### 8.2. 作成する成果物を決める
 
-| 目的                                               | 参照先                                                        |
-| -------------------------------------------------- | ------------------------------------------------------------- |
-| 成果物の種類、目的、主な内容を調べる               | [成果物リファレンス](../references/deliverables-reference.md) |
-| トラックの構成と実行順序を設計する                 | [トラック設計ガイド](track-design-guide.md)                   |
-| rulebook / recipe / sample / template を使い分ける | [実践の型活用ガイド](kata-guide.md)                           |
+| 目的                                                               | 参照先                                                        |
+| ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| 成果物の種類、目的、主な内容を調べる                               | [成果物リファレンス](../references/deliverables-reference.md) |
+| トラックの構成と実行順序を設計する                                 | [トラック設計ガイド](track-design-guide.md)                   |
+| rulebook / recipe / sample / template を使い分ける                 | [実践の型活用ガイド](kata-guide.md)                           |
+| 小さなシビックテックのチームで最初に使う型の組と、残す順番を決める | [シビックテック入門ガイド](civic-tech-starter-guide.md)       |
 
 ### 8.3. 成果物の作成を計画する
 
@@ -270,7 +271,7 @@ CLI の導入は
 | 任意の Dev Container や常時稼働ホストで実行環境を分離する               | [常時稼働ホスト運用ガイド](remote-host-development-guide.md)      |
 | プロジェクトを管理用の別リポジトリへ移す手順と安全確認を行う            | [[specdojo:project-move-guide\|プロジェクト移行ガイド]]           |
 
-登録簿を agent 実行と並行して記帳する場合は、記帳コマンドの `--commit` が同じ project の `register lifecycle` 枠を使います。provider 設定を配布するときは `config scaffold` を使い、Antigravity の `--global` はすべてのリポジトリに効くため dry-run 後に適用します。Dev Container は必須ではなく、必要な場合だけ `devcontainer scaffold` で追加します。各操作の詳細は上表のガイドと [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
+登録簿を agent 実行と並行して記帳する場合は、記帳コマンドの `--commit` が同じ project の `register lifecycle` 枠を使います。provider 設定を配布するときは `config scaffold` を使います。Dev Container は必須ではなく、必要な場合だけ `devcontainer scaffold` で追加します。各操作の詳細は上表のガイドと [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
 
 ### 8.5. 成果物を確定・編集する
 

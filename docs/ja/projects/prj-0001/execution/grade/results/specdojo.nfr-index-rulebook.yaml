@@ -4,16 +4,16 @@ document: specdojo:nfr-index-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-02T20:36:18.898Z"
-graded_by: flash-high-executor
-content_hash: 4b81f5b7a77ee61c152935c61572764e9872a882bbf1516aa13af88e99930222
+verdict: pass
+score: 95
+graded_at: "2026-11-23T15:10:59.560Z"
+graded_by: sonnet-review-executor
+content_hash: 0377991e16aca2a8eefa49fe69ac38a727d41fa6f87fc33d005c77cdc3a1de43
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -69,17 +69,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,28 +100,34 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 1
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 非機能要件インデックス 作成ルール"
-    message: 指定サンプル `specdojo:nfr-index-sample` に、第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。
-    message_ja: 指定サンプル `specdojo:nfr-index-sample` に、第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。
+    severity: minor
+    rule: vp-dev-testability
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint はリポジトリの検証で扱い、成果物の業務の検証に含めません。
+    message: 作成後に実行する検証（`npm run lint:md`、`npm run lint:fm`、`npm run validate:schema` のどれを対象とするか）への参照がなく、担当者が確認手順を本書から辿れない。
+    message_ja: 作成後に実行する検証（`npm run lint:md`、`npm run lint:fm`、`npm run validate:schema` のどれを対象とするか）への参照がなく、担当者が確認手順を本書から辿れない。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 126
-    anchor: ""
-    message: 第8章のルール内サンプルに、第5章で定義された必須見出し「4.変更の入口」「5.関連ドキュメント導線」が欠落している。
-    message_ja: 第8章のルール内サンプルに、第5章で定義された必須見出し「4.変更の入口」「5.関連ドキュメント導線」が欠落している。
-  - id: F003
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 非機能要件インデックス 作成ルール"
-    message: 指定サンプル `specdojo:nfr-index-sample` がルールブックの定義に従っておらず、実例として不適切である。
-    message_ja: 指定サンプル `specdojo:nfr-index-sample` がルールブックの定義に従っておらず、実例として不適切である。
+    line: 13
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断です。sample を「本文要件」の見出し構成に揃えた後、NFR 分冊と共通の template
+      にできるかを論点として判断します。判断までは本文要件と sample を作成の拠り所とします。
+    message: recipe・template が `undecided` のままで Kata 一式が未完成であり、決定時期と判断者の記述がないため、サンプルと rulebook の整合以外の Kata 整合を確認できない。
+    message_ja: recipe・template が `undecided` のままで Kata 一式が未完成であり、決定時期と判断者の記述がないため、サンプルと rulebook の整合以外の Kata 整合を確認できない。
+  - id: F003
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 13
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断です。sample を「本文要件」の見出し構成に揃えた後、NFR 分冊と共通の template
+      にできるかを論点として判断します。判断までは本文要件と sample を作成の拠り所とします。
+    message: ready 化の前提（recipe・template の要否を決めること）が明示されておらず、ready 化の判断条件を読み取れない。
+    message_ja: ready 化の前提（recipe・template の要否を決めること）が明示されておらず、ready 化の判断条件を読み取れない。

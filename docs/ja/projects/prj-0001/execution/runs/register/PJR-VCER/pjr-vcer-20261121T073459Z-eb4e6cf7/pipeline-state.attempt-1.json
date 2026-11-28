@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VCER",
+  "run_id": "pjr-vcer-20261121T073459Z-eb4e6cf7",
+  "updated_at": "2026-11-21T07:49:31.920Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T07:35:35.285Z",
+      "completed_at": "2026-11-21T07:44:25.935Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-21T07:47:55.450Z",
+      "completed_at": "2026-11-21T07:49:31.920Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VCER/pjr-vcer-20261121T073459Z-eb4e6cf7/result.md"
+  }
+}

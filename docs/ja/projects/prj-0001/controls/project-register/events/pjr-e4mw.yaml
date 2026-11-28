@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e88f2d4843ed4157b584767c97b2129e
+  ts: "2026-11-22T23:13:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクト文書の名前空間ありの id を名前空間なしに直し、参照を付け替える
+    - field: description
+      from: ""
+      to: "docs/ja/product の下で prj-0001: の付いた id を持つ 7 件と、名前空間ありの based\\_on の 8 件を名前空間なしに直す。履歴のファイルを含めて参照をすべて付け替える"
+    - field: input
+      from: ""
+      to: '["プロダクト文書の id は名前空間なしを正とする（PJR-PHY7 の案 A、利用者の決定、2026-11-23）","参照の付け替えは履歴のファイルも含めてすべて行う（利用者の決定、2026-11-23）","2026-11-23 時点の対象: stsd-task-execution・stsd-deliverable・cdt-register-type・ccd-project-planning（Markdown）、bdd-register-entry・ifx-index・ifx-file-agent-evidence（YAML）。参照は延べ約 250 ファイル"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PHY7"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PHY7"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: product
+- v: 1
+  id: reg_464a911053724e9e803a52d6021434de
+  ts: "2026-11-22T23:13:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_e88f2d4843ed4157b584767c97b2129e
+- v: 1
+  id: reg_83f0fdaf6e294bad9a3c7a8cbbeabf98
+  ts: "2026-11-23T05:13:37Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_464a911053724e9e803a52d6021434de
+- v: 1
+  id: reg_7465fe615b374cf699827e818acc0eb7
+  ts: "2026-11-23T05:16:30Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: uncommitted=139; log=docs/ja/projects/prj-0001/execution/runs/register/PJR-E4MW/pjr-e4mw-20261123T051333Z-56465bdc/integrate.log; files=docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-8TMF/20261106T122824356Z-c7d8bf65/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261122T133845Z-1142c0d4/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/evidence.json, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.attempt-1.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-T6P6/20261105T171121491Z-eb50de33/…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: uncommitted=139; log=docs/ja/projects/prj-0001/execution/runs/register/PJR-E4MW/pjr-e4mw-20261123T051333Z-56465bdc/integrate.log; files=docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-8TMF/20261106T122824356Z-c7d8bf65/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261122T133845Z-1142c0d4/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/evidence.json, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.attempt-1.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-T6P6/20261105T171121491Z-eb50de33/…"
+  previous_event_id: reg_83f0fdaf6e294bad9a3c7a8cbbeabf98
+- v: 1
+  id: reg_3d0c14f384734365be1dfbec6a5a3fdb
+  ts: "2026-11-23T05:18:24Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: uncommitted=139; log=docs/ja/projects/prj-0001/execution/runs/register/PJR-E4MW/pjr-e4mw-20261123T051333Z-56465bdc/integrate.log; files=docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-8TMF/20261106T122824356Z-c7d8bf65/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261122T133845Z-1142c0d4/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/evidence.json, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.attempt-1.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-T6P6/20261105T171121491Z-eb50de33/…"
+      to: "-"
+  previous_event_id: reg_7465fe615b374cf699827e818acc0eb7
+- v: 1
+  id: reg_c21df022c0714aa1a2b0a4adddbe3c37
+  ts: "2026-11-23T05:18:42Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3d0c14f384734365be1dfbec6a5a3fdb
+- v: 1
+  id: reg_558934b9f06a4a7cb7362d751ae81a99
+  ts: "2026-11-23T05:20:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合の後に rg で旧 id が成果物と Markdown の文書に残っていないこと（grade の記録・生の記録・fixture を除く）と、index build の後に 7 件が名前空間なしの id で引けることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: docs/ja/product の下の 7 件の id と、名前空間ありの based_on を名前空間なしに直し、参照を過去の個票・plan・result も含めて付け替えた。過去の run の生の記録（evidence・log・pipeline-state）と grade の記録は、書かれたときのまま残した
+  previous_event_id: reg_c21df022c0714aa1a2b0a4adddbe3c37

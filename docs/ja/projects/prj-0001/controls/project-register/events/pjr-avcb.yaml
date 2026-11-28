@@ -1,0 +1,182 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_40b821e9173c4ebea036ffd286f3b129
+  ts: "2026-11-28T07:20:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: note を done で close できるように rulebook と CLI を直す
+    - field: description
+      from: ""
+      to: PJR-CA6G の決定に沿って、register close で note を done にできるようにし、pjr-rulebook と登録簿運用ガイドとオーケストレーター本文の note の扱いを直す
+    - field: input
+      from: ""
+      to: '["PJR-CA6G で note を done で close できるようにすると決めた（indie、2026-11-28）。rejected・deferred は note に使わない","今は src/register/update.ts が note の close を拒んでいる","v0.10.0 に入れる。担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CA6G"]'
+- v: 1
+  id: reg_b0c5a172387148cab98068ab9270a9b5
+  ts: "2026-11-28T07:21:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_40b821e9173c4ebea036ffd286f3b129
+- v: 1
+  id: reg_097c63cb45854c74ab5efe2898d726cc
+  ts: "2026-11-28T07:22:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容を書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_b0c5a172387148cab98068ab9270a9b5
+- v: 1
+  id: reg_f1b077e5936d452b82d6f94008204bac
+  ts: "2026-11-28T07:29:56Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_097c63cb45854c74ab5efe2898d726cc
+- v: 1
+  id: reg_4f4b0a3132e84a259bae7b00d5be0512
+  ts: "2026-11-28T07:40:50Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_f1b077e5936d452b82d6f94008204bac
+- v: 1
+  id: reg_51f79c312eba4cb8b0edcb3ddd3790a6
+  ts: "2026-11-28T07:42:49Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_4f4b0a3132e84a259bae7b00d5be0512
+- v: 1
+  id: reg_71acf01ef0e44edc8cacfc85776c9dcd
+  ts: "2026-11-28T07:51:43Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_51f79c312eba4cb8b0edcb3ddd3790a6
+- v: 1
+  id: reg_ac000f217db0434bb079397ca40dba7a
+  ts: "2026-11-28T07:56:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の完了条件を足す
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_71acf01ef0e44edc8cacfc85776c9dcd
+- v: 1
+  id: reg_ac44998cfbe944729f5d7e34b8d53cb5
+  ts: "2026-11-28T07:58:15Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_ac000f217db0434bb079397ca40dba7a
+- v: 1
+  id: reg_34085171a6ae4c9b96cf380a8f00e68f
+  ts: "2026-11-28T08:04:25Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ac44998cfbe944729f5d7e34b8d53cb5
+- v: 1
+  id: reg_4d3b3cdee966439189e8f47169ffd4df
+  ts: "2026-11-28T08:05:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回の exec run の差分と対応結果を完了条件に照らして確かめ、空のリポジトリで dist の CLI により close・拒否 3 通り・reopen が動くことを確かめた。オーケストレーター本文の変更は feature/prj-0001/orchestrator-note-close に用意し、取り込みは利用者の承認を待つ
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: register close で note を done にできるようにした（conclusion 必須、done 以外と reject・defer は拒否、reopen で戻せる）。pjr-rulebook（日英）・登録簿運用ガイド・CLI コマンドリファレンス・ステータス遷移仕様（登録項目）・分類一覧（登録項目の種別）を直した
+  previous_event_id: reg_34085171a6ae4c9b96cf380a8f00e68f

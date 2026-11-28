@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c738f497edfd41f1b097a768380ac434
+  ts: "2026-11-22T23:45:29Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs:generate:fresh を段ごとの判定にする
+    - field: description
+      from: ""
+      to: docs/ のどれかが新しいと build の 6 段を全部作り直す。入力が変わった段だけを作り直す
+    - field: input
+      from: ""
+      to: '["docs:dev の起動を速くする（利用者の依頼、2026-11-23）。devcontainer を作り直した後の 2 回目の起動で 58.4 秒だった"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BBTW"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-BEQ8","PJR-XHS8"]'
+    - field: commit_type
+      from: ""
+      to: perf
+    - field: commit_scope
+      from: ""
+      to: docs-site
+- v: 1
+  id: reg_e0c8d3d8be094aaf9e4ae88101c9d793
+  ts: "2026-11-22T23:45:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_c738f497edfd41f1b097a768380ac434
+- v: 1
+  id: reg_7cd11d7765654c5fb6410d18923974ed
+  ts: "2026-11-23T04:30:43Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e0c8d3d8be094aaf9e4ae88101c9d793
+- v: 1
+  id: reg_924b60a425204efd8c7f80ddc92ceb7f
+  ts: "2026-11-23T04:48:05Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7cd11d7765654c5fb6410d18923974ed
+- v: 1
+  id: reg_0f630bf77ce544c7a298e35078471ba3
+  ts: "2026-11-23T04:51:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストと対応結果の測りを確かめ、本体で個票の更新時刻だけを変えた run が exec refresh・catalog・yaml-pages を飛ばすことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: specdojo build --skip-fresh を足し、docs:generate:fresh が段ごとに入力（パス・サイズ・更新時刻の一覧のハッシュ）を見て、変わった段だけを作り直すようにした。判定できないときは作り直す
+  previous_event_id: reg_924b60a425204efd8c7f80ddc92ceb7f

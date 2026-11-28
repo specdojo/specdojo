@@ -1,0 +1,18 @@
+R5（整合）の段として、`docs/ja/specdojo/samples/sld-sample.md` を 3 か所直しました。参照先の sample との食い違いは、ほかにありませんでした。
+
+**直した食い違い（3 件、各 1 行）**
+
+1. **店番担当の範囲**（概要）: 「店番担当」が誰を指すかが書かれていませんでした。商品のステータス定義（STSD）と全体概要の CDFD に合わせ、店主代表または家族利用者代表のどちらかだと明記しました。
+2. **台帳の置き場所**（店舗内・母屋の物理保管場所）: CDFD では、今ある台帳はレジ横のノートです。sample は施錠キャビネットとだけ書いていたので、「レジ横の施錠キャビネット」にしました。
+3. **照合する範囲**（本書を確定する前の確認）: 対応表では、CDFD の顧客台帳・つけ台帳を常連客ノートに当てています。ところが確認の手順では、この 2 つを照合していませんでした。手順に足しました。
+
+**確かめたが直さなかったもの**
+- 用語集には sld の用語が載っておらず、食い違いはありませんでした。共通サンプル文脈とも合っています（1 台のタブレット、人物名を使わない、役割名と Role code）。
+- CDSD・CLIS・メンバー定義と担当・役割・パス・照合の流れを突き合わせましたが、食い違いはありませんでした。
+- plan の指摘のうち、F002・F003 と F001・F004 は前の段で直り済みで、本文で確かめました。F004 の担当表記は、今回の 1 件目の直しで STSD とも合っています。F005（運用観点）は kata レビューで使わない観点なので、この段では扱っていません。
+
+**検証**: Prettier の整形確認は通りました。markdownlint などの lint は親 runner が実行するので、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合として sld-sample の参照先 sample・用語集・共通サンプル文脈との食い違いを確かめ、店番担当の範囲、店頭台帳保管棚の位置、確定前確認の照合範囲の 3 か所を sample 側で直した。参照先の sample 側を直すべき食い違いはなかった。","handoff":["R5-1: R5 / 概要 / 店番担当の定義が「その日にレジに立って最初に対処する人」だけで、誰が担うかが stsd-sample（店番担当＝店主代表または家族利用者代表）と cdfd-overview-sample（家族利用者代表が店番業務を担う）の範囲と結び付いていない / 「店主代表または家族利用者代表のうち、その日にレジに立って店頭で最初に対処する人」に直した / vp-qe-kata-conformance（specdojo:stsd-sample の「目的」、specdojo:cdfd-overview-sample の前提） / -","R5-2: R5 / 保管場所一覧（店舗内・母屋の物理保管場所）/ cdfd-overview-sample は現行の台帳の保管先を「レジ横のノート」とするが、sample の店頭台帳保管棚は「施錠キャビネット」とだけ書き、位置が対応しない / 保管場所名を「店頭台帳保管棚（レジ横の施錠キャビネット）」にした / vp-qe-kata-conformance（specdojo:cdfd-overview-sample のデータストアの章「現行の保管先はレジ横のノート」）。施錠と所在の両方を保つ最小の直しを選び、CDFD 側を「施錠キャビネット」に書き換える案は CDFD の現行描写を変えるため選ばなかった / 要判断","R5-3: R5 / 本書を確定する前の確認 / 対応表の CDFD 行は顧客台帳・つけ台帳（常連客ノート）を対応づけているが、確認手順は全体概要から仕入記録・在庫記録しか照合しておらず、CDFD の 8 データストアのうち 2 つが照合から外れる / 手順を「全体概要の仕入記録・在庫記録・顧客台帳・つけ台帳」にした / vp-qe-kata-conformance、vp-dev-change-impact（specdojo:cdfd-overview-sample のマスタ・トランザクションデータ表） / -","R5-4: R5 / grade の finding / F002（STSD の sold）と F003（検品場所の管理区分の分割）は前の段で直り済み、F001（第5章の再掲）・F004（担当表記）は R3 の段で直り済みであることを本文で確かめた。F005（取引セッションの消失・破損時の対処）は vp-ops-operability の指摘で、kata-guide の「kata の観点の組」が kata レビューで使わない観点としているためこの段では扱わない / - / kata-guide の「kata の観点の組」 / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_applicable","summary":"親 runner が実行する","reason":"pipeline の parent validation として親 runner が実行するため executor では実行しない"}]}
+</specdojo_executor_evidence>

@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
 id: prj-0001:ccd-project-planning-grade-criteria
-document: prj-0001:ccd-project-planning
+document: ccd-project-planning
 path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
 graded_at: "2026-11-11T03:24:06.362Z"
 graded_by: sol-review-executor

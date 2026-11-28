@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6690",
+  "run_id": "pjr-6690-20261123T230753Z-0718377f",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T23:27:25.042Z",
+    "completed_at": "2026-11-23T23:28:47.580Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6690.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6690-schema-hang.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/parent-validation-timeout.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/parent-validation.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/validation-metrics.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/parent-validation-output.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/parent-validation-output.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/e2e/parent-validation-load.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6690-schema-hang.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/validation-metrics.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": ".../controls/project-register/events/pjr-6690.yaml |  18 ++-\n .../project-register/pjr-6690-schema-hang.md       |   6 +-\n .../pjr-6690-20261123T230753Z-0718377f/plan.md     |   6 +\n docs/ja/specdojo/guides/exec-operation-guide.md    |  18 +--\n src/exec/evidence.ts                               |  13 +++\n src/exec/parent-validation.ts                      | 126 +++++++++++++--------\n .../parent-validation-timeout.integration.test.ts  |  10 +-\n tests/src/exec/parent-validation.test.ts           |  33 ++++++\n tests/src/exec/validation-metrics.test.ts          |  21 +++-\n 9 files changed, 185 insertions(+), 66 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/exec/validation-metrics.test.ts tests/src/exec/parent-validation.test.ts",
+      "status": "passed",
+      "summary": "2 files, 56 tests passed"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint tests/src/exec/validation-metrics.test.ts",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check tests/src/exec/validation-metrics.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-6690-schema-hang.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "all history files valid"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690/src/shared/specdojo-config.ts\n  1250:1  warning  File has too many lines (1113). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6599 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6599 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[parent-validation:test-file] \n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1734}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  08:31:01\n   Duration  2.45s (transform 4.43s, setup 702ms, import 6.92s, tests 5.43s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "related tests only (26 of 45 test files depend on the changed files; no test depends on: tools/e2e/parent-validation-load.ts): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts tests/src/commands/git.integration.test.ts tests/src/commands/init-agent-roster.integration.test.ts tests/src/commands/where.integration.test.ts tests/src/exec/catalogless-register.integration.test.ts tests/src/exec/cycle.integration.test.ts tests/src/exec/job-sequence.integration.test.ts tests/src/exec/parent-validation-output.integration.test.ts tests/src/exec/parent-validation-timeout.integr\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register ite…",
+      "test_selection": {
+        "mode": "related",
+        "reason": "26 of 45 test files depend on the changed files; no test depends on: tools/e2e/parent-validation-load.ts",
+        "selected_tests": [
+          "tests/src/commands/git.integration.test.ts",
+          "tests/src/commands/init-agent-roster.integration.test.ts",
+          "tests/src/commands/where.integration.test.ts",
+          "tests/src/exec/catalogless-register.integration.test.ts",
+          "tests/src/exec/cycle.integration.test.ts",
+          "tests/src/exec/job-sequence.integration.test.ts",
+          "tests/src/exec/parent-validation-output.integration.test.ts",
+          "tests/src/exec/parent-validation-timeout.integration.test.ts",
+          "tests/src/exec/pipeline-e2e.integration.test.ts",
+          "tests/src/exec/plan-markdownlint.integration.test.ts",
+          "tests/src/exec/register-multiple-ids.integration.test.ts",
+          "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+          "tests/src/exec/register-resume.integration.test.ts",
+          "tests/src/exec/register-worktree.integration.test.ts",
+          "tests/src/exec/release-reset-worktree.integration.test.ts",
+          "tests/src/exec/run/agent-timeout.integration.test.ts",
+          "tests/src/exec/task-repos.integration.test.ts",
+          "tests/src/exec/trailing-records.integration.test.ts",
+          "tests/src/exec/worktree-command.integration.test.ts",
+          "tests/src/exec/worktree-ops.integration.test.ts",
+          "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+          "tests/src/exec/worktree.integration.test.ts",
+          "tests/src/grade/yaml.integration.test.ts",
+          "tests/src/register/external-project.integration.test.ts",
+          "tests/src/register/register-branch.integration.test.ts",
+          "tests/src/shared/local-config.integration.test.ts"
+        ],
+        "omitted_tests": [
+          "tests/src/commands/build.integration.test.ts",
+          "tests/src/deliverable/trash.integration.test.ts",
+          "tests/src/devcontainer/scaffold.integration.test.ts",
+          "tests/src/exec/agent-git-state.integration.test.ts",
+          "tests/src/exec/job-worktree.integration.test.ts",
+          "tests/src/exec/kata-authoring.integration.test.ts",
+          "tests/src/exec/kata-review-stage.integration.test.ts",
+          "tests/src/exec/run/change-scope.integration.test.ts",
+          "tests/src/exec/validate-records-commit.integration.test.ts",
+          "tests/src/project/move-check.integration.test.ts",
+          "tests/src/register/commit.integration.test.ts",
+          "tests/src/register/cross-project.integration.test.ts",
+          "tests/src/shared/lefthook-scaffold.integration.test.ts",
+          "tests/test-environment.integration.test.ts",
+          "tests/tools/check-evidence-secrets.integration.test.ts",
+          "tests/tools/commit-msg-merge.integration.test.ts",
+          "tests/tools/d2-cli.integration.test.ts",
+          "tests/tools/open-agent-worktree.integration.test.ts",
+          "tests/tools/src-move-codemod.integration.test.ts"
+        ]
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6690\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/grade-per-document.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/catalogless-target.test.ts\"}\n ✓ tests/src/register/catalogless-target.test.ts (27 tests) 2877ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/regist\n… output omitted …\n/invalid.md\n\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\n[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed\n[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-6690-schema-hang.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6690-schema-hang.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/evidence.ts",
+      "status": "changed",
+      "path": "src/exec/evidence.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/parent-validation.ts",
+      "status": "changed",
+      "path": "src/exec/parent-validation.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/parent-validation-timeout.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/parent-validation-timeout.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/parent-validation.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/parent-validation.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/parent-validation-output.ts",
+      "status": "changed",
+      "path": "src/exec/parent-validation-output.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/parent-validation-output.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/parent-validation-output.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tools/e2e/parent-validation-load.ts",
+      "status": "changed",
+      "path": "tools/e2e/parent-validation-load.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/validation-metrics.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/validation-metrics.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "親の検証の test-unit の失敗（validation-metrics.test.ts:214、active_test_files が空）は今回の変更が原因だった。runner が pipe ではなくファイルから出力を読むようになったのに、テストの偽の子が pipe へ書いていた。期待は変えず、偽の子が spawn に渡された標準出力の fd へ書くように直した。理由は個票の対応結果に書いた。",
+  "completion_status": "complete",
+  "handoff": [
+    "tests/src/exec/validation-metrics.test.ts の時間切れのテストは、期待（`active_test_files: [\"tests/hanging.test.ts\"]`）を変えずに、偽の子が `spawn` の `stdio[1]` のファイル記述子へ書くよう直した。理由は個票の対応結果の「対応」に書いた。",
+    "`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`test-integration` は親の runner の検証で確認する（個票の対応方針の要求）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6690/pjr-6690-20261123T230753Z-0718377f/executor.log",
+      "bytes": 4618,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_19c4f2f1fe6d41acb71f1fa998320315
+  ts: "2026-11-24T03:36:57Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の run の checkpoint が、ほかの文書の grade の結果を取り込む
+    - field: description
+      from: ""
+      to: PJR-A54F は schedule のタスクだけを絞ったため、register の run の commit に、並べて流した kata の run の grade の結果が混ざる
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の方針、2026-11-24: 今回の実行で詰まったところを issue として起票して直す）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-A54F"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_5769c206747e4b92839cdba537fe6223
+  ts: "2026-11-24T03:37:00Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: PJR-A54F は schedule のタスクだけを絞ったため、register の run の commit に、並べて流した kata の run の grade の結果が混ざる
+      to: "- 2026-11-24 の `PJR-F4TG` の register の run の commit（`4349a4aa92`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
+  previous_event_id: reg_19c4f2f1fe6d41acb71f1fa998320315
+- v: 1
+  id: reg_a75ebbee75464aae94668dee3bc48952
+  ts: "2026-11-24T03:37:04Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_5769c206747e4b92839cdba537fe6223
+- v: 1
+  id: reg_eaaa63ac53054530982b69d79b259cd8
+  ts: "2026-11-24T03:37:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_a75ebbee75464aae94668dee3bc48952
+- v: 1
+  id: reg_aa2432b4e4f24219b35f7071afd1be5c
+  ts: "2026-11-24T03:37:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_eaaa63ac53054530982b69d79b259cd8
+- v: 1
+  id: reg_b5c46a53c9494a8cace6e7726eac5cb5
+  ts: "2026-11-24T03:37:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: "- 2026-11-24 の `PJR-F4TG` の register の run の commit（`4349a4aa92`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
+      to: "- 2026-11-24 の `PJR-F4TG` の register の run の開始（start）の記帳の commit（`23d6bf8bcd`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
+  previous_event_id: reg_aa2432b4e4f24219b35f7071afd1be5c
+- v: 1
+  id: reg_455965f5397f4b9c8421ce24e1ae98df
+  ts: "2026-11-24T03:45:44Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b5c46a53c9494a8cace6e7726eac5cb5
+- v: 1
+  id: reg_5060286dce9c46dd8e2c4603eec0f8cb
+  ts: "2026-11-24T03:52:23Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_455965f5397f4b9c8421ce24e1ae98df
+- v: 1
+  id: reg_f08e26cfe97e4a68a2a756df92083ab8
+  ts: "2026-11-24T04:58:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と親の検証（test-integration ほか passed）を確かめ、後の register run（JA3M・C11R）の統合 commit に grade の結果が混ざらないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: register の worktree と再開の経路の checkpoint が、項目の対象の文書の grade の結果だけを取り込むようになった
+  previous_event_id: reg_5060286dce9c46dd8e2c4603eec0f8cb

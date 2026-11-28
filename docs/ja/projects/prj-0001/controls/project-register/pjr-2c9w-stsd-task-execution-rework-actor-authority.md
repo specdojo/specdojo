@@ -21,7 +21,7 @@ specdojo:
   commit_scope: stsd
   approach: fully-guided
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # PJR-2C9W stsd-task-execution を grade の指摘で手直しする（担当者の権限と引き継ぎ、記録の再生の順序）
@@ -59,7 +59,7 @@ specdojo:
 
 ### 5.1. 実施内容
 
-- [[prj-0001:stsd-task-execution]] の「状態の判定」に、担当アクター（claim の持ち主）を最新イベントの記録者と分けて定義した。`claim` で決まり、`note`・`link`・`estimate`・`block`・引き取りを指定しない `unblock` では変わらず、人間が引き取りを指定した `unblock` だけで移り、`todo`・`done`・`cancelled` でなくなる（PJR-M495 の `claimed_by`）。
+- [[stsd-task-execution]] の「状態の判定」に、担当アクター（claim の持ち主）を最新イベントの記録者と分けて定義した。`claim` で決まり、`note`・`link`・`estimate`・`block`・引き取りを指定しない `unblock` では変わらず、人間が引き取りを指定した `unblock` だけで移り、`todo`・`done`・`cancelled` でなくなる（PJR-M495 の `claimed_by`）。
 - 同じ時刻の記録の再生の順序を、種類の既定順、記録ファイルのパス順、状態から成立する記録の順の選択として定めた（実装の `readAllEventFiles`・`orderSameTimestampEventsByState`）。
 - 「状態遷移」の共通条件で、`T-06`・`T-07`（`T-09`〜`T-12` も同じ）の操作権限を担当アクターとの照合に定め、runner が段のアクターに依らず担当アクターとして完了・中断を記録し、中断に両方のアクターを残すことを書いた（PJR-T4G3）。`T-05`・`T-08` の補足を合わせた。
 - 互換の扱いに、過去のイベントにも同じ規則を当てること、担当アクターを持たない旧形式の集約状態は最新の記録者で読むことを足した。

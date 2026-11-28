@@ -1,0 +1,33 @@
+**判定は `incomplete` です。** 型の整備を含む schedule では、すべての型に最新の `--target kata` の `pass` が必要です。rulebook は `pass` でしたが、sample が `needs-work` のため完了条件を満たしません。成果物と result は変更していません。
+
+**評価結果の鮮度**
+- 確認したコマンド: `npx specdojo grade list --target kata --path <path> --changed-only` と `--incomplete`。sample（`docs/ja/specdojo/samples/utc-index-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/utc-index-rulebook.md`）の両方で実行しました。
+- 4 回とも出力はなく、終了コードは 0 でした。古い評価結果も、評価パイプラインの未完了もありません。
+- 評価結果サイドカーは 2 件とも存在します。sample 側のサイドカーを読み、`verdict: needs-work` と、`content_hash` が記載されていることを確かめました。
+
+**grade の結果**
+- sample（`specdojo:utc-index-sample`）: `needs-work`、score 96。finding は major 1 / minor 2 です。
+  - F001（minor）: 優先度のルールと分配方針の表で、つけ残高の扱いが食い違っています。
+  - F002（major）: 未解決の `_ASSUMPTION_` が残っています。
+  - F003（minor）: CI ジョブの前提を PJR へ移して引き継ぐ旨が書かれていません。
+- rulebook（`specdojo:utc-index-rulebook`）: `pass`、score 95。finding は minor 2 で、6.3.1 の列構成の食い違いと、禁止事項と sample の記入例の食い違いです。
+
+**完了条件との照合**
+- DC-001〜DC-005 の各観点は grade の判定を事実として使いました。
+- DC-004 は frontmatter で直接確かめました。`based_on` に `specdojo:tsp-index-sample` があり、H1 は「単体テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」です。
+- F002（major）は、release に向けた準備ができていないことを示し、`pass` を阻んでいます。このため `complete-with-findings` にもできません。
+- 作業ツリーの未追跡ファイルは runner の `pipeline-state.json` だけで、対象外の変更は混ざっていません。
+
+**改善指示**
+1. sample の `_ASSUMPTION_`（CI ジョブ `kinuya-ci-unit` の整備）を PJR（決定記録または課題）へ移し、ラベルを外す（F002・F003）。
+2. つけ残高を P0 にするか、P1 とする理由を書き足し、優先度のルールと分配方針の表を一致させる（F001）。
+3. 直したあと sample を `--target kata` で評価し直し、`pass` を得てから再度 review する。
+4. rulebook の minor 2 件（6.3.1 の列構成、禁止事項と記入例の食い違い）は、`pass` を妨げていませんが、あわせて直すとよいです。
+
+**確認できなかった範囲**
+- 先行する edit タスクの実行記録（result）は探しておらず、内容とその検証結果は確かめていません。
+- 記録の直前の鮮度の再確認は、最初の確認と同じ一回の作業の中で終えています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review verdict: incomplete。鮮度確認（`npx specdojo grade list --target kata --path <sample|rulebook> --changed-only` / `--incomplete`）は sample・rulebook とも出力なし・exit 0 で、評価結果は最新、サイドカーは 2 件とも存在する。rulebook は pass（score 95、minor 2）、sample は needs-work（score 96、major 1 / minor 2: F001 つけ残高の優先度が表と食い違う、F002 未解決の `_ASSUMPTION_` が残る、F003 CI ジョブの前提を PJR へ引き継ぐ旨がない）。型の整備を含む schedule はすべての型に最新の kata pass を求めるため、sample の needs-work によって incomplete とした（complete-with-findings は不可）。DC-004 は frontmatter で確認した（`based_on` に `specdojo:tsp-index-sample`、H1 は rulebook の形式に沿う）。作業ツリーの未追跡ファイルは runner の `pipeline-state.json` だけで、対象外の変更はない。確認できなかった範囲: 先行する edit タスクの実行記録（result）は探しておらず、内容と検証結果は確かめていない。","handoff":["sample の `_ASSUMPTION_`（CI ジョブ `kinuya-ci-unit` の整備）を PJR（決定記録または課題）へ移し、ラベルを外す（F002・F003）","つけ残高を P0 にするか、P1 とする理由を書き足し、優先度のルールと分配方針の表を一致させる（F001）","直したあと sample を --target kata で評価し直し、pass を得てから再度 review する","rulebook の minor 2 件（6.3.1 の列構成、禁止事項と sample の記入例の食い違い）は pass を妨げていないが、あわせて直すとよい"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-index-sample.md --changed-only","status":"passed","summary":"出力なし・exit 0（評価結果は最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-index-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/utc-index-rulebook.md --changed-only","status":"passed","summary":"出力なし・exit 0（評価結果は最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/utc-index-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価パイプラインは完了済み）"}]}
+</specdojo_executor_evidence>

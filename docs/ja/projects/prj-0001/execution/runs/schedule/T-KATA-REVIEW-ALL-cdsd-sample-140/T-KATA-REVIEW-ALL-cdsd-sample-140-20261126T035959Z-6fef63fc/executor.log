@@ -1,0 +1,30 @@
+R4（正しさ）の段は完了です。サンプルの事実の誤りは 1 件見つかり、`docs/ja/specdojo/samples/cdsd-sample.md` の 1 行を直しました。
+
+**直した点**
+「確認事項と変更影響」の表に、未作成の保管場所一覧の ID が `specdojo:sll-sales-closing` と書かれていました。成果物リファレンスと `sld-rulebook.md` では、この種別の接頭辞は `sld-<term>` です。そこで `specdojo:sld-sales-closing` に直しました。
+
+**直していない点（rulebook 側の問題）**
+`cdsd-rulebook.md` も「保管場所一覧（SLL）」と書いています（5.3 と 5.5 の 2 箇所）。サンプルの誤りはここから来たとみられます。直す対象はサンプルだけなので、rulebook は直さずに申し送りに残しました。
+
+**確かめて正しかった主張**
+- frontmatter：`based_on` の 3 文書はすべて存在し、`type: data` と `rulebook` は schema に合っています。
+- 管理単位の名前：5 つのデータストア、参照だけの台帳、売場棚の扱いは、概念データフロー図（全体概要）のサンプルと一致します。プロセス名（`P-03`、`P-04`、`P-09`、`P-10`）も一致します。
+- 業務データ辞書のサンプル（`bdd-sample.yaml`）と合う点：
+  - 標準販売価格と販売単価は別の項目です。
+  - 売上明細は売上IDと明細番号の組で識別し、売上記録とは別に管理しません。
+  - 支払方法と購入者は辞書に項目があります。
+  - 入力途中と取消済みの取引は売上記録に含めません。
+- 販売管理 CLI 仕様が扱うのは現金販売の確定までで、つけ販売は対象外です。サンプルの書き方と合います。
+- `cdfd-sales` という ID は、概念データフロー図（仕入）のサンプルで店頭販売を任せる先として使われています。
+- 未作成とした 6 つの ID（`cop-sales-reconciliation` など）は、実際にどれも存在しません。
+- PO、BA、OPS、QE の各ロールは、メンバー定義のサンプルにあります。
+
+**確かめられなかった主張**
+- 「schema が未作成」：CDSD と SLD の schema がないことは確かめました。ただし業務データ辞書の schema（`bdd.schema.yaml`）は存在します。サンプルが何の schema を指しているかは、文脈からは決められません。
+- 担当の割り当てと例示の金額（108円・216円）：正本のない業務上の仮定なので、確かめる対象にしていません。
+
+検査は `prettier --check` だけを実行し、問題はありませんでした。lint などのそれ以外の検査は、このあと runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の段で cdsd-sample の事実を正本と突き合わせた。誤りは 1 件で、保管場所一覧の予定文書 ID の種別の接頭辞を sll から sld に直した。ほかの主張は正本と一致したか、確かめられない仮定として扱った。","handoff":["R4-1: R4 / 確認事項と変更影響 / 未作成の保管場所一覧の ID が `specdojo:sll-sales-closing` となっており、成果物の種別の接頭辞が成果物リファレンスと一致しない（保管場所定義は `sld-<term>`） / `specdojo:sld-sales-closing` に直した / vp-arc-technical-constraints。正本は docs/ja/specdojo/references/deliverables-reference.md の保管場所定義の行（`sld-<term>`）と docs/ja/specdojo/rulebooks/sld-rulebook.md の H1「保管場所一覧（SLD）」 / -","R4-2: R4 / 対象外（cdsd-rulebook の本文要件） / cdsd-rulebook.md の 5.3 と 5.5 は保管場所一覧の略称を「SLL」と書いており、種別の接頭辞 `sld` と食い違う。サンプルの誤りの元とみられる / - / vp-arc-technical-constraints。相手側は docs/ja/specdojo/rulebooks/cdsd-rulebook.md。直す案は「保管場所一覧（SLL）」と「SLL」を「保管場所一覧（SLD）」と「SLD」にすること / -","R4-3: R4 / 関連仕様と検証（照合手順と受入条件） / 「schema が未作成のため」の schema が何を指すか、本文から一つに決まらない。CDSD と SLD の schema はないが、業務データ辞書の schema（docs/specdojo/schemas/v1/bdd.schema.yaml）は存在する / - / vp-qe-verifiability。確かめられない主張として残した。直す案は「データストアの実データを検証する schema が未作成のため」と対象を限定すること。業務の仮定の書き方に関わるため R5 か人の判断に任せる / 要判断","確かめの表の材料（主張 / 正本 / 結果）: (1) frontmatter の `based_on` の 3 文書が存在する / docs/ja/specdojo/samples/ / 一致。(2) `type: data` と `rulebook` / docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、cdsd-rulebook の推奨 Frontmatter 項目 / 一致。(3) 5 つの管理単位、参照だけの台帳、売場棚の扱い / cdfd-overview-sample.md のデータストア表と 75 行 / 一致。(4) 店頭販売・つけ販売・日次締め・月次見直しのプロセス名 / cdfd-overview-sample.md の P-03・P-04・P-09・P-10 / 一致。(5) 標準販売価格と販売単価の区別、売上ID＋明細番号の粒度、支払方法・購入者、入力途中と取消済みを含めない / bdd-sample.yaml の 34・58・88・101・113・115・139 行 / 一致。(6) 販売管理 CLI 仕様の範囲が現金販売の確定までで、つけ販売は対象外 / clis-sample.md の 25 行 / 一致。(7) `cdfd-sales` を店頭販売の CDFD として扱う / cdfd-sample.md の適用範囲 / 一致。(8) 未作成の 6 ID が存在しない / docs 配下を grep / 一致。(9) PO・BA・OPS・QE のロール / pm-members-sample.yaml / 一致。(10) 保管場所一覧の ID の接頭辞 sll / deliverables-reference.md の 226 行 / 不一致のため直した。(11) 「schema が未作成」 / docs/specdojo/schemas/v1/ / 確かめられない（bdd.schema.yaml は存在し、指す先が決まらない）。(12) 担当の割り当てと例示の金額 / 正本なし / 業務の仮定として確かめの対象外"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdsd-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample だけで、plan・result・個票などの履歴ファイルを変更していないため"}]}
+</specdojo_executor_evidence>

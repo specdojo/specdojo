@@ -42,7 +42,7 @@ function jobWorktreePath(repo: string): string {
     .split("\n\n")
     .find((candidate) => candidate.includes("JBR-"));
   const worktree = entry?.match(/^worktree (.+)$/m)?.[1];
-  if (!worktree) throw new Error("Job Run worktree not found");
+  if (!worktree) throw new Error("job run worktree not found");
   return worktree;
 }
 
@@ -163,7 +163,7 @@ function setupFixture(
   );
   write(
     join(repo, "tools/review-reporter.mjs"),
-    `process.stdin.resume(); process.stdin.on("end", () => console.log(JSON.stringify({schema_version:1,mode:"review",grade_check:"Job Run output checked",rationale:["output commit and evidence agree"],improvements:[],approach:"read-only review",verdict:${JSON.stringify(verdict)}})));\n`,
+    `process.stdin.resume(); process.stdin.on("end", () => console.log(JSON.stringify({schema_version:1,mode:"review",grade_check:"job run output checked",rationale:["output commit and evidence agree"],improvements:[],approach:"read-only review",verdict:${JSON.stringify(verdict)}})));\n`,
   );
   write(
     join(repo, "jobs/job-sample.yaml"),
@@ -260,7 +260,7 @@ afterEach(() => {
   for (const dir of tempDirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
-describe("Job Run worktree integration", () => {
+describe("job run worktree integration", () => {
   it("reviews and merges a Job launched from another Job worktree", () => {
     const fixture = setupFixture("complete", { declareReview: true });
     const parentJob = join(fixture.worktrees, "parent-job");
@@ -288,7 +288,7 @@ describe("Job Run worktree integration", () => {
       expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
       const again = runJob(fixture.repo, fixture.worktrees, { worktreeFlag: false });
       expect(again.status, `${again.stdout}\n${again.stderr}`).toBe(0);
-      expect(String(again.stdout)).toContain("Job Run already complete:");
+      expect(String(again.stdout)).toContain("job run already complete:");
       expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(fixture.head);
     },
     120_000,
@@ -347,7 +347,7 @@ describe("Job Run worktree integration", () => {
     expect(result.status).toBe(1);
     expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
     expect(`${result.stdout}\n${result.stderr}`).toContain(
-      "review verdict complete is not accepted for Job Run state partial",
+      "review verdict complete is not accepted for job run state partial",
     );
   }, 120_000);
 
@@ -394,7 +394,7 @@ describe("Job Run worktree integration", () => {
     expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
     const reviewResult = reviewResultContent(jobWorktreePath(fixture.repo));
     expect(reviewResult).toContain("- verdict: incomplete");
-    expect(reviewResult).toContain("No reporter is available for Job Run review.");
+    expect(reviewResult).toContain("No reporter is available for job run review.");
     expectSingleTrailingNewline(reviewResult);
   }, 120_000);
 
@@ -407,8 +407,8 @@ describe("Job Run worktree integration", () => {
 
     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
     const output = String(result.stdout);
-    const parentRunId = output.match(/Running Job Run (JBR-[^ ]+) in /)?.[1];
-    const completedRunId = output.match(/Job Run complete: (JBR-\S+)/)?.[1];
+    const parentRunId = output.match(/Running job run (JBR-[^ ]+) in /)?.[1];
+    const completedRunId = output.match(/job run complete: (JBR-\S+)/)?.[1];
     const mergedRunId = output.match(/\[routine-job\] merged run_id=(JBR-\S+)/)?.[1];
     expect(parentRunId).toMatch(/^JBR-/);
     expect(completedRunId).toBe(parentRunId);

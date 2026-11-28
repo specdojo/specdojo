@@ -116,7 +116,7 @@ describe("routine execution persistence", () => {
     },
   );
 
-  it("records a failure without a Job Run in Git and releases its local lock", async () => {
+  it("records a failure without a job run in Git and releases its local lock", async () => {
     const { paths } = fixture("  kind: job\n  job: job-missing");
     vi.mocked(spawnSync).mockReturnValue({
       pid: 1,
@@ -134,7 +134,7 @@ describe("routine execution persistence", () => {
     expect(process.exitCode).toBe(1);
   });
 
-  it("retains a preceding worktree Job Run ID when a later action throws", async () => {
+  it("retains a preceding worktree job run ID when a later action throws", async () => {
     const { paths } = fixture(
       "  - kind: job\n    job: job-review\n  - kind: job\n    job: job-next",
     );

@@ -1,0 +1,12 @@
+`docs/ja/specdojo/samples/pm-members-sample.yaml` は変更していません。削る・まとめる・参照に置き換える箇所が見つからなかったためです。
+
+候補として見たのは次の2点で、どちらも `retain` にしました。
+
+- **`focus` と `note`:** `focus` は担当する観点を並べ、`note` は兼務、支援の取り込み、参加の頻度や時間帯といった制約を書いています。`focus` と重なる文はありませんでした。
+- **`rules` の1項目と member の `email: null`:** `rules` の「未成年の member は email を null のままとし、連絡は店主代表を通す」は、`email: null` という値の意味を説明するものではありません。連絡経路という運用上の制約を書いた規則なので残しました。
+
+検査は実行していません。ファイルを編集していないため、検査の対象になる変更がありません。親 runner が走らせる検査の結果は runner 側で付きます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書に冗長箇所は見つからず、変更なし。retain 2 件を記録した。","handoff":[],"condense_records":[{"location":"members[].focus と members[].note","category":"table-prose","action":"retain","reason":"focus は担当観点、note は兼務・支援の取り込み・参加頻度などの制約で、内容が重ならず、判断に要る制約のため残した。","cause":{"type":"document"}},{"location":"rules[1] と members[].email: null","category":"repetition","action":"retain","reason":"rules は未成年の連絡経路（店主代表経由）という運用上の制約を定めており、email: null の値の説明ではないため残した。","cause":{"type":"document"}}],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/samples/pm-members-sample.yaml","status":"not_applicable","reason":"対象ファイルを変更しておらず、検査対象の変更がない。"}]}
+</specdojo_executor_evidence>

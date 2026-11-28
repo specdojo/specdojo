@@ -9,6 +9,7 @@ import {
   applicableReviewCriteria,
   buildInPlaceStem,
   deliverableDocId,
+  deliverableDocPathByDocId,
   execTemplatePath,
   finalizeResultSectionsForDeliverable,
   generateSinglePlan,
@@ -153,6 +154,57 @@ describe("deliverableDocId", () => {
         "docs/ja/projects/prj-test/020-project-definition/prj-new.md",
       ),
     ).toBe("prj-test:prj-new");
+  });
+});
+
+describe("deliverableDocPathByDocId", () => {
+  const catalogYaml = [
+    "domain: kata",
+    "base_path: /docs/ja/specdojo",
+    "groups:",
+    "  - name: samples",
+    "    base_path: samples",
+    "    deliverables:",
+    "      - local_id: tsp-index-sample",
+    "        path: tsp-index-sample.md",
+    "",
+  ].join("\n");
+  const docIds: Record<string, string> = {
+    "docs/ja/specdojo/samples/tsp-index-sample.md": "specdojo:tsp-index-sample",
+  };
+
+  it("returns the catalog path of a kata domain deliverable whose document id matches", () => {
+    const catalogPath = mkdtempSync(join(tmpdir(), "specdojo-doc-path-by-id-"));
+    try {
+      writeFileSync(join(catalogPath, "dct-kata.yaml"), catalogYaml, "utf8");
+
+      const actual = deliverableDocPathByDocId(
+        catalogPath,
+        "specdojo:tsp-index-sample",
+        (path) => docIds[path],
+      );
+
+      expect(actual).toBe("docs/ja/specdojo/samples/tsp-index-sample.md");
+    } finally {
+      rmSync(catalogPath, { recursive: true, force: true });
+    }
+  });
+
+  it("returns undefined for a type document that the catalog does not list", () => {
+    const catalogPath = mkdtempSync(join(tmpdir(), "specdojo-doc-path-by-id-"));
+    try {
+      writeFileSync(join(catalogPath, "dct-kata.yaml"), catalogYaml, "utf8");
+
+      const actual = deliverableDocPathByDocId(
+        catalogPath,
+        "specdojo:tsp-index-rulebook",
+        (path) => docIds[path],
+      );
+
+      expect(actual).toBeUndefined();
+    } finally {
+      rmSync(catalogPath, { recursive: true, force: true });
+    }
   });
 });
 

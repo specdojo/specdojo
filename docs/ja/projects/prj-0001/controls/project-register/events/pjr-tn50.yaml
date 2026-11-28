@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b0f28bc3411b43a8adcb44f541582706
+  ts: "2026-11-22T05:40:50Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 第 3 波の stc-index の型を grade の指摘に沿って直す
+    - field: description
+      from: ""
+      to: 第 3 波の 090 で stc-index の型（rulebook pass 96（minor 2）、sample needs-work 94（major 1・minor 4））が合格に届かなかったため、grade の指摘を直して評価し直す
+    - field: input
+      from: ""
+      to: '["2026-11-22、T-KATA-WAVE-3-stc-index-sample-090 の review で、型の評価は rulebook pass 96（minor 2）、sample needs-work 94（major 1・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-rulebook.yaml と specdojo.stc-index-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_25febd667f994bf2bd983b49bd3ea04f
+  ts: "2026-11-22T06:17:16Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b0f28bc3411b43a8adcb44f541582706
+- v: 1
+  id: reg_c02d88180d0a4ecaa17daa6b4684652e
+  ts: "2026-11-22T06:19:36Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_25febd667f994bf2bd983b49bd3ea04f
+- v: 1
+  id: reg_af696d7d514e41d1a8374f4a5ac0ddd5
+  ts: "2026-11-22T07:02:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が自分の型の rulebook と sample だけであること、対応結果、統合後の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: stc-index の型を grade の指摘に沿って直し、評価し直しで合格の基準（機械的な指摘を除いて blocker と major がない）を満たした
+  previous_event_id: reg_c02d88180d0a4ecaa17daa6b4684652e

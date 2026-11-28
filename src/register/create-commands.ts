@@ -1,5 +1,5 @@
 import { normalizeRegisterInput } from "./input.js";
-import { validateSectionFile } from "./section.js";
+import { applyTicketSections, pairSectionOptions, validateSectionFile } from "./section.js";
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -174,10 +174,24 @@ export function registerCreateCommands(
     "--topic <topic>",
     "Topic slug for ticket filename; derived from --title if omitted",
   );
+  addCmd.option(
+    "--section <name>",
+    "Ticket section to fill from the paired --section-file (repeatable, paired in order)",
+    collectTarget,
+  );
+  addCmd.option(
+    "--section-file <path>",
+    "Markdown file with the body of the paired --section (repeatable)",
+    collectTarget,
+  );
   addCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   addCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   addCmd.option("--force", "Overwrite existing ticket file", false);
-  addCmd.option("--dry-run", "Print the generated item file without writing", false);
+  addCmd.option(
+    "--dry-run",
+    "Print the generated item file without writing (the ID shown is provisional)",
+    false,
+  );
   addRegisterCommitOptions(addCmd);
   addCmd.action(async (opts) => {
     try {
@@ -186,6 +200,8 @@ export function registerCreateCommands(
       printCommandError(error);
       return;
     }
+    // 同期や別 project の記帳は作業場所を移してから mutate を呼ぶ。利用者が渡したファイルは移る前の cwd から読む。
+    const callerDirectory = process.cwd();
     await runRegisterMutation("add", opts, ({ paths, assertCommitTargetsClean }) => {
       const explicitTopic = opts.topic?.trim();
       const topic = explicitTopic || slugify(opts.title);
@@ -291,14 +307,21 @@ export function registerCreateCommands(
       if (derivedFrom !== undefined) fields.derivedFrom = derivedFrom;
       fields.dependsOn = normalizeDependsOn(opts.dependsOn);
 
+      const sections = pairSectionOptions(opts.section, opts.sectionFile).map((section) => ({
+        name: section.name,
+        content: validateSectionFile(section.file, callerDirectory),
+      }));
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
-      const content = buildRegisterItemContent({
-        projectId: paths.projectId,
-        displayId,
-        topic,
-        fields,
-        templatePath,
-      });
+      const content = applyTicketSections(
+        buildRegisterItemContent({
+          projectId: paths.projectId,
+          displayId,
+          topic,
+          fields,
+          templatePath,
+        }),
+        sections,
+      );
       const dependencyItem = readRegisterItemContent(content, ticketFilename)?.item;
       if (!dependencyItem) throw new Error(`Failed to read item ${displayId}`);
       validateRegisterDependencies(paths, dependencyItem);
@@ -316,6 +339,11 @@ export function registerCreateCommands(
         process.stdout.write(
           `Would create ${registerEventFilePath(paths.projectRegisterPath, displayId)}:\n` +
             `${appendRegisterEvent(undefined, addEvent)}\n`,
+        );
+        process.stdout.write(
+          `Note: ${displayId} is provisional. A real add assigns a new random ID, so do not copy it ` +
+            `into a commit message; write {id} in --commit -m (for example "Refs: {id}") and it is ` +
+            `replaced with the actual ID.\n`,
         );
         if (warnAboutDerivedTopic) printDerivedTopicWarning(topic);
         return { id: displayId, title: opts.title };
@@ -449,6 +477,8 @@ export function registerUpdateCommand(
   updateCmd.option("--dry-run", "Print change without writing", false);
   addRegisterCommitOptions(updateCmd);
   updateCmd.action(async (opts) => {
+    // 同期や別 project の記帳は作業場所を移してから mutate を呼ぶ。利用者が渡したファイルは移る前の cwd から読む。
+    const callerDirectory = process.cwd();
     await runRegisterMutation("update", opts, (context) => {
       const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id);
@@ -541,7 +571,7 @@ export function registerUpdateCommand(
       }
       let sectionUpdate: { name: string; content: string } | undefined;
       if (sectionName !== undefined && sectionFilePath !== undefined) {
-        const sectionContent = validateSectionFile(sectionFilePath);
+        const sectionContent = validateSectionFile(sectionFilePath, callerDirectory);
         sectionUpdate = {
           name: sectionName,
           content: sectionContent,

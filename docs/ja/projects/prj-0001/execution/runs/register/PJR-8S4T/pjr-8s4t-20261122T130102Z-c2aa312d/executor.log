@@ -1,0 +1,29 @@
+4 回目の実行の作業を終えました。直したのは sld-rulebook の記述ガイド「保管場所一覧」の良い例 1 か所だけです。prettier と `validate:history-links` は通りました。型の grade と lint 系の検査は、統合の後に orchestrator と親 runner が流すため、まだ結果はありません。
+
+**直した内容（`docs/ja/specdojo/rulebooks/sld-rulebook.md`）**
+- これまでの良い例は `docs/**/generated/` 全体を削除してよいとしていました。これを、作り直せる派生物（YAML の表示ページ `docs/**/generated/*.md` と `.specdojo/doc-index.json`）に限りました。作り直す手段は `specdojo build`（`yaml-pages`・`index`）です。
+- 同じ `generated/` という名前でも、次の 2 か所は作り直せないため削除の対象から除く、と書き足しました。
+  - grade の実行ロックと再開の状態（`execution/grade/generated/`）
+  - 移行元の旧 routine 状態（`routines/generated/`）
+- 結論とほかの章は変えていません。sld-sample も変えていません。
+- 大きさは 17,713 B から 17,973 B に増えました。除く条件を足した分です。
+
+**確かめた実装のファイル**
+- `src/docs/yaml-pages.ts`：YAML の隣の `generated/<name>.md` に表示ページを出力する。
+- `src/commands/build.ts`：`specdojo build` の段に `yaml-pages` と `index` がある。
+- `src/grade/run.ts`：`run.lock` と `runs/<run-id>/run.json` をこの配下に置く。
+- `src/routine/storage.ts`：旧 `generated/` を移行元として読み、ロールバック用に残す。
+- `.gitignore`：`docs/**/generated/*` を追跡から外している。
+
+**個票（`pjr-8s4t-sld-kata-slim-pilot.md`）の更新**
+- 作業内容の 13 を `done` にしました。
+- 対応結果に「4 回目の実行の結果」の節を足し、確かめたファイル・大きさ・迷った点を書きました。
+- 「CHANGELOG に書く事項」に、4 回目の行の文案（区分: 修正）を足しました。
+- 残課題に作業内容の 14（統合の後の rulebook の grade）を足しました。
+
+**迷って決めた点**
+- `execution/generated/ready.json` も作り直せる派生物ですが、良い例を短く保つため例には入れませんでした。除く対象は grade が指摘した 2 か所に絞りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-rulebook の記述ガイド「保管場所一覧」の良い例を、再生成できる派生物（YAML の表示ページと文書索引）に限り、`execution/grade/generated/` と `routines/generated/` を除く条件を足した。個票の作業内容 13 を done にし、4 回目の実行の結果・CHANGELOG の文案・残課題を書いた。","handoff":["統合の後に orchestrator が sld-rulebook の型の grade を流し、前後の score と finding を個票に書く（作業内容の 14）。","利用者が読みやすさを改めて確かめる（作業内容の 12）。","迷った点: `execution/generated/ready.json`（`exec refresh` の出力）も再生成できる派生物だが、良い例を短く保つため例に足さず、除く対象は grade の指摘と同じ 2 か所に絞った。","確かめた実装: `src/docs/yaml-pages.ts`、`src/commands/build.ts`、`src/grade/run.ts`、`src/routine/storage.ts`、`.gitignore`。","CHANGELOG の文案（区分: 修正）は個票の「CHANGELOG に書く事項」に追記した。保護された設定の変更は不要。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/sld-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-8s4t-sld-kata-slim-pilot.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"全履歴ファイル valid（変更した個票を含む）"}]}
+</specdojo_executor_evidence>

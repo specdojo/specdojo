@@ -35,6 +35,13 @@ properties:
       pattern: "^[a-z0-9-]+$"
     additionalProperties:
       $ref: "#/$defs/ExternalProject"
+  references:
+    description: Read-only directories for orchestrator launch; never product worktrees or exec targets.
+    type: object
+    propertyNames:
+      pattern: "^[a-z0-9-]+$"
+    additionalProperties:
+      $ref: "#/$defs/Reference"
 $defs:
   NonEmptyString:
     type: string
@@ -77,6 +84,56 @@ $defs:
           Branch that receives direct project-register commits. Defaults to
           project/<project-id>/develop.
         $ref: "#/$defs/NonEmptyString"
+      sync:
+        description: >-
+          Opt-in synchronization through dedicated branches. The register branch carries
+          register tickets and events; the exec-events branch carries execution/exec/events/.
+          Cannot be set together with register_sync.
+        type: object
+        additionalProperties: false
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          remote:
+            type: string
+            pattern: "^(?!-)(?!.*[\\s:])\\S+$"
+            default: origin
+          branches:
+            type: object
+            additionalProperties: false
+            properties:
+              register:
+                type: object
+                additionalProperties: false
+                properties:
+                  branch:
+                    description: Defaults to project/<project-id>/sync/register.
+                    $ref: "#/$defs/NonEmptyString"
+              exec-events:
+                type: object
+                additionalProperties: false
+                properties:
+                  branch:
+                    description: Defaults to project/<project-id>/sync/exec-events.
+                    $ref: "#/$defs/NonEmptyString"
+      register_sync:
+        description: >-
+          Legacy single-branch synchronization of register mutations and schedule events.
+          Kept for compatibility; migrate to sync.
+        type: object
+        additionalProperties: false
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          branch:
+            description: Defaults to project/<project-id>/register.
+            $ref: "#/$defs/NonEmptyString"
+          remote:
+            type: string
+            pattern: "^(?!-)(?!.*[\\s:])\\S+$"
+            default: origin
       catalog_path:
         type: string
       schedule_path:
@@ -94,6 +151,8 @@ $defs:
       project_register_path:
         type: string
       routines_path:
+        type: string
+      playbook_path:
         type: string
       jobs_path:
         type: string
@@ -114,6 +173,17 @@ $defs:
           $ref: "#/$defs/Repo"
       run:
         $ref: "#/$defs/Run"
+  Reference:
+    type: object
+    additionalProperties: false
+    required: [path]
+    properties:
+      path:
+        description: Existing directory relative to the main working tree root; must not overlap writable repositories.
+        type: string
+        pattern: "\\S"
+        not:
+          pattern: "^(/|[A-Za-z]:[\\\\/])"
   ExternalProject:
     type: object
     additionalProperties: false
@@ -130,6 +200,13 @@ $defs:
       project_id:
         description: Project id understood by SpecDojo in the external repository.
         $ref: "#/$defs/NonEmptyString"
+      source_url:
+        description: >-
+          Base URL that turns a repository-relative path of the external repository into a link
+          (for example https://github.com/owner/repo/blob/main). The docs site resolves wikilinks
+          to the external project's doc ids with it.
+        type: string
+        pattern: "^https?://\\S+$"
   Repo:
     type: object
     additionalProperties: false

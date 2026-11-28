@@ -1,0 +1,22 @@
+`docs/ja/specdojo/rulebooks/sac-rulebook.md` を簡潔にし、grade の指摘 15 件のうち rulebook で直せる 12 件を直しました。ただし完成例の章を外したことは、執筆標準の経過措置と食い違っています（下に書きます）。編集したのはこの 1 ファイルだけで、sample・recipe・template と result は触っていません。確かめたのは prettier の整形と markdownlint（0 件）までで、親の検証はこの後 runner が流します。
+
+直した内容（finding 別）:
+- **F005・F012（完成例の章）**: rulebook から外し、完成例は宣言済みの sample に任せました。
+- **F006・F008（見出しの番号）**: 受入条件の見出しを `### 2.n.` と `#### 2.n.1.` から `2.n.4.` までの連番にし、Markdown 規約に合わせました。
+- **F014（必須と任意）**: Frontmatter の項目を表にし、必須と任意を分けました。
+- **F007（検証方法）**: `based_on` が既存文書へつながるかは、作成・更新後に `npm run lint:fm` などで確かめると書きました。`lint:fm` がこれを実際に検査しているかは確かめていません。
+- **F003・F013（位置づけ）**: 「どの場面で何を判断する文書か」で書き直しました。根拠の NFR、BAC との境界、下位の総合テスト（stc）・受入テスト（atc）へ wikilink を付けています。
+- **F002（区分ごとの指針）**: 機能・非機能・障害・移行ごとの期待結果と観測点の表を足しました。
+- **F004（重複）**: 「よくある誤りと対策」の章をなくし、内容は受入条件のガイドと禁止事項にまとめました。
+- **F009（文書 ID）**: SAC はプロダクト文書なので、PJR-PHY7 と ID 命名標準のとおり名前空間なしの `sac-<term>` のまま残し、その理由を書きました。合わせて受入条件ごとの ID の付け方も足しています。
+- **F001（判定者）**: PJR-76N9 に従い、判定する人の割り当ては本文に求めないと明記しました。判定方法には合否の境界と観測先を書くよう定めています。
+- 記述ガイドの各章に判断の基準と良い例・悪い例を置き、禁止事項には「根拠のない閾値の追加」と「テストの詳細手順の記載」を足しました。
+
+残っている点:
+- **完成例の章の削除が標準と食い違う**: 執筆標準は既存の完成例の章を経過措置として認めており、「個別の改訂で先行して削除しない」としています。今回は plan の指示を優先して外しました。どちらを正とするか確認してください。
+- **F010（sample が完成例になっていない）**: sample の問題なので、この段では直していません。後続の sample の段で、受入対象を決めた SAC の実例に作り直す必要があります。
+- **F011・F015（recipe・template が未判断）**: recipe と template は `undecided` のままです。作るか、`not-needed` にするかの判断が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sac-rulebook を簡潔にした。完成例の章と「よくある誤りと対策」を外し、受入条件の見出しを連番にし、Frontmatter の必須と任意を分け、位置づけに参照と BAC との境界を、区分ごとの観点表を記述ガイドに足した。F010（sample）と F011・F015（recipe・template の要否）は申し送りに残した。","handoff":["F010: sac-sample はサンプルの解説書で、SAC の実例になっていない。後続の sample の段で、受入対象（例: 性能）を決め、本文要件の章立て（概要、受入条件と連番見出し、メモ / 将来課題）と名前空間なしの id `sac-<term>` で作り直す。sample にある必須観点の「責任者」は PJR-76N9 に従い入れない。","F011・F015: Frontmatter の `recipe` と `template` は `undecided` のまま。作るか `not-needed` にするかを決め、ready にする前に Frontmatter を直す必要がある。決めるのは orchestrator か利用者。","F001・F003: PJR-76N9 に従い、受入判定者や文書の作成・確認者の Role code を本文に求めないよう直した。判定方法には合否の境界と観測先を書く。BAC の rulebook は判定方法で確認者を求めているので、SAC との違いを型の横並びで確認したほうがよい。","F005・F012: plan の指示に従い、rulebook から完成例（サンプル）の章を削った。rulebook-authoring-standard は既存の完成例の章を経過措置として残し、個別の改訂で先に削らないとしており、今回の変更はこれと食い違う。どちらを正とするか確認が要る。","F009: SAC は `docs/ja/product/070-system-acceptance-criteria` に置くプロダクト文書のため、PJR-PHY7 と id-and-file-naming-standard に従い、文書 ID は名前空間なしの `sac-<term>` のまま残した（指摘の project 修飾の形は採らない）。","F007: `based_on` がつながるかの確認に `npm run lint:fm` を挙げたが、lint:fm がこれを実際に検査しているかは確かめていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/sac-rulebook.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/sac-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変えていない","reason":"変更は rulebook だけで、plan・result・個票を変えていない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変えていない","reason":"変更したのは *.md だけ"}]}
+</specdojo_executor_evidence>

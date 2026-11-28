@@ -1,0 +1,15 @@
+R3（読みやすさ）として sample `docs/ja/specdojo/samples/nfr-maintainability-sample.md` の 2 か所を直しました。変更したのはこのファイルだけで、prettier と markdownlint-cli2 はどちらも問題なしでした。lint・test 類は、この後に runner が実行します。
+
+**直した指摘**
+
+- **R3-1（概要（対象・目的））**: 冒頭の文が長く、切り分けと切り戻しを誰が終えるのかが書かれていませんでした。「…続けられるようにする。そのため、…紙の販売控えへ切り替える前に `OPS` と `DEV` が切り分けと切り戻しを終える。」の 2 文に分けました。根拠は W1・W3 です。`OPS` と `DEV` の分担は「適用範囲・前提条件」の役割の行に沿わせています。
+- **R3-2（概要（対象・目的））**: 「これは…目的に応えるための要件である」の「これ」が何を指すか曖昧でした。「本書の要件は、…という目的に応える。」に書き換えました。根拠は W4・W2 です。
+- **R3-3（保守性要件一覧）**: `nfr-mnt-001` の原因の範囲が「アプリ・データ・端末・通信」で、rulebook の用語定義（アプリ・データ・端末・外部）とずれていました。「外部」にそろえました。grade の F002 への対応で、根拠は `vp-ux-language-consistency` と W8 です。
+
+**直していない指摘**
+
+- **F001（`nfr-mnt-004` が `_UNDECIDED_` のまま）**: 今の版ではすでに閾値が入っており、未決は `nfr-mnt-003`（MTTR）だけです。指摘の状態はもう残っていません。観点も R3 ではなく `vp-qe-kata-conformance` なので、この段では手を入れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさとして nfr-maintainability-sample の概要の文を直し（主語の明示・文の分割・指示語の置き換え）、原因の範囲の表記を rulebook の用語（外部）へそろえた（F002）。F001 は今の版ですでに解消済みで、観点も R3 の対象外のため変えていない。","handoff":["R3-1: R3 / 1. 概要（対象・目的） / 冒頭の文が長く、切り分けと切り戻しを終える主語がない / 「…続けられるようにする。そのため、…紙の販売控えへ切り替える前に `OPS` と `DEV` が切り分けと切り戻しを終える。」の 2 文に分けた / W1、W3（主語は「適用範囲・前提条件」の役割の行に沿わせた） / -","R3-2: R3 / 1. 概要（対象・目的） / 「これは…目的に応えるための要件である」の「これ」が指す先が曖昧 / 「本書の要件は、…という目的に応える。」にした / W4、W2 / -","R3-3: R3 / 3. 保守性要件一覧 / `nfr-mnt-001` の原因の範囲「アプリ・データ・端末・通信」が rulebook の用語定義「アプリ・データ・端末・外部」とずれている（grade F002） / 「通信」を「外部」に直した / `vp-ux-language-consistency`、W8 / -","R3-4: R3 / 3. 保守性要件一覧 / grade F001（`nfr-mnt-004` が `_UNDECIDED_`）は今の版ですでに閾値が入っており解消済み。未決は `nfr-mnt-003` だけ / - / `vp-qe-kata-conformance`（R1・R5 の観点で R3 の対象外。再評価で解消を確かめる） / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"整形の差分なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは sample だけで、plan・result・個票は変えていないため"}]}
+</specdojo_executor_evidence>

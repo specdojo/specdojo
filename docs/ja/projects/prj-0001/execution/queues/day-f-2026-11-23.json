@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "queue_id": "day-f-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T02:00:47.382Z",
+  "updated_at": "2026-11-23T02:13:53.081Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-E73Z",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T02:00:47.932Z",
+      "completed_at": "2026-11-23T02:00:58.051Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-EF4Z",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T02:00:58.053Z",
+      "completed_at": "2026-11-23T02:13:53.078Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

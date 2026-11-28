@@ -1,0 +1,21 @@
+R4（正しさ）のレビューを終えました。誤りは 1 件見つかり、`docs/ja/specdojo/samples/cpd-sample.md` の 1 文を直しました。変更したファイルはこれだけです。result は編集していません。
+
+**直した誤り**
+「概要」では、[[specdojo:prj-overview-sample]] の「必要性」を根拠に「販売記録の漏れと引き継ぎの確認負担が残る」と書いていました。しかし「必要性」の章にあるのは「店主以外が店番をする場合に同じ判断ができず、業務が属人化したままになる」で、販売記録の漏れの話はありません（この言い回しは上位図の cnd-sample の概要にあるものです）。根拠の章に合わせて「業務が属人化したままになる」に直しました。
+
+**突き合わせて一致した主張**
+- 引用している章（cpd-rulebook の「位置づけと用語定義」、prj-overview-sample の「必要性」「基本的な考え方」「期待効果」）はすべて存在します。
+- 用語集（`gl-sample.yaml`）に「販売」と「店主代表」が載っています。
+- 本書の `REL-01`・`REL-06`・`REL-08` は、上位図の `REL-03`・`REL-04`・`REL-05` にそれぞれ対応しています。
+- 接続方式（店内 HTTP・ローカルファイル入出力・外部コマンド）、詳細の正本の名前 4 つ、引き継ぎ先 `pjr-a001`〜`a004` は、上位図と同じです。
+- 前提の「単一店舗・タブレット 1 台」、clis-sample が本部 API を使う別構成であることも、それぞれの文書と合っています。
+- 図の書き方は CPD Mermaid 記法ルールの形状・配色の定義どおりです。
+
+**確かめなかった主張**
+- 架空の参照名と駄菓子屋の業務上の仮定は正本がなく、共通サンプル文脈とも食い違わないので、確かめる対象から外しました。
+
+`npx prettier --check` は通りました。lint は親 runner が後で実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: cpd-sample の事実を cpd-rulebook・cpd-mermaid-rulebook・cnd-sample・prj-overview-sample・gl-sample.yaml・clis-sample と突き合わせ、不一致 1 件（概要の「必要性」由来の記述）を修正した。ほかの主張は一致した。","handoff":["指摘 R4-1（修正済み）: 主張は概要第2段落の「販売記録の漏れと引き継ぎの確認負担が残る」で、prj-overview-sample の「必要性」が根拠とされていた。正本 docs/ja/specdojo/samples/prj-overview-sample.md の「必要性」は、店主以外の店番で同じ判断ができず業務が属人化したままになる、という内容で、販売記録の漏れには触れていない（この言い回しは cnd-sample の概要のもの）。結果は不一致。直し: 「業務が属人化したままになる」に置き換えた。","確かめの表 No1: 主張=概要の cpd-rulebook「位置づけと用語定義」の参照 / 正本=docs/ja/specdojo/rulebooks/cpd-rulebook.md / 確かめ方=grep で見出し一覧 / 結果=一致 / 根拠=31行目「## 2. 位置づけと用語定義」に、コンテナ・コンポーネント・依存方向の定義がある","確かめの表 No2: 主張=概要の prj-overview-sample「必要性」「基本的な考え方」「期待効果」の参照 / 正本=docs/ja/specdojo/samples/prj-overview-sample.md / 確かめ方=見出しと本文を読んだ / 結果=章は一致（必要性の内容は R4-1 で修正）/ 根拠=5.1 初期公開指標の「作業完遂」「判断の一致」が、販売記録の完遂と両利用者の確認結果の一致に対応する","確かめの表 No3: 主張=用語集の「販売」「店主代表」 / 正本=docs/ja/specdojo/samples/gl-sample.yaml / 確かめ方=grep / 結果=一致 / 根拠=tm-sales、tm-shop-owner がある","確かめの表 No4: 主張=本図の `REL-01`・`REL-06`・`REL-08` が上位図の `REL-03`・`REL-04`・`REL-05` に対応する / 正本=docs/ja/specdojo/samples/cnd-sample.md の 3.6 / 確かめ方=関係表を読んだ / 結果=一致 / 根拠=画面→サービス、サービス→記録ストア、サービス→印刷基盤","確かめの表 No5: 主張=接続は店内 HTTP・ローカルファイル入出力・外部コマンドで、DB 製品を前提にしない / 正本=cnd-sample の 3.3・3.4・3.6 / 確かめ方=読み取り / 結果=一致 / 根拠=80行目、90行目、112〜114行目","確かめの表 No6: 主張=詳細の正本名（`kinuya-sales-api`、`kinuya-record-schema`、`kinuya-print-command-contract`）と引き継ぎ先 `kinuya:pjr-a001`〜`a004` / 正本=cnd-sample の 3.6 と 5 / 確かめ方=読み取り / 結果=一致 / 根拠=110〜114行目、144〜147行目。いずれも未同梱の架空名なので、名前が上位図と同じことまでを確かめた","確かめの表 No7: 主張=上位図の前提「単一店舗・タブレット1台」 / 正本=cnd-sample の18行目、prj-overview-sample の99行目・105行目 / 確かめ方=grep / 結果=一致","確かめの表 No8: 主張=clis-sample は CLI と本部 API を使う別構成 / 正本=docs/ja/specdojo/samples/clis-sample.md / 確かめ方=grep / 結果=一致 / 根拠=27行目の _ASSUMPTION_","確かめの表 No9: 主張=図の形状と classDef（system・external、境界の style） / 正本=docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md の 2・4 / 確かめ方=読み取り / 結果=一致 / 根拠=表現例と配色の定義が同じ。構文の確認は親 runner の lint-mermaid に任せる","確かめの表 No10: 主張=架空の文書名（`kinuya-sales-component-design`、`kinuya-infra-design`、`kinuya-sales-operations`）と駄菓子屋の業務上の仮定 / 正本=なし / 結果=確かめられない（対象外）/ 根拠=正本のない学習用の仮定で、共通サンプル文脈と食い違わない"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cpd-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

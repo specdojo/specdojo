@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n鮮度確認コマンド: `specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-index-sample.md --changed-only` \n出力:\n```\n(出力なし・最新であることを確認)\n```\n\n- **対象成果物 (`docs/ja/specdojo/samples/nfr-index-sample.md`)**: `verdict`: `pass`, `score`: 98, `findings`: 2件\n- **Rulebook (`docs/ja/specdojo/rulebooks/nfr-index-rulebook.md`)**: `verdict`: `pass`, `score`: 95, `findings`: 3件",
+  "rationale": [
+    "成果物の鮮度は `specdojo grade list` により最新であることが確認されました。",
+    "完了条件 `DC-001`〜`DC-005` について、成果物の内容を照合した結果、充足されていることを確認しました。",
+    "Grade の `finding` として、サンプル側には `F001` (緊急連絡手段の決定プロセス不足) および `F002` (目標値の冗長な再掲) が残っていますが、これらは本タスクの完了を妨げる性質のものではなく、品質に関する指摘であるため、`complete-with-findings` と判定しました。",
+    "Rulebook 側についても、`F001`〜`F003` の `finding` が存在しますが、同様の理由で完了を妨げないと判断しました。"
+  ],
+  "improvements": [
+    "**サンプル (`docs/ja/specdojo/samples/nfr-index-sample.md`) への改善指示:**",
+    "- `F001`: 備考欄の `_UNDECIDED_` である「営業時間外の緊急連絡手段」について、決定のタイミングや同時に決定すべき文書などを追記し、PO が判断しやすい記述にすること。",
+    "- `F002`: 分冊一覧の備考欄において、監査ログの保管期間等の値を再掲せず、「運用方針と揃える」といった指示に留めること。",
+    "**Rulebook (`docs/ja/specdojo/rulebooks/nfr-index-rulebook.md`) への改善指示:**",
+    "- `F001`: 作成後に実行する検証コマンド（`npm run lint:md` 等）への参照を追加すること。",
+    "- `F002`: recipe・template が `_UNDECIDED_` であることへの言及として、決定時期や判断者の記述を追加すること。",
+    "- `F003`: ready 化の前提条件を明示すること。"
+  ],
+  "approach": "#### approach に応じた確認\n\n- 成果物の磨き込みにおいて、Rulebook の必須要素、禁止事項、および Sample の形式との整合性が確認されました（Grade 結果に基づく）。\n- 変更がタスクの範囲外でないことも確認済みです。",
+  "verdict": "complete-with-findings"
+}

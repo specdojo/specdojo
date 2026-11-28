@@ -1,0 +1,19 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/itc-sample.md` を 1 か所だけ直しました。result ファイルは変更していません。
+
+**直したこと（F001）**
+`itc-index-sample` は、扱わない観点の型について「理由を 1 行残す」ことを求めています。本書は「補完後の確定への遷移は扱わない」と書くだけで、理由も代わりのケースもありませんでした。これは要る内容の欠落なので R1 で扱い、「テスト観点とケース」の導入段落に理由と代わりのケースを書き足しました。
+- 理由: 補完後の購入は通常の会計確定と同じ入力になる。
+- 代わり: `it-sales-checkout-persistence-integrity-010`
+
+F001 は grade では R2 の観点 `vp-qe-omissions-consistency` に分類されています。そのため R2 の担当と食い違わないかを人が確かめる必要があり、「要判断」の印を付けました。
+
+**直さなかったこと**
+- **F002（R5 に回す）**: 本書と他の sample との食い違いで、R5 の範囲です。`itc-index-sample` は依存障害の割り当てを「DB 停止時に…」としていますが、本書は DB 停止を採用していません。直す案は、`itc-index-sample` の割り当てを「DB の更新拒否時に未保存を成功表示しない」に改めることです。
+- **F003（R3 に回す）**: 導入段落が 1 段落に詰め込まれていて読みにくいという指摘で、R3 の範囲です。
+
+**検証**
+`npx prettier --check docs/ja/specdojo/samples/itc-sample.md` は通りました。lint などの検査はこのあと親 runner が流します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 の確かめで F001（状態遷移の型のうち扱わない部分の理由・代わりのケースの欠落）を docs/ja/specdojo/samples/itc-sample.md に足した。F002 は R5、F003 は R3 に回す指摘として handoff に残した。","handoff":["R1-1: R1 / 6. テスト観点とケース（導入段落） / itc-index-sample の「観点の立て方（共通）」は該当しない型に理由を1行残すよう求め、`itc-sales-checkout` の状態遷移を「未確定から確定への遷移」としているが、本書は「補完後の確定への遷移は扱わない」とだけ書き、理由も代わりのケースもなかった（grade F001） / 「補完後の確定への遷移は独立した観点にしない（理由: 補完後の購入は通常の会計確定と同じ入力になる、代替: `it-sales-checkout-persistence-integrity-010`）」を書き足した / `vp-qe-kata-conformance`（種別の責務: rulebook の「観点」で itc-index の「観点の立て方（共通）」に従う）、grade F001 / 要判断（F001 の viewpoint は `vp-qe-omissions-consistency` で R2 の担当でもあるが、itc-index と rulebook が求める内容の欠落なので R1 で直した。R2 に任せる案は選ばなかった）","R1-2: R1 / 6. テスト観点とケース（導入段落） / itc-index-sample の観点の型の表では `itc-sales-checkout` の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない、応答欠落時の照合待ちの識別」としている。本書は DB 停止・接続断を不採用とし、更新拒否で代えている。応答欠落時の照合待ちの識別にも触れていない（grade F002） / - / `vp-qe-kata-conformance`（kata 相互）で R5 の担当のため、本書は直さない。相手側を直す案: itc-index-sample の該当セルを「DB の更新拒否時に未保存を成功表示しない」に改める。照合待ちの識別は、本書の対象外か外部結合テスト（ET）へ回すかを決めてそろえる / 要判断（本書で DB 停止を扱う案は、本書が書く再現性の理由と食い違うため選ばなかった）","R1-3: R1 / 6. テスト観点とケース（導入段落） / 4 つの観点の型の扱いと不採用の理由・代わりのケースが 1 段落に詰まっていて読みにくい（grade F003） / - / `vp-ux-readability` で R3 の担当のため、この段では直さない。R3 で「観点の型／本書での扱い／理由・代わり」の表か箇条書きに分ける案を検討する / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/itc-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

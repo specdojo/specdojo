@@ -3,12 +3,12 @@ version: 1
 document: specdojo:etc-index-rulebook
 path: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
 target: kata
-rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-10-31T20:36:57.399Z"
-graded_by: flash-high-executor
-content_hash: 8ce124aabb889d18413bc7d6c12747c3e6d5c57e2d322461f8a9f153da011a77
+rubric: grade-rubric-v3
+verdict: pass
+score: 93
+graded_at: "2026-11-26T10:49:50.045Z"
+graded_by: opus-review-executor
+content_hash: c2bbdfbdc9c087ab8a0ea42ab92ff4c69a820d0880a327e2f8d8102942a5f1fb
 categories:
   purpose:
     score: 100
@@ -23,11 +23,11 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,14 +60,14 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -75,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -100,21 +100,66 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 300
-    anchor: "## 8. サンプル（最小）"
-    message: 8章のサンプルが、具体的なプロジェクトの例（決済連携など）ではなくルール本文（1～7章）の一般論と記述ガイドを反復するだけの内容になっており、削除または具体的な例への置換が可能である。
-    message_ja: 8章のサンプルが、具体的なプロジェクトの例（決済連携など）ではなくルール本文（1～7章）の一般論と記述ガイドを反復するだけの内容になっており、削除または具体的な例への置換が可能である。
+    rule: vp-dev-change-impact
+    line: 46
+    anchor: "- `<term>` は用語集（GL）の論理名キー（英小文字 kebab-case）とし、日本語の表示名は本文の H1 に記載する。"
+    message: >-
+      `＜term＞` を用語集（GL）の論理名キーとする規定が、適用先 `dct-test-specs-template.yaml` の `etc-_TARGET_.md` の
+      note（「対象外部システム・I/F名の略称（kebab-case）」）と食い違っており、対象別ファイルの命名根拠が作成者ごとにぶれるため、どちらかに揃えるか両者の関係を明記すべきである。
+    message_ja: >-
+      `＜term＞` を用語集（GL）の論理名キーとする規定が、適用先 `dct-test-specs-template.yaml` の `etc-_TARGET_.md` の
+      note（「対象外部システム・I/F名の略称（kebab-case）」）と食い違っており、対象別ファイルの命名根拠が作成者ごとにぶれるため、どちらかに揃えるか両者の関係を明記すべきである。
   - id: F002
-    severity: major
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 16
+    anchor: "- `tsp-index` の方針を根拠に、分割基準・観点と条件の立て方・外部依存境界・合格基準・証跡を定義する。"
+    message: >-
+      全体方針と推奨 Frontmatter 項目では etc-index
+      に共通の合格基準を定めるとしているが、本文構成（標準テンプレ）と記述ガイドに合格基準を書く章・記述規約がなく置き場所が作成者ごとにぶれるため、該当章（例：外部結合テスト共通の境界/依存/環境の扱い）に合格基準の書き方を明記すべきである。
+    message_ja: >-
+      全体方針と推奨 Frontmatter 項目では etc-index
+      に共通の合格基準を定めるとしているが、本文構成（標準テンプレ）と記述ガイドに合格基準を書く章・記述規約がなく置き場所が作成者ごとにぶれるため、該当章（例：外部結合テスト共通の境界/依存/環境の扱い）に合格基準の書き方を明記すべきである。
+  - id: F003
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 外部結合テストカタログ概要 作成ルール"
-    message: 指定の sample が mandatory と定義された本文構成（1~8章）を無視し、かつ Frontmatter の type に `project` を指定しており rulebook の定義と矛盾している。
-    message_ja: 指定の sample が mandatory と定義された本文構成（1~8章）を無視し、かつ Frontmatter の type に `project` を指定しており rulebook の定義と矛盾している。
+    message: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで `target_format` も宣言されておらず、kata
+      の組（rulebook・recipe・sample・template）の対応と対象形式が決まっていないため、作成するか、宣言を補うべきである。
+    message_ja: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで `target_format` も宣言されておらず、kata
+      の組（rulebook・recipe・sample・template）の対応と対象形式が決まっていないため、作成するか、宣言を補うべきである。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 46
+    anchor: "- `<term>` は用語集（GL）の論理名キー（英小文字 kebab-case）とし、日本語の表示名は本文の H1 に記載する。"
+    message: >-
+      適用先 `dct-test-specs-template.yaml` は対象別の `_TARGET_` を「対象外部システム・I/F名の略称」とし、rulebook は `＜term＞`
+      を用語集（GL）の論理名キーとしているため、rulebook と適用先の命名規則が矛盾しており、どちらを正とするかを揃えるべきである。
+    message_ja: >-
+      適用先 `dct-test-specs-template.yaml` は対象別の `_TARGET_` を「対象外部システム・I/F名の略称」とし、rulebook は `＜term＞`
+      を用語集（GL）の論理名キーとしているため、rulebook と適用先の命名規則が矛盾しており、どちらを正とするかを揃えるべきである。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# 外部結合テストカタログ概要 作成ルール"
+    message: >-
+      rulebook の呼び名「外部結合テストカタログ 概要／対象別」が、適用先 `dct-test-specs-template.yaml` の
+      name「外部結合テスト（全体構成）」「外部結合テスト（対象別）」と一致しておらず、同じ成果物が別名で並び誤読されるため、dct 側と呼び名を揃えるか対応を明記すべきである。
+    message_ja: >-
+      rulebook の呼び名「外部結合テストカタログ 概要／対象別」が、適用先 `dct-test-specs-template.yaml` の
+      name「外部結合テスト（全体構成）」「外部結合テスト（対象別）」と一致しておらず、同じ成果物が別名で並び誤読されるため、dct 側と呼び名を揃えるか対応を明記すべきである。
+size_metrics:
+  characters: 6014
+  operations_characters: 0
+  operations_ratio: 0

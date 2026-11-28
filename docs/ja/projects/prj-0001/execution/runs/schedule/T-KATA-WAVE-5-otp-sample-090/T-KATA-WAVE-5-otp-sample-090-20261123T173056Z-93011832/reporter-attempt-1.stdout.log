@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 成果物: `[[docs/ja/specdojo/samples/otp-sample.md|docs/ja/specdojo/samples/otp-sample.md]]`\n- コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-sample.md --changed-only`\n- 出力: なし (終了コード 0)\n- `verdict`: `pass` / `score`: 100 / `finding_counts`: blocker 0, major 0, minor 0, note 0\n\n#### 成果物: `[[docs/ja/specdojo/rulebooks/otp-rulebook.md|docs/ja/specdojo/rulebooks/otp-rulebook.md]]`\n- コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-rulebook.md --changed-only`\n- 出力: なし (終了コード 0)\n- `verdict`: `pass` / `score`: 98 / `finding_counts`: blocker 0, major 0, minor 1, note 0",
+  "rationale": [
+    "`docs/ja/specdojo/samples/otp-sample.md` の評価結果は `pass` であり、`finding` もありません。また、`docs/ja/specdojo/rulebooks/otp-rulebook.md` の評価結果は `pass` ですが、`minor` な `finding` (`F001`) が 1 件存在します。",
+    "完了条件 `DC-001` 〜 `DC-004` について、成果物本文を確認した結果、すべて充足されていることを確認しました。`rulebook` の章立ておよび必須の表が含まれ、共通サンプル文脈（駄菓子屋）に沿っており、禁止事項にも抵触していません。また、概要において業務の価値と対象範囲が明示されています。",
+    "一方で、`rulebook` において `vp-dev-testability` に関する `finding` (`F001`) が残っているため、即座に `complete` とはせず、品質の指摘を伴う完了として扱います。"
+  ],
+  "improvements": [
+    "`docs/ja/specdojo/rulebooks/otp-rulebook.md` に関する改善指示: `F001` に基づき、Frontmatter で示されている `npm run lint:fm` 以外に、本文の章立てや書式を確認するための `npm run lint:md` などの検証手順を追記してください。",
+    "横串の確認事項: 9 章の `_UNDECIDED_`（旧ノート参照期間は `dmd-index` で決定する予定）および 3 章の RTO/RPO の仮定について、人間による最終確認が必要です。",
+    "型の整備: `recipe` が `_MISSING_` であるため、必要に応じて型として整備することを検討してください。"
+  ],
+  "approach": "### approach に応じた確認\n- 磨き込みの実施: `rulebook` の必須要素および禁止事項、`sample` の形式との整合性は `grade` によって確認済みです。\n- `recipe` の扱い: `recipe` が `_MISSING_` であることを確認しました。",
+  "verdict": "complete-with-findings"
+}

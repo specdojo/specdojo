@@ -1,0 +1,22 @@
+R3（読みやすさ）を終え、`docs/ja/specdojo/samples/bdd-sample.yaml` だけに文の直しを 7 件入れました。schema 検査と Prettier の検査はどちらも通っています。意味と、判断に要る背景・例外・制約は変えていません。
+
+R1・R2 の指摘は繰り返していません。plan に展開された finding はありませんでした。
+
+直した箇所:
+
+1. **商品の説明**: 「用語参照は〜を対象とする」は主語と述語がねじれていたため、「用語は〜を参照する」にしました（W2）。
+2. **売上記録の説明（含めない取引）**: 「入力途中や取り消した取引」は修飾の係りが曖昧だったため、「入力途中の取引と取り消した取引」に分けました（W5）。
+3. **売上記録の説明（現金販売）**: 受け身の「顧客が特定されない」を「顧客を特定しない」にしました（W6）。
+4. **支払方法**: 「本部への登録の受付状態」は「の」が続いて読みにくいため、エンティティ名を使い「本部売上受付の受付状態とは別の判断軸とする」にしました（W8・W10）。
+5. **顧客ID**: 必要とする理由と、未設定の扱いの 2 つを 1 文で述べていたため、2 文に分けました（W3）。
+6. **販売数量**: 「販売する」を、商品ID の「販売した」に時制をそろえました（W10）。
+7. **本部売上ID**: 受け身の「採番される」で採番と照合の主体が消えていたため、「本部は〜採番するため、店舗側は〜照合する」にしました（W1・W6）。
+8. **受付状態**:
+   - 「拒否は応答コードで返る」を「本部は拒否を応答コードで返す」にしました（W1）。
+   - 「この項目」を「受付状態」、「ここでは」を「本辞書では」に置き換えました（W4）。
+
+用語の表記（つけ・発注点）は用語集（gl-sample）と一致しています。文体は である調 と体言止めでそろっていました。迷って「要判断」を付けた指摘はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）を終え、bdd-sample.yaml に文の直しを入れた（W1・W2・W3・W4・W5・W6・W8・W10）。意味と制約は変えず、schema 検査と prettier 検査は通った。","handoff":["R3-1: R3 / entities[商品].description / 「用語参照は〜を対象とする」の主語と述語がねじれている / 「用語は [[specdojo:gl-sample|用語集 在庫・調達]] を参照する。」にした / W2 / -","R3-2: R3 / entities[売上記録].description / 「入力途中や取り消した取引」の修飾の係りが曖昧で、受け身の「顧客が特定されない」も主体が消えている / 「入力途中の取引と取り消した取引は含めない」「顧客を特定しない現金販売も記録する」にした / W5, W6 / -","R3-3: R3 / entities[売上記録].fields[payment_method].description / 「本部への登録の受付状態」は「の」が続いて読みにくく、エンティティ名とずれている / 「本部売上受付の受付状態とは別の判断軸とする。」にした / W8, W10 / -","R3-4: R3 / entities[売上記録].fields[customer_id].description / 必要とする理由と未設定の扱いの 2 つを 1 文で述べている / 「つけ販売では請求先を特定するために必要とする。未設定を現金販売と読み替えない。」の 2 文に分けた / W3 / -","R3-5: R3 / entities[売上明細].fields[quantity].description / 「販売する」が product_id の「販売した」と時制がずれている / 「この行で販売した商品の個数。」にした / W10 / -","R3-6: R3 / entities[本部売上受付].fields[sale_id].description / 受け身の「採番される」で、採番と照合の主体が読めない / 「本部は店舗の売上記録の売上IDとは別に採番するため、店舗側は両者を同じ値と読み替えずに照合する。」にした / W1, W6 / -","R3-7: R3 / entities[本部売上受付].fields[status].description / 「拒否は応答コードで返る」の主体がなく、「この項目」「ここでは」の指す先が曖昧 / 「本部は拒否を応答コードで返すため、受付状態の値がないことを受付済みと扱わない。」「本辞書では業務上の意味を対応付ける。」にした / W1, W4 / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/bdd-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"plan・result・個票を変更していないため（変更は samples 配下の YAML だけ）"}]}
+</specdojo_executor_evidence>

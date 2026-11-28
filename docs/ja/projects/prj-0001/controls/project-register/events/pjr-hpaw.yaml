@@ -1,0 +1,181 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7ed354a91a34437a8a582c1255b38f00
+  ts: "2026-11-28T04:16:57Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo git が push を止めずに通し、executor が git push の deny をすり抜けられる
+    - field: description
+      from: ""
+      to: specdojo git -- push が git push をそのまま実行するため、npx specdojo を許された executor が push の deny をすり抜けられる。v0.10.0 の前に push を拒むように直す
+    - field: input
+      from: ""
+      to: '["src/commands/git.ts は push を止めずに git へ渡す（2026-11-28 の確認）。executor の .specdojo/claude/settings.edit.json は Bash(npx specdojo `*)` を許し、deny は Bash(git push `*)` の形だけを見る。codex の rules も git push の形だけを見る","PJR-D4RJ でオーケストレーターの push を守りのある入口で許すと決めた際に見つけた。入口は別の todo で作る","v0.10.0 に入れる。担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-D4RJ"]'
+- v: 1
+  id: reg_2b84d9de3b3f4e44948c0122dd433502
+  ts: "2026-11-28T04:26:19Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7ed354a91a34437a8a582c1255b38f00
+- v: 1
+  id: reg_4628323a4c25487595716d0da0c6b85d
+  ts: "2026-11-28T04:37:53Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_2b84d9de3b3f4e44948c0122dd433502
+- v: 1
+  id: reg_1e6f85c97b094f58bb0a6fb50997f7d2
+  ts: "2026-11-28T04:58:53Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_4628323a4c25487595716d0da0c6b85d
+- v: 1
+  id: reg_0e692b6f1dde42848dbeea8a28708295
+  ts: "2026-11-28T05:02:41Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
+  previous_event_id: reg_1e6f85c97b094f58bb0a6fb50997f7d2
+- v: 1
+  id: reg_f4d0406cf4a943c897a6a77492deabc6
+  ts: "2026-11-28T05:07:16Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
+      to: "-"
+  previous_event_id: reg_0e692b6f1dde42848dbeea8a28708295
+- v: 1
+  id: reg_8826ac270d574431b445c6650b1198c7
+  ts: "2026-11-28T05:13:49Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
+  previous_event_id: reg_f4d0406cf4a943c897a6a77492deabc6
+- v: 1
+  id: reg_f729768ed4654592acf2262359e00296
+  ts: "2026-11-28T05:16:01Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
+      to: "-"
+  previous_event_id: reg_8826ac270d574431b445c6650b1198c7
+- v: 1
+  id: reg_171fc25f54824214b79f20525fa08b74
+  ts: "2026-11-28T05:17:29Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f729768ed4654592acf2262359e00296
+- v: 1
+  id: reg_d572b8d4d1a8470aabb5ec04c6842455
+  ts: "2026-11-28T05:19:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票の対応結果・親の検証 12 段を確かめ、build し直した CLI で push（-C・-c を前に置いた形を含む）と send-pack が拒まれ、status・log・merge が動くことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: specdojo git が push・send-pack・http-push・receive-pack を git の起動前に拒むようにした。global option を前に置いた形も拒み、alias・未知のコマンド・外部の git-* はまとめて拒む
+  previous_event_id: reg_171fc25f54824214b79f20525fa08b74

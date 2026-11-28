@@ -1,0 +1,29 @@
+PJR-RS2P の作業は、成果物 27 ファイルの修正まで終わっています。ただし、役割が主体として残る記述が数か所あり、利用者の判断を待っています。`lint:md`・`lint:fm`・`validate:history-links` はエラーなしで、他の親検証は runner が実行します。
+
+`docs/ja/product/` の 59 件から役割名の語を洗い出し、文書を作る・確かめる・承認する役割の割り当てと、承認・留保の進み具合を外しました。文がつながらなくなる箇所は、文書が扱う内容が分かる文に直しています。確認者・担当・判断者・決定者の列は削り、`ifx-*` は YAML が正本のため YAML を直しました。`generated/` は git 管理外で、build で再生成されます。
+
+frontmatter、rulebook・sample・template・standard、`CHANGELOG.md` は変えていません。`cnd-specdojo` は PJR-Q9DF で直したため対象外です。
+
+個票の対応結果には次を書きました。
+- **直した成果物の表:** 5.2 にあります。
+- **残したものと理由:** 5.3 にあります。
+- **未完了の承認・留保の一覧:** 5.4 にあります。
+- **CHANGELOG に書く事項:** 5.1 に「なし」と書きました。
+
+作業内容の表は 4 行とも `done` にしてあります。
+
+次の文書は、業務プロセスの主体など文書の中身として役割が要るため、役割を残しました。
+- `cdfd-*`、`bps-task-completion`、`bps-deliverable-evaluation`
+- `cdsd-execution` の更新責務の列
+- `ifd-specdojo` の管理主体の列
+- `stsd-register-entry` の承認権限者
+- `bac-task-completion` のシナリオ
+- `sysd-critical-flows` のフローの登場者
+
+## 判断をお願いしたいこと
+- `sysd-critical-flows` と `bac-task-completion` の「確認する」記述の一部に、役割の主体が残っています。業務プロセスの主体との切り分けが要るため、役割を外すかどうか決めてください。
+- 5.4 の未完了の承認・留保を登録簿へ起票するかどうかは、オーケストレーターと利用者で決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs/ja/product の成果物 27 ファイルから、文書の役割の割り当てと承認の進み具合の記述を外した。個票の対応結果に、直した成果物の表・残したものと理由・未完了の承認と留保の一覧・CHANGELOG に書く事項（なし）を記載した。作業内容の表は 4 行とも done にした。","handoff":["sysd-critical-flows と bac-task-completion の「確認する」記述の一部に役割の主体が残っている。業務プロセスの主体との切り分けが要るため、外すかどうか利用者の判断を待つ。","個票 5.4 の未完了の承認と留保（PJR-AK5V、PJR-TN43、PJR-Y2X4、PJR-39AB、PJR-CJMN、PJR-W63Q など追跡先ありのもの、および追跡先のない M-01〜M-04、U-01〜U-07 など）の登録簿への起票は、オーケストレーターが利用者と決める。","ifx-* は YAML が正本のため YAML だけを直した。generated/ は git 管理外で build により再生成される。","CHANGELOG への記載は不要（利用者の操作・出力に影響しない）と判断した。"],"validations":[{"command":"npm run lint:md","status":"passed","summary":"エラーなし"},{"command":"npm run lint:fm","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"個票の Markdown リンク違反なし"},{"command":"npx prettier --write","status":"passed","summary":"変更した md・yaml を整形した"}]}
+</specdojo_executor_evidence>

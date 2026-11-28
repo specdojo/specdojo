@@ -1,0 +1,13 @@
+R1（目的の過不足）では、sample の 5 章「例外条件と未解決事項」の表だけを直しました。指摘 F001 は R1 の観点に当たらないため、直さずに R4 へ回します。markdownlint などの検査はこの後の段で走るため、ここでは prettier の整形だけ流しています。
+
+**変更したファイル**: `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md`（5 章、8 行を追加し 8 行を削除）
+
+- **F002（直した）**: 例外表の列が rulebook・template と違い、影響を受ける条件 ID と「初期受入を進められるか」が独立した列になっていませんでした。列を template と同じ `論点`・`判定への影響`・`当面の扱い` の 3 つにそろえました。
+  - 旧表の「解決期限」と「責任者」の列は、`当面の扱い` に「店主代表（`PO`）が〜までに決める」という文で入れました。各行に「決まるまで判定を保留する」という扱いも足しています。
+  - 表の前の 1 文も、表が示す内容を説明する文に変えました。
+- **F001（直していない）**: SC-06 の「必須記録と引き継ぎ」が何を指すか決まっていない、という指摘です。観点 `vp-qe-verifiability` は R4 で使う観点なので、R4 で必須記録の項目と引き継ぎの内容を書き足してください。
+- **R1 として自分で確かめた点**: 指摘は出ていません。rulebook の必須章（判定対象と適用範囲・成功基準・受入条件・判定手順と証跡）と、業務価値・判定時期・確認者・承認者・否決時の扱いはすべてありました。要らない内容も見当たりません。低コストを業務価値に置いていないので、それに関する記述ガイドは当てはまりません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 として、sample の例外表を rulebook・template の列（論点・判定への影響・当面の扱い）にそろえ、影響を受ける条件 ID と初期受入を進められるかを `判定への影響` の列に分けた（F002）。F001 は観点 `vp-qe-verifiability` が R4 の観点なので R4 へ回した。","handoff":["R1-1: R1 / 5. 例外条件と未解決事項 / 例外表の列が rulebook・template の推奨表（論点・判定への影響・当面の扱い）と違い、影響を受ける条件 ID と初期受入を進められるかが独立した列になっていない（grade F002） / 列を 3 つにそろえ、`判定への影響` に条件 ID と初期受入を進められるかを書いた。旧表の解決期限と責任者は `当面の扱い` に「店主代表（`PO`）が〜までに決める」と書き、決まるまで判定を保留する扱いを足した。表の前の 1 文も表の内容を説明する文に変えた / `vp-qe-kata-conformance`、rulebook の「例外条件と未解決事項」の記述ガイド、template の 5 章 / -","R1-2: R1 / 2. 成功基準 SC-06 / 「必須記録と引き継ぎ」が何を指すか決まっていない（grade F001） / - / 観点 `vp-qe-verifiability` は kata-guide の観点の組で R4 の観点なので、この段では直さない。R4 で必須記録の項目（販売・在庫・つけの記録など）と引き継ぎの内容を判定基準か測定方法の列に書き足す案を検討してほしい / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md","status":"passed","summary":"変更した sample を整形し、エラーなし"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner の parent validation で実行される"}]}
+</specdojo_executor_evidence>

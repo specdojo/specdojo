@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-access-control-sample.md --changed-only` を実行した結果、出力は空（rc=0）であり、評価結果は最新です。\n\n- `verdict`: `pass`\n- `score`: 100\n- `finding_counts`: blocker 0 / major 0 / minor 0 / note 0",
+  "rationale": [
+    "`grade` の評価結果は最新であることを確認済みです。",
+    "`done_criteria` の各項目について、`grade` の評価および本文の記述を確認しました。",
+    "DC-001 (`vp-qe-omissions-consistency`): `rulebook` の章立てと必須の表に沿っていることを確認しました。",
+    "DC-002 (`vp-qe-kata-conformance`): Sample 記述標準および駄菓子屋のコンテキストに沿っていることを確認しました。",
+    "DC-003 (`vp-qe-kata-conformance`): `rulebook` の禁止事項に抵触していないことを確認しました。",
+    "DC-004 (`vp-ba-requirements-completeness`): 権限の付与・剥奪ルールおよび監査ログの方針（記録対象・保持期間）が記載されていることを確認しました。",
+    "DC-005 (`vp-ba-stakeholder-clarity`): 権限の付与対象が役割名で記載され、`opr-index` への導線が存在することを確認しました。",
+    "対象外の変更の混入もなく、すべての完了条件が満たされています。"
+  ],
+  "improvements": [],
+  "approach": "### approach に応じた確認\n\n- `plan` で求められた磨き込みの実施: `grade` の結果および本文の記述に基づき、指示された内容が反映されていることを確認しました。",
+  "verdict": "complete"
+}

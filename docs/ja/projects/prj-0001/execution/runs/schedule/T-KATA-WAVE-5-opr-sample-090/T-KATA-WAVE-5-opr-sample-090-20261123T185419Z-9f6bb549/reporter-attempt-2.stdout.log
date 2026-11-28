@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n1. `specdojo grade list --target kata --changed-only` を実行\n`出力: なし (opr- 該当なし)`\n\n2. `specdojo grade list --target kata --incomplete` を実行\n`出力: なし (opr- 該当なし)`\n\n評価結果は最新です。\n\n- `docs/ja/specdojo/samples/opr-sample.md`: `pass` (score: 94, finding: 0/0/4/0)\n- `docs/ja/specdojo/rulebooks/opr-rulebook.md`: `needs-work` (score: 94, finding: 0/1/1/0)\n- `docs/ja/specdojo/samples/opr-access-control-sample.md`: `pass` (score: 95, finding: 0/0/2/0)\n- `docs/ja/specdojo/samples/opr-backup-restore-sample.md`: `pass` (score: 98, finding: 0/0/2/0)\n- `docs/ja/specdojo/samples/opr-batch-sample.md`: `needs-work` (score: 66, finding: 0/8/15/0)\n- `docs/ja/specdojo/samples/opr-change-sample.md`: `pass` (score: 96, finding: 0/0/3/0)\n- `docs/ja/specdojo/samples/opr-incident-sample.md`: `pass` (score: 91, finding: 0/0/7/0)\n- `docs/ja/specdojo/samples/opr-monitoring-sample.md`: `pass` (score: 92, finding: 0/0/6/0)\n- `docs/ja/specdojo/samples/opr-support-sample.md`: `fail` (score: 57, finding: 1/14/9/0)",
+  "rationale": [
+    "### 判断根拠\n\n1. `評価結果の確認`\n`docs/ja/specdojo/samples/opr-sample.md` は `pass` (score: 94) であり、最新の状態です。また、`done_criteria` に直結する `blocker` 系の finding は存在しません。\n\n2. `完了条件の照合`\n`opr-sample.md` に対する `done_criteria` を照合しました。`DC-001` から `DC-005` すべての条件を満たしていることを確認しました。\n\n3. `approach に応じた確認`\n`fully-guided` の方針に従い、`opr-sample.md` に対する磨き込みを確認しました。`opr-sample.md` 自体は `pass` を得ていますが、依存関係にある他の型（`rulebook` およびその他の `sample`）の整備が完了していないため、全体の完了には至っていません。",
+    "実行記録の確認: 今回の `executor` 実行において、成果物の変更は行われていません。先行する `edit` の実行結果は特定できませんでした。"
+  ],
+  "improvements": [
+    "### 未充足事項・改善指示\n\n1. 型の整備に関する指示\n- `docs/ja/specdojo/rulebooks/opr-rulebook.md` の `F001` (template 重複の縮約) および `F002` (事項の解消) を反映し、再 `grade` してください。\n- `docs/ja/specdojo/samples/opr-batch-sample.md` の `major` 級の finding を解消し、再 `grade` してください。\n- `docs/ja/specdojo/samples/opr-support-sample.md` が `fail` であるため、`rulebook` に沿った構成への修正および再 `grade` が必要です。\n\n2. 確認できなかった範囲\n- 成果物の本文の詳細な再評価、および先行する `edit` の具体的な変更内容は確認できていません。"
+  ],
+  "approach": "### approach に応じた確認\n\n`fully-guided` の方針に従い、`opr-sample.md` に対する磨き込み（`rulebook` の必須要素、禁止事項、`done_criteria` への適合）を確認しました。`opr-sample.md` 自体は `pass` を得ていますが、依存関係にある他の型（`rulebook` およびその他の `sample`）の整備が完了していないため、全体の完了には至っていません。",
+  "verdict": "incomplete"
+}

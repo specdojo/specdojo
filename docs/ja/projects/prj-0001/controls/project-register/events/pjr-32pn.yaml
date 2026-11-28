@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c7a7e05fa2484d14aa6d1c4db6210aa3
+  ts: "2026-11-25T11:11:11Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 動いている exec run --auto --loop を、走っているタスクを終えてから安全に止めるコマンドを足す
+    - field: description
+      from: ""
+      to: 動いている `exec run --auto --loop` を、走っているタスクを壊さずに止めるコマンドを足す。新しいタスクは始めず、走っているタスクを統合まで終えてからループを抜ける止め方（drain）にする。設定の変更・feature ブランチの統合・dist の作り直しなどを、区切りで安全に行えるようにする。
+    - field: input
+      from: ""
+      to: '["利用者の問い（2026-11-25）: schedule を途中で安全に止めて設定を変えるコマンドは実装されているか","確かめた事実（2026-11-25）: exec queue cancel は次の段の前でしか止まらず、--max-rounds は起動時の値。SIGTERM で止めると走っていたタスクが途中で切れ、exec resume で手当てが要った。exec-defaults は起動時に 1 度だけ読まれる","利用者の判断（2026-11-25）: 担当は DEV、期限は 12 月末"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0BGE"]'
+- v: 1
+  id: reg_34c87a9a119c436ea47cf28fa4f27eaa
+  ts: "2026-11-25T12:22:06Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c7a7e05fa2484d14aa6d1c4db6210aa3
+- v: 1
+  id: reg_b26e28fd142b407ba87d0688b59e3f50
+  ts: "2026-11-25T12:40:23Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_34c87a9a119c436ea47cf28fa4f27eaa
+- v: 1
+  id: reg_6c8f5b604e314bea837d962741bc736e
+  ts: "2026-11-25T22:04:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 実際の exec run --auto --loop で、止める指示の後に新しい claim が出ず、記録が残り、列から再開できることを確かめ、indie の承認（2026-11-26）を得て close。止める前の失敗で列が再開できない件は PJR-1TYG で扱う。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: exec stop で、走っているタスクを統合まで終えてからループを止め、列から再開できるようにした。
+  previous_event_id: reg_b26e28fd142b407ba87d0688b59e3f50

@@ -1,0 +1,21 @@
+R2（構成）の確認では、sample `docs/ja/specdojo/samples/dct-sample.yaml` に章の移動・分割・統合の必要はなく、ファイルは変更していません。検証コマンドも実行していません（変更がないため対象外）。
+
+読んだ資料:
+- 上記の sample。前回のレビュー段（`c81b065f7d`）が直した版です。
+- `docs/ja/specdojo/rulebooks/dct-rulebook.md` の「推奨メタ項目」「本文構成（標準テンプレ）」「記述ガイド」。
+- `docs/ja/specdojo/templates/dct-project-definition-template.yaml`。
+- `docs/ja/specdojo/guides/kata-guide.md` の「kata を agent でレビューする」。
+
+照合の結果は次のとおりです。
+
+- **ファイル先頭のキー**: `id`・`type`・`status`・`title`・`rulebook`・`part_of`・`project_id`・`domain`・`base_path` の順で、rulebook の推奨メタ項目の表と同じ順です。
+- **グループ構成**: 下位の区分がないため葉グループ 1 つに並べる形で、rulebook の記述ガイドに沿っています。
+- **成果物の各項目**: 全 7 件とも、rulebook の項目表と同じ順です（`local_id`、`name`、`kind`、`depends_on`、`overview`、`brief`、`path`、`rulebook`、`done_criteria`、`note`）。
+- **成果物の並び**: 作業成果物の 5 件は template と同じ相対順です。依存元が依存先より前に来るので、前提から結論の順に読めます。その後に管理文書、自動生成文書の順で続きます。template にないこの 2 件は種別ごとにまとめて後ろに置かれており、自然な配置です。
+- **コメントの位置**: 規模の既定から 2 件を足した理由は、成果物の並びの先頭にあります。`brief` のアンカーの説明はその定義の直前、`rulebook` が `not-needed` の理由と書かない理由はそれぞれの成果物の直前にあります。いずれも対象の近くにあります。
+
+grade の指摘 F001 は既に解消されていました。この指摘は「課題と方針」が `brief` を持たないとしていましたが、現在の版には `brief: *project_baseline_brief` があります。前回のレビュー段で足されたとみられます。ただし、コメントの「定義系の成果物すべて」の書き方が正確かという読みやすさの問題は残ります。管理文書の用語集と自動生成の定義サマリーは `brief` を持たないためです。これは観点 `vp-ux-readability` に当たるので、R3 に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成の確認では、dct-sample.yaml に章の移動・分割・統合の必要はなく、ファイルは変更していない。先頭のキーの順、グループ構成、成果物の各項目の順、成果物の並びは rulebook の本文構成と template に合う。F001 は課題と方針に brief が既にあり解消済み。残る書き方の問題は R3 に任せる。","handoff":["R2-1: R2 / groups[0].deliverables（成果物の並び） / 作業成果物 5 件の並びが template の相対順と依存の順（概要→スコープ→成功基準・前提制約→課題と方針）に合い、template にない管理文書（prj-glossary）と自動生成文書（prj-definition-summary）を種別ごとに後ろへまとめている。前提から結論の順に読める / - / vp-arc-document-structure（dct-rulebook の本文構成、dct-project-definition-template.yaml の成果物の順と照合） / -","R2-2: R2 / ファイル先頭のキーと deliverables[] の各項目 / ファイル先頭のキーの順が rulebook の推奨メタ項目の表と同じで、全 7 件の項目も rulebook の成果物の項目表と同じ順（local_id, name, kind, depends_on, overview, brief, path, rulebook, done_criteria, note）。脱落や順の逆転はない / - / vp-arc-document-structure、vp-qe-omissions-consistency / -","R2-3: R2 / prj-overview の brief のアンカーのコメント（30 行目） / grade の F001 は課題と方針（prj-issues-and-approach）に brief がないとしたが、現在の版には brief: *project_baseline_brief があり解消済み。管理文書の用語集と自動生成の定義サマリーが brief を持たないため、「定義系の成果物すべて」という書き方の正確さが残るが、観点 vp-ux-readability に当たるので R3 に任せる / - / F001（vp-ux-readability は R3 の観点。R2 では構成上の欠落がないことだけを確かめた） / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/specdojo/samples/dct-sample.yaml","status":"not_applicable","summary":"sample を変更していない","reason":"YAML ファイルを変更していないため、変更した *.yaml を求める適用条件を満たさない"}]}
+</specdojo_executor_evidence>

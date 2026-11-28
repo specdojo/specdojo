@@ -1,0 +1,197 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a24b999a9675495aaa1e2b691e01d233
+  ts: "2026-11-22T23:45:21Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard の生成で run の記録を項目ごとに全走査しない
+    - field: description
+      from: ""
+      to: findRunRecord が記録の置き場のない項目で execution/runs/ を全部たどり、dashboard build 42 秒のうち約 33 秒を使う。1 回の生成で一覧を 1 回だけ読む
+    - field: input
+      from: ""
+      to: '["docs:dev の起動を速くする（利用者の依頼、2026-11-23）。devcontainer を作り直した後の 2 回目の起動で 58.4 秒だった"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BBTW"]'
+    - field: commit_type
+      from: ""
+      to: perf
+    - field: commit_scope
+      from: ""
+      to: dashboard
+- v: 1
+  id: reg_499a0b363e034d4397d791e2cab5d62d
+  ts: "2026-11-22T23:45:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_a24b999a9675495aaa1e2b691e01d233
+- v: 1
+  id: reg_cd0ef824369840ca93d1eb7e63ea7147
+  ts: "2026-11-23T00:12:47Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_499a0b363e034d4397d791e2cab5d62d
+- v: 1
+  id: reg_0a901899a4844675a7bbb6f29af112a8
+  ts: "2026-11-23T00:16:08Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
+  previous_event_id: reg_cd0ef824369840ca93d1eb7e63ea7147
+- v: 1
+  id: reg_01a5c7e0c7fd4a8db82f4637fd47c48a
+  ts: "2026-11-23T01:01:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: 比較と測りを orchestrator が行い、2 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_0a901899a4844675a7bbb6f29af112a8
+- v: 1
+  id: reg_8eca94fcfb7c45db93024a7e98d87792
+  ts: "2026-11-23T01:03:05Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
+      to: "-"
+  previous_event_id: reg_01a5c7e0c7fd4a8db82f4637fd47c48a
+- v: 1
+  id: reg_190d5d6ae7cf44c5bbd343df052c6045
+  ts: "2026-11-23T01:07:56Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_8eca94fcfb7c45db93024a7e98d87792
+- v: 1
+  id: reg_4e89adb3c4a741a09726467d4a3640c0
+  ts: "2026-11-23T01:12:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: 親の検証で落ちた test-unit の原因を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_190d5d6ae7cf44c5bbd343df052c6045
+- v: 1
+  id: reg_4af2f8f52a7d4bb08c3b3335bcc9836d
+  ts: "2026-11-23T01:13:00Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_4e89adb3c4a741a09726467d4a3640c0
+- v: 1
+  id: reg_094eb7c02f7e430899aebad168ed331d
+  ts: "2026-11-23T01:17:09Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4af2f8f52a7d4bb08c3b3335bcc9836d
+- v: 1
+  id: reg_1a9327b2c843480999e71e2a8a92917e
+  ts: "2026-11-23T01:18:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・対応結果・orchestrator の比較と測りで確かめ、run-records のテストを 5 回続けて通した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: dashboard の 1 回の生成で run の記録の一覧を 1 回だけ読む RunRecordIndex を足し、started_at を日付の値でも文字列でも時刻として扱うようにした。本体のデータで dashboard build が 52.2 秒から 13 秒になり、生成物は生成時刻の行を除いて同じだった
+  previous_event_id: reg_094eb7c02f7e430899aebad168ed331d

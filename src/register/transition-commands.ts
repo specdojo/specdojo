@@ -58,6 +58,18 @@ export function registerTransitionCommands(
       if (targetStatus !== "done" && targetStatus !== "decided") {
         throw new Error(`--status must be "done" or "decided" for the close command`);
       }
+      if (item.type === "note") {
+        if (targetStatus !== "done") {
+          throw new Error(`Cannot close ${item.id}: item type "note" only allows "done" for close`);
+        }
+        const conclusion = opts.conclusion?.trim();
+        if (!conclusion || conclusion === CELL_NONE) {
+          throw new Error(
+            `Cannot close ${item.id}: --conclusion is required for item type "note". ` +
+              `Describe where the note was moved or why it became obsolete.`,
+          );
+        }
+      }
 
       const completedAt =
         parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE) ?? nowUtcTimestamp();

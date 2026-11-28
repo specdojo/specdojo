@@ -1,5 +1,4 @@
 import { type Command } from "commander";
-import { existsSync, readFileSync } from "node:fs";
 import { relative, sep } from "node:path";
 import { setImmediate } from "node:timers/promises";
 import { CrossProcessMutex } from "../shared/cross-process-lock.js";
@@ -11,6 +10,9 @@ import {
   stageCommitTargets,
   unstageCommitTargets,
   worktreeStatusPaths,
+  GitCommandError,
+  formatGitCommandFailure,
+  describeGitProcessFailure,
 } from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
@@ -34,20 +36,13 @@ import { normalizeRegisterTimestamp } from "./date.js";
 import { validateRegisterDependencyDocs } from "./dependency.js";
 import { validateDerivedFromDocs } from "./derivation.js";
 import {
-  appendRegisterEvent,
   deterministicRegisterEventId,
-  readEmbeddedRegisterEvents,
-  readRegisterEventsFromContent,
   registerEventFilePath,
-  removeEmbeddedRegisterEvents,
-  serializeRegisterEvents,
   validateRegisterEventDocs,
   type RegisterEventAction,
   type RegisterEventV1,
 } from "./events.js";
-import { collectRegisterHistoryEvents } from "./history.js";
 import {
-  loadRegisterItemDocs,
   PJR_ID_ALPHABET,
   PJR_ID_RE,
   TERMINAL_STATUSES_SET,
@@ -68,7 +63,7 @@ import {
   type RegisterDifficulty,
 } from "./item.js";
 import { registerMaintenanceCommands } from "./maintenance-commands.js";
-import { applyRegisterMigrationPlan, planRegisterMigration } from "./migration.js";
+import { registerBranchCommands } from "./branch-commands.js";
 import {
   planRenumber,
   planRetopic,
@@ -91,7 +86,15 @@ import {
 } from "./views.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { registerLifecyclePoolPath } from "./lifecycle-lock.js";
+import { ensureSyncWorktreeRegisterIndexes } from "./sync-worktree-index.js";
 import { inCrossProjectWorktree, resolveCrossProjectMutationTarget } from "./cross-project.js";
+import {
+  assertRegisterBranchPaths,
+  inRegisterBranch,
+  pushRegisterBranch,
+  resolveRegisterBranchTarget,
+  type RegisterBranchTarget,
+} from "../shared/register-branch.js";
 
 export {
   PJR_ID_ALPHABET,
@@ -126,12 +129,6 @@ export {
   type TableHeading,
   type TicketStatus,
 } from "./core.js";
-export {
-  applyRegisterMigrationPlan,
-  planRegisterMigration,
-  type RegisterMigrationFile,
-  type RegisterMigrationPlan,
-} from "./migration.js";
 export {
   findItemById,
   findRegisterItem,
@@ -268,12 +265,12 @@ function addRegisterCommitOptions(cmd: Command): Command {
   return cmd
     .option(
       "--commit",
-      "Take the register lifecycle lock, rebuild views, and commit only this command's changes",
+      "Lock, rebuild views, and commit this command's changes; push when register_sync is enabled",
       false,
     )
     .option(
       "-m, --message <message>",
-      "Override the register commit message (repeatable; each value becomes a paragraph, as in git commit -m)",
+      "Override the register commit message (repeatable; each value becomes a paragraph, as in git commit -m; {id} becomes the actual item ID)",
       collectRegisterCommitMessage,
     );
 }
@@ -284,19 +281,42 @@ function collectRegisterCommitMessage(value: string, previous: string[] | undefi
   return [...(previous ?? []), value];
 }
 
-// git commit -m と同じく、空でない各値を段落として空行でつなぐ。
+// 本文の `{id}` を、実際に起票・更新した項目 ID へ置き換える記号。dry-run の ID は仮で、
+// 起票のたびに乱数で振り直されるため、`Refs:` へ仮の ID を書き写さずに済ませる（PJR-V8ND）。
+export const REGISTER_COMMIT_ID_PLACEHOLDER = "{id}";
+
+// git commit -m と同じく、空でない各値を段落として空行でつなぐ。`id` があれば `{id}` を置き換える。
 export function registerCommitMessageFromParagraphs(
   paragraphs: readonly string[] | undefined,
+  id?: string,
 ): string | undefined {
-  const text = (paragraphs ?? [])
+  const joined = (paragraphs ?? [])
     .map((paragraph) => paragraph.trim())
     .filter((paragraph) => paragraph !== "")
     .join("\n\n");
+  const text = id === undefined ? joined : joined.split(REGISTER_COMMIT_ID_PLACEHOLDER).join(id);
   return text === "" ? undefined : text;
 }
 
 const REGISTER_COMMIT_SUBJECT_MAX_LENGTH = 100;
 const REGISTER_COMMIT_STABILIZATION_ATTEMPTS = 3;
+
+// 失敗の commit で gitOutput が投げる GitCommandError は stderr のみ公開し、commitlint 等が stdout
+// へ出す理由を取りこぼす。gitResult を直接使い stdout と stderr の両方を formatGitCommandFailure
+// （内部で要約）に渡し、原因を含む GitCommandError を投げるローカルラッパー。成功時は文字を返す。
+function gitOutputCapturingFailure(repoRoot: string, args: string[]): string {
+  const result = gitResult(repoRoot, args);
+  if (result.status !== 0 || result.error) {
+    const stdout = typeof result.stdout === "string" ? result.stdout : "";
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    throw new GitCommandError(
+      formatGitCommandFailure(args, `${stdout}\n${stderr}`, describeGitProcessFailure(result)),
+      args,
+      `${stdout}\n${stderr}`,
+    );
+  }
+  return typeof result.stdout === "string" ? result.stdout : "";
+}
 
 function defaultRegisterCommitMessage(command: string, result: RegisterMutationResult): string {
   const prefix = `docs(register ${result.id}): ${command} `;
@@ -387,9 +407,17 @@ async function commitRegisterMutation(
     if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
     const commitMessage =
-      registerCommitMessageFromParagraphs(message) ?? defaultRegisterCommitMessage(command, result);
+      registerCommitMessageFromParagraphs(message, result.id) ??
+      defaultRegisterCommitMessage(command, result);
     // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
-    gitOutput(repoRoot, ["commit", "--only", "-m", commitMessage, "--", ...changed]);
+    gitOutputCapturingFailure(repoRoot, [
+      "commit",
+      "--only",
+      "-m",
+      commitMessage,
+      "--",
+      ...changed,
+    ]);
     committed = true;
     // hook の整形は一時 index にだけ入る。HEAD と一致した対象を index でも HEAD へ戻し、
     // 整形前の内容を staged のまま残さない（PJR-Y3XS）。
@@ -425,8 +453,10 @@ async function commitRegisterMutation(
     unstageCommitTargets(repoRoot, changed);
     await setImmediate();
     if (committed) throw error;
-    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
+    // gitOutputCapturingFailure は commitlint 等が stdout へ出す理由を stderr と併せて
+    // GitCommandError.message に含めるため、そのまま原因として使える。
     const cause = error instanceof Error ? error.message : String(error);
+    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
     throw new Error(
       `Register commit failed for ${result.id}: ${cause}\n` +
         `The register changes were written but not committed:\n` +
@@ -444,6 +474,31 @@ export async function runRegisterMutationInCurrentWorktree(
   opts: RegisterMutationOptions,
   mutate: (context: RegisterMutationContext) => RegisterMutationResult,
   requireCleanRegister = false,
+): Promise<void> {
+  const target =
+    opts.commit && !opts.dryRun
+      ? resolveRegisterBranchTarget(resolveRegisterPaths(opts).projectId)
+      : undefined;
+  if (!target) return runRegisterMutationLocally(command, opts, mutate, requireCleanRegister);
+  await inRegisterBranch(target, async (worktree) => {
+    const originalDirectory = process.cwd();
+    try {
+      process.chdir(worktree);
+      ensureSyncWorktreeRegisterIndexes(worktree);
+      await runRegisterMutationLocally(command, opts, mutate, true, target);
+      pushRegisterBranch(target, worktree);
+    } finally {
+      process.chdir(originalDirectory);
+    }
+  });
+}
+
+async function runRegisterMutationLocally(
+  command: string,
+  opts: RegisterMutationOptions,
+  mutate: (context: RegisterMutationContext) => RegisterMutationResult,
+  requireCleanRegister: boolean,
+  syncTarget?: RegisterBranchTarget,
 ): Promise<void> {
   const paths = resolveRegisterPaths(opts);
   if (!opts.commit || opts.dryRun) {
@@ -487,6 +542,7 @@ export async function runRegisterMutationInCurrentWorktree(
     // an ownership boundary for this commit.
     const assertCommitTargetsClean = (targets: readonly string[]): void => {
       const relativeTargets = targets.map((target) => repoRelative(repoRoot, target));
+      if (syncTarget) assertRegisterBranchPaths(syncTarget, relativeTargets);
       const overlapping = relativeTargets.filter((target) => preexisting.has(target));
       if (overlapping.length === 0) {
         relativeTargets.forEach((target) => commitTargets.add(target));
@@ -650,93 +706,6 @@ export function legacyHistoryEventToRegisterEvent(
   };
 }
 
-function migrateEmbeddedRegisterEvents(
-  paths: RegisterPaths,
-  dryRun: boolean,
-): { items: number; events: number } {
-  let itemCount = 0;
-  let eventCount = 0;
-  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    const ticketContent = readFileSync(doc.path, "utf8");
-    const embedded = readEmbeddedRegisterEvents(ticketContent, doc.filename);
-    if (embedded.length === 0) continue;
-    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
-    if (existsSync(eventPath)) {
-      const existing = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
-      if (JSON.stringify(existing) !== JSON.stringify(embedded)) {
-        throw new Error(`${doc.filename}: embedded and external register events differ`);
-      }
-    }
-    if (!dryRun) {
-      atomicWriteFile(eventPath, serializeRegisterEvents(embedded));
-      atomicWriteFile(doc.path, removeEmbeddedRegisterEvents(ticketContent));
-    }
-    itemCount++;
-    eventCount += embedded.length;
-  }
-  return { items: itemCount, events: eventCount };
-}
-
-function migrateRegisterEventsFromGit(
-  paths: RegisterPaths,
-  dryRun: boolean,
-): { items: number; events: number; skipped: number; available: boolean } {
-  let history: ReturnType<typeof collectRegisterHistoryEvents>;
-  try {
-    history = collectRegisterHistoryEvents({
-      repoRoot: specdojoRootDir(),
-      registerPathspec: repoRelativePathspec(specdojoRootDir(), paths.projectRegisterPath),
-      timeZone: paths.registerDateTimeZone,
-    });
-  } catch {
-    return { items: 0, events: 0, skipped: 0, available: false };
-  }
-
-  const byId = new Map<string, typeof history>();
-  for (const event of history) {
-    if (event.source === "event" || event.kind === "removed") continue;
-    const entries = byId.get(event.id) ?? [];
-    entries.push(event);
-    byId.set(event.id, entries);
-  }
-
-  let itemCount = 0;
-  let eventCount = 0;
-  let skipped = 0;
-  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
-    const ticketContent = readFileSync(doc.path, "utf8");
-    if (
-      existsSync(eventPath) ||
-      (dryRun && readEmbeddedRegisterEvents(ticketContent, doc.filename).length > 0)
-    ) {
-      skipped++;
-      continue;
-    }
-    const legacyEvents = byId.get(doc.id) ?? [];
-    if (legacyEvents.length === 0) continue;
-
-    let currentStatus: string | null = null;
-    let appended = 0;
-    let eventContent: string | undefined;
-    for (const historyEvent of legacyEvents) {
-      const event = legacyHistoryEventToRegisterEvent(historyEvent, {
-        isFirst: appended === 0,
-        currentStatus,
-        fallbackStatus: doc.item.status,
-      });
-      eventContent = appendRegisterEvent(eventContent, event);
-      currentStatus = event.to_status;
-      appended++;
-    }
-    if (appended === 0) continue;
-    if (!dryRun && eventContent) atomicWriteFile(eventPath, eventContent);
-    itemCount++;
-    eventCount += appended;
-  }
-  return { items: itemCount, events: eventCount, skipped, available: true };
-}
-
 // ================================
 // Command Registration
 // ================================
@@ -747,7 +716,6 @@ const REGISTER_COMMAND_DEPENDENCIES: RegisterCommandDependencies = {
   addProjectOption,
   addRegisterCommitOptions,
   applyItemUpdate,
-  applyRegisterMigrationPlan,
   assertRegisterItemCommitTargetsClean,
   assertTerminalOperationAllowed,
   atomicWriteFile,
@@ -756,12 +724,9 @@ const REGISTER_COMMAND_DEPENDENCIES: RegisterCommandDependencies = {
   generateDerivedViewFiles,
   loadItemForUpdate,
   loadRegisterItems,
-  migrateEmbeddedRegisterEvents,
-  migrateRegisterEventsFromGit,
   parseHistoryIds,
   parseRegisterTimestampOption,
   planRegisterItem,
-  planRegisterMigration,
   planRenumber,
   planRetopic,
   printCommandError,
@@ -784,4 +749,5 @@ export function registerRegisterCommands(program: Command): void {
   registerTransitionCommands(reg, REGISTER_COMMAND_DEPENDENCIES);
   registerUpdateCommand(reg, REGISTER_COMMAND_DEPENDENCIES);
   registerMaintenanceCommands(reg, REGISTER_COMMAND_DEPENDENCIES);
+  registerBranchCommands(reg, REGISTER_COMMAND_DEPENDENCIES);
 }

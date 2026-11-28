@@ -220,17 +220,17 @@ describe("normalizeAgentLimit の解除時刻（PJR-NJ6J）", () => {
     expect(actual.resume_at).toBe(new Date(2026, 9, 18, 12, 15, 0).toISOString());
   });
 
-  it("agy の相対の Resets in を観測時刻からの経過で読む", () => {
+  it("相対の Resets in を観測時刻からの経過で読む", () => {
     const observedAt = new Date("2026-10-18T10:00:00.000Z");
 
     const short = normalizeAgentLimit({
-      provider: "antigravity",
+      provider: "custom",
       output:
         "error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 4h36m50s.",
       observedAt,
     });
     const long = normalizeAgentLimit({
-      provider: "antigravity",
+      provider: "custom",
       output: "Individual quota reached. Resets in 85h46m36s.",
       observedAt,
     });
@@ -291,5 +291,21 @@ describe("decidePinnedWait", () => {
     const actual = decidePinnedWait(limitAt("60"), new Date("2026-10-18T10:05:00.000Z"), 28_800);
 
     expect(actual).toMatchObject({ action: "skip", reason: "past" });
+  });
+});
+
+describe("normalizeAgentLimit with the claude 5-hour limit", () => {
+  it("classifies the notice as a session limit with the provider reset time", () => {
+    const actual = normalizeAgentLimit({
+      output: "You've hit your 5-hour limit · resets 2:20am (Asia/Tokyo)\n",
+      provider: "claude",
+      observedAt: new Date("2026-11-25T16:25:00Z"),
+    });
+
+    expect(actual).toMatchObject({
+      kind: "session_limit",
+      resume_at: "2026-11-25T17:20:00.000Z",
+      resume_source: "provider_reset",
+    });
   });
 });

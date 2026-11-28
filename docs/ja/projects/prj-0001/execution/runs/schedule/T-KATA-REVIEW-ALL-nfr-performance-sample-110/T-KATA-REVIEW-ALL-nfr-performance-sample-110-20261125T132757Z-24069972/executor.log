@@ -1,0 +1,36 @@
+R1 の観点で確認しましたが、sample に直す箇所はなかったため、ファイルは変更していません。
+
+**R1 で読んだもの**
+- 対象の sample `docs/ja/specdojo/samples/nfr-performance-sample.md`
+- rulebook `specdojo:nfr-performance-rulebook`
+- Sample 記述標準
+- 成果物カタログの `nfr-performance` の `done_criteria`
+
+**R1 の判断**
+- **欠けている内容:** なし。
+  - 「本文要件」の6章（未決事項を含む）が、決められた順にそろっています。
+  - 概要には、対象処理と遅延したときの業務影響があり、基準値の厳しさの理由も説明されています。
+  - 負荷条件には、平常時・ピーク時・閉店後の時間帯、同時操作数、処理件数、データ量、根拠があります。根拠のない値には `_ASSUMPTION_` が付いています。
+  - 外部依存（通信回線・印字・ホスティング）を計測に含めるかどうかも書かれています。
+  - 要件一覧には指標・単位・比較方向と負荷条件があり、P95/P99 で評価しています。
+  - 測定方法には、環境・回数・判定時期があります。
+  - 導線は「位置づけ」の必須文書（`nfr-index`・`sac-*`・`stc-*`・`opd-*`）をすべて押さえています。
+  - 未決事項には、当面の扱いと、決まったときに直す要件ID があります。
+- **要らない内容:** なし。各章が rulebook の目的と、`done_criteria` の技術制約・試験基準に直接つながっています。役割の割り当て、承認の進み具合、実装の詳細、人物名も書かれていません。
+
+**F001 は R1 では扱わず、R4 に回しました**
+F001 の観点 `vp-qe-verifiability` は、kata-guide で R4 の観点とされているためです。
+
+ただ R4 で直すべき点があります。`nfr-perf-002`・`nfr-perf-004` の当面の扱いは「値を記録するだけ」ですが、「測定・検証方法」の章末の文は「基準が `_UNDECIDED_` の間は暫定の判定で pass / fail を決め」と言い切っており、この2つと食い違っています。
+
+**rulebook 側の直す案（sample の外なので変更していません）**
+- 「記述ガイド」の測定・検証方法の項は、表に「合格条件」を含めるよう求めています。
+- 一方「本文要件」の表では、第4章の内容に合格条件が入っていません。
+- どちらかに揃える必要があります。
+
+**検証**
+ファイルを変更していないので、sandbox で走らせる検証はありません。lint 系の検証は runner 側で実行されます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 (purpose fit) review of nfr-performance-sample found nothing missing and nothing unneeded against the rulebook purpose, the Sample Authoring Standard, or the done_criteria; no edits made to the sample. F001 (vp-qe-verifiability) is an R4 viewpoint and is left to R4.","handoff":["No: 1 / 段: R1 / 箇所: 全体（`docs/ja/specdojo/samples/nfr-performance-sample.md`） / 指摘: rulebook の「本文要件」6章（概要、適用範囲・負荷条件、性能要件一覧、測定・検証方法、関連ドキュメント導線、未決事項）と、記述ガイドが各章に求める項目（業務影響、時間帯・同時操作数・処理件数・データ量とその根拠、外部依存の扱い、P95/P99 と単位・比較方向、測定環境・回数・判定時期、位置づけの必須導線、当面の扱いと直す要件ID）はすべてそろっている。要らない内容（役割の割り当て、承認の進み具合、実装の詳細、人物名、rulebook の丸写し）もない / 直した案: 変更なし / 根拠: `specdojo:nfr-performance-rulebook` の「本文要件」「記述ガイド」「禁止事項」、`specdojo:sample-authoring-standard` の「記述ガイド」「禁止事項」、dct-non-functional-requirements-template.yaml にある `nfr-performance` の `done_criteria`（技術制約・試験基準） / 印: なし","No: 2 / 段: R1（R4 へ申し送り） / 箇所: 性能要件一覧の `nfr-perf-002`・`nfr-perf-004` の行と、測定・検証方法の章末の段落 / 指摘: grade の F001（`vp-qe-verifiability`）は kata-guide で R4 の観点なので、R1 では直さない。ただし、2つの要件の当面の扱い「値を記録するだけ」と、章末の文「基準が `_UNDECIDED_` の間は暫定の判定で pass / fail を決め」が食い違っている / 直した案: R4 で、章末の文に「暫定の判定がない要件（`nfr-perf-002`・`nfr-perf-004`）は、基準が決まるまで未判定とし、測った値を記録する」を足すか、暫定の閾値を置く / 根拠: rulebook の「記述ガイド」の性能要件一覧（基準だけで pass / fail を一意に判定できること）と未決事項（推測で確定しない） / 印: 要判断","No: 3 / 段: R1 / 箇所: rulebook `docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md` の「本文要件」と「記述ガイド」の測定・検証方法の項 / 指摘: 記述ガイドは測定・検証方法の表に「合格条件」を含めるよう求めるが、本文要件の表では第4章の内容に合格条件が入っておらず、rulebook の中で食い違っている。sample は合格条件を章末の文で示し、表の列にはしていない / 直した案: rulebook の本文要件の第4章の内容に「合格条件（基準の参照）」を足すか、記述ガイドから表に含める指示を外す。sample の外なので変更していない / 根拠: rulebook の「本文要件」の表と「記述ガイド」の測定・検証方法の項 / 印: 要判断"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"No plan, result, or ticket history file was changed in this task"}]}
+</specdojo_executor_evidence>

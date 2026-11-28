@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "queue_id": "resume4-tjzm-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T03:27:39.977Z",
+  "updated_at": "2026-11-23T03:43:23.585Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-TJZM",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--resume-note",
+        "register-pipeline-e2e.integration.test.tsで足したdry-runの期待値は、下線を含むタイトルを期待しているが、fixtureのPJR-AB12のタイトルには下線がないため落ちている。コードの直し（unescapeMarkdownCell）は正しいので変えない。fixtureに下線を含むタイトルの項目を用意して、下線がエスケープされずに出ることを確かめるテストにする。test:integrationの該当のファイルを流して通ることを確かめてから報告する。",
+        "--executor-by",
+        "sonnet-executor",
+        "--fallback-executor-by",
+        "opus-executor",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T03:27:40.275Z",
+      "completed_at": "2026-11-23T03:43:23.582Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

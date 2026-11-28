@@ -120,7 +120,7 @@ members:
     priority: 10
 ```
 
-モデルを持つ実体の `nickname` は、モデルの版を含めず、モデルの系統と役割で付けます（例: `opus-executor`・`sol-review-executor`）。版は `model` に記録します。同じモデル系統を既定でない provider から使う場合は、`agy-opus-executor` のように provider 名を前に付けます。従来名など実体を指す名前はトップレベルの `aliases` に置き、`alias_of` で実体または別の alias を指します。
+モデルを持つ実体の `nickname` は、モデルの版を含めず、モデルの系統と役割で付けます（例: `opus-executor`・`sol-review-executor`）。版は `model` に記録します。同じモデル系統を既定でない provider から使う場合は、`copilot-opus-executor` のように provider 名を前に付けます。従来名など実体を指す名前はトップレベルの `aliases` に置き、`alias_of` で実体または別の alias を指します。
 
 ```yaml
 members:
@@ -382,6 +382,46 @@ pipeline:
     - { id: test-unit, paths: ["{src,tests,tools}/**", "docs/ja/specdojo/**", "vitest.config.*"] }
 ```
 
+要素に `parallel: true` を書くと、直前・直後の `parallel: true` の要素と同時に流します（PJR-50RQ）。書かない要素は従来どおり 1 本ずつ、設定の並び順で流します。結果は設定の並び順で記録します。lint のような軽い検証だけに使い、vitest を使う test の検証には付けません。
+
+文書だけを変えた run の検証は、次の ID で軽くできます（PJR-50RQ）。
+
+- `lint-md-changed`（`npm run lint:md:changed`）と `lint-fm-changed`（`npm run lint:fm:changed`）は、作業ツリーで変えた Markdown だけに lint を流します。範囲は統合の commit の hook と同じです。変更が無ければ何もせず成功します。設定や lint の規則のファイルを変えた run では、`paths` を付けた全体の `lint-md` / `lint-fm` も併せて流します。
+- `test-docs`（`npm run test:docs`）は、`docs/ja/specdojo/**`・`docs/specdojo/**` の実際の文書を読むテストだけを流します。`test-unit` と `test-integration` の `paths` から文書を外し、文書だけの変更ではこの検証を流します。
+
+```yaml
+pipeline:
+  parent_validations:
+    - { id: lint-md-changed, parallel: true }
+    - { id: lint-fm-changed, parallel: true }
+    - { id: lint-md, paths: ["packages/docs-lint/**", ".markdownlint*"], parallel: true }
+    - { id: test-docs, paths: ["docs/ja/specdojo/**", "docs/specdojo/**"] }
+```
+
+`test-unit` と `test-integration` の要素に `related: true` を書くと、変更したファイルに関係するテストのファイルだけを流します（PJR-9X52）。書かなければ今までどおり全件を流します。親 runner は `tests/` 配下の各テストから相対 import と、テストが子プロセスで起動するファイル（`src/specdojo.ts` など。`dist/<name>.js` は `src/<name>.ts` とみなす）を辿り、変更したファイルに依存するテストのファイルを固定の npm script の `--` の後ろへ渡します。見逃しを避けるため、次の場合は全件を流します。
+
+- 変更一覧が無い、または evidence の上限で切れた場合。
+- 関係するテストが 1 つも見つからない場合。
+- テストの基盤や設定を変えた場合（`vitest.*`・`tests/helpers/**`・`tests/setup/**`・`tests/fixtures/**`・`package.json`・`package-lock.json`・`tsconfig*.json`・`lefthook.yml`・`.specdojo/**`・`docs/specdojo/**`）。
+- `src/`・`tests/`・`tools/`・`packages/`・`scripts/` 配下でコード以外のファイル（YAML・snapshot など）を変えた場合。
+
+選んだ結果は、その検証の evidence の `test_selection` に残ります。`mode`（`related` か `full`）、`reason`（絞った・戻した理由と、どのテストにも依存されない変更したファイル）、`selected_tests`（流したテスト）、`omitted_tests`（流さなかったテスト）です。`summary` の先頭にも `related tests only (...)` または `full run (...)` を付けます。絞って `passed` になった検証も `commit_hook_skips` の `covered_by` を満たすため、統合の commit の全件の hook（`npm test` など）も流れません。
+
+```yaml
+pipeline:
+  parent_validations:
+    - {
+        id: test-integration,
+        paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*"],
+        related: true,
+      }
+```
+
+`related: true` は統合の前の確認を速くするためのもので、全件の代わりにはなりません。全件は次の時機に流します。
+
+- 夜間: 統合先の checkout で `npm run test:integration`（単体テストも含めるなら `npm test`）を流します。routine や cron など、run の外の定期の実行に載せます。
+- リリースの前: `npm run check:release` で全件を流します。手順は [exec運用ガイド](exec-operation-guide.md) を参照してください。
+
 `pipeline.commit_hook_skips` は、runner の統合の commit で流し直さない Git hook（lefthook のコマンド名）を宣言します。`covered_by` に並べた親の検証がその run ですべて `passed` のときだけ、commit を `LEFTHOOK_EXCLUDE` 付きで実行します。`not_applicable` や失敗した検証は代わりにならないため、その場合は hook を流します。人が手で commit するときの hook は変わりません。
 
 ```yaml
@@ -417,6 +457,7 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
 - `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。register の worktree 実行では、`--join` で合流した run を跨いで数えます。
+- `agent_timeout_seconds`: その provider の agent の CLI を 1 回起動してから終わるまでの時間の上限（秒、1〜2147483 の整数）。未指定なら上限はなく、CLI が終わるまで待ちます。範囲外や整数でない値は起動前にエラーで止めます。
 
 `{nickname}` のような `{lower_snake}` は実行のたびに展開される実行時変数であり、ファイルに記法のまま残った状態が完成形です。テンプレート成果物の記入プレースホルダ `_UPPER_SNAKE_`（一度埋めたら消える）とは別の記法で、使い分けは [Template 記述標準](../standards/template-authoring-standard.md) の `他のプレースホルダ記法との使い分け` を正本とします。
 
@@ -437,16 +478,8 @@ providers:
         normal: { effort: medium }
         expert: { effort: high }
         frontier: { effort: xhigh }
-
-  antigravity: # 0.9.2 から使えない（agy を起動しない）
-    command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
-    # model を持たない従来の 1 段の member だけが、次の model を使う
-    command_params:
-      by_proficiency:
-        normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.8-flash-high }
       by_nickname:
-        agy-claude-expert-executor: { model: claude-opus-5-5-high }
+        sol-review-executor: { effort: xhigh }
 ```
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
@@ -461,6 +494,65 @@ providers:
     # opencode は現在実行中の数を同時 1 つに制限する（他 provider は --parallel のまま並列）。
     max_concurrency: 1
 ```
+
+`agent_timeout_seconds` は、固まった agent が run と実行枠を占め続けるのを防ぎます。上限を設定した provider の CLI は、runner が専用のプロセスグループで起動します。上限に達すると、そのグループへ SIGTERM を送り、10 秒後もプロセスが残れば SIGKILL を送ります。CLI が起動した孫のプロセスも同じグループに入るため、残りません。止めた後は rate limit・接続エラーの検出に掛けず、別の agent への切り替えや再試行もしません。run は block になり、理由に `agent timed out after <秒>s (providers.<provider>.agent_timeout_seconds)` が残ります。対象は executor・reporter・in-place・Job の agent の起動です。上限を設定しない provider は従来どおり、runner と同じプロセスグループで起動します。
+
+```yaml
+providers:
+  claude:
+    # 1 回の起動が 2 時間を超えたら止めて block にする。
+    agent_timeout_seconds: 7200
+```
+
+### 5.2. 見張りの手当て
+
+`watch` は、`orchestrator watch-scan` が分けた止まりの種類ごとに打つ手当てを選びます。どの手当ても既定は `none` で、`watch` を書かなければ見張りは記録と報告だけを行います。判断が要るもの・中断・分けられなかったものには、設定に関係なく手を打ちません。手当ての動きと記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行に手当てを打つ」を正本とします。
+
+```yaml
+watch:
+  remedies:
+    usage_limit:
+      action: wait # none | wait | fallback
+      fallback_executor_by: sonnet-executor
+      fallback_reporter_by: sonnet-reporter
+      switch_after: 12h # 解除がこれより先なら代わりの agent へ替える
+      unknown_resume_wait: 1h # 解除の時刻が読めないときに待つ時間
+    load_timeout:
+      action: rerun # none | rerun
+    needs_target_sync:
+      action: sync # none | sync
+  max_attempts: 3
+  attempt_window: 24h
+```
+
+| キー                                       | 内容                                                                                                                    |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `remedies.usage_limit.action`              | `wait` は解除の時刻を過ぎてから同じ agent で再開する。`fallback` はすぐに代わりの agent で流し直す                      |
+| `remedies.usage_limit.fallback_*_by`       | 代わりの executor・reporter の nickname。`fallback` では少なくとも一方が要る。`wait` で書くと、長い上限のときだけ替える |
+| `remedies.usage_limit.switch_after`        | `wait` で解除の時刻がこれより先なら、claim を取り消して代わりの agent で流し直す。既定 `12h`                            |
+| `remedies.usage_limit.unknown_resume_wait` | 解除の時刻が読めないとき、止まった時刻からこれだけ待つ。既定 `1h`                                                       |
+| `remedies.load_timeout.action`             | `rerun` は止まった段から再開し、失敗した親の検証を流し直す                                                              |
+| `remedies.needs_target_sync.action`        | `sync` は worktree を統合先に同期してから再開する                                                                       |
+| `max_attempts`                             | 同じ対象に `attempt_window` の間に打つ手当ての上限。達したら手当てを止める。既定 `3`                                    |
+| `attempt_window`                           | 回数を数える期間。既定 `24h`                                                                                            |
+
+期間は `<正の整数><m|h|d>` で書きます。不正な値は `exec run` などが exec-defaults を読む時点でエラーになります。
+
+### 5.3. 判断が要る止まりの診断
+
+`watch.diagnosis.by` に読み取り専用の診断用 member（`mode: review`）を指定すると、`needs_decision` の止まりについて診断と次の手の案を依頼します。省略時は起動しません。起動コマンドは通常の名簿と provider の `command_template`・`command_params`（または member の `command`）から解決します。
+
+```yaml
+watch:
+  diagnosis:
+    by: watch-diagnoser
+    max_per_night: 3
+    timeout_seconds: 300
+```
+
+`max_per_night` は 1〜100（既定 3）、`timeout_seconds` は 1〜3600 秒（既定 300）です。1 晩は登録簿の日付の時間帯の正午から翌正午までとし、夜中の日付変更では回数を戻しません。失敗・時間切れ・中断も 1 回と数えます。同じ止まりの鍵には翌晩も再依頼しませんが、初回の見張りが中断した場合に限り、上限内で 1 回だけ再診断します。再診断も起動した晩の上限に数えます。時刻や状態が変わった止まりは別件です。診断の動作と記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「判断が要る止まりの診断案」を参照してください。
+
+有効にする前に、診断専用 member の起動コマンドと provider 設定で読み取り専用の権限を用意してください。`mode: review` とプロンプトだけでは OS の書き込み権限は制限されません。一般の executor・reporter の書き込み許可を継がせず、shell による書き込み・状態変更、編集ツール、MCP を禁止します。agent は標準入力で渡す playbook と止まりの記録を読み、標準出力へ案を返します。朝報告への書き込みは見張りが代行するため、agent へのファイル書き込み許可は不要です。保護された設定は人が確認して適用します。
 
 ## 6. executor / reporter pipeline の構成
 
@@ -622,17 +714,16 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使います。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットします。
 
-0.9.2 から、SpecDojo は Antigravity CLI（`agy`）を起動しません。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。provider が `antigravity` の member は、名前で指定すると agent の起動前にエラーで止まり、自動選択と代わりの選択では候補から外れます。`agent launch` と `orchestrator launch` の `--provider antigravity`、`init`・`config scaffold`・`devcontainer scaffold` での `antigravity` の指定もエラーになり、止めるのを外す設定はありません。0.9.1 の `init` で antigravity を選んだ場合は、`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか削除し、ほかの provider を使ってください。以降の agy の設定の説明は 0.9.1 までの記録で、0.9.2 では使えません。
+配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`skills/` 配下 → `.<provider>/skills/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
-配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
+| provider | 配布内容                                                                                                                                              | 配置先                                 |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| claude   | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`         | `.claude/agents/`、`.specdojo/claude/` |
+| codex    | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
+| opencode | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                 | `.opencode/agents/`、`opencode.json`   |
+| copilot  | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
 
-| provider    | 配布内容                                                                                                                                                                                                                        | 配置先                                 |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`                                                                                   | `.claude/agents/`、`.specdojo/claude/` |
-| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                                                                                                        | `.codex/agents/`、`.codex/rules/`      |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                                                                                           | `.opencode/agents/`、`opencode.json`   |
-| copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット                                                                           | `.specdojo/copilot/`                   |
-| antigravity | 0.9.2 から配置できない。0.9.1 までは役割別 `settings.edit.json` / `settings.review.json` / `settings.report.json` / `settings.orchestrator.json`、orchestrator と設定スニペット。旧 `settings.global.json` は互換用途だけに使用 | `.specdojo/antigravity/`               |
+4 つの provider には、skill `specdojo-exec-in-session`（オーケストレーターが会話の中で登録簿の項目を実装する手順）も配ります。正本 `templates/agent-skills/specdojo-exec-in-session/SKILL.md` を `.agents/skills/specdojo-exec-in-session/SKILL.md` へ置きます。Codex・OpenCode・Copilot は `.agents/skills` を読むため、正本だけを置きます。Claude Code は `.claude/skills` だけを読むため、正本を読ませるラッパー `templates/claude/skills/specdojo-exec-in-session/SKILL.md` を `.claude/skills/specdojo-exec-in-session/SKILL.md` へ併せて置きます。どちらも、既にあるファイルは `--force` なしでは上書きしません。
 
 導入手順と手動設定（`.codex/config.toml` や接続先 URL の調整、Modelfile によるローカル派生タグの作成など）は各 `templates/<provider>/README.md` を参照します。
 
@@ -661,29 +752,27 @@ specdojo config scaffold --provider claude
 - 配布原本はインストール済み package のルートから解決します。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにします。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力します。`--force` 指定時のみ上書きします。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力します（既存の scaffold 系コマンドの出力形式に合わせます）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示します。
-- 0.9.2 から使えません。0.9.1 までは、`antigravity` で `--global` を明示した場合だけ、`~/.gemini/antigravity-cli/settings.json` の `permissions.allow` / `deny` / `ask` へ不足 rule を追記します。既存キーと配列要素は保持し、書き換え前に timestamp 付きバックアップを作ります。`--global --dry-run` は追加 rule の差分だけを表示し、設定もバックアップも作りません。
-- `--global` をサポートしない provider へ指定した場合はエラーにします。`--force` はグローバル設定の既存値を上書きしません。
+- `--global` は、ユーザーディレクトリ設定を持つ provider へ permission rule を追記するオプションです。0.10.0 では対応する provider がないため、指定するとリポジトリへ書き込む前にエラーにします。
 - コピー完了後、次の 2 点を案内メッセージとして出力します。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings` の指定が必要であること。
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
-- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。ユーザーディレクトリ設定も扱う provider だけは、グローバル設定原本と配置先を実装の許可リストへ明示します。
+- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。
 
 ### 7.2. agent の名簿の 2 段構成と移行
 
 `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
 
-| provider    | init が生成する実体                                                                                                   | 別名（従来の名前）                                                   | model の書き場所                                                            |
-| ----------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`                                                        | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                                  |
-| claude      | `opus-executor`・`opus-review-executor`（expert）                                                                     | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                                    |
-| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`                                                              | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）                  |
-| codex       | `sol-executor`・`sol-review-executor`（expert）                                                                       | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`）                 |
-| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`、`qwen-executor`・`qwen-review-executor`・`qwen-reporter` | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み、原則 `*-mlx-work-64k`） |
-| antigravity | 0.9.2 から生成しない。0.9.1 までは `flash-executor`・`flash-review-executor`・`flash-reporter`                        | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                                         |
-| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter`                                                     | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                                        |
+| provider | init が生成する実体                                                                                                   | 別名（従来の名前）                                                   | model の書き場所                                                            |
+| -------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| claude   | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`                                                        | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                                  |
+| claude   | `opus-executor`・`opus-review-executor`（expert）                                                                     | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                                    |
+| codex    | `luna-executor`・`luna-review-executor`・`luna-reporter`                                                              | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）                  |
+| codex    | `sol-executor`・`sol-review-executor`（expert）                                                                       | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`）                 |
+| opencode | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`、`qwen-executor`・`qwen-review-executor`・`qwen-reporter` | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み、原則 `*-mlx-work-64k`） |
+| copilot  | `copilot-executor`・`copilot-review-executor`・`copilot-reporter`                                                     | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                                        |
 
-claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode・antigravity など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
+claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
 
-init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
+init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。
 
 `gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように `proficiency: frontier` の実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。既存の起動設定には `providers.codex.command_params.by_proficiency.frontier: { effort: xhigh }` を追加します。
 
@@ -717,11 +806,42 @@ members:
 
 1 段から 2 段へ移す手順は次のとおりです。`.specdojo/` は agent が書き換えられない保護設定のため、人間（または orchestrator の承認を経た操作）が行います。
 
-1. member ごとに、使っている model の系統と役割から実体の名前を決め（`claude-expert-executor` が opus なら `opus-executor`）、`nickname` を実体の名前へ変え、`model`（版を含む ID）を加えます。同じ系統を既定でない provider から使う場合は `agy-opus-executor` のように provider 名を前に付けます。
+1. member ごとに、使っている model の系統と役割から実体の名前を決め（`claude-expert-executor` が opus なら `opus-executor`）、`nickname` を実体の名前へ変え、`model`（版を含む ID）を加えます。同じ系統を既定でない provider から使う場合は `copilot-opus-executor` のように provider 名を前に付けます。
 2. 従来の名前を、トップレベルの `aliases` に `nickname` と `alias_of`（実体の名前）の組で加えます。Job・routine・`sch-strategy`・文書・スクリプトにある名前は、別名として解決されるため変えなくて構いません。
 3. `.specdojo/exec-defaults.yaml` の `command_params.by_proficiency` などにある `model` を外し、member の `model` を正とします。codex の reasoning effort のように model 以外の値は残します。
 4. claude と opencode は、`templates/<provider>/agents/` の役割ごとの定義を `config scaffold --provider <name> --force` で配置し（手を加えた定義がある場合は差分を確認してから）、`command_template` を `--agent {agent} --model {model}` と `command_params.by_mode` の形へ改めます。model ごとに複製していた定義ファイル（`claude-expert-review-executor.md` など）は、別名から参照されなくなったら削除します。
 5. `npx specdojo exec run --register <id> --executor-by <alias> --reporter-by <alias> --dry-run` などで、別名から実体が選ばれ、起動のコマンドに `--model` の値が入ることを確かめてから、変更をコミットします。event と result の actor には実体の名前が記録されます。
+
+### 7.3. claude の edit executor に許すコマンド
+
+`claude -p` は承認を求められないため、`settings.edit.json` の allow に無いコマンドは拒まれます。配布する `settings.edit.json` は `Edit(**)` に加え、`npm run`・`npm test`・`npx prettier`・`npx markdownlint-cli2`・`npx markdownlint`・`npx eslint`・`npx tsc`・`npx vitest`・`npx slidev`・`specdojo` を許します。読み取りの `git status`・`git diff`・`git log`・`git show`・`git grep` と、差分に残る削除・移動の `git rm`・`git mv` も許します。`git rm` の `-r`・`-f`・`--force`・`--cached`、`git mv` の `-f`・`--force`、`git push`、`gh` は deny が優先して拒みます。`git reset`・`git checkout`・`git commit`・`rm` は allow に無いため拒まれます。
+
+`settings.edit.json` は `env` に `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1` を持ちます。executor が `cd <プロダクトの worktree>` で検査を流しても、Bash の作業場所は次の呼び出しで project の worktree に戻ります。これがないと `Edit(**)` や deny の `Edit(.specdojo/**)` などの相対パスの規則が `cd` 後の場所から照合され、project の worktree の個票への Edit が拒まれます。
+
+リポジトリごとに違う検証コマンドは、`.specdojo/exec-defaults.yaml` の `providers.claude.allow_commands` に `Bash(<command> *)` の形で書きます。edit mode の起動コマンドへ `--allowedTools` として足されるため、`config scaffold --force` で `settings.edit.json` を当て直しても残ります。review・report mode には足しません。
+
+```yaml
+providers:
+  claude:
+    allow_commands:
+      - "Bash(npx playwright test *)"
+      - "Bash(make lint)"
+```
+
+規則に引用符・バックスラッシュ・改行は使えません。
+
+### 7.4. opencode の edit executor に許すコマンド
+
+opencode の executor は `templates/opencode/agents/opencode-executor.md` の `permission.bash` に無いコマンドを拒みます。配布する定義は、読み取り系の git、`npm run`・`npm test`、`npx prettier`・`npx markdownlint`・`npx markdownlint-cli2`・`npx eslint`・`npx tsc`・`npx vitest`・`npx ajv`・`npx specdojo`、`specdojo` に加え、`docs/`・`src/`・`tests/` の下に限った `git rm` を許します。`git rm -r`・`-f`・`--force`、`git push`、`rm -rf`、`gh` は許しません。
+
+リポジトリごとに違う検証コマンドは、`providers.opencode.allow_commands` に claude と同じ `Bash(<command> *)` の形で書きます。edit mode の起動コマンドの前に、起動するエージェントの `permission.bash` へ allow 規則を入れた環境変数 `OPENCODE_CONFIG_CONTENT` として足されるため、`.opencode/agents/` を当て直しても残ります。規則は定義の `"*": deny` より後ろに並び、足したコマンドだけが通ります。global の `OPENCODE_PERMISSION` は定義の `"*": deny` より前に並んで効かないため使いません。追加ディレクトリの許可（`OPENCODE_CONFIG_CONTENT`）とは 1 つの値に混ぜて保ちます。review・report mode には足しません。
+
+```yaml
+providers:
+  opencode:
+    allow_commands:
+      - "Bash(npx playwright test *)"
+```
 
 ## 8. agent 権限とプロンプトインジェクション対策
 
@@ -731,20 +851,18 @@ exec の plan は done_criteria と成果物本文から生成され、agent は
 
 provider によらず、exec の実行構造そのものが次の境界を提供します。
 
-| 対策                       | 内容                                                                                             |
-| -------------------------- | ------------------------------------------------------------------------------------------------ |
-| worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                      |
-| git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
-| Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する           |
-| ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
-| commit 対象の除外          | `plan.md`、対象 run 以外の `execution/runs/`、`exec/events/`、`generated/` は commit しない      |
-| merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
+| 対策                       | 内容                                                                                                                                     |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                                                              |
+| git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない                                         |
+| Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する                                                   |
+| ready 昇格の human-only 化 | `docs/` 配下の成果物や型の `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する。`tests/` などの fixture は対象外 |
+| commit 対象の除外          | `plan.md`、対象 run 以外の `execution/runs/`、`exec/events/`、`generated/` は commit しない                                              |
+| merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                                                                    |
 
 ### 8.2. provider 別の権限設定
 
 **claude** は `provider 設定の配布と scaffold` のとおり、pipeline のロール別 `--settings` でパス単位に制限します。executor・review executor・reporter は `git push` と全 `gh` を deny します。対話型オーケストレーターの npm script は専用の `settings.orchestrator.json` を読み込み、保護設定を含む編集を妨げず、`git push` と `gh` の書き込みだけを deny して読み取りを allow します。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
-
-**antigravity** は 0.9.2 から使えません（`provider 設定の配布と scaffold` を参照）。0.9.1 までは `config scaffold --provider antigravity --global` で fine-grained permission を追記します。グローバル設定は利用者のすべてのリポジトリに効くため、allow は読み取りの Git コマンド（`git status` / `diff` / `log` / `show`）だけとし、`npm run` など任意のスクリプトを実行できる command は含めません。deny には、`git push`、全 `gh`、Git の変更操作・破壊的 command・秘密情報・固定保護設定へのアクセスを入れます。`--dangerously-skip-permissions` は使いません。CLI の permission に加えて、実行後の provider 非依存ガードでも保護設定の変更を block します。
 
 **codex** はパス単位の permission 機構を持たず、sandbox（`read-only` / `workspace-write` / `danger-full-access`）の粒度で制御します。review でも result の記入が必要なため `read-only` にはできず、edit / review とも `workspace-write` を使います。command template には次を明示します。
 
@@ -774,7 +892,7 @@ providers:
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。executor・review executor は、将来の許可リスト追加で意図せず開かないよう `git push` と全 `gh` を末尾でも明示 deny します。対話型オーケストレーターは agent 定義ごとに権限を分離できるため、`edit` をリポジトリ全体で allow し、PR・workflow run・release などの読み取りだけを allow します。`gh api` と書き込みサブコマンドは明示 deny し、それ以外は先頭の deny により拒否されます。
 
-Codex の project-local rule と Antigravity の global settings は役割共通であり、同じリポジトリまたは利用者の orchestrator だけを例外にできません。この 2 provider は全 agent の `gh` 全面拒否を維持します。Claude と OpenCode は orchestrator 専用設定を持てるため読み取りだけを許可し、pipeline executor・reporter は全 `gh` を拒否します。
+Codex の project-local rule は役割共通であり、同じリポジトリの orchestrator だけを例外にできません。Codex は全 agent の `gh` 全面拒否を維持します。Claude と OpenCode は orchestrator 専用設定を持てるため読み取りだけを許可し、pipeline executor・reporter は全 `gh` を拒否します。
 
 **copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`.specdojo/agent-members.yaml` には copilot member を `disabled: true` で定義し、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
 
@@ -783,45 +901,28 @@ providers:
   copilot:
     command_template: >-
       copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
+      --sync-session=off --disable-builtin-mcps
       --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git status:*)'
+      --allow-tool 'shell(git diff)' --allow-tool 'shell(git diff:*)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git log:*)'
+      --allow-tool 'shell(git show)' --allow-tool 'shell(git show:*)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm run:*)'
+      --allow-tool 'shell(npm test)' --allow-tool 'shell(npm test:*)'
       --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git add:*)'
+      --deny-tool 'shell(git commit)' --deny-tool 'shell(git commit:*)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git push:*)'
+      --deny-tool 'shell(git reset)' --deny-tool 'shell(git reset:*)'
+      --deny-tool 'shell(specdojo guarded-push)' --deny-tool 'shell(specdojo guarded-push:*)'
+      --deny-tool 'shell(npx specdojo guarded-push)' --deny-tool 'shell(npx specdojo guarded-push:*)'
 ```
-
-**antigravity**（Antigravity CLI `agy`）は 0.9.2 から起動できません（`provider 設定の配布と scaffold` を参照）。以下は 0.9.1 までの設定です。pipeline の役割指示は plan の共通規約を正本とし、権限は `agent launch --role {mode}` が分離します。非対話実行は `-p` ですが、プロンプトを引数に取り stdin を読まないので、runner が stdin へ書く plan を `"$(cat)"` で引数に渡します（command は `shell: true` で実行されます）。
-
-```yaml
-providers:
-  antigravity:
-    command_template: >-
-      specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"
-    command_params:
-      by_proficiency:
-        normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.8-flash-high }
-      by_nickname:
-        agy-claude-executor: { model: claude-sonnet-5-5-medium }
-        agy-claude-expert-executor: { model: claude-opus-5-5-high }
-        agy-claude-expert-review-executor: { model: claude-opus-5-5-high }
-        agy-gpt-executor: { model: gpt-oss-120b-medium }
-```
-
-- `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
-- `config scaffold --provider antigravity` で役割別の設定を配置します。`agent launch` がプロファイルと宣言済み task worktree ごとの絶対パスの保護を一つの `--settings` JSON にまとめます。通常導入はユーザー設定を書き換えず、`--global` は不要です。review / report は全ファイルの書き込みと command / MCP を拒否し、親 runner が検証します。対話型は `orchestrator launch` が専用の設定を渡します。`--dangerously-skip-permissions` は使いません。既存の command template・個別 command・npm script の移行と、未確認のグローバル／project 設定マージの実機検証は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。
-- モデルは `agy models` で確認します。標準モデルは `by_proficiency`、Antigravity 経由の Claude / GPT は `by_nickname` で選びます。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
-- 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
-- `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。
 
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使いません（claude の bypassPermissions 相当）。
 - ファイルアクセスはデフォルトで cwd（= worktree）配下 + 一時ディレクトリに制限されます。`--allow-all-paths` を使わないことで codex の `workspace-write` 相当の境界になります。
 - `write` はパス単位に絞れない（worktree 全域に書ける）ため、review agent でも `write` を許可して result を記入させ、変更の境界は commit 許可リストで作ります。
-- shell は `--allow-tool 'shell(...)'` の許可リストです。git / gh は第1サブコマンド単位でマッチするため読み取り系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` を明示 deny します（deny 優先の保険です。許可リストの追記で誤って開くことを防ぎます）。
-- 外部送信面を閉じます: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化します。セッションの GitHub web / mobile への共有・遠隔操作は `--no-remote --no-remote-export` で無効化します。URL アクセスはデフォルト確認制のため `--allow-url` を追加しません（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow します）。
+- shell は `--allow-tool 'shell(...)'` の許可リストです。読み取り系・検証系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` / `git reset` と `guarded-push` の入口を明示 deny します（deny 優先の保険です。許可リストの追記で誤って開くことを防ぎます）。末尾に `:*` のない `shell(<command>)` は引数付きのコマンドに当たらないことがあるため、allow・deny とも素の形と `:*` 付きの形を並べます。`:*` はコマンドの先頭部分に空白が続く形に当たり、引数のない素のコマンドに当たるかは公式の説明にないためです。
+- 外部送信面を閉じます: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化します。セッション履歴の同期は `--sync-session=off` で止めます。遠隔操作は `-p` の起動では有効にできないため、起動引数を置きません（`--no-remote` は廃止され、`--no-remote-export` は `--sync-session=off` に改名されました）。URL アクセスはデフォルト確認制のため `--allow-url` を追加しません（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow します）。
 - `-p` は引数必須のため、stdin で渡される plan は `-p "$(cat)"` で受けます。`--no-ask-user` で質問ツールを無効化し、無人実行で停止しないようにします。
 - shell パターンのマッチ粒度（`shell(npm run)` が `npm run <script>` 全体を許可するか等）は、member 追加時に最初のタスクで permission ログを確認して調整します。
 

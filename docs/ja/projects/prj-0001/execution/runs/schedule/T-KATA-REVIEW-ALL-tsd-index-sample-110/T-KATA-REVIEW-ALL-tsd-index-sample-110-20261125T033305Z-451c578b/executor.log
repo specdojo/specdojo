@@ -1,0 +1,16 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/tsd-index-sample.md` だけを直しました。整形と markdownlint は通っています。ほかの検査は親 runner が実行します。
+
+**直したこと（1 件）**
+- **何が問題だったか:** 未作成のホスティングと CI/CD の詳細文書について、一覧の備考列、参照先の表、「未作成の詳細文書」節の三か所に同じ `_TODO_` が書かれていました。この節は rulebook の本文要件（冒頭の概要・技術スタック一覧・補足・詳細への導線）にない、サンプルだけの節です。
+- **どう直したか:** 「未作成の詳細文書」節を削りました。作成するまで何を正本にするかは、参照先の表の `tsd-hosting.md`・`tsd-ci.md` の行に一本化しました。一覧の備考は「詳細 TSD は未作成（「参照先の役割と適用条件」参照）」にしています。
+- **失われた情報:** ありません。節にあった「一覧からの参照先を確定しない」は、作成までの正本を明記したことで要らなくなりました。
+- **根拠:** rulebook の「本文要件」と「詳細文書と更新」（未作成の詳細は共通ラベルで示す）、Sample 記述標準の「構成の原則」（サンプル独自の章立てを作らない）です。grade の指摘 F001（`vp-arc-conciseness`）もこの修正で解消します。
+- **要判断:** F001 の観点は本来 R3 の受け持ちですが、rulebook の構成にない節を削る判断として R1 で扱いました。R1 で扱ってよいかを確かめてください。
+
+それ以外に、欠けている内容や要らない内容は見つかりませんでした。冒頭の概要は 3 文で、一覧の列は rulebook が求めるものをそろえています。未採択の候補は一覧に載せず、未決の事項には `_UNDECIDED_` を付けています。rulebook と Sample 記述標準は、どちらも直す必要はありません。
+
+`pipeline-state.json` は runner が作るファイルなので、触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認し、rulebook の本文要件にないサンプル独自の節「未作成の詳細文書」を削り、三か所にあった _TODO_ を参照先の表へ一本化した（F001 も解消）。変更は docs/ja/specdojo/samples/tsd-index-sample.md のみ。","handoff":["No: 1 / 段: R1 目的の過不足 / 箇所: docs/ja/specdojo/samples/tsd-index-sample.md の「補足・詳細への導線」配下の「未作成の詳細文書」節、一覧表の Docker・Fly.io・GitHub Actions 行の「詳細・備考」列、「参照先の役割と適用条件」表の `tsd-hosting.md`・`tsd-ci.md` 行 / 指摘: rulebook の「本文要件」が補足に求めるのは全体の共通条件と各参照先の役割・適用条件だけで、「未作成の詳細文書」節はサンプル独自の節だった。しかも同じ _TODO_ が一覧の備考・参照先の表と合わせて三か所に重なっていた（grade の F001、`vp-arc-conciseness` と同じ箇所） / 直した案: 「未作成の詳細文書」節を削り、作成までの暫定の正本（`fly.toml`・`Dockerfile`、`.github/workflows/`）を参照先の表の参照先セルへ移した。一覧の備考は「詳細 TSD は未作成（「参照先の役割と適用条件」参照）」とし、_TODO_ は参照先の表の 2 行だけに残した / 根拠: tsd-index-rulebook の「本文要件」と「詳細文書と更新」（未作成の詳細は共通ラベルで示し、仮の参照先を確定情報にしない）、Sample 記述標準の「構成の原則」（sample 独自の章立てを作らない） / 印: 要判断（観点 `vp-arc-conciseness` は本来 R3 の受け持ちだが、rulebook の構成にない節を削る R1 の判断として扱ったため）","No: 2 / 段: R1 目的の過不足 / 箇所: docs/ja/specdojo/samples/tsd-index-sample.md 全体 / 指摘: 冒頭の概要（3 文）、技術スタック一覧の列（区分・採用技術・担当責務・版・正本・適用範囲・詳細・備考）、補足の共通条件と参照先は rulebook の求めを満たしている。未採択の候補は一覧に載せず、未決は _UNDECIDED_ で示している。ほかに欠けている内容・要らない内容はない / 直した案: なし（維持） / 根拠: tsd-index-rulebook の「本文要件」「技術スタック一覧の列」「版と採用状態」、Sample 記述標準の「サンプル群の目的」 / 印: なし"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/tsd-index-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/tsd-index-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

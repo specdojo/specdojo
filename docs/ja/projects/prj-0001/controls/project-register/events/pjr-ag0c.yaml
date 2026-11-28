@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_846983767e774990a75df32a240c8137
+  ts: "2026-11-28T08:48:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: guarded-push の dry-run が、新しいブランチの commit の件数に全部の履歴を数える
+    - field: description
+      from: ""
+      to: remote にないブランチを guarded-push --dry-run で示すと、送る範囲を (new branch) とし、Commits に全履歴の件数（17597）を出す。remote にまだない commit だけを数えて示すように直す
+    - field: input
+      from: ""
+      to: '["2026-11-28 に feature/prj-0001/guarded-push-permissions で npx specdojo guarded-push --project prj-0001 --branch feature/prj-0001/guarded-push-permissions --dry-run を流すと Range: (new branch) 1b159b605f…、Commits: 17597 と出た","push の動き自体には影響しないが、承認の前に示す範囲と件数が分かりにくく、利用者が送る中身を判断できない","担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GDMB"]'
+- v: 1
+  id: reg_c4e8758116fc461aae3fa6d209247ee6
+  ts: "2026-11-28T10:27:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 対応方針と完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_846983767e774990a75df32a240c8137
+- v: 1
+  id: reg_12917ce8555745d5b5f929f999831708
+  ts: "2026-11-28T10:41:57Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c4e8758116fc461aae3fa6d209247ee6
+- v: 1
+  id: reg_06dbd107420c46ed85ce173021fd1c0f
+  ts: "2026-11-28T10:50:44Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_12917ce8555745d5b5f929f999831708
+- v: 1
+  id: reg_2625d4a54c1b4a97af2ff6949e37b38e
+  ts: "2026-11-28T11:00:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合の後に remote にない feature ブランチで --dry-run を流し、Commits が 17597 から 37 になり、基準の 23 本の remote のブランチが Range に示されることを確かめた（2026-11-28）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: remote にないブランチの guarded-push の表示で、Commits を remote のどのブランチにもない commit の数にし、基準にした remote のブランチを Range に示すようにした
+  previous_event_id: reg_06dbd107420c46ed85ce173021fd1c0f

@@ -1,0 +1,187 @@
+parent validation: test-docs
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 test:docs
+> vitest run --config vitest.docs.config.ts
+
+
+ RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050
+
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-lint/yaml-deliverable-type.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts","duration_ms":6}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-site/kata-staging.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-lint/rulebook-schema-enums.test.ts"}
+ ✓ tests/packages/docs-lint/rulebook-schema-enums.test.ts (5 tests) 15ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-lint/rulebook-schema-enums.test.ts","duration_ms":15}
+ ✓ tests/packages/docs-site/kata-staging.test.ts (6 tests) 23ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-site/kata-staging.test.ts","duration_ms":23}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-lint/deliverable-type.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/docs/template-resolution.test.ts"}
+ ✓ tests/src/docs/template-resolution.test.ts (7 tests) 16ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/docs/template-resolution.test.ts","duration_ms":16}
+[parent-validation:test-file] {"event":"start","file":"tests/src/register/item.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/kata/command.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/job-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/job-schema.test.ts (6 tests) 8ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/job-schema.test.ts","duration_ms":8}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/dct-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/dct-schema.test.ts (5 tests) 6ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/dct-schema.test.ts","duration_ms":6}
+[parent-validation:test-file] {"event":"start","file":"tests/src/catalog/index.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/exec-defaults-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/exec-defaults-schema.test.ts (13 tests) 7ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/exec-defaults-schema.test.ts","duration_ms":7}
+ ✓ tests/src/kata/command.test.ts (29 tests) 135ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/kata/command.test.ts","duration_ms":135}
+ ✓ tests/src/catalog/index.test.ts (9 tests) 105ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/catalog/index.test.ts","duration_ms":105}
+ ✓ tests/packages/docs-lint/deliverable-type.test.ts (28 tests) 276ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-lint/deliverable-type.test.ts","duration_ms":276}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/pm-members-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/pm-members-schema.test.ts (6 tests) 3ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/pm-members-schema.test.ts","duration_ms":3}
+ ✓ tests/src/register/item.test.ts (55 tests) 244ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/register/item.test.ts","duration_ms":244}
+[parent-validation:test-file] {"event":"start","file":"tests/src/grade/grade.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/plans.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/run-records.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/register-plan-escape.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/sch-strategy-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/sch-strategy-schema.test.ts (12 tests) 23ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/sch-strategy-schema.test.ts","duration_ms":23}
+ ❯ tests/src/grade/grade.test.ts (69 tests | 1 failed) 323ms
+     ✓ discovers artifact templates but excludes internal exec templates from kata 20ms
+     ✓ excludes generated documents and rejects their explicit selection 3ms
+     ✓ excludes trashed deliverables for every selection mode and rejects explicit selection 8ms
+     ✓ combines verdict, score, finding-count, and changed-only filters 8ms
+     ✓ counts all stored finding severities against the maximum 1ms
+     ✓ defines ungraded as the absence of specdojo.grade 0ms
+     ✓ selects only current, retryable pipeline state as incomplete 4ms
+     ✓ rejects invalid score and finding thresholds 0ms
+     ✓ parses JSON and enforces severity level caps 1ms
+     ✓ accepts submissions without the legacy agent-supplied graded_by 0ms
+     ✓ resolves the grading actor from the member roster 0ms
+     ✓ requires every applicable agent viewpoint and excludes deterministic viewpoints 0ms
+     ✓ rejects a rubric that has no weight for a graded viewpoint category 0ms
+     ✓ weights all nine categories for both targets and sums each target to 100 0ms
+     ✓ grades every common viewpoint without a continuous flag 0ms
+     ✓ writes an idempotent compact grade snapshot that Prettier preserves 37ms
+     ✓ normalizes repeated blank lines and trailing whitespace for content hashes 1ms
+     ✓ normalizes trailing blank lines to exactly one newline 1ms
+     ✓ keeps mappings outside grade in block style 1ms
+     ✓ places a finding before the containing 'nested list' block 3ms
+     ✓ places a finding before the containing 'table' block 2ms
+     ✓ places a finding before the containing 'fenced code' block 2ms
+     ✓ places a finding before a directive comment attached to its block 9ms
+     ✓ detects count drift and edits after grading 1ms
+     ✓ preserves the severity and level cap across repeated grading 3ms
+     ✓ allows a lower severity for a different residual finding with rationale 1ms
+     ✓ renders an executor plan without a GradeSubmission JSON contract 2ms
+     ✓ document_kinds で対象外の viewpoint を prompt へ含めない 1ms
+     ✓ document_kinds で対象外の done_criteria を prompt へ含めない 1ms
+     ✓ renders a reporter plan that only structures the executor declaration 0ms
+     ✓ parses free-form executor rationale and rejects reporter judgment changes 2ms
+     ✓ accepts presentation-only punctuation and whitespace differences in finding messages 0ms
+     ✓ rejects semantic finding changes and reports the changed fields 0ms
+     ✓ converts executor markers into a GradeSubmission without a reporter 0ms
+     ✓ normalizes bold, list, and quote decorations around markers without changing messages 0ms
+     ✓ does not treat a FINDING embedded in prose as a marker 0ms
+     ✓ rejects executor output with a missing viewpoint marker 0ms
+     ✓ rejects executor output without an END VIEWPOINT marker 0ms
+     ✓ clamps executor levels to the finding severity cap and records the correction 0ms
+     × resolves declared and reverse-linked Kata references 38ms
+     ✓ lists reference paths without embedding target or reference contents 2ms
+     ✓ embeds frontmatter separately and numbers body lines from the H1 11ms
+     ✓ falls back to path references when embedded documents exceed the character limit 4ms
+     ✓ selects a ready reference example from the same Kata kind on each run 2ms
+     ✓ records the comparison reference as a document id 0ms
+     ✓ keeps an already resolved id as is 0ms
+     ✓ writes the reference id into the grade and omits the key when unused 2ms
+     ✓ omits the reference section entirely when no example is given 1ms
+     ✓ uses the given reference instead of selecting one 28ms
+     ✓ reports no reference when candidates are empty 28ms
+     ✓ returns nothing when no ready document shares the target kind 0ms
+     ✓ records a good example as comparison material without evaluating it 1ms
+     ✓ carries previous finding facts into the next plan without previous scores 2ms
+     ✓ lists catalog done_criteria in the executor plan with roles, viewpoint, and markers 1ms
+     ✓ ignores done_criteria for kata plans 1ms
+     ✓ adds a done_criteria template to the reporter plan 0ms
+     ✓ parses the DONE_CRITERIA block and rejects malformed entries 0ms
+     ✓ requires every catalog criterion exactly once with a reason for unsatisfied 1ms
+     ✓ converts executor markers with done_criteria into a deliverable GradeSubmission 0ms
+     ✓ rejects deliverable executor output that omits a catalog criterion 0ms
+     ✓ rejects reporter changes to criterion status or reason 0ms
+     ✓ records a summary in the frontmatter and keeps score independent of satisfaction 7ms
+     ✓ omits the summary when the document has no catalog criteria or is a kata 0ms
+     ✓ writes one overwritten detail file per deliverable next to the grade 4ms
+     ✓ writes the latest result sidecar without changing the deliverable 28ms
+     ✓ carries severity by the canonical English message, not the Japanese display text 44ms
+     ✓ requires exact inline code preservation and translation of ordinary English phrases 0ms
+     ✓ hashes blank lines and legacy finding comments as document content 0ms
+     ✓ changes when non-blank content changes 0ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/grade/grade.test.ts","duration_ms":323}
+ ✓ tests/src/exec/run-records.test.ts (19 tests) 144ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/run-records.test.ts","duration_ms":144}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/plan-conventions.test.ts"}
+ ✓ tests/packages/docs-lint/yaml-deliverable-type.test.ts (15 tests) 841ms
+     ✓ checks modelines including none and validate=false, then succeeds after migration  303ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-lint/yaml-deliverable-type.test.ts","duration_ms":841}
+ ✓ tests/src/exec/plan-conventions.test.ts (15 tests) 136ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/plan-conventions.test.ts","duration_ms":136}
+ ✓ tests/src/exec/register-plan-escape.test.ts (36 tests) 1365ms
+     ✓ approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる  681ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/register-plan-escape.test.ts","duration_ms":1365}
+ ✓ tests/src/exec/plans.test.ts (97 tests) 1649ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/plans.test.ts","duration_ms":1649}
+
+ Test Files  1 failed | 18 passed (19)
+      Tests  1 failed | 479 passed (480)
+   Start at  04:52:03
+   Duration  2.39s (transform 4.59s, setup 642ms, import 7.24s, tests 5.33s, environment 1ms)
+
+
+
+--- stderr ---
+stderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata
+grade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/grade/grade.test.ts > grade plan > resolves declared and reverse-linked Kata references
+AssertionError: expected [ …(9) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   StringContaining "/rulebooks/opd-rulebook.md",
+-   StringContaining "/rulebooks/opr-rulebook.md",
+-   StringContaining "/templates/opr-template.md",
++ [
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/rulebooks/opr-rulebook.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-access-control-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-backup-restore-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-change-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-incident-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-monitoring-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/samples/opr-support-sample.md",
++   "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/ja/specdojo/templates/opr-template.md",
+  ]
+
+ ❯ tests/src/grade/grade.test.ts:1305:24
+    1303|   it("resolves declared and reverse-linked Kata references", () => {
+    1304|     const references = resolveGradeReferencePaths("docs/ja/specdojo/sa…
+    1305|     expect(references).toEqual(
+       |                        ^
+    1306|       expect.arrayContaining([
+    1307|         expect.stringContaining("/rulebooks/opd-rulebook.md"),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

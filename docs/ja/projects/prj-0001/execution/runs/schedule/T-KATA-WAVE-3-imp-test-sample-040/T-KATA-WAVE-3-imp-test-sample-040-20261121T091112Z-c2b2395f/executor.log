@@ -1,0 +1,21 @@
+ルールブック `docs/ja/specdojo/rulebooks/imp-test-rulebook.md` を書き直しました。編集したのはこの 1 ファイルだけで、sample・frontmatter・result には手を入れていません。
+
+**直した内容**
+- **導入文と全体方針（F006・F001・F008）:** 影響調査を省いたときの問題（回帰漏れによる欠陥流出、納期遅延）を導入文に足しました。役割は Role code で示しています。判定と記述は `QE`、計画・期限への影響の確認は `PM`、代替・見送りの承認・保留・差し戻しは `PO`、業務受入テストに影響する場合の受入観点の確認は `BA` です。
+- **位置づけ（F004・F017）:** 前後の文書を明記しました。入力は登録簿の `item_type: change-request` の個票、反映先はテスト戦略・方針と各レベルのテストカタログ（`<level>c-index`）です。並行する文書として業務・データ・I/F・運用の 4 つの影響調査を挙げています。
+- **本文要件（F003・F011・F016・F019）:** 章名を標準に合わせて「本文要件」に変えました。表を置く 4 つの章について必須の列を決め、列名を揃えています。「担当と期限」と「実施時期」の食い違いは「期限」「担当」の列に統一しました。「優先度」のような別名は使わないと定めています。未解決事項の列には決定期限・担当・転記先を加えました。
+- **目的と適用範囲（F007）:** 対象外のテスト範囲とその理由を必須にしました。対象期間は「着手日から受入判定日まで」と定義しています。
+- **影響詳細一覧（F010）:** 1 行の単位を「テストレベルとテスト観点の組」と決めました。
+- **未解決事項（F005）:** 登録簿への転記基準を表にしました（`question` / `risk` / `issue` / `decision`）。転記先の ID の記載と `PM` への報告も定めています。
+- **担当の書き方（F002）:** 担当は Role code で書くこととし、個人名・連絡先の記載を禁止事項に加えました。
+- **記述ガイド:** 6 章それぞれに判断の基準と良い例・悪い例の表を置きました。完成例は sample に任せ、見出しは H3 までです。
+
+**この段で直していない指摘**
+- **sample 側の指摘（F012〜F016、F018、F019）:** 計画どおり sample は変えていないため残っています。いまの sample は新しいルールブックにまだ合っていません。対象期間・成功条件・尺度の定義がなく、担当欄に個人名があり、列名や行の単位も違います。後続の sample-maintenance で直す必要があります。
+- **frontmatter（F009・F020）:** `target_format: markdown` の宣言と、`recipe`・`template` の要否はまだ決まっていません。計画で frontmatter を変えないことになっているためで、template は PJR-WYTX で扱います。
+
+**検証:** 対象ファイルに `npx prettier --write` を実行し、`--check` も通りました。`lint:md` などの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-test-rulebook を grade の指摘に沿って簡潔に整え直した。役割を Role code で示し、位置づけの入力・反映先、表を置く章の必須の列と統一した列名、行の単位、対象期間の定義、PJR への転記基準、担当表記の禁止事項を足した。記述ガイドには章ごとの判断の基準と良い例・悪い例を置いた。sample と frontmatter は計画どおり変えていない。","handoff":["sample 側の指摘（F012〜F016、F018、F019）は未解消。後続の sample-maintenance で、`docs/ja/specdojo/samples/imp-test-sample.md` を新しい本文要件に合わせて直す必要がある。直す点: 対象外のテスト範囲・対象期間・成功条件を足す。影響度の尺度と集約規則を定義する。影響詳細一覧の行をテストレベル×テスト観点にする。判断根拠に評価観点ごとの事実と集約結果を書く。対応方針の列を「影響度・対応項目・期限・担当・前提条件」に揃え、担当を Role code にする。未解決事項に「判断・対応への影響」「当面の扱い」「転記先の登録項目」を足す。","F009・F020（`target_format: markdown` の宣言と、`recipe`・`template` の要否の確定）は、frontmatter を変えない計画のため見送った。template は PJR-WYTX で扱い、recipe の要否は人が判断する。","rulebook の章名を「本文構成（標準テンプレ）」から「本文要件」に変えた（`rulebook-authoring-standard` に合わせた）。Sample 記述標準は対応 rulebook の「本文構成（標準テンプレ）」を参照しているため、sample-maintenance では「本文要件」を正として読む。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/imp-test-rulebook.md","status":"passed","summary":"--write で整形した後、--check も通った"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変えていない","reason":"変えたのは docs/ja/specdojo/rulebooks/imp-test-rulebook.md だけで、plan・result・pjr 個票はどれも変えていない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML ファイルは変えていない","reason":"変えたのは Markdown の rulebook だけで、*.yaml / *.yml は変えていない"}]}
+</specdojo_executor_evidence>

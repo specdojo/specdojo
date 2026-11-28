@@ -1,5 +1,5 @@
 import { mkdirSync, existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { basename, join, relative } from "node:path";
 import type { Command } from "commander";
 import type { ExecEventV1, ReadyTaskView, StateSnapshot } from "../exec/types.js";
 import { toArtifactPath } from "../shared/artifact-path.js";
@@ -62,7 +62,7 @@ import { extractLocalId } from "../schedule/phase-sets.js";
 import { buildScheduleIndex } from "../exec/schedule/schedule.js";
 import { type ScheduleNode } from "../shared/schedule-index.js";
 import { readReadySnapshot } from "../exec/schedule/ready.js";
-import { findRunRecord } from "../shared/run-records.js";
+import { findRunRecord, RunRecordIndex } from "../shared/run-records.js";
 
 // ================================
 // Types
@@ -84,6 +84,8 @@ export type DashboardPaths = {
   executionGeneratedPath: string;
   routinesPath?: string;
   gradeResultsPath?: string;
+  /** Per-generation snapshot of run records; set only by buildDashboardMarkdown. */
+  runRecordIndex?: RunRecordIndex;
 };
 
 // ================================
@@ -163,6 +165,7 @@ export type DashboardActionRequiredRow = {
   kind: string;
   id: string;
   link: string;
+  content: string;
   nextAction: string;
 };
 
@@ -212,12 +215,12 @@ export function formatTaskLink(
   const execDir = join(paths.executionGeneratedPath, "..");
   if (paths.schedulePath && existsSync(execDir)) {
     try {
-      const plan = findRunRecord(execDir, "plan", taskId);
+      const plan = findRunRecord(execDir, "plan", taskId, paths.runRecordIndex);
       if (plan && existsSync(plan)) {
         const rel = relative(paths.executionGeneratedPath, plan).replaceAll("\\", "/");
         return `[${taskId}](${rel})`;
       }
-      const result = findRunRecord(execDir, "result", taskId);
+      const result = findRunRecord(execDir, "result", taskId, paths.runRecordIndex);
       if (result && existsSync(result)) {
         const rel = relative(paths.executionGeneratedPath, result).replaceAll("\\", "/");
         return `[${taskId}](${rel})`;
@@ -346,6 +349,34 @@ function readRegisterEvents(view: RegisterItemView, registerPath: string): Regis
   return readRegisterEventsFromContent(readFileSync(path, "utf8"), path);
 }
 
+// schedule の task の内容は、対象の文書の名前を出す。task 定義の成果物名、成果物カタログの
+// ファイル名、`local_id` の順に選び、どれもなければ task 名、`-` の順に選ぶ。task 名は
+// 「次にすること」に含まれるとき重複するため出さない。長いタイトルは情報の欠落を避けるため切らない。
+function taskContent(
+  taskId: string,
+  taskName: string | undefined,
+  nextAction: string,
+  catalogDocMap: Map<string, string>,
+  node: ScheduleNode | undefined,
+  readyLocalId?: string,
+): string {
+  if (node?.artifact_name) return node.artifact_name;
+  const localId = readyLocalId ?? node?.local_id ?? extractLocalId(taskId);
+  const docPath = localId ? catalogDocMap.get(localId) : undefined;
+  const docName = docPath ? basename(docPath).replace(/\.[^.]+$/, "") : "";
+  if (docName || localId) return docName || localId || "-";
+  if (taskName && !nextAction.includes(taskName)) return taskName;
+  return "-";
+}
+
+function readScheduleNodes(schedulePath: string): Map<string, ScheduleNode> {
+  try {
+    return buildScheduleIndex(schedulePath).nodes;
+  } catch {
+    return new Map();
+  }
+}
+
 export function aggregateActionRequired(
   paths: DashboardPaths,
   views: RegisterItemView[],
@@ -361,6 +392,7 @@ export function aggregateActionRequired(
       kind: "review",
       id: view.id,
       link: formatTicketLink(view, paths.executionGeneratedPath),
+      content: view.item.title || "-",
       nextAction: "close の確認待ち",
     });
   }
@@ -373,6 +405,7 @@ export function aggregateActionRequired(
       kind: view.item.type,
       id: view.id,
       link: formatTicketLink(view, paths.executionGeneratedPath),
+      content: view.item.title || "-",
       nextAction:
         view.item.type === "decision" ? "意思決定を行い状態を更新" : "回答・判断を行い状態を更新",
     });
@@ -385,6 +418,7 @@ export function aggregateActionRequired(
       kind: "waiting",
       id: view.id,
       link: formatTicketLink(view, paths.executionGeneratedPath),
+      content: view.item.title || "-",
       nextAction: waitReason
         ? `待機理由を解消: ${sanitizeDashboardCell(waitReason)}`
         : "待機理由の解消",
@@ -396,20 +430,32 @@ export function aggregateActionRequired(
     const readyPath = join(paths.executionGeneratedPath, "ready.json");
     const statePath = join(paths.executionGeneratedPath, "state.json");
     const humanTaskIds = new Set<string>();
+    const taskNames = new Map<string, string>();
+    const scheduleNodes = readScheduleNodes(paths.schedulePath);
 
     if (existsSync(readyPath)) {
       try {
         const ready = readReadySnapshot(readyPath);
         for (const task of ready.tasks) {
+          if (task.name) taskNames.set(task.id, task.name);
           if (task.execution === "human") {
             humanTaskIds.add(task.id);
+            const nextAction = task.name
+              ? `${sanitizeDashboardCell(task.name)}を実施`
+              : "人手による作業を実施";
             rows.push({
               kind: "human",
               id: task.id,
               link: formatTaskLink(task.id, paths, catalogDocMap),
-              nextAction: task.name
-                ? `${sanitizeDashboardCell(task.name)}を実施`
-                : "人手による作業を実施",
+              content: taskContent(
+                task.id,
+                task.name,
+                nextAction,
+                catalogDocMap,
+                scheduleNodes.get(task.id),
+                task.local_id,
+              ),
+              nextAction,
             });
           }
         }
@@ -426,14 +472,22 @@ export function aggregateActionRequired(
             (taskState.state === "doing" || taskState.state === "blocked") &&
             !humanTaskIds.has(taskId)
           ) {
+            const nextAction =
+              taskState.state === "blocked"
+                ? `ブロッキング原因を解消: ${sanitizeDashboardCell(taskState.last_msg ?? "-")}`
+                : "作業の継続・完了";
             rows.push({
               kind: taskState.state === "blocked" ? "blocked" : "human",
               id: taskId,
               link: formatTaskLink(taskId, paths, catalogDocMap),
-              nextAction:
-                taskState.state === "blocked"
-                  ? `ブロッキング原因を解消: ${sanitizeDashboardCell(taskState.last_msg ?? "-")}`
-                  : "作業の継続・完了",
+              content: taskContent(
+                taskId,
+                taskNames.get(taskId),
+                nextAction,
+                catalogDocMap,
+                scheduleNodes.get(taskId),
+              ),
+              nextAction,
             });
           }
         }
@@ -545,10 +599,12 @@ function renderActionRequiredSection(
     return lines;
   }
 
-  lines.push("| 種別 | 項目 | 次にすること |");
-  lines.push("| --- | --- | --- |");
+  lines.push("| 種別 | 項目 | 内容 | 次にすること |");
+  lines.push("| --- | --- | --- | --- |");
   for (const row of rows) {
-    lines.push(`| \`${row.kind}\` | ${row.link} | ${sanitizeDashboardCell(row.nextAction)} |`);
+    lines.push(
+      `| \`${row.kind}\` | ${row.link} | ${sanitizeDashboardCell(row.content)} | ${sanitizeDashboardCell(row.nextAction)} |`,
+    );
   }
   lines.push("");
   return lines;
@@ -830,7 +886,7 @@ function renderRoutineSection(paths: DashboardPaths): string[] {
   } else {
     lines.push("### 直近 24 時間に失敗した routine");
     lines.push("");
-    lines.push("| routine | 実行時刻 | 結果 | Job Run |");
+    lines.push("| routine | 実行時刻 | 結果 | job run |");
     lines.push("| --- | --- | --- | --- |");
     for (const f of recentFailures) {
       lines.push(
@@ -1057,7 +1113,12 @@ export type DashboardBuildResult = {
   warnings: string[];
 };
 
-export function buildDashboardMarkdown(paths: DashboardPaths): string {
+export function buildDashboardMarkdown(basePaths: DashboardPaths): string {
+  const execDir = join(basePaths.executionGeneratedPath, "..");
+  const paths: DashboardPaths = {
+    ...basePaths,
+    runRecordIndex: existsSync(execDir) ? new RunRecordIndex(execDir) : undefined,
+  };
   const lines: string[] = [];
   const nowLabel = new Date().toISOString().replace(/\.\d{3}Z$/, "");
 

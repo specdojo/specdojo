@@ -1,0 +1,40 @@
+レビューを終えました。成果物は変更していません。タスクの完了条件は満たしており、判定は `complete-with-findings` が妥当です。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --path <sample> --changed-only` は出力なし、終了コード 0 でした。rulebook に対しても同様です。評価結果は最新です。
+- sample は `verdict` が `pass`、`score` が 98 で、finding は minor 1 件です。rulebook は `verdict` が `pass`、`score` が 96 で、finding は minor 4 件です。
+- 作業ツリーの変更は、runner の `pipeline-state.json`（未追跡）だけです。review 中に成果物は変更されていません。
+
+**判断根拠（完了条件との照合）**
+- **DC-001:** 第1〜5章（概要、適用範囲・前提条件、信頼性要件一覧、測定・検証方法、関連ドキュメント導線）が揃っています。この点は grade の `vp-qe-omissions-consistency` が level 4 です。
+- **DC-002・DC-003:** 駄菓子屋「きぬや」の文脈で書かれています。禁止事項に当たる点は、grade の `vp-qe-kata-conformance` が level 4 で、見当たりません。
+- **DC-004:** 要件5件（`nfr-rel-001`〜`005`）について、指標・基準・備考を障害の種類ごとに書いています。重複記録、通信瞬断、異常終了、不正入力の別があり、第4章で測定方法・判定時期・Role code も定めています。ただし `nfr-rel-001` と `nfr-rel-004` の基準は `_UNDECIDED_` です（grade の `F001`）。
+- **DC-005:** 第5章で、後続の成果物との関係を示しています。受入条件（`sac-reliability`）、総合テスト（`stc-reliability`）、運用方針・手順、設計判断（`dec-reliability-criteria`）です。
+- **参照先の確認:** 参照している `nfr-index-sample`、`nfr-availability-sample`、`opd-monitoring-sample`、`opd-incident-management-sample`、`opr-incident-sample` は存在します。前提条件 `ACD-A02`・`ACD-D03` は前提・制約・依存の sample に記載があります。
+
+**finding が完了を妨げない理由**
+- sample の `F001`（minor）は、基準が未確定であることを指しています。
+- 本文は、決まるまでの暫定の扱い（件数を記録するだけで判定しない）を備考に明記しています。確定の契機も第4章で示しています。また、`dec-reliability-criteria` を確定の記録先として置いています。
+- そのため、`_UNDECIDED_` は意図した未決として管理されており、完了条件の充足は損なわれません。
+- rulebook の `F001`〜`F004`（minor）は、`recipe`・`template` の要否判断と追跡先の話です。rulebook 側の課題であり、この sample タスクの範囲外です。
+
+**未充足事項・改善指示**
+- 未充足事項はありません。
+- sample 側の任意改善として、`nfr-rel-001`・`nfr-rel-004` の基準を確定する判断契機を備考に足してください。たとえば試用期間の終了時点です。
+- rulebook 側では、`recipe`・`template` の要否判断の時期と追跡先を、別の手当てで解消してください。
+- 本書の `status` は `draft` のままです。`ready` への昇格は人の確認（横串の確認）で行います。
+
+**approach（`fully-guided`）に応じた確認**
+- `recipe` は `_MISSING_` で、rulebook が宣言していません。これは rulebook の `F003` と同じ事項です。
+- 宣言された文書（sample、rulebook、`based_on` の 2 件）の範囲で確認しました。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result は参照していません。plan に記載がなく、実行記録は確認していません。
+- `dec-reliability-criteria`、`sac-reliability`、`stc-reliability` は、仮置きの ID としてバッククォートで書かれています。文書の存在は確認していません。
+- lint などの検査は、親 runner が実行します。
+
+**decision:** `verdict` は `complete-with-findings` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"評価結果は最新（sample/rulebook とも grade list --changed-only が出力なし、終了コード 0）。sample は pass・98、rulebook は pass・96 で、blocker・major はなし。完了条件 DC-001〜DC-005 はいずれも満たしている。sample の minor finding（`nfr-rel-001`・`nfr-rel-004` の基準が `_UNDECIDED_`）は、暫定扱いと確定契機が本文にあるため完了を妨げない。rulebook の minor 4 件は recipe・template の要否判断の話で、この sample タスクの範囲外。推奨 verdict は complete-with-findings。確認できなかった範囲: 先行 edit result は plan に記載がなく未確認。`dec-reliability-criteria`、`sac-reliability`、`stc-reliability` の存在は未確認。lint など parent_validations の検査は親 runner が実行する。","handoff":["任意改善: `nfr-rel-001`・`nfr-rel-004` の基準を確定する判断契機（例: 試用期間の終了時点）を備考に追記する","rulebook 側の課題: recipe・template の要否判断の時期と追跡先（登録簿の個票など）を示し、未宣言のまま ready 化しない","人の確認は横串の確認でまとめて行う。status は draft のまま"],"validations":[{"command":"specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-reliability-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新"},{"command":"specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新"}]}
+</specdojo_executor_evidence>

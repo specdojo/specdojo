@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/prj-overview-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-23T20:07:23.181Z"
-graded_by: flash-high-executor
-content_hash: 1f18b4ddb5ac1fab091d524c73ec068321e139cee9c47a270a1cae5e53a79513
+score: 94
+graded_at: "2026-11-23T20:42:53.625Z"
+graded_by: sonnet-review-executor
+content_hash: 4ea3bab5f4653a97b57baacc227d1fd2725e8c7ac5f2564f934897a949768628
 categories:
   purpose:
     score: 100
@@ -17,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,6 +101,27 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 45
+    anchor: "_TODO_: 初期公開前に、誰がどの利用場面を試行して何を判定するかを記述する。"
+    message: 実現したいことの欄に、対象利用者・適用領域を書く指示（rulebook 6.6 の「必要に応じて」）が template 上になく、関係者の記述が任意の記入に委ねられている。
+    message_ja: 実現したいことの欄に、対象利用者・適用領域を書く指示（rulebook 6.6 の「必要に応じて」）が template 上になく、関係者の記述が任意の記入に委ねられている。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 82
+    anchor: "- _SELECTION_POLICY_"
+    message: recipe 手順 7 と rulebook 6.8 は前提条件に適用範囲を含めるとしているが、template の前提条件にはそれを書く欄がなく、sample の「対象は単一店舗に限定」に当たる記述の置き場が定義されていない。
+    message_ja: recipe 手順 7 と rulebook 6.8 は前提条件に適用範囲を含めるとしているが、template の前提条件にはそれを書く欄がなく、sample の「対象は単一店舗に限定」に当たる記述の置き場が定義されていない。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 82
+    anchor: "- _SELECTION_POLICY_"
+    message: 前提条件に適用範囲の記入欄がなく、recipe と rulebook の要求とずれている。
+    message_ja: 前提条件に適用範囲の記入欄がなく、recipe と rulebook の要求とずれている。

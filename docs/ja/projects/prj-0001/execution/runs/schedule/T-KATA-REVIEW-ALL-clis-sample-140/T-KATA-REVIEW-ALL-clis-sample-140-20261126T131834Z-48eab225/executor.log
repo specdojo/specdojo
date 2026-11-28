@@ -1,0 +1,29 @@
+R4（正しさ）のレビューでは、sample（`docs/ja/specdojo/samples/clis-sample.md`）に誤りは見つかりませんでした。このため sample は編集しておらず、変更したファイルはありません。
+
+**照合した主張と結果**
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: ui`・`rulebook: specdojo:clis-rulebook` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`clis-rulebook.md` の「推奨 Frontmatter 項目」 | 一致 |
+| 2 | `part_of`・`based_on` を空配列にしている | `common-frontmatter.schema.yaml` の定義、rulebook の「メモ / 将来課題」に未接続の理由を書く決まり | 一致 |
+| 3 | wikilink `[[specdojo:ifx-cmd-sample\|…]]` | `.specdojo/doc-index.json` | 一致（id あり） |
+| 4 | 入力パス `receipts/receipt-YYYYMMDD-NNNN.txt` | `ifx-cmd-sample.yaml` の `files.inputs` | 一致 |
+| 5 | 印字コマンドの終了コードは販売 CLI 全体に伝わらない。印字未完了は終了コード `0` で会計を維持する | `ifx-cmd-sample.yaml` の `purpose`・`exit_codes` | 一致 |
+| 6 | 印字の未印字と結果不明を分け、再印刷は保存済みレシートだけにする | `ifx-cmd-sample.yaml` の `idempotency`・`malformed_output_action` | 一致 |
+| 7 | 役割名（店主代表・家族利用者代表・開発担当・同行レビュー担当） | `sample-authoring-standard.md` の共通登場人物 | 一致 |
+| 8 | `kinuya-cli-reference`・各 `kinuya-*-schema`・`ifx-api-kinuya-*.yaml` が持つ構文・値・終了コード | 本文で「未同梱の架空参照名」と明記されている | 確かめられない（正本がない駄菓子屋の仮定で、共通サンプル文脈とは食い違わない） |
+
+`src/` には、CLI 仕様の完成例として参照する箇所（`src/schedule/strategy-profiles.ts`）があるだけで、照合すべき事実はありませんでした。
+
+**grade の指摘 4 件の扱い**
+
+どれも R4 では扱わず、sample は直していません。
+
+- **F001・F002**（`vp-pm-plan-feasibility`・`vp-pm-control-reporting`）と **F004**（`vp-ops-operability`）は、`kata-guide.md` の「kata の観点の組」で kata の段のレビューでは使わない観点です。
+- **F003**（`vp-qe-omissions-consistency`）は R2 で扱う観点です。指摘された内容は、読んだ版ではすでに直っていました。6.2 の表で、取引セッション保存失敗が「開始」と「追加・取消」の行に分かれています。開始の行には「取引未開始」を確かめてから `sales start` をやり直す手順と、回復の確認条件が書かれています。
+
+検査は、変更ファイルがないため実行しておらず、実行する必要のある検査もありません。lint などは親 runner の結果が正になります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で sample の事実を schema・`ifx-cmd-sample`・doc index・記述標準と照合した。誤りがなかったため sample は変更していない。grade の指摘 F001・F002・F004 は kata レビューで使わない観点、F003 は R2 の観点で読んだ版では直っていたため、R4 では扱っていない。","handoff":["R4 確かめの表（No｜主張｜正本｜確かめ方｜結果｜根拠）: 1｜frontmatter `type: ui`・`rulebook: specdojo:clis-rulebook`｜`docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/clis-rulebook.md`｜enum と「推奨 Frontmatter 項目」を読み取り｜一致｜enum に `ui`、rulebook は `type` を `ui`、`rulebook` を `specdojo:clis-rulebook` と定める。 2｜`part_of`・`based_on` が空配列｜`docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、rulebook の「推奨 Frontmatter 項目」｜定義を読み取り｜一致｜項目が定義済みで、未接続の理由は本文の「メモ / 将来課題」に記録されている。 3｜wikilink `specdojo:ifx-cmd-sample`｜`.specdojo/doc-index.json`｜grep｜一致｜id が登録されている。 4｜入力パス `receipts/receipt-YYYYMMDD-NNNN.txt`｜`docs/ja/specdojo/samples/ifx-cmd-sample.yaml` の `files.inputs`｜読み取り｜一致｜同じパス。 5｜印字コマンドの終了コードは販売 CLI に伝わらず、印字未完了は終了コード 0 で会計を維持する｜`ifx-cmd-sample.yaml` の `purpose`・`exit_codes`｜読み取り｜一致｜「印字失敗時も会計を取り消さず」「会計全体の完了判定は販売 CLI が行う」。 6｜未印字と結果不明を分け、再印刷は保存済みレシートだけにする｜`ifx-cmd-sample.yaml` の `idempotency`・`malformed_output_action`｜読み取り｜一致｜「再印刷は保存済みレシートだけを使い」「印字結果不明として扱う」。 7｜役割名（店主代表・家族利用者代表・開発担当・同行レビュー担当）｜`docs/ja/specdojo/standards/sample-authoring-standard.md` の共通登場人物｜grep｜一致｜共通登場人物の表に 4 役割がある。 8｜`kinuya-cli-reference`・各 `kinuya-*-schema`・`ifx-api-kinuya-*.yaml` の構文・値・終了コード｜なし（本文で未同梱の架空参照名と明記）｜-｜確かめられない｜正本のない駄菓子屋の仮定で、共通サンプル文脈とは食い違わないため確かめの対象外。確かめるには架空参照の正本の作成が要る。","F001（`vp-pm-plan-feasibility`）と F002（`vp-pm-control-reporting`）: `docs/ja/specdojo/guides/kata-guide.md` の「kata の観点の組」で kata の段のレビューでは使わない観点のため、sample を直していない。登録簿で追う論点として扱う。","F003（`vp-qe-omissions-consistency`）: R2 の観点のため R4 では扱っていない。読んだ版では 6.2 の表で取引セッション保存失敗が「開始」と「追加・取消」の行に分かれ、開始の行に「取引未開始」の確認と `sales start` の再実行が書かれており、指摘は直っている。","F004（`vp-ops-operability`）: kata の段のレビューで使わない観点のため sample を直していない。内容は F003 と同じ版の直しで満たされている（開始の行に、取引番号の表示をもって回復とする条件がある）。"],"validations":[]}
+</specdojo_executor_evidence>

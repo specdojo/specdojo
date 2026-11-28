@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-etc-index-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-etc-index-sample-150-20261124T230925Z-0e3ab92b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T23:10:09.866Z",
+    "completed_at": "2026-11-24T23:14:28.408Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/etc-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/etc-index-sample.md | 28 ++++++++++++++--------------\n 1 file changed, 14 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/etc-index-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形（表の列幅を揃えた）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/etc-index-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:etc-index-sample\n  type: test\n  status: draft\n  rulebook: specdojo:etc-index-rulebook\n  based_on:\n    - specdojo:tsp-index-sample\n    - specdojo:ifd-sample\n---\n\n# 外部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）\n\n## 1. 本ドキュメントの目的と適用対象\n\n本書は、\\[\\[specdojo:tsp-index-sample|テスト戦略・方針]] の外部結合テスト（ET）を根拠とする。駄菓子屋きぬや 販売管理システムの対象別カタログ（`etc-<term>`）に共通する分割基準・観点と条件の立て方・外部依存境界・合格基準・証跡を定める。個別の観点・条件・ケースは `etc-<term\n… output omitted …\n判定 | 実接続の観点が未実施のまま出口条件を判定できない | 「外部結合テスト共通の境界/依存/環境の扱い」の保留に加え、Project Manager（PM）が日程を見直す |\n| *UNDECIDED*: `receipt-print` の応答待ちと自動再試行 | \\[\\[specdojo:ifx-cmd-sample\\|レシート印刷コマンド連携仕様]] の上限30秒・送信前ビジー時の自動再試行（最大3回）と、本書の応答待ち10秒・自動再送なしで境界値と期待値が食い違う | 本書の値で期待値を立て、連携仕様と値をそろえた時点で本書と `etc-receipt-print` を更新する |\n| *ASSUMPTION*: 保管サービスの応答待ち30秒・再送2回 | 境界条件の値と合格基準が変わる | 提供事業者の提供条件が届くまで仮置きとし、届いたら本書と対象別を更新する |\n| *TODO*: 削除し損ねた `et-` コピーの定期的な片付け | 検証用領域の上限に達すると転送の正常系が失敗する | 週1回、7日を過ぎた `et-` コピーを手動で削除する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6891 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6891 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-etc-index-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1754}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  08:15:20\n   Duration  2.89s (transform 7.99s, setup 889ms, import 10.14s, tests 6.95s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-etc-index-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-etc-index-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）として etc-index-sample を tsp-index-sample・etc-sample・etc-index-rulebook に合わせて修正（内部結合テストの範囲の表記、分割閾値、記入例のトレース・証跡）。相手側（itc-index-sample）の食い違いは修正案として handoff に記録。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 1. 本ドキュメントの目的と適用対象 / 内部結合テストで扱う範囲が「画面・記録サービス・業務記録 DB」となっており、tsp-index-sample の内部結合テストの範囲（保全・復元処理を含む）と一致しない / 「画面・記録サービス・保全・復元処理と業務記録データベース（DB）の結合は内部結合テストで扱う」に直した / vp-qe-kata-conformance（tsp-index-sample のテストレベル表の内部結合テストの行） / -",
+    "R5-2: R5 / 2. テスト対象の括り方と分割基準 / 分割を見直す閾値「観点が 15 を超える・ケース表が 50 行を超えた」が、rulebook の「観点が 15 以上、表が 50 行以上」と境界値で食い違う（F009） / 「観点が 15 以上か、ケース表が 50 行以上になった時点」に直した / vp-qe-kata-conformance（etc-index-rulebook の分割基準） / -",
+    "R5-3: R5 / 8. ケース表の共通カラム / 記入例のトレース列が説明文で、同じケース et-receipt-print-failure-handling-010 の etc-sample の値（`TR-01,TR-05`）や rulebook が求める ID と合わない（F007） / `TR-01,TR-05`（etc-receipt-print のトレース表で仕様 ID に対応付ける）に直した / vp-qe-kata-conformance（etc-index-rulebook のケース表カラムの定義、etc-rulebook のトレース章、etc-sample の 6.2.2.） / -",
+    "R5-4: R5 / 8. ケース表の共通カラム / 記入例の証跡が、etc-sample の同じケースの証跡（テストファイル名を含む）と食い違う / `tests/et/receipt-print/failure-handling.test.ts` を加え、etc-sample と同じ証跡の構成にした / vp-qe-kata-conformance（etc-sample の 6.2.2.） / -",
+    "R5-5: R5 / 2. テスト対象の括り方と分割基準（相手側: itc-index-sample） / F001・F008 は tsp-index-sample が `PATH-04`〜`PATH-07` を外部結合テストの範囲とする前提だが、今の版の tsp-index-sample は `PATH-04`・`PATH-07` を内部結合テスト、`PATH-05`・`PATH-06` を外部結合テストとしており、etc-index-sample と一致する。食い違っているのは itc-index-sample の適用対象の段落と、外部結合テストの行・対象外の表で、`PATH-04`〜`PATH-07` を外部結合テスト（etc-backup-storage）の範囲として内部結合テストでは扱わないとしている。このままでは保全の取得（`PATH-04`）と復元の回復（`PATH-07`）をどのテストも扱わない / - / vp-qe-kata-conformance、vp-dev-change-impact。相手側の案: itc-index-sample を tsp-index-sample に合わせ、`PATH-04`・`PATH-07` を内部結合テストの範囲に入れて保全の取得と復元後の記録一致の term・観点を置き、外部結合テストの代替先を `PATH-05`・`PATH-06` に絞る。選ばなかった案: etc-index-sample に `PATH-04`・`PATH-07` と復元の回復の観点を加える（tsp-index-sample の内部結合テストの範囲と保全・復元の内部結合テストでの確認の記述に反するため不採用）。tsp-index-sample を正本としたが、どちらに合わせるかは人が判断する / 要判断",
+    "R5-6: R5 / 9. メモ / 将来課題 / F002（vp-pm-plan-feasibility）・F003・F004（vp-pm-control-reporting）は計画・報告の観点で、kata-guide の「kata の観点の組」はこれらを kata の段のレビューで使わないと定めているため、この段では扱わない / - / kata-guide の kata の観点の組（外す観点の表）。必要なら登録簿の運用として別途判断する / -",
+    "R5-7: R5 / 4. 観点の立て方（共通）・5. 条件の立て方（共通） / F005（遅延の具体値）・F006（ET で扱う範囲の非機能の型）は前の段の版ですでに解消済み（遅延は 9 秒・29 秒、非機能の行あり）のため指摘を繰り返さない / - / vp-qe-verifiability、vp-qe-omissions-consistency（前の段の範囲） / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-etc-index-sample-150/T-KATA-REVIEW-ALL-etc-index-sample-150-20261124T230925Z-0e3ab92b/executor.log",
+      "bytes": 7333,
+      "truncated": false
+    }
+  ]
+}

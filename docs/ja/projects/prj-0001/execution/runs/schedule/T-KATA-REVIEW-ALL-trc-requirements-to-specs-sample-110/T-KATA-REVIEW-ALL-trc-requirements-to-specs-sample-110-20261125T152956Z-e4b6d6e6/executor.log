@@ -1,0 +1,19 @@
+R1（目的の過不足）のレビューで、`docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md` を 3 か所直しました。変更はこのファイルだけで、Prettier の整形チェックは通っています。lint などの検証はこのあと親 runner が実行します。
+
+照合した資料:
+- rulebook `specdojo:trc-requirements-to-specs-rulebook`
+- Sample 記述標準
+- kata-guide の「kata を agent でレビューする」
+
+rulebook の必須 5 章と条件付きの「変更履歴と更新ルール」はそろっていて、欠けている内容はありませんでした。成果物カタログに、この型の `done_criteria` は見つかりませんでした。
+
+直したこと:
+1. **「トレース対象の前提」の末尾の 1 文を削除:** 「本書が参照する要求一覧と仕様文書は、いずれも未同梱の架空参照名である。」は、sample についての注記で、成果物の責務に入りません。ない文書をバッククォートで書く規約は Sample 記述標準が持っています。
+2. **「ギャップと対応方針」の末尾の 1 文を削除:** 「実案件の PJR 個票は未同梱である。」も同じ理由で削りました。
+3. **「充足状況サマリ」の優先リストの前の 1 文を修正:** リストの 3 番目は要求ではなく仕様の `bes-product-master` なので、導入文を「優先して解消する要求と、要求に対応しない仕様、その理由は次のとおり。」にしました。rulebook はここに「要求 ID と理由」を求めているため、要判断の印を付けます。
+
+grade の F001（「使う人」の欄が通称で書かれ、Role code にそろっていない）は観点 `vp-ux-language-consistency` で、R1 ではなく R3（読みやすさ）が扱うため、この段では直していません。この欄は利用場面に関わる人の説明で、成果物そのものが扱う内容なので、R1 では残すと判断しました。R3 で、Role code にそろえるか役割名のままにするかを決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューで trc-requirements-to-specs-sample を 3 か所直した。sample についての注記 2 文（未同梱の架空参照名、未同梱の PJR 個票）を削り、優先リストの導入文を、仕様 bes-product-master も並ぶ実際の中身に合わせた。F001 は R3 の観点のため、この段では直さず申し送った。","handoff":["No: 1 / 段: R1 / 箇所: 「トレース対象の前提」の末尾 / 指摘: 「本書が参照する要求一覧と仕様文書は、いずれも未同梱の架空参照名である。」は sample についての注記で、トレースビューの責務（rulebook の「本文要件」）に入らない、要らない内容 / 直した案: 文を削除した / 根拠: Sample 記述標準の「記述ガイド」（ない文書はバッククォートで仮置きする規約は標準が持つ）、`vp-po-purpose-alignment` / 印: なし","No: 2 / 段: R1 / 箇所: 「ギャップと対応方針」の末尾 / 指摘: 「実案件の PJR 個票は未同梱である。」は sample についての注記で、成果物の内容ではない / 直した案: 文を削除し、担当と期限を登録簿で追うという rulebook の求めの 1 文だけを残した / 根拠: rulebook の「記述ガイド」の「ギャップと対応方針」、Sample 記述標準の「記述ガイド」 / 印: なし","No: 3 / 段: R1 / 箇所: 「充足状況サマリ」の優先リストの導入文 / 指摘: 導入文は「優先して解消する要求と理由」だが、3 番目の項目は仕様の `bes-product-master` で、導入文と中身が合わない / 直した案: 導入文を「優先して解消する要求と、要求に対応しない仕様、その理由は次のとおり。」に直した。rulebook は「優先して解消する要求 ID と理由」を求めるので、3 番目を外して要求 ID だけにする案もある / 根拠: rulebook の「本文要件」の「充足状況サマリ」の行、`vp-qe-kata-conformance` / 印: 要判断","No: 4 / 段: R1（R3 へ申し送り） / 箇所: 「目的と適用範囲」の使う場面の表の「使う人」の欄（grade F001） / 指摘: 使う人の欄が通称（開発担当・店主代表・同行レビュー担当）で書かれ、Role code にそろっていない。観点 `vp-ux-language-consistency` は R3 が扱うため、R1 では直していない。R1 では、この欄を成果物が扱う利用場面の関係者と見て残した / 直した案: R3 で、Role code（DEV・PO など）にそろえるか、Sample 記述標準の「共通サンプル文脈」の役割名のままにして理由を残すかを決める / 根拠: kata-guide の「kata の観点の組」、Sample 記述標準の「共通登場人物」（責務を表す項目は Role code、本文と表の表示名は役割名） / 印: 要判断","成果物カタログに、この型の `done_criteria` は見つからなかった（docs/ja/specdojo と docs/specdojo を検索して該当なし）。R1 は rulebook と Sample 記述標準を基準に確かめた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したのは *.md だけで、*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>

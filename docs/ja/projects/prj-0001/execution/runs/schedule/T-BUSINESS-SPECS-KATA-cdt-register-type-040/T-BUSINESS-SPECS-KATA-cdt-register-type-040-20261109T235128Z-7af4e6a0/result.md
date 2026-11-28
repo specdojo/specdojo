@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: rulebook-maintenance
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
     - specdojo:cdt-rulebook
 ---
 

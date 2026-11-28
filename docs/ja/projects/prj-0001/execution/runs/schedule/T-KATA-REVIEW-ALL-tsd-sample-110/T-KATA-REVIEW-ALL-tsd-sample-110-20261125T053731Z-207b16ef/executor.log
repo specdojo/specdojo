@@ -1,0 +1,26 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/tsd-sample.md` を直しました。rulebook など sample 以外のファイルは変えていません。
+
+**見つけた問題:** sample は冒頭と「目的」で、本番環境で DB が起動し、日次のダンプから復元できる状態まで導くと書いています。ところが「導入と初期設定」の章には開発端末の手順しかありませんでした。このため、動作確認表の「本番の DB 環境の作成後に確認する」の前提を再現できない状態でした（F003）。
+
+**直したこと:**
+- **対象範囲の表:** 対象外の行を 1 つ足しました。Fly.io の 3 アプリとボリュームの作成は `tsd-hosting.md`（未作成の間は各アプリの `fly.toml`）に任せる、という線引きです。
+- **新しい節「5.2. 本番環境の初期設定手順」:** アプリとボリュームが作成済みであることを開始条件にしました。手順は次の 5 つです。
+  1. DB の設定値を反映する（既存の「採用設定一覧」の反映先を参照）
+  2. 読み取り専用のバックアップ用ロールを作る
+  3. `DATABASE_URL` を保存する
+  4. `fly deploy --app kinuya-db-backup` でバックアップ環境を配置する
+  5. CI で `npx prisma migrate deploy` を初回実行する
+- 元の 5.2 は 5.3 に番号を送りました。
+- いらない内容は見つからなかったので、削った箇所はありません。
+
+**確認していないこと:** 新しい節のコマンドとキーワードが正しいかは確かめていません。対象は `GRANT pg_read_all_data`、`fly deploy --app`、`fly postgres config update` です。確かめるのは R4 の段です。実行した検査は Prettier の整形確認だけで、通りました。
+
+**この段で扱わなかった指摘:**
+- **F001:** 使う観点 `vp-pm-dependency-risk` は、kata のレビューでは使わない観点になっているため扱いません。
+- **F002:** R3 に任せます（簡潔さの観点）。
+- **F004:** R4 に任せます（判定できる閾値の観点）。
+- **F005・F006:** R2 に任せます（抜けと食い違いの観点）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施した。冒頭と目的が本番の DB 起動と復元までを掲げるのに、導入の章が開発端末だけで本番の初期設定が欠けていた（F003）。対象範囲の表に Fly.io アプリとボリュームの作成を対象外として足し、5.2 に本番環境の初期設定手順（設定値の反映、バックアップ用ロールの作成、DATABASE_URL の保存、バックアップ環境の配置、migrate deploy の初回実行）を足した。旧 5.2 は 5.3 に送った。削る内容はなかった。R1 以外の観点の finding はほかの段に任せる。","handoff":["R1-1: R1 / 5. 導入と初期設定 / 目的（本番で DB が起動し、ダンプから復元できる）に対し、導入の章が開発端末だけで本番の DB 環境とバックアップ環境の初期設定が欠けていた。動作確認の「作成後に確認する」の前提を再現できない（F003） / 「5.2. 本番環境の初期設定手順」を足し、作成済みのアプリとボリュームを開始条件として、設定値の反映、バックアップ用ロールの作成（`pg_read_all_data`）、`DATABASE_URL` の保存、`fly deploy --app kinuya-db-backup`、`npx prisma migrate deploy` の初回実行の 5 手順を既存の節への参照で書いた。旧 5.2 は 5.3 にした / vp-po-purpose-alignment、vp-qe-kata-conformance（rulebook の本文要件「導入・初期設定」） / 要判断（アプリとボリュームの作成まで本書に書く案は、1.3 で tsd-hosting が 3 アプリの構成を持つとしているため採らず、作成後の DB 固有の設定だけを書いた。コマンドとキーワードの正しさは R4 で確かめる）","R1-2: R1 / 1.2. 対象範囲と責務境界 / Fly.io の 3 アプリとボリュームの作成を本書と tsd-hosting のどちらが持つかが対象範囲の表から読めず、本番の構築手順の欠落が範囲外なのか抜けなのか判断できなかった / 対象外の行「Fly.io アプリとボリューム」を足し、委ねる先を `tsd-hosting.md`（未作成の間は各アプリの `fly.toml`）とした / vp-arc-single-responsibility / -","R1-3: R1 / 1.3. 他文書との関係 / `tsd-hosting.md`・`tsd-ci.md` の作成担当と時期が無い（F001） / - / 使う観点 vp-pm-dependency-risk は、kata-guide の「kata の観点の組」で kata の段のレビューでは使わない観点のため扱わない。sample 本文に担当の割り当てを書くことも Sample 記述標準が禁止している / -","R1-4: R1 / 3. 全体構成と接続経路・6.1 動作確認一覧・7.2・7.3 / F002（図をなぞる文、vp-arc-conciseness）、F004（動作確認 7 の閾値、vp-qe-verifiability）、F005（ダンプの日付の基準、vp-qe-omissions-consistency）、F006（7.3 の切り戻し用ダンプとアプリ停止の順序、vp-qe-omissions-consistency）はこの段の観点に当たらない / - / F002 は R3、F004 は R4、F005・F006 は R2 に任せる / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/tsd-sample.md","status":"passed","summary":"--write で整形した後の再確認で、All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>

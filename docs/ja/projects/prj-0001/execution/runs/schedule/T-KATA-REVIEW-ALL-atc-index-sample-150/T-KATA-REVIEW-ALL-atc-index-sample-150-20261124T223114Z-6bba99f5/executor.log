@@ -1,0 +1,31 @@
+R5（整合）として `docs/ja/specdojo/samples/atc-index-sample.md` を2か所直しました。Prettier と markdownlint はこのファイルで 0 件です。ほかの文書へ直すべき点は4件あり、相手側は変えずに案だけ残しています。
+
+**展開された finding（F001〜F003）**
+3件とも前の段で解消済みでした。
+- F001: `取引照合の保証` の主担当は `atc-sale-hold` だけになっています。
+- F002: 観点名は `主要操作の自力完了の成立` に直っています。
+- F003: 家族利用者代表には `UX` が付いています。
+
+F003 は `PO` 業務助言に揃える案でした。ただし `pm-members-sample.yaml` が家族利用者代表を `roles: [UX]` と定義しているため、`UX` を正としてそのまま残しました。
+
+**本書で直した点**
+- **R5-1（要判断）合格基準:** TSP の受入の出口条件は「Blocker・Critical・Major 0 件、例外なし」です。本書の P1 の条件付き受入と P2 の 90% 合格は、この条件と食い違って読めました。そこで「優先度にかかわらず Blocker・Critical・Major の Fail が1件でも残る場合は、受入可・条件付き受入にしない」の1文を足しました。条件付き受入の対象は Minor 以下の Fail に限られます。足さずに TSP 側を直す案は採りませんでした。受入の出口の正本は TSP のためです。
+- **R5-2 ケース表の共通カラム（記入例）:** 記入例を `atc-sample.md` の同じケース（`at-cash-sale-sale-complete-010`）に揃えました。
+  - 条件を「店主不在で家族利用者代表が店番」にしました。
+  - 期待値から「説明なしで確定でき」を外し、「在庫一覧で商品Aが3個」にしました。
+  - トレースを BAC-01・AC-01 にしました。
+  - 「説明なし」と SC-01 は別の観点（`self-complete`）の内容のため外しています。
+
+**ほかの文書へ直す案（変更していません）**
+- **R5-3（`atc-sample.md` の観点の見出し）:** 見出しの「観点：主要操作の自力完了」を「観点：主要操作の自力完了の成立」に改め、本書の分配表と命名規則に合わせる案です。
+- **R5-4（`atc-sample.md` の概要）:** 分割基準の引用「商品の登録→会計確定→レシートの受け渡し」に「金額の提示」を足し、本書の分割基準の表と揃える案です。
+- **R5-5（要判断・環境/依存の列）:** 本書の記入例は `kinuya-at`、店舗プリンタを書いています。一方 `atc-sample.md` の同じケースは「なし」です。共通方針との差がないため「なし」にした、と読めます。どちらに揃えるかは列の意味の決め方しだいなので決めていません。案は2つです。
+  - 本書の列の説明を「共通方針と異なる場合だけ書く」に改める。
+  - `atc-sample.md` 側にデータ領域と接続先を書く。
+- **R5-6（`atc-sample.md` の環境/データ/外部依存の表）:** 店舗プリンタだけを挙げています。本書の外部依存にある復元用保管サービスの扱いが抜けています。足すか、`共通方針との差` で触れる案です。
+
+用語集はプロダクト側の用語だけで、駄菓子屋の業務語との食い違いはありませんでした。共通サンプル文脈（登場人物、商品A 30円・在庫5個）、`stc-*` の term 名、BAC・SC・AC の ID にも食い違いはありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）で atc-index-sample の合格基準に TSP の出口条件（Blocker・Critical・Major の Fail が残れば受入不可）を足し、ケース表の記入例を atc-sample の `at-cash-sale-sale-complete-010` に揃えた。F001〜F003 は前の段で解消済みだった。F003 は pm-members-sample の `roles: [UX]` を正として UX のまま残した。atc-sample 側へ直す案は handoff に残した。","handoff":["R5-1: R5 / 合格基準 / P1 の条件付き受入と P2 の 90% 合格が、TSP の受入の出口条件「SC-01・SC-07・SC-09・AC-01〜AC-05 がすべて合格、Blocker・Critical・Major 0 件、例外なし」と食い違って読める / 「優先度にかかわらず Blocker・Critical・Major の Fail が1件でも残る場合は、受入可・条件付き受入にしない」の1文を足した / `vp-qe-kata-conformance`（tsp-index-sample の受入テスト行と品質ゲートの表）。迷った理由: 条件付き受入の範囲が Minor 以下に狭まる。TSP 側を直す案は、受入の出口の正本が TSP のため選ばなかった / 要判断","R5-2: R5 / ケース表の共通カラム（記入例） / 記入例 `at-cash-sale-sale-complete-010` の条件・期待値・トレースが atc-sample の同じケースと食い違っていた。期待値に「説明なしで確定でき」、トレースに SC-01 が入っており、別の観点（`self-complete`）の内容が混ざっていた / 条件を「店主不在で家族利用者代表が店番」、期待値を「レシートと販売一覧に同じ取引番号と合計60円が表示され、在庫一覧で商品Aが3個と表示される」、トレースを BAC-01、AC-01 にした / `vp-qe-kata-conformance`（atc-sample の観点「会計確定の成立」のケース表、TR-01・TR-02） / -","R5-3: R5 / atc-sample の観点の見出し「主要操作の自力完了」 / 本書の分配表と命名規則（名詞＋成立/保証/整合）では `主要操作の自力完了の成立` で、個別 sample の観点名と食い違う / - / `vp-qe-kata-conformance`。相手側の docs/ja/specdojo/samples/atc-sample.md の見出し「観点：主要操作の自力完了」を「観点：主要操作の自力完了の成立」に改める案 / -","R5-4: R5 / atc-sample の概要の分割基準の引用 / 個別 sample は「商品の登録→会計確定→レシートの受け渡し」、本書の分割基準の表は「商品の登録→金額の提示→会計確定→レシートの受け渡し」で、引用が欠けている / - / `vp-qe-kata-conformance`。相手側の atc-sample.md の概要の括弧内に「金額の提示」を足す案 / -","R5-5: R5 / ケース表の共通カラム（環境/依存の列） / 本書の記入例は `kinuya-at`、店舗プリンタと書き、atc-sample の同じケースは「なし」と書いている。列の意味（共通方針との差だけを書くのか、常に書くのか）が両者で揃っていない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。迷った理由: どちらを正とするかは列の定義の判断になる。案は、本書の列の説明を「共通方針と異なる場合だけデータ領域と接続先を書く」に改めて記入例を「なし」にする案と、atc-sample 側に `kinuya-at`、店舗プリンタを書く案の2つ / 要判断","R5-6: R5 / atc-sample の環境/データ/外部依存 / 本書の外部依存は店舗プリンタと復元用保管サービスを挙げるが、個別 sample は店舗プリンタだけで、保管サービスの扱いに触れていない / - / `vp-qe-kata-conformance`。相手側の atc-sample.md の外部依存に保管サービスの扱い（このカタログで使わないなら `共通方針との差` に一言）を足す案 / -","F001〜F003 は前の段（R1〜R4）で解消済みだった。F001 は `取引照合の保証` の主担当が `atc-sale-hold` だけになっている。F002 は観点名が `主要操作の自力完了の成立` になっている。F003 は家族利用者代表に `UX` が付いている。F003 の message は `PO` 業務助言に合わせる案だったが、pm-members-sample.yaml が家族利用者代表を `roles: [UX]` と定義しているため、UX のまま残した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"表の列幅を整えた"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

@@ -4,16 +4,16 @@ document: specdojo:nfr-security-safety-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 84
-graded_at: "2026-11-05T20:32:24.430Z"
-graded_by: flash-high-executor
-content_hash: 643dc36998c7090c04fe9940d00cc25ef58eef1577893ca61736bb2a02670749
+verdict: pass
+score: 94
+graded_at: "2026-11-23T15:21:50.868Z"
+graded_by: sonnet-review-executor
+content_hash: f0749d962e71ab3585ecdc6cd54aeae284f6e53010e603491af387c35343ee07
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,23 +75,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,49 +103,28 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
+  major: 0
   minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 79
-    anchor: ""
-    message: 記述ガイドにおいて、判定基準を具体化するための例示が不十分であり、検証可能な表現への誘導が弱い。
-    message_ja: 記述ガイドにおいて、判定基準を具体化するための例示が不十分であり、検証可能な表現への誘導が弱い。
-  - id: F002
-    severity: major
     rule: vp-qe-omissions-consistency
-    line: 6
-    anchor: 機密性・安全性要件は、権限逸脱や情報漏えいを防ぐ基準を定量化する。
-    message: Frontmatter の recipe および template が undecided となっており、成果物生成のための定義が不足している。
-    message_ja: Frontmatter の recipe および template が undecided となっており、成果物生成のための定義が不足している。
+    line: 92
+    anchor: ""
+    message: "検証先に `opr-*` を挙げているが、位置づけでは `opr-*` を監視・インシデント対応の正本としている。検証先として使う場合の役割（例: 月次点検の手順・棚卸し記録）を揃えて明記すること。"
+    message_ja: "検証先に `opr-*` を挙げているが、位置づけでは `opr-*` を監視・インシデント対応の正本としている。検証先として使う場合の役割（例: 月次点検の手順・棚卸し記録）を揃えて明記すること。"
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 非機能要件 / 機密性・安全性 作成ルール"
+    message: "`recipe` と `template` が `undecided` のままで、Kata の対応が揃っていない。ready 化の前に、対応する recipe と template を決めること。"
+    message_ja: "`recipe` と `template` が `undecided` のままで、Kata の対応が揃っていない。ready 化の前に、対応する recipe と template を決めること。"
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 123
-    anchor: "```"
-    message: セクション8のフロントマター例が `specdojo:` ブロックで囲まれておらず、ルールブック自身の形式や最新のスキーマと矛盾している。
-    message_ja: セクション8のフロントマター例が `specdojo:` ブロックで囲まれておらず、ルールブック自身の形式や最新のスキーマと矛盾している。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: ""
-    message: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
-    message_ja: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 7
-    anchor: ""
-    message: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
-    message_ja: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 76
-    anchor: "### 6.2. 適用範囲・脅威前提"
-    message: 「5. 本文構成」の表で、「5 関連ドキュメント導線」の行が別の表に分断されており、表示が崩れている。
-    message_ja: 「5. 本文構成」の表で、「5 関連ドキュメント導線」の行が別の表に分断されており、表示が崩れている。
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 非機能要件 / 機密性・安全性 作成ルール"
+    message: ready 化の条件である recipe と template の決定が未了であることが、本文で示されていない。ready 判断の前に確認できるようにすること。
+    message_ja: ready 化の条件である recipe と template の決定が未了であることが、本文で示されていない。ready 判断の前に確認できるようにすること。

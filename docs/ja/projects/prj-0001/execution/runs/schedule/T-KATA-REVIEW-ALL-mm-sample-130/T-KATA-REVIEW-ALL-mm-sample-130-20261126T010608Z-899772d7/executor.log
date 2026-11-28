@@ -1,0 +1,14 @@
+R3（読みやすさ）として `docs/ja/specdojo/samples/mm-sample.md` の「決定事項」の導入文を 2 か所直しました。Prettier と markdownlint はどちらも通っています。
+
+**直した箇所（決定事項の導入文）:**
+- **R3-1（W2・W3）:** 冒頭の 1 文は「欠品7回のうち5回が、…目安が違い、…」と主語が二重になり、読点も 3 つありました。「欠品は7回だった」と「うち5回は…」の 2 文に分けました。
+- **R3-2（W1）:** 表の前の文の「決めた役割」では、誰の役割かが読み取りにくいです。「決めた人の役割」にしました。
+
+**直さなかった指摘:**
+- **F001（決定2の判断理由がない）:** 前の段で「残る2回は、店番の交代で欠品速報を見る時刻がずれ…」という文がすでに足されており、判断理由は本文に書かれています。また、この指摘の観点 `vp-ba-business-value` は、kata-guide の「kata の観点の組」で R3 では使わない観点とされています。そのため、この段では扱いませんでした。
+
+ほかの文（会議情報、議題、アクションアイテム、保留事項）は W1〜W10 で問題がなく、そのままにしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさとして mm-sample の決定事項の導入文を2文に分け（W2/W3）、表前の文の「決めた役割」を「決めた人の役割」に直した（W1）。F001 は既に前段で解消済みで、観点も R3 対象外。","handoff":["R3-1: R3 / 3. 決定事項 / 冒頭文「欠品7回のうち5回が、店番ごとに…目安が違い、補充が遅れた」は主語が二重でねじれ、読点も3つある / 「週次レビューで確かめた人気商品の欠品は7回だった。うち5回は、…」の2文に分けた / W2、W3 / -","R3-2: R3 / 3. 決定事項 / 表前の文「決めた役割」が誰の役割か読み取りにくい / 「決めた人の役割」にした / W1 / -","R3-3: R3 / 3. 決定事項 / grade の F001（決定2の判断理由がない）は、前の段で「残る2回は、店番の交代で欠品速報を見る時刻がずれ…」の文が足され、すでに解消している。観点 `vp-ba-business-value` も kata-guide の「kata の観点の組」で外す観点とされている / - / vp-ba-business-value（kata の段のレビューでは外す観点）。再 grade で解消を確かめる / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mm-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/mm-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは sample だけで、plan、result、個票は変更していないため"}]}
+</specdojo_executor_evidence>

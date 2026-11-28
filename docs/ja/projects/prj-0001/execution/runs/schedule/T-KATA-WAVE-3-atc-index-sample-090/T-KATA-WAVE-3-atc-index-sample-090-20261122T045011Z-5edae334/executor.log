@@ -1,0 +1,37 @@
+判定は `complete-with-findings` です。このタスクは完了してよく、finding は minor が 3 件残っていますが、どれも完了を妨げません。成果物と result は変更していません。
+
+**評価結果の確認**
+- 鮮度：sample（`docs/ja/specdojo/samples/atc-index-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/atc-index-rulebook.md`）について、`npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を実行しました。どちらも何も出力せず rc=0 で、評価結果は最新、評価パイプラインも完了しています。判定の直前にも `--changed-only` を再実行し、出力なし（rc=0）でした。`docs/ja/specdojo` 配下に作業中の変更もありません。
+- sample：`verdict: pass`、score 97、`content_hash` は `06cc2c15…`、finding は blocker 0 / major 0 / minor 2 / note 0（F001・F002）。
+- rulebook：`verdict: pass`、score 100、`content_hash` は `e527371d…`、finding は blocker 0 / major 0 / minor 1 / note 0（F001）。
+- 型の整備を含む schedule に課される「関係する型すべてに最新の kata の `pass`」という追加条件を満たしています。
+
+**判断根拠**
+- 完了条件 DC-001〜DC-005 は grade が判定済みで、それをそのまま使いました。
+  - 対応する観点のうち、`vp-qe-omissions-consistency` と `vp-qe-verifiability` は level 4 です。
+  - `vp-qe-kata-conformance` は level 3（score 75）で、原因は minor の F001 だけです。
+- 実際に読んで確かめた事実:
+  - **DC-001**：sample は rulebook の記述ガイド 6.1〜6.9 と同じ順で全章を持っています。
+  - **DC-002**：題材は駄菓子屋きぬやで、共通サンプル文脈に沿っています。
+  - **DC-004**：
+    - sample は `based_on` を持ち、合格基準（P0/P1/P2）とケース表の共通の列があります。
+    - rulebook には完成例の章がなく、frontmatter の `sample: specdojo:atc-index-sample` で sample を正本として宣言しています。
+  - **DC-005**：形式例のケースに期待値・観測点・証跡があり、期待値を曖昧に書いたケースは差し戻すと書かれています。
+- 先行の condense タスク（`T-KATA-WAVE-3-atc-index-sample-080`）の result は `status: complete` です。変更は sample 1 ファイルの重複の整理だけで、対象外の変更はありません。
+- 同じ run の evidence では、prettier、markdownlint、`lint:md`、`lint:fm`、`lint:mermaid`、`lint:d2`、`validate:schema`、`test:unit`、`test:integration` がすべて passed でした。残りの検査は、適用条件を満たさないため `not_applicable` として記録されています。
+
+**finding が完了を妨げない理由**
+3 件とも minor です。どれも表記や記述条件の不揃いで、rulebook の必須要素の欠落や禁止事項への抵触ではないため、完了条件を損ないません。
+
+**改善指示**
+- sample F001：分配表の観点名「主要操作の自力完了」が命名規則（名詞＋成立/保証/整合）に合っていません。`主要操作の自力完了の成立` などに直します。
+- sample F002：関係者の表で、家族利用者代表の行だけ Role code がありません。`PO`（業務助言）を書き足します。
+- rulebook F001：「メモ / 将来課題」の記述条件に、担当の Role code と判断期限（または判断タイミング）を必須として足します。
+
+**確認できなかった範囲**
+- `T-KATA-WAVE-3-atc-index-sample-040` と `T-KATA-WAVE-3-atc-index-sample-050` の result は読んでいません。直前の `T-KATA-WAVE-3-atc-index-sample-080` だけで確認しました。
+- grade の finding の行番号（line=100、line=18）は、いまのファイルで該当する箇所（112 行目、31 行目）とずれています。frontmatter を除いて数えたものとみられますが、確かめていません。`content_hash` は一致しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"判定は complete-with-findings。sample（docs/ja/specdojo/samples/atc-index-sample.md）と rulebook（docs/ja/specdojo/rulebooks/atc-index-rulebook.md）の評価結果は、`specdojo grade list --target kata --changed-only` / `--incomplete` が何も出力せず（rc=0）最新で、判定直前の再確認でも変わらない。sample は pass・97・minor 2、rulebook は pass・100・minor 1。完了条件 DC-001〜DC-005 は grade の判定と、成果物を読んで確かめた事実（章立てが rulebook の記述ガイド 6.1〜6.9 と同じ、駄菓子屋の題材、`based_on`・合格基準・共通の列・期待値・観測点・証跡がある、rulebook に完成例の章がなく frontmatter の sample で正本を宣言）で満たしている。先行の condense タスク T-KATA-WAVE-3-atc-index-sample-080 の result は complete で、変更は sample 1 ファイルだけ、検査はすべて passed または適用外。finding 3 件はどれも minor の表記・記述条件の不揃いで、完了を妨げない。確認できなかった範囲: 040 と 050 の result は読んでいない。finding の行番号（line=100・18）はいまのファイルの該当箇所（112・31 行目）とずれている（content_hash は一致）。","handoff":["sample F001: 分配表の観点名「主要操作の自力完了」を `主要操作の自力完了の成立` などに直し、命名規則（名詞＋成立/保証/整合）に揃える。","sample F002: 関係者の表で家族利用者代表の行に Role code（`PO` 業務助言）を書き足す。","rulebook F001: 「メモ / 将来課題」の記述条件に、担当の Role code と判断期限（または判断タイミング）を必須として足す。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-index-sample.md --changed-only","status":"passed","summary":"何も出力せず rc=0。評価結果は最新（判定直前の再確認でも同じ）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-index-sample.md --incomplete","status":"passed","summary":"何も出力せず rc=0。評価パイプラインは完了"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/atc-index-rulebook.md --changed-only","status":"passed","summary":"何も出力せず rc=0。評価結果は最新（判定直前の再確認でも同じ）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/atc-index-rulebook.md --incomplete","status":"passed","summary":"何も出力せず rc=0。評価パイプラインは完了"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_45371a3b87ea4692981b69d92f04cb1f
+  ts: "2026-11-28T04:25:39Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 範囲を守る push の入口を作り、オーケストレーターにだけ承認つきで許す
+    - field: description
+      from: ""
+      to: PJR-D4RJ の決定（選択肢 B）に従い、範囲を守る push の入口を specdojo のコマンドとして作る。オーケストレーターにだけ毎回の承認で許し、各環境の `git push` の deny と executor の守りは残す。PJR-HPAW で `specdojo git` の `push` を拒んだ後に、この入口だけを push の経路にする。
+    - field: input
+      from: ""
+      to: '["PJR-D4RJ で選択肢 B を採った（indie、2026-11-28）。claude・codex・copilot・opencode は道具の側で git push を拒んでおり、本文の文言だけでは許せない","PJR-HPAW で specdojo git の push を拒む。この入口はその後に作り、push の唯一の経路にする","v0.10.0 に入れる。担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-D4RJ"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HPAW"]'
+- v: 1
+  id: reg_9de75e8d02c14cf1b9cb6bfef26a275c
+  ts: "2026-11-28T05:21:01Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45371a3b87ea4692981b69d92f04cb1f
+- v: 1
+  id: reg_16a281f776e6449d84584bfcd41099bb
+  ts: "2026-11-28T05:37:55Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9de75e8d02c14cf1b9cb6bfef26a275c
+- v: 1
+  id: reg_e0f4f7a880404e65a24c0f28d3f165c2
+  ts: "2026-11-28T05:40:09Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票の対応結果・親の検証を確かめ、build し直した CLI で dry-run の表示、main の拒否、executor の役割での拒否、specdojo git の push の案内を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: specdojo guarded-push を足した。同じ project の develop と feature ブランチを同名の remote ref へ fast-forward でだけ送り、main・他 project・タグ・force・全件・mirror・削除を持たない。executor・reporter の実行中は git の起動前に拒む。各環境の設定と文言の案は個票に書いた（未反映）
+  previous_event_id: reg_16a281f776e6449d84584bfcd41099bb
+- v: 1
+  id: reg_2903c5cd0e3e4ae4843468c530f34636
+  ts: "2026-11-28T09:39:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: 設定の反映と実機の確認の結果を記録する
+  changes:
+    - field: section
+      from: ""
+      to: 検証結果
+  previous_event_id: reg_e0f4f7a880404e65a24c0f28d3f165c2
+- v: 1
+  id: reg_c093b932dae54ae3b264a39be6b8bb1c
+  ts: "2026-11-28T09:44:51Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: executor の拒否の実機の確認を記録する
+  changes:
+    - field: section
+      from: ""
+      to: 検証結果
+  previous_event_id: reg_2903c5cd0e3e4ae4843468c530f34636

@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-imp-data-sample-080",
+  "run_id": "T-KATA-WAVE-5-imp-data-sample-080-20261123T144230Z-c7b29b12",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T14:43:09.266Z",
+    "completed_at": "2026-11-23T14:43:37.330Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/imp-data-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/imp-data-sample.md | 12 ++++++------\n 1 file changed, 6 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/imp-data-sample.md",
+      "status": "passed",
+      "summary": "整形済み。差分は 6 行追加・6 行削除。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:imp-data-sample\n  type: project\n  status: draft\n  rulebook: specdojo:imp-data-rulebook\n  based_on:\n    - specdojo:imp-business-sample\n    - cr-2026-004\n  part_of:\n    - prj-0001\n---\n\n# 影響調査（データ）サンプル\n\n## 1. 目的と適用範囲\n\n本書は、変更要求 `cr-2026-004`（バーコード会計とキャンペーン値引きの導入）が駄菓子屋の販売管理システムのデータへ与える影響を判断し、データ対象ごとの変更要否・影響度・対応方針を、データの変更と移行に着手する前に決めるための文書である。業務への影響は \\[\\[specdojo:imp-business-sample|影響調査（業\n… output omitted …\n| `PJR-D4Q1`（`question`） |\n| 既存の売上明細の補正の範囲 | 過去 3 か月分のうち、手書きノートで値引きした明細の件数 | 件数が多いと補正の手順が増え、移行難易度が中から高へ上がるおそれがある | 全明細を値引き額 0 円・理由「値引きなし」で移行し、ノートとの差は記録だけ残す | 2026-05-10 | `DEV` | `PJR-D4R2`（`risk`） |\n| 閉店後の移行作業に使える時間 | 店主代表が閉店後に端末を止めてよい時間 | 決まらないと可用性の判定と、売上明細の移行を 1 晩で終えるか 2 晩に分けるかを決められない | 営業時間中は停止しない前提で判定し、移行手順は 2 晩に分けられる形で作る | 2026-05-12 | `PO` | `PJR-D4Q3`（`question`） |\n\n各事項は、不足情報がそろい「影響詳細一覧」の影響度と「対応方針」の期限を見直した時点で確定とし、転記先の登録項目に結果を記録する。決定期限を過ぎた事項は、対応方針の期限と受入確認の日付 2026-05-28 への影響を見直す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6296 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6296 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-imp-data-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/dct-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/dct-schema.test.ts (5 tests) 6ms\n[parent-validation:test-fi\n… output omitted …\n/src/exec/plans.test.ts\",\"duration_ms\":1761}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  23:51:13\n   Duration  2.97s (transform 10.46s, setup 881ms, import 13.40s, tests 6.19s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-imp-data-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-imp-data-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "4. 影響詳細一覧 / 商品マスタ／バーコード値 行の判断根拠",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「最大値規則により高。」は影響分析サマリの集約規則と影響度列の繰り返しで、判断情報は各観点の判定に残る。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 影響詳細一覧 / 売上明細／値引き額・値引き理由 行の判断根拠",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「最大値規則により高。」は集約規則と影響度列の繰り返しで、観点別判定は残る。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 影響詳細一覧 / キャンペーン適用履歴 行の判断根拠",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「最大値規則により中。」は集約規則と影響度列の繰り返しで、観点別判定は残る。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 影響詳細一覧 / 価格履歴 行の判断根拠",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「最大値規則により低。」は集約規則と影響度列の繰り返しで、観点別判定は残る。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "5. 対応方針 末尾の切替日以降の成功条件の段落",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "確認時点の日付（2026-06-14・2026-06-30）を示す唯一の記述で、判断に要るため残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3. 影響分析サマリ / 境界値の箇条書き",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "許容停止時間・照合失敗の許容は評価観点表にない境界値で、補正の範囲も定量の条件を含むため残した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "「影響詳細一覧」の判断根拠 4 行から、集約規則の繰り返しである「最大値規則により高/中/低。」を削除し、Prettier で表を整形した。ほかの候補は判断に要る情報を含むため保持した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-imp-data-sample-080/T-KATA-WAVE-5-imp-data-sample-080-20261123T144230Z-c7b29b12/executor.log",
+      "bytes": 2981,
+      "truncated": false
+    }
+  ]
+}

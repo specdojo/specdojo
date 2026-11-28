@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SJR7",
+  "run_id": "pjr-sjr7-20261124T005750Z-251111f7",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T01:45:54.038Z",
+    "completed_at": "2026-11-24T01:46:05.057Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-sjr7.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjr7-deprecate-pm-log-kata-apply.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-6-project.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-issue-log-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 10,
+    "summary": ".../010-deliverables-catalog/dct-kata.yaml         | 72 ----------------------\n .../controls/project-register/events/pjr-sjr7.yaml | 20 +++++-\n .../pjr-sjr7-deprecate-pm-log-kata-apply.md        |  3 +-\n .../pjr-sjr7-20261124T005750Z-251111f7/plan.md     |  6 ++\n .../schedule/sch-strategy-kata-wave-6-project.yaml | 39 +-----------\n .../rulebooks/pm-change-request-log-rulebook.md    |  6 +-\n .../ja/specdojo/rulebooks/pm-issue-log-rulebook.md |  6 +-\n .../rulebooks/pm-risk-register-rulebook.md         |  6 +-\n .../samples/pm-change-request-log-sample.md        |  6 +-\n docs/ja/specdojo/samples/pm-issue-log-sample.md    |  6 +-\n .../ja/specdojo/samples/pm-risk-register-sample.md |  6 +-\n 11 files changed, 50 insertions(+), 126 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査です。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6641 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6641 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJR7\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 8ms\n[parent-validation:test-file] \n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1919}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  10:46:17\n   Duration  2.74s (transform 5.15s, setup 754ms, import 7.96s, tests 6.56s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJR7/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJR7/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjr7-deprecate-pm-log-kata-apply.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjr7-deprecate-pm-log-kata-apply.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-6-project.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-6-project.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/pm-issue-log-sample.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/pm-issue-log-sample.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "pm-change-request-log・pm-issue-log・pm-risk-register の rulebook と sample を非推奨にしました。dct-kata と第 6 波 strategy からも外し、個票の対応結果も記入しました。pm-decision-log には rulebook も sample もないため、対象の文書はありません。第 6 波の track(sch-track-kata-wave-6-project.yaml)の再生成は、統合後にオーケストレーターが schedule build で行います。個票の表の 4 行目は open のままで、理由を書いています。",
+  "completion_status": "complete",
+  "handoff": [
+    "統合後に、オーケストレーターが schedule build で sch-track-kata-wave-6-project.yaml を作り直します。track には 3 つの sample の 040〜080 の段が残っています。未実行の 060・080・090 は流さないでください。",
+    "CHANGELOG.md は変更していません。記載する事項は、個票の対応結果 5.2(区分 Deprecated)にあります。",
+    "register build の generated/ の差分は、template と views.ts を変えていないため取得していません。親の検査に任せます。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJR7/pjr-sjr7-20261124T005750Z-251111f7/executor.log",
+      "bytes": 3139,
+      "truncated": false
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
 id: prj-0001:stsd-deliverable-grade-criteria
-document: prj-0001:stsd-deliverable
+document: stsd-deliverable
 path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
 graded_at: "2026-11-10T16:32:36.819Z"
 graded_by: flash-high-executor

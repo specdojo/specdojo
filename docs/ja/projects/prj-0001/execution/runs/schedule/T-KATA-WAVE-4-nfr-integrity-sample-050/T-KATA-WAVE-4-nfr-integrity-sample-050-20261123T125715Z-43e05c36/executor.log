@@ -1,0 +1,21 @@
+`docs/ja/specdojo/samples/nfr-integrity-sample.md` を、駄菓子屋きぬやの値を入れた完成例に書き直しました。変更したのはこのファイルだけです。Prettier で整形し、markdownlint-cli2 は 0 件でした。親 runner が実行する検査はここでは流していません。
+
+**直したこと**
+- 章立てを rulebook の5章構成（概要（対象・目的）〜関連ドキュメント導線）に合わせました。frontmatter には `part_of: specdojo:nfr-index-sample` を追加し、H1 は rulebook へのリンクを外した平文にしました（F017〜F019・F021・F022）。
+- **概要**: 販売記録・在庫数・つけ残高・変更の履歴を重要記録とし、それぞれが損なわれたときの業務影響と、対応する要件を表で示しました（F001・F002・F007）。
+- **適用範囲**: どのデータ間の一致を保つか（整合性境界）を3組と、除外条件を書きました。監査証跡の必須項目（誰が・いつ・何を・変更前後の値・理由）と保持期間7年も入れています（F008・F010・F011）。
+- **要件一覧**: `nfr-int-001`〜`nfr-int-006` を、数値・単位・集計期間付きの基準で定義しました。割合の指標は分子と分母も書いています（F013・F016）。
+- **測定・検証方法**: 要件ごとに測定手段、判定のタイミング、合否条件、判定する Role code（OPS・QE）を表にしました。改ざんの検知は試験 `stc-integrity` で判定します。違反を見つけたときの記録先と、要件を見直すきっかけも書きました（F005・F006・F015）。
+- 旧版の「最小記述例」の重複表と独自の「未解決事項」章は削除し、未決事項は本文の `_UNDECIDED_` に移しました（F012）。
+- 文書の作成・承認の役割分担や承認の進み具合は、PJR-76N9 に従って書いていません。そのため F003・F004・F023 の一部は sample では満たさず、引き継ぎ事項に回しました。
+
+**決めていただきたいこと**
+1. **保持期間の根拠**: 7年の根拠は「青色申告の帳簿保存期間」という仮定（`_ASSUMPTION_`）です。根拠にする規程の文書がまだないため、`based_on` は空のままです。
+2. **紙に記録した販売の扱い**: 端末の障害中に紙へ記録した販売を、復旧後にどう入力し、いつから整合性チェックの対象にするかは未定（`_UNDECIDED_`）です。
+3. **整合性チェックの実行方法**: 閉店後に自動で動かすか、店番が操作して動かすかは未定（`_UNDECIDED_`）です。
+
+`sac-integrity`、`stc-integrity`、`opd-integrity-check`、`opr-integrity-check`、`nfr-security-safety` などの参照先はまだ存在しないため、リンクにせずバッククォートで仮置きしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-integrity-sample を rulebook の5章構成（概要（対象・目的）／適用範囲・前提条件／完全性要件一覧／測定・検証方法／関連ドキュメント導線）に合わせ、駄菓子屋きぬやの販売記録・在庫数・つけ残高を題材にした完成例へ書き直した。frontmatter に part_of: specdojo:nfr-index-sample を追加し、H1 は rulebook へのリンクを外した平文にした。整合性境界3組、除外条件、監査証跡の必須項目と保持期間7年、要件 nfr-int-001〜006 を数値基準付きで定義し、要件ごとの測定手段・判定タイミング・合否条件・判定 Role code、違反時の記録先、見直しの契機も書いた。旧版の重複表と独自の未解決事項章は削除した。変更ファイルは docs/ja/specdojo/samples/nfr-integrity-sample.md のみ。","handoff":["未決（利用者の判断が必要）: 監査証跡の保持期間7年の根拠は、青色申告の帳簿保存期間とする _ASSUMPTION_ として本文に書いた。根拠にする規程文書がまだないため `based_on` は空のまま。根拠文書を決めたら `based_on` に追加する。","未決（利用者の判断が必要）: 端末の障害中に紙へ記録した販売を復旧後にどう入力し、いつから整合性境界の対象にするかを、オフライン時の運用方針と合わせて決める必要がある（本文に _UNDECIDED_ として記載）。","未決（利用者の判断が必要）: 整合性チェックを閉店後に自動で実行するか、店番が操作して実行するかを `opd-integrity-check` で決める必要がある（本文に _UNDECIDED_ として記載）。","PJR-76N9 に従い、F003（PO の承認判断に必要な意思決定者・選択肢）、F004（作業単位・Role 割り当て）、F006（未解決事項の転送先と Role）、F023（ready 昇格の条件）のうち、文書の役割割り当てや承認の進み具合を求める部分は sample に書いていない。未決事項は本文の _UNDECIDED_ と、要件ごとの判定 Role code・違反時の記録先で表した。","rulebook の変更案: 「全体方針」の _UNDECIDED_ に「sample は本文構成の5章に揃っていない」とあるが、今回の改訂で5章に揃ったため、この記述を更新し、NFR 分冊で共通の template にできるかの判断だけを残すとよい。","rulebook の変更案: 「推奨 Frontmatter 項目」は `part_of` に `nfr-index` を置くとしているが、sample では存在する doc id として `specdojo:nfr-index-sample` を置いた。sample での書き方を rulebook に一文添えるとよい。","参照先の `sac-integrity` / `stc-integrity` / `opd-integrity-check` / `opr-integrity-check` / `nfr-security-safety` は存在しないため、wikilink にせずバッククォートで仮置きした。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-integrity-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-integrity-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

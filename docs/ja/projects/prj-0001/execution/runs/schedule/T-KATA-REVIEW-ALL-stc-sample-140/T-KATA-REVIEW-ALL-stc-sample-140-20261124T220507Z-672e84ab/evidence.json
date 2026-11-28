@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-stc-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-stc-sample-140-20261124T220507Z-672e84ab",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T22:05:50.365Z",
+    "completed_at": "2026-11-24T22:08:45.367Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/stc-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/stc-sample.md | 11 ++++++-----\n 1 file changed, 6 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/stc-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner の parent validation で実行されるため、executor では実行しない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/stc-sample.md のみで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:stc-sample\n  type: test\n  status: draft\n  rulebook: specdojo:stc-rulebook\n  based_on:\n    - specdojo:tsp-index-sample\n    - specdojo:stc-index-sample\n---\n\n# 総合テストカタログ: 店頭の現金販売\n\n## 1. 概要（`cash-sale`）\n\n店番担当が商品Aの明細を登録して請求額を合意し、会計を確定してから、販売記録・在庫減算・レシート印刷の結果がそろうまでの経路を確かめる。確定前の取消と、確定後に印刷だけが失敗する経路もこの term で扱う。ローカル ID は `stc-cash-sale` とし、分割の判断は \\[\\[specdojo:stc-index-sample|総合テストカタログ 概要]] の\n… output omitted …\nが1対1に対応し、記録に欠落・重複がないことを保証する。\n\n#### 6.5.2. 条件・ケース表\n\n会計確定応答と同じ試行の記録を使い、再初期化・追加送信せずに照合する。\n\n| `case_id` | 条件 | 手順（最小） | 期待値 | 観測点（アサーション） | 環境/依存 | トレース | 優先度 | 自動化 | 証跡 |\n| - | - | - | - | - | - | - | - | - | - |\n| `st-cash-sale-commit-records-010` | 状態: `st-cash-sale-commit-response-010` の60取引の試行が終了し、取引番号の控えと販売記録を保持している | 控えの60取引番号と保存された販売記録を突き合わせる | 販売記録は60件で、控えの各取引番号に1件ずつ一致し、欠落・重複は0件 | 取引番号の控え、販売記録 | `kinuya-st`（同じ性能試行の記録を保持） | TR-06 | P0 | automated | `kinuya-ci-st` の run、取引番号別の照合結果 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6856 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6856 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-stc-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dura\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1732}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  07:12:56\n   Duration  2.59s (transform 6.23s, setup 997ms, import 8.62s, tests 5.89s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-stc-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-stc-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）の確かめを行い、stc-sample.md の誤り3点を直した: TR-03 の自動再試行の言い切りを ifx-cmd の分類に合わせて限定、TR-04 の根拠に分割基準を追加、SAC-PERF-01 のトレース TR-07 を追加して会計確定応答のケースに P99 の記録を加えた。grade の finding F001〜F005 は R4 の観点外のため扱っていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "確かめの表（R4）: 1 TR-01 C-01（2個・60円・在庫5→3）/C-02（5個・150円・在庫5→0）| 正本 docs/ja/specdojo/samples/bac-sample.md 55-56行 | 一致",
+    "確かめの表（R4）: 2 TR-02 AC-01「商品・数量・支払方法を確定すると販売記録が1件できる」| 正本 prj-success-criteria-and-acceptance-criteria-sample.md 51行 | 一致",
+    "確かめの表（R4）: 3 TR-03「印字失敗・30秒タイムアウトは自動再試行しない」| 正本 ifx-cmd-sample.yaml の exit_codes・error_handling | 不一致: exit 1 の送信前のビジー状態は transient_failure で、最大3回まで自動再試行する。「送信開始後の用紙切れ・30秒タイムアウト」に限定して修正した。timeout_seconds: 30 と、会計を取り消さないこと（21行）は一致",
+    "確かめの表（R4）: 4 TR-04「取消・印刷失敗は分配方針で本 term が主担当」| 正本 stc-index-sample.md 分割基準（40行）・分配表（108-118行）| 一部不一致: 分配表に取消の行がなく、取消は分割基準で本 term に含まれている。仕様IDと要点を修正した。印刷失敗（会計維持）の主担当と、二重確定防止の従担当は一致",
+    "確かめの表（R4）: 5 TR-05・目的・例外「60取引/時で95%が2秒以内（仮置き）」「BAC-01〜BAC-03 の全ケース合格」| 正本 tsp-index-sample.md 106行・138行 | 一致",
+    "確かめの表（R4）: 6 会計確定応答のトレースと観測点 | 正本 sac-sample.md SAC-PERF-01（22行: P95 が2秒以内、P99 は記録のみ）、stc-index-sample.md 115行（P99 も記録する）| 不一致: SAC-PERF-01 へのトレースがなく、P99 の記録もなかった。TR-07 を追加し、観測点に P95・P99 を加えた",
+    "確かめの表（R4）: 7 TR-06 SAC-PERF-02「送った件数と販売記録が一致」| 正本 sac-sample.md 23行・58行（SAC-PERF-01 と同じ試行）| 一致",
+    "確かめの表（R4）: 8 データ・外部依存・証跡（kinuya-st・kinuya-test-data 商品A 30円・在庫5個、スタブで再現、kinuya-ci-st・kinuya-st-report）| 正本 stc-index-sample.md 7.1（133-137行）| 一致。性能試行で在庫を100個にする件は、共通方針との差として根拠つきで書かれている",
+    "確かめの表（R4）: 9 case_id 書式 st-<term>-<perspective_key>-<nnn>、優先度 P0/P1、自動化 automated/mixed、列の順 | 正本 stc-index-sample.md 8章 | 一致",
+    "確かめの表（R4）: 10 frontmatter（type: test、rulebook: specdojo:stc-rulebook、based_on に tsp-index と stc-index）と wikilink の参照先が実在すること | 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、stc-rulebook.md 4章、各 sample の id | 一致（schema の正式な検査は runner の lint:fm に委ねる）",
+    "確かめの表（R4）: 11 在庫100→40（60取引×1個）、在庫5→3の算術 | 正本: 本文の値から算出 | 一致",
+    "指摘（他の kata・R5 向け）: sac-sample.md 29行は「st-cash-sale-commit-response-010 が SAC-PERF-01・SAC-PERF-02 を分解して測る」と書いているが、SAC-PERF-02 は st-cash-sale-commit-records-010 が担当している。sac-sample 側の修正を提案する",
+    "指摘（他の kata・R1/R5 向け）: stc-index-sample.md 152行は「商品検索の測定は stc-cash-sale が担当する」としているが、stc-sample に商品検索の応答測定の観点・ケースがない。観点を追加するか、分担を見直すかの判断が要る",
+    "指摘（他の kata・R5 向け）: stc-index-sample.md の分配表に「確定前の取消」の行がない。分割基準で stc-cash-sale に含めているだけなので、分配表に行を追加するかどうかの判断が要る",
+    "grade の finding: F001・F003・F004・F005 は、前の段の修正で解消済みに見える（実施の行は削除済み、対象外は例外の形に変更済み、stc-index に記入例のケースはない、観点名は「会計維持」）。F002 は R2 の観点で、flow-success-030 は観点「販売確定成立」に残っている。意図の文は1つの命題として読めるため、R2 での確認に委ねる。いずれも R4 の観点外のため未対応"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-stc-sample-140/T-KATA-REVIEW-ALL-stc-sample-140-20261124T220507Z-672e84ab/executor.log",
+      "bytes": 8733,
+      "truncated": false
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { type Command } from "commander";
 import { spawn } from "node:child_process";
+import { AGENT_ROLE_ENV } from "../shared/agent-role.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -27,7 +28,7 @@ import {
   qualifiedRepoPaths,
 } from "./agent-protected-config.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   foldEventsToState,
   readAllEventFiles,
   releaseSchedulerLock,
@@ -56,7 +57,9 @@ import {
   missingProductWorktrees,
   plannedProjectWorktreePath,
   productBranchForTask,
+  productAccessForMode,
   productRepoEnvironment,
+  type ProductAccess,
   pruneOrphanedProductExecBranches,
   withAgentExtraRoots,
   withoutInheritedRepoEnvironment,
@@ -217,6 +220,7 @@ function resolveAgent(
   command: string;
   provider?: AgentProvider;
   prompt: string;
+  access: ProductAccess;
 } {
   const state = requireDoingTask(context.schedulePath, taskId);
   const task = buildTaskView(context.schedulePath, context.executionPath, taskId);
@@ -255,7 +259,13 @@ function resolveAgent(
 
   const prompt = loadPrompt(context.executionPath, taskId);
   if (!prompt) throw new Error(`Plan not found for task: ${taskId}`);
-  return { actor: member.nickname, command, provider: member.provider, prompt };
+  return {
+    actor: member.nickname,
+    command,
+    provider: member.provider,
+    prompt,
+    access: productAccessForMode(task.mode),
+  };
 }
 
 function printWorktree(worktree: ExecWorktree): void {
@@ -305,7 +315,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
 
   let lockDir = "";
   try {
-    lockDir = acquireSchedulerLock(context.schedulePath, {
+    lockDir = await acquireSchedulerLockAsync(context.schedulePath, {
       actor: `worktree-prepare:${state.actor}`,
       lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
       lockStaleMs: DEFAULT_LOCK_STALE_MS,
@@ -334,7 +344,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
       if (!existsSync(path)) throw new Error(`Required execution file not found: ${path}`);
     }
 
-    const worktree = checkpointAndEnsureWorktree({
+    const worktree = await checkpointAndEnsureWorktree({
       context,
       worktreeTaskId,
       base,
@@ -420,6 +430,7 @@ async function agent(opts: AgentOpts): Promise<void> {
   const productDirs = (worktree.repos ?? []).map((product) => product.path);
   const command = withAgentExtraRoots(resolved.command, resolved.provider, productDirs, {
     cwd: worktree.path,
+    access: resolved.access,
   });
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] actor: ${resolved.actor}\n`);
@@ -442,7 +453,8 @@ async function agent(opts: AgentOpts): Promise<void> {
       ...localConfigEnvironment(worktree.path),
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
-      ...productRepoEnvironment(worktree.path, worktree.repos),
+      ...productRepoEnvironment(worktree.path, worktree.repos, resolved.access),
+      [AGENT_ROLE_ENV]: "executor",
     },
     shell: true,
     stdio: ["pipe", "inherit", "inherit"],
@@ -498,7 +510,7 @@ function commit(opts: CommitOpts): void {
   });
 }
 
-function merge(opts: MergeOpts): void {
+async function merge(opts: MergeOpts): Promise<void> {
   const context = resolveContext(opts);
   const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
   // prepare left the root's own copies of the checkpoint files uncommitted (the exec branch
@@ -510,7 +522,7 @@ function merge(opts: MergeOpts): void {
     ...(claimEventPath ? [claimEventPath] : []),
     ...gradeCheckpointPaths(context),
   ];
-  mergeWorktreeIntoCurrent({
+  await mergeWorktreeIntoCurrent({
     context,
     worktree,
     taskId: opts.task,
@@ -644,9 +656,9 @@ export function registerExecWorktreeCommands(exec: Command): void {
   );
   mergeCommand.option("--ff-only", "Require a fast-forward merge", false);
   mergeCommand.option("--dry-run", "Print the merge command without merging", false);
-  mergeCommand.action((opts: MergeOpts) => {
+  mergeCommand.action(async (opts: MergeOpts) => {
     try {
-      merge(opts);
+      await merge(opts);
     } catch (error) {
       commandError(error);
     }

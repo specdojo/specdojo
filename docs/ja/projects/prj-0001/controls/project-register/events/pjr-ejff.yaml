@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_423299f7c59b4be48f4c2b054c380d46
+  ts: "2026-11-27T10:15:40Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-overview の AI Agent の役割を、業務に使う場合だけ書く条件付きにする
+    - field: description
+      from: ""
+      to: prj-overview-rulebook の前提条件の節が AI Agent の役割を常に求めるため、AI を業務に使わない駄菓子屋の sample にも成果物作成の補助の記述が入った。rulebook と template を条件付きに変え、sample から外す
+    - field: input
+      from: ""
+      to: '["prj-overview-sample の 111 行目以降の AI Agent の記述は、2026-11-23 の T-KATA-WAVE-6-PROJECT-prj-overview-sample-050（3d569e81d2）で入った","元は prj-overview-rulebook の前提条件の節（2026-06-06、586769eb25）の「人間の判断責任、AI Agent の役割、…を明示します」と、prj-overview-template の 92 行目の導入文","利用者（indie）は、sample の文脈（駄菓子屋の販売管理）では成果物作成の AI Agent の話は関係ないと判断し、案 B（rulebook を AI Agent を業務に使う場合は役割を書く条件付きに変え、sample からは外す）を選んだ（2026-11-27）","条件付きの書き方の前例: prj-charter-template の「AI Agent を利用する場合は、支援対象の活動と委譲範囲を記述する。」","判断責任・公開方針・取捨選択方針の記述は残す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_ef112f3dd672487e9289f5f3d1337784
+  ts: "2026-11-27T10:20:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_423299f7c59b4be48f4c2b054c380d46
+- v: 1
+  id: reg_108b229458a24439818ee8954c25b2a9
+  ts: "2026-11-27T10:40:44Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ef112f3dd672487e9289f5f3d1337784
+- v: 1
+  id: reg_4edbbc16d54847d28e8c6cadaf4a9951
+  ts: "2026-11-27T10:48:07Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_108b229458a24439818ee8954c25b2a9
+- v: 1
+  id: reg_35b8f380ab4647fd81cec8b3a0096abd
+  ts: "2026-11-27T11:19:23Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_4edbbc16d54847d28e8c6cadaf4a9951
+- v: 1
+  id: reg_5d4b8a2ab4ec4aefb568dc89013567c8
+  ts: "2026-11-27T11:29:45Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_35b8f380ab4647fd81cec8b3a0096abd
+- v: 1
+  id: reg_f847b126ccc042b5ad1e818ae4166445
+  ts: "2026-11-27T11:36:45Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5d4b8a2ab4ec4aefb568dc89013567c8
+- v: 1
+  id: reg_d540687b36cd4962ab696e43c284c1ec
+  ts: "2026-11-27T11:40:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の exec run --register の結果を差分・個票・result で確かめた（template は _TODO_ の段落、CHANGELOG の行は個票へ移した、recipe も条件付き）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: prj-overview の rulebook・template・recipe で AI Agent の役割を業務に使う場合だけ書く条件付きにし、sample から AI Agent の記述を外した
+  previous_event_id: reg_f847b126ccc042b5ad1e818ae4166445

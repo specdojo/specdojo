@@ -1,0 +1,34 @@
+評価結果は最新でした。照合した内容に基づく review の結果を次に示します。
+
+**review 結果: verdict は `complete-with-findings`**
+
+**評価結果の確認**
+- `specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-index-sample.md --changed-only` は出力なし（終了コード 0）でした。
+- `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opd-index-rulebook.md --changed-only` も出力なし（終了コード 0）でした。
+- 2 件とも最新です。
+- sample の grade は `pass`・score 93・minor 3 件です。
+- rulebook の grade は `pass`・score 99・minor 1 件です。
+- worktree の未追跡ファイルは `pipeline-state.json` だけで、review 中に成果物は変更されていません。
+
+**判断根拠**
+- 2 件とも最新の `kata` の `pass` で、blocker と major はありません。
+- DC-001〜DC-005 に直結する finding はありません。grade の観点では、`vp-qe-kata-conformance`・`vp-ba-business-value` が level 4 でした。
+- 対象成果物の章 3 と章 4 を読み、grade の minor finding が実在することを確かめました。
+  - `F001`: 欠品 KPI の「導入前から 50% 減」は、導入前の基準値の測り方が表にありません。
+  - `F002`: 章 4 は「P1 で `OPS` が 15 分応答しなければ店番担当が `PO` へ連絡し、紙の販売控えへ切替」としています。章 6 の「30 分で `PO` が切替を決める」とは判断者と時間が食い違います。章 6 は今回読んでいません。この食い違いは grade の指摘に基づきます。
+- 実行記録（先行する edit タスクの result）は、plan の宣言文書に含まれていないため参照していません。
+
+**未充足事項・改善指示**
+完了を妨げる未充足事項はありません。次の改善を後続の磨き込みで反映してください。
+- sample の `F001`: 欠品 KPI について、導入前の基準値の取得方法と期間を示す。稼働の目標が未決の間に使う暫定の判定条件も示す。
+- sample の `F002`: 紙の販売控えへの切替について、判断者とタイミングを章 4 と章 6 で統一する。
+- sample の `F003`: 章 5 と章 10 の「夜間バックアップ」と、章 8 の「閉店後の日次締めの後」で、作業の呼称と時間帯を統一する。
+- rulebook の `F001`: 記述ガイドに概要（index）章の記載項目を追記する。未決事項の表（判断者・決まるまでの扱い・影響章）の要否も定める。
+
+**確認できなかった範囲**
+- 章 5〜10 の本文は読んでいません。`F003` の呼称の不一致は grade の指摘に基づきます。
+- 先行する edit タスクの result は特定していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。鮮度確認（sample・rulebook とも --changed-only 出力なし）で最新を確認。両 grade は pass（sample 93 / rulebook 99）、blocker・major なし。minor は sample 3 件・rulebook 1 件で、完了条件 DC-001〜DC-005 に直結しない。章 3・章 4 を読み F001・F002 の実在を確認した。改善指示: 欠品 KPI の基準値の測り方と暫定の判定条件、切替の判断者とタイミングの統一、バックアップ・日次締めの呼称統一、rulebook への概要章項目の追記。確認できなかった範囲: 章 5〜10 の本文、先行 edit タスクの result。","handoff":["sample の minor finding F001〜F003 と rulebook の minor finding F001 は、後続の磨き込みで反映する。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-index-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opd-index-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>

@@ -12,7 +12,7 @@ specdojo:
   on_critical_path: true
   approach: condense
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # Condense Plan: T-STSD-PILOT-stsd-deliverable-080

@@ -1,0 +1,16 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/dss-sample.md` に足りなかった内容を 4 件足しました。削る内容は見つかりませんでした。lint などの検査は親 runner がこの後に実行するので、私の側では Prettier の整形だけを流しています（正常終了）。
+
+照らし合わせたのは `dss-rulebook` の本文要件・記述ガイド・禁止事項、Sample 記述標準（共通サンプル文脈を含む）、成果物カタログ `dct-kata.yaml` の `dss-sample` の `done_criteria` です。展開された finding はありませんでした。
+
+| No | 段 | 箇所 | 指摘 | 直した内容 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | R1 | 「目的・適用範囲」の本文、「検証」の表の「全体の利用結果」の行 | 利用者が「店員」と書かれていた。共通サンプル文脈と `uis-sample` の利用者は「店主」と「店番をする家族」で、店員はいない | 2 か所とも「店主と店番をする家族」に置き換えた | Sample 記述標準の共通サンプル文脈、`uis-sample` の利用者の表 | なし |
+| 2 | R1 | 「目的・適用範囲」の表の対象外の行 | 対象外を並べるだけで、それぞれの参照先（UIS・NFR）を示していなかった | 画面固有の仕様は UIS、利用結果の目標は操作性要件、API のエラー契約・再送条件は横断ルールで扱う、と書き分けた | rulebook の記述ガイド「目的・適用範囲」 | なし |
+| 3 | R1 | 「部品の使い方」の `dss-comp-01`〜`04` | rulebook が求める「寸法の参照先」が書かれていなかった | 部品ごとに使う寸法のトークンを足した（ボタンは `size-target`・`radius-control`、入力はさらに `stroke-control`、表の行内操作は `size-target`、ダイアログは `radius-panel`） | rulebook の記述ガイド「部品の使い方」 | なし |
+| 4 | R1 | 「変更・不適合・例外」の表の規則変更の行 | 審査が要る変更を change-request に記録することが抜けていた | 「操作の意味や回復操作が変わり審査が要る変更は change-request」と足した | rulebook の記述ガイド「検証・変更管理と関連文書」 | 要判断 |
+
+No.4 は、審査が要る変更の範囲を「操作の意味や回復操作が変わる変更」と私が決めて書いています。rulebook の求めをこの境界で例示してよいか、人の確認が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 目的の過不足として dss-sample.md に不足していた 4 件（利用者の呼び方を共通サンプル文脈に合わせる、対象外の参照先、部品の寸法の参照先、change-request の転記先）を足した。削る内容はなし。rulebook など sample 以外は変更していない。","handoff":["No: 1 / 段: R1 / 箇所: 「目的・適用範囲」の本文、「検証」の表の「全体の利用結果」の行 / 指摘: 利用者が「店員」と書かれていた。共通サンプル文脈と uis-sample の利用者は「店主」と「店番をする家族」で、店員はいない / 直した案: 2 か所とも「店主と店番をする家族」に置き換えた / 根拠: Sample 記述標準の共通サンプル文脈、[[specdojo:uis-sample]] の利用者の表 / 印: なし","No: 2 / 段: R1 / 箇所: 「目的・適用範囲」の表の対象外の行 / 指摘: 対象外を並べるだけで、それぞれの参照先（UIS・NFR）を示していなかった / 直した案: 画面固有の仕様は UIS、利用結果の目標は操作性要件、API のエラー契約・再送条件は横断ルールで扱う、と書き分けた / 根拠: [[specdojo:dss-rulebook]] の記述ガイド「目的・適用範囲」 / 印: なし","No: 3 / 段: R1 / 箇所: 「部品の使い方」の `dss-comp-01`〜`04` / 指摘: rulebook が求める「寸法の参照先」が書かれていなかった / 直した案: 部品ごとに使う寸法のトークンを足した（ボタンは size-target・radius-control、入力はさらに stroke-control、表の行内操作は size-target、ダイアログは radius-panel） / 根拠: [[specdojo:dss-rulebook]] の記述ガイド「部品の使い方」 / 印: なし","No: 4 / 段: R1 / 箇所: 「変更・不適合・例外」の表の規則変更の行 / 指摘: 審査が要る変更を change-request に記録することが抜けていた / 直した案: 「操作の意味や回復操作が変わり審査が要る変更は change-request」と足した / 根拠: [[specdojo:dss-rulebook]] の記述ガイド「検証・変更管理と関連文書」 / 印: 要判断（審査が要る変更の範囲を「操作の意味や回復操作が変わる変更」と executor が決めて書いた。この境界で例示してよいか人が確認する）","確かめた資料: [[specdojo:dss-rulebook]]（本文要件・記述ガイド・禁止事項）、[[specdojo:sample-authoring-standard]]、dct-kata.yaml の dss-sample の `done_criteria`、[[specdojo:uis-sample]]。展開された finding はなし。rulebook の必須章・禁止事項に照らして削る内容はなく、ほかの記述は維持した。rulebook を直す案はなし"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/dss-sample.md","status":"passed","summary":"表を整形し、正常終了した"}]}
+</specdojo_executor_evidence>

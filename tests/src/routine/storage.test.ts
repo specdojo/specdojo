@@ -92,7 +92,7 @@ describe("routine failure retention", () => {
     expect(gitOutput).not.toHaveBeenCalled();
   });
 
-  it("uses the Job Run instead of duplicating its failure record", () => {
+  it("uses the job run instead of duplicating its failure record", () => {
     const { repo } = fixture();
     expect(
       recordRoutineFailure(repo, join(repo, "failures"), { ...history, job_run_ids: ["JBR-test"] }),
@@ -100,7 +100,7 @@ describe("routine failure retention", () => {
     expect(gitOutput).not.toHaveBeenCalled();
   });
 
-  it("saves a redacted failure without a Job Run and commits only that file", () => {
+  it("saves a redacted failure without a job run and commits only that file", () => {
     const { repo } = fixture();
     const file = recordRoutineFailure(repo, join(repo, "execution/routines/failures"), {
       ...history,

@@ -20,10 +20,10 @@ specdojo:
 
 - **対話駆動**: 会話から「対象プロジェクト」「やりたいこと（登録・計画・実行・状況確認）」を特定し、対応する `specdojo` サブコマンドへ落とし込む。
 - **提案 → 承認 → 実行**: 状態やファイルを変える操作は、実行するコマンドを提示して利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help` / `list` / `status` / `where` / `validate` / `--dry-run`）は説明の上で実行してよい。
-- **1本文・4環境**: 指示本文（システムプロンプト）を単一の正本（SSOT）に集約し、4系統の agent CLI 設定へ同一本文を埋め込む（`設定ファイル構成` を参照）。
+- **1本文・環境別ラッパー**: 指示本文（システムプロンプト）を単一の正本（SSOT）に集約し、各 agent CLI 設定へ同一本文を埋め込む（`設定ファイル構成` を参照）。
 - **安全既定**: 破壊的変更や `git push` を行わない。認証情報・秘密鍵・`.env` / `secrets/` を読み込まない。会話で確定していないプロジェクト事実を捏造しない。
 
-対象とする agent CLI は共通設定と同じ4系統（Claude Code / Codex / GitHub Copilot / OpenCode）である。個別 CLI の認証・provider・非対話起動の詳細は共通設定の各子設計に従う。
+SpecDojo が起動する agent CLI は共通設定と同じ4系統（Claude Code / Codex / GitHub Copilot / OpenCode）である。これに加え、利用者が agy（Antigravity）を直接起動して使う対話用の本文と権限設定を配布する。個別 CLI の認証・provider・非対話起動の詳細は共通設定の各子設計に従う。
 
 ## 2. 責務分担
 
@@ -41,7 +41,7 @@ specdojo:
 | 入力             | 標準入力で渡される1件の plan    | 会話（自由入力）                    |
 | 実行対象         | 成果物または result の編集      | `specdojo` サブコマンドの実行       |
 | claim / complete | 実行しない                      | `specdojo` コマンドとして実行しうる |
-| 対象 CLI         | 1 CLI（子設計ごと）             | 4 CLI 横断（同一本文）              |
+| 対象 CLI         | 1 CLI（子設計ごと）             | 同一本文を各 CLI で利用             |
 
 ## 3. 実行フロー
 
@@ -63,16 +63,17 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 ## 4. 設定ファイル構成
 
-指示本文の正本を1ファイルに集約し、各 agent CLI の設定は同一本文を埋め込む薄いラッパーとする。4系統の設定形式（配置先・frontmatter キー・OpenCode の権限・Codex の TOML）は非互換のため、単一のネイティブ設定ファイルを4環境で共有することはできない。そこで「本文の SSOT ＋ 環境別ラッパー」構成を採る。
+指示本文の正本を1ファイルに集約し、各 agent CLI の設定は同一本文を埋め込む薄いラッパーとする。環境ごとの設定形式（配置先・frontmatter キー・OpenCode の権限・Codex の TOML）は非互換のため、「本文の SSOT ＋ 環境別ラッパー」構成を採る。
 
-| 役割               | パス                                       | 形式・要点                                                         |
-| ------------------ | ------------------------------------------ | ------------------------------------------------------------------ |
-| 本文の正本（SSOT） | `.agents/specdojo-orchestrator.agent.md`   | システムプロンプトの唯一の正本                                     |
-| Claude Code        | `.claude/agents/specdojo-orchestrator.md`  | frontmatter に `tools` / `model`、本文は SSOT と同一               |
-| GitHub Copilot     | `.github/agents/specdojo-orchestrator.md`  | frontmatter に `target: github-copilot` / `tools` / `model`        |
-| Codex              | `.codex/agents/specdojo-orchestrator.toml` | `developer_instructions` に SSOT 本文、`approval_policy` を宣言    |
-| OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一 |
-| OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一 |
+| 役割               | パス                                       | 形式・要点                                                            |
+| ------------------ | ------------------------------------------ | --------------------------------------------------------------------- |
+| 本文の正本（SSOT） | `.agents/specdojo-orchestrator.agent.md`   | システムプロンプトの唯一の正本                                        |
+| Claude Code        | `.claude/agents/specdojo-orchestrator.md`  | frontmatter に `tools` / `model`、本文は SSOT と同一                  |
+| GitHub Copilot     | `.github/agents/specdojo-orchestrator.md`  | frontmatter に `target: github-copilot` / `tools` / `model`           |
+| Codex              | `.codex/agents/specdojo-orchestrator.toml` | `developer_instructions` に SSOT 本文、`approval_policy` を宣言       |
+| OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一    |
+| OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   | frontmatter に `mode: primary` と `permission`、本文は SSOT と同一    |
+| agy（直接起動用）  | `templates/antigravity/orchestrator.md`    | ファイル全体が SSOT と同一。権限は隣接の `settings.orchestrator.json` |
 
 各ラッパーの本文は SSOT とバイト単位で一致させる。個別 CLI の認証・provider・モデル選択・非対話起動の詳細は共通設定の各子設計に従う。
 
@@ -83,6 +84,7 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 - **Claude Code / GitHub Copilot**: 状態変更コマンドはハーネスの承認フローを通す。破壊的操作と `git push` は本文で禁止する。
 - **Codex**: `approval_policy = "on-request"` とし、状態変更コマンドの実行時に承認を求める。`sandbox_mode = "workspace-write"` でリポジトリ外への書き込みを避ける。
 - **OpenCode**: `permission.bash` を許可リスト方式とし、読み取り系 `specdojo`（`--help` / `project list` / `exec status` / `where exec` / `exec validate` / `* --help` / `* --dry-run`）は `allow`、その他の `specdojo *` は `ask` とする。`.env` / `secrets/` の読み取りは `deny` する。
+- **agy（直接起動用）**: `agentMode: ""`・`toolPermission: "request-review"` と編集の `ask` を指定し、`git push`・主要な秘密パスを `deny` にする。パス指定の限界と手動起動の手順は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] に従う。
 
 共通の禁止事項は次のとおりとする。
 
@@ -95,7 +97,9 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 `specdojo-orchestrator` は各 CLI の agent 選択機構で起動する。設定ファイルの配置は `設定ファイル構成` のとおりで、非対話起動の具体的なフラグは共通設定の各子設計（[Claude Code エージェント設定](sysd-claude-agent-settings.md) / [Codex エージェント設定](sysd-codex-agent-settings.md) / [GitHub Copilot エージェント設定](sysd-github-copilot-agent-settings.md) / [OpenCode エージェント設定（Ollama）](sysd-opencode-agent-settings.md)）に従う。edit / review agent と異なり、本エージェントは対話セッションで使うことを主用途とする。
 
-利用リポジトリへ `config scaffold` が追加する npm script は `specdojo orchestrator launch` を入口とする。入口は対象 project を共通の解決順序で選び、`repos` に宣言したプロダクトリポジトリ本体だけを provider の許可対象へ加えてから CLI を起動する。Claude Code、Codex、Antigravity、GitHub Copilot の引数規則は exec の追加ルートと共通化する。OpenCode は選択 agent の `permission.external_directory` を起動時の inline config で「全拒否、宣言済みルートだけ許可」にし、同じルートの `permission.edit` も許可する。永続設定や agent 定義は変更しない。
+利用リポジトリへ `config scaffold` が追加する npm script は `specdojo orchestrator launch` を入口とする。入口は対象 project を共通の解決順序で選び、`repos` に宣言したプロダクトリポジトリ本体だけを provider の許可対象へ加えてから CLI を起動する。Claude Code、Codex、GitHub Copilot の引数規則は exec の追加ルートと共通化する。OpenCode は選択 agent の `permission.external_directory` を起動時の inline config で「全拒否、宣言済みルートだけ許可」にし、同じルートの `permission.edit` も許可する。永続設定や agent 定義は変更しない。
+
+agy の対話用ラッパーは provider ではなく、利用者が直接起動するときの指示として使う。SpecDojo から agy を起動する経路と scaffold の選択肢は復元せず、追加ルートや権限の実行時生成も行わない。`.agents/rules/` の規則ラッパーは保護された設定として利用者の承認後に配置する。
 
 ### 6.1. npm スクリプト
 

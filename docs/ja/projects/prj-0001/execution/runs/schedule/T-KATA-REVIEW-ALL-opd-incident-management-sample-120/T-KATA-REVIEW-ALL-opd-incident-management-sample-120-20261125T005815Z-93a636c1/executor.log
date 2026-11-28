@@ -1,0 +1,13 @@
+R2（構成）のレビューを終えました。直したのは 1 か所だけで、`docs/ja/specdojo/samples/opd-incident-management-sample.md` の「周知の対象・手段・時機」です。
+
+**レビューの対象:** plan の編集対象は `opd-access-control-sample.md` になっていますが、タスク名と根拠の `path` が指す `opd-incident-management-sample.md` をレビューしました。R1 の No 1 と同じ食い違いなので、ここでは繰り返していません。`opd-access-control-sample.md` は読んだだけで、変更していません。
+
+**構成の確かめ:** この rulebook は template を持たないため（`template: not-needed`）、rulebook の本文構成と、同じ系列の sample の構成と照らしました。章の並びは「概要」→「障害対応方針」→「関連ドキュメント導線」で、rulebook と合っています。差分の章の見出しも `opd-index` と同じです。
+
+**直したこと:** 周知しない範囲を書いた 2 文が、表の前と後に分かれていました。表の後にあった「P2・P3 は来店客へ周知しない」を表の前へ移し、2 文をそろえました。表の直前の文は「次の表は」のままです。
+
+Prettier の検査は通りました。lint と schema の検査は、この後に親 runner が行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）のレビューを行い、opd-incident-management-sample の周知の対象・手段・時機の節で、周知しない範囲を書いた 2 文を表の前にまとめた。ほかの章の順・粒度・表と本文の配置は rulebook の本文構成に沿っており、維持した。rulebook など sample 以外は変更していない。","handoff":["No: R2-1 / 段: R2 / 箇所: 2.3. 周知の対象・手段・時機 / 指摘: 周知しない範囲を書いた 2 文が表の前後に分かれていた。外部の利用者・取引先は表の前、P2・P3 の来店客は表の後にあり、範囲の前提が結論の表の後に出ていた / 直した案: 「P2・P3 は会計に影響しないため、来店客へは周知しない。」を表の前へ移し、外部の利用者の文と並べた。表の直前の文は「次の表は」のままにした / 根拠: `vp-arc-document-structure`（前提から結論の順、表と本文の配置） / 印: -","No: R2-2 / 段: R2 / 箇所: 2. 障害対応方針（優先度・停止判断・周知） / 指摘: 同じ系列の opd-access-control-sample と opd-monitoring-sample は、2 章の直下に節の前の短い前提文を置いている。本 sample は 2 章の直下からすぐ 2.1 に入る / 直した案: - （rulebook は 2 章直下の前提文を求めておらず、各節の冒頭の文で `opd-index` との差分を示しているため、差分を入れなかった） / 根拠: `vp-qe-omissions-consistency`。選ばなかった案は、2 章の直下に「優先度・停止・周知の各節は `opd-index` の障害対応方針を具体化する」の 1 文を足す案。系列のそろえ方の判断として R5 へ残す / 印: 要判断","No: R2-3 / 段: R2 / 箇所: 1. 概要（incident-management） / 指摘: rulebook の記述ガイドは概要を 1〜3 行とするが、本 sample の概要の段落は 6 文ある。ただし、未決事項の表を概要に置く形は同じ系列の sample と同じで、章の構成としては沿っている / 直した案: - （段落の長さは文の直しになるため、R3（読みやすさ）に任せた） / 根拠: `specdojo:opd-rulebook` の記述ガイドの概要の項、`vp-arc-document-structure`。選ばなかった案は、背景の 2 文を「障害対応方針」の章の冒頭へ移す案。系列の sample の概要も同じ程度の長さのため、移すと系列がずれる / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"executor は plan・result・個票などの履歴ファイルを変更していない"}]}
+</specdojo_executor_evidence>

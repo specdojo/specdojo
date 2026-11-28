@@ -115,6 +115,7 @@ console.log("  PJR-AB12  success  transition=review  commit=committed abc123");
         item("PJR-AB14", { autopilot: "approved", type: "decision" }),
         item("PJR-AB15", { autopilot: "approved", status: "waiting" }),
         item("PJR-AB17", { autopilot: "approved", type: "epic", track: "business" }),
+        item("PJR-AB18", { autopilot: "approved", type: "handoff" }),
         item("PJR-AB16", { autopilot: "approved", type: "issue" }),
       ],
       10,

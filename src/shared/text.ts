@@ -113,8 +113,66 @@ function wrapAngleTokens(text: string, placeholder: RegExp): string {
   );
 }
 
+// HTTP(S) の autolink。URL 内の `_` や `*` は URL の一部なので code span にしない。
+const HTTP_AUTOLINK = /<https?:\/\/[^<>\s]+>/g;
+
 export function escapeMarkdownInline(text: string): string {
-  return replaceOutsideMarkdownCodeSpans(inlineCodeAnglePlaceholders(text), codeSpanRiskyTokens);
+  return replaceOutsideMarkdownCodeSpans(inlineCodeAnglePlaceholders(text), (segment) =>
+    replaceOutside(segment, HTTP_AUTOLINK, codeSpanRiskyTokens),
+  );
+}
+
+function replaceOutside(
+  text: string,
+  protectedSpan: RegExp,
+  replace: (segment: string) => string,
+): string {
+  let result = "";
+  let lastIndex = 0;
+  for (const match of text.matchAll(protectedSpan)) {
+    const start = match.index ?? 0;
+    result += replace(text.slice(lastIndex, start));
+    result += match[0];
+    lastIndex = start + match[0].length;
+  }
+  return result + replace(text.slice(lastIndex));
+}
+
+// URL の囲みを適用しない Markdown の範囲。コードスパン、山括弧、リンク（shortcut / reference
+// link を含む）は著者がすでに選んだ記法として保持する。
+const MARKDOWN_URL_PROTECTED_SPAN =
+  /(`+)[\s\S]*?\1|<[^<>\r\n]*>|!?\[[^\]\r\n]*\](?:\([^\r\n)]*\)|\[[^\]\r\n]*\])?/g;
+
+// 全角の閉じ括弧・句読点と半角の閉じ括弧は URL の直後に続く本文として扱う。
+// ASCII の句読点は query に使えるため一度 URL 候補へ含め、末尾にあるものだけ戻す。
+export const BARE_HTTP_URL = /https?:\/\/[^\s<>"'`）］｝〉》」』】〕〗〙〛。、，！？；：…)\]}]+/g;
+const TRAILING_ASCII_URL_PUNCTUATION = /[.,;:!?]+$/;
+
+// 素の HTTP(S) URL を autolink（`<https://...>`）にする。markdownlint の MD034（no-bare-urls）に
+// 合わせるため。コードスパン・山括弧・Markdown link の中は変えず、複数回呼んでも結果は変わらない。
+export function encloseBareHttpUrls(text: string): string {
+  return replaceOutside(text, MARKDOWN_URL_PROTECTED_SPAN, (segment) =>
+    segment.replace(BARE_HTTP_URL, (candidate) => {
+      const trailing = candidate.match(TRAILING_ASCII_URL_PUNCTUATION)?.[0] ?? "";
+      const url = trailing ? candidate.slice(0, -trailing.length) : candidate;
+      return url ? `<${url}>${trailing}` : candidate;
+    }),
+  );
+}
+
+// コードスパンの内側の前後の空白を除く（markdownlint の MD038 no-space-in-code）。
+// 空白だけのコードスパンは中身が無くなるため変えない。
+export function trimCodeSpanPadding(text: string): string {
+  return text.replace(
+    /(`+)([^`\n]+)\1(?!`)/g,
+    (_match, fence: string, body: string) => `${fence}${body.trim() || body}${fence}`,
+  );
+}
+
+// 登録簿の表セルへ書くために toCell がエスケープした `\*` `\_` `\|` を元の文字へ戻す。
+// ログなど Markdown ではない出力に項目のタイトルを出すときに使う。
+export function unescapeMarkdownCell(text: string): string {
+  return text.replace(/\\([*_|])/g, "$1");
 }
 
 function codeSpanRiskyTokens(segment: string): string {
@@ -223,4 +281,15 @@ export function escapeRegExp(value: string): string {
 // Markdown 表のセルへ入れる文字列をエスケープする。先に `\` を `\\` にしてから `|` を `\|` にする。
 export function escapeMarkdownTableCell(cell: string): string {
   return cell.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
+}
+
+// reporter などの agent は JSON 文字列の中でバッククォートを `\`` と二重にエスケープして返すことがある。
+// Markdown では `\`` は code span にならず、対になるバッククォートとの間が MD038 に当たって統合の前の
+// 検査が止まる。バッククォートがすべてバックスラッシュ付きのときだけ、全体が一律にエスケープされた
+// ものとして戻す。エスケープなしのバッククォートが混ざる文は、code span 内の意図した `\` を
+// 壊さないよう変えない。
+export function unescapeBackticksWhenUniform(text: string): string {
+  if (!text.includes("\\`")) return text;
+  const hasBareBacktick = /(?<!\\)`/.test(text);
+  return hasBareBacktick ? text : text.replace(/\\`/g, "`");
 }

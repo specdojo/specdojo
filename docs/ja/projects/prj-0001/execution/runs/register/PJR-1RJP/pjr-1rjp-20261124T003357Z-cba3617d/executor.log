@@ -1,0 +1,21 @@
+rulebook の grade が YAML の sample の古い表示のページを読む問題を直しました。単体テスト、型検査、lint はいずれも通っています。
+
+**原因**: `loadKataReferences` が `samples/` 配下を再帰で走査し、git 管理外の `samples/generated/<name>.md` も拾っていました。この表示のページは正本の YAML と同じ id を持ちます。先に走査されると、id が重複した場合に正本より優先されました。そのため古い内容が grade に渡りました。
+
+**決定**: 表示のページを作り直すのではなく、`generated/` 配下を参照の候補から除きました。grade が正本の YAML だけを読めば、ページの鮮度や作り直しの実行順に左右されないためです。
+
+**変更**
+- `src/grade/targets.ts`: `loadKataReferences` が `generated/` 配下を除外します。引数 `root` を取れるようにしました。省略時は従来どおりです。
+- `tests/src/grade/grade.test.ts`: 古い表示のページがあっても正本の YAML だけが選ばれることを確かめるテストを足しました。
+- 個票の影響範囲・対応結果・関連ドキュメントを埋めました。CHANGELOG に書く事項は区分 Fixed で、文案を個票に書いています。
+
+**検証**
+- `npx vitest run tests/src/grade/grade.test.ts`: 70 件が通りました。
+- `npm run typecheck`: エラーなしで通りました。
+- `npm run lint:ts`: エラー 0 件で、warning 43 件が出ています。確認できたのは `max-lines` と `max-lines-per-function` で、この変更が増やしたかどうかは確かめていません。
+
+grade の外形的な挙動は変わらないため、設計・ガイド・CLI リファレンスは直していません。runner の動きも変えていないので、`exec smoke` は不要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"loadKataReferences が generated/ 配下の古い YAML 表示ページを除外するよう修正し、単体テストと個票の対応結果を追加した。","handoff":["決定: 表示ページの再生成ではなく generated/ を参照候補から除外する方式を採用（正本 YAML のみを読むため鮮度に依存しない）。","CHANGELOG に書く事項: 区分 Fixed。`grade run --target kata` が YAML の sample の古い表示のページ（`samples/generated`）を読んで項目を「ない」と誤評価する問題を修正した。","runner の動きは変えていないため exec smoke は不要。保護設定は未変更。"],"validations":[{"command":"npx vitest run tests/src/grade/grade.test.ts","status":"passed","summary":"70 tests passed including new test"},{"command":"npm run typecheck","status":"passed","summary":"no errors"},{"command":"npm run lint:ts","status":"passed","summary":"0 errors, warnings only"}]}
+</specdojo_executor_evidence>

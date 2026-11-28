@@ -38,13 +38,13 @@ External File Exchange Specification Authoring Rulebook
 
 ```mermaid
 flowchart LR
-    ESIL["外部システムI/F一覧 (ifx-index)"] -->|"spec_ref で参照"| EFES["外部ファイル連携仕様 (ifx-file-*)"]
-    IFXCMD["外部コマンド連携仕様 (ifx-cmd-*)"] -.->|"受け渡しファイル契約を参照"| EFES
-    EFES -->|"schema_ref / references で参照"| SCHEMA["正本スキーマ / 型定義"]
+    IFXIDX["外部システムI/F一覧 (ifx-index)"] -->|"spec_ref で参照"| IFXFILE["外部ファイル連携仕様 (ifx-file-*)"]
+    IFXCMD["外部コマンド連携仕様 (ifx-cmd-*)"] -.->|"受け渡しファイル契約を参照"| IFXFILE
+    IFXFILE -->|"schema_ref / references で参照"| SCHEMA["正本スキーマ / 型定義"]
 ```
 
 1. **一覧からの詳細化**: 本仕様は [[specdojo:ifx-index-rulebook|外部システムI/F一覧作成ルール]] に従う `ifx-index` に登録されたファイル連携（`kind: ファイル`、または外部コマンド連携等で授受するファイル契約）の詳細仕様として位置づけます。
-2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `prj-0001:ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。
+2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。CLI 内部の状態・証跡ファイルなど `ifx-index` に登録しない契約は、`based_on` に参照元の仕様（CLI 仕様など）を書き、照合先をその仕様とします。
 3. **契約の主体とファイルの主体**: `source` / `target` は連携契約全体の送信元・受信先、`writer` / `reader` は個別ファイルを実際に書く・読む主体です。報告内容の作り手とファイルの書き手が異なる場合は、`writer` にファイルの書き手を書きます。
 
 ## 3. ファイル命名・ID規則
@@ -59,7 +59,7 @@ flowchart LR
 
 ### 3.2. 仕様 ID 規則
 
-1. **仕様 ID**: プロダクト文書は `ifx-file-<kebab-case>`、プロジェクト修飾を伴う場合は `<project-id>:ifx-file-<kebab-case>` とします。
+1. **仕様 ID**: 置き場所で決まります。プロダクト文書（`docs/ja/product/` の下）は名前空間なしの `ifx-file-<kebab-case>`、プロジェクト文書は `<project-id>:ifx-file-<kebab-case>` とします。
 2. **一意性**: ファイル名の stem（拡張子を除いた部分）と ID のローカル部を一致させ、文書インデックス全体で一意にします。
 
 ## 4. 推奨 Frontmatter・メタ情報項目
@@ -73,13 +73,13 @@ YAML 成果物の先頭にはスキーマ検証用の modeline コメント（�
 ```yaml
 # specdojo-schema: none reason=no-ifx-file-schema
 x-spec-meta:
-  id: prj-0001:ifx-file-agent-evidence
+  id: ifx-file-agent-evidence
   type: api
   status: draft
   title: 外部ファイル連携仕様（agent の evidence）
   rulebook: specdojo:ifx-file-rulebook
   based_on:
-    - prj-0001:ifx-index
+    - ifx-index
 ```
 
 ### 4.2. メタ情報の各フィールド定義
@@ -158,7 +158,7 @@ YAML のルートには以下のキーを配置します。
 2. **項目定義（外部との合意スキーマを本仕様で直接定める場合）**:
    - `schema.fields` 配列に各フィールドの `name`（必須）、`type`（必須）、`description`（必須）、`required`（必須, boolean）を定義し、必要に応じて `example`、`constraints`（`min`、`max`、`maxLength`、`pattern` 等）、`mapping`（`csv.column`、`json.pointer` 等）を記載します。
 3. **正本スキーマ・型定義参照（既存の schema やコード型定義が正本の場合）**:
-   - `schema.references`（または `schema.schema_ref`、`files[].schema_ref`）に正本ファイルパスを記載し、各ファイルの契約上の必須項目は `files[].required_fields` で宣言します。正本に定義済みの全フィールド構造を YAML 内へ重複転記しません。
+   - `schema.references`（キー名と正本ファイルパスの対応を持つオブジェクト）と `files[].schema_ref`（ファイルごとの正本パス）に正本を記載し、各ファイルの契約上の必須項目は `files[].required_fields` で宣言します。正本に定義済みの全フィールド構造を YAML 内へ重複転記しません。
 
 ### 5.7. 失敗時の扱いとエラーハンドリング（`error_handling`）
 
@@ -173,7 +173,7 @@ YAML のルートには以下のキーを配置します。
 ### 6.1. ファイル基本情報と責務境界の判断基準
 
 1. **判断基準**: 誰がいつファイルを書き（`source` / `writer`）、誰が何のために読み（`target` / `reader`）、どこにどの名前で置かれるか（`location` / `naming_rule`）が、実装コードを見ずに特定できること。
-2. **単一ファイルと複数ファイルの使い分け**: 1 つのファイルだけで完結する連携は `file` を使い、実行エビデンス（`evidence.json`）とパイプライン状態（`pipeline-state.json`）のように同一実行単位で協調動作するファイル群は `files` 配列で定義し、ファイルごとに `writer`・`reader`・`required_fields` を明記します。
+2. **単一ファイルと複数ファイルの使い分け**: 同一実行単位で協調動作するファイル群（例: `evidence.json` と `pipeline-state.json`）は `files` で定義します（粒度は 3.1 の 3 項目め）。
 3. **仮置き・前提条件の明記**: 通信環境や運用体制に関する前提条件、または未確定の技術判断がある場合は、YAML コメントで `# _ASSUMPTION_:` や `# _UNDECIDED_:` を付記し、何が決まれば解消するかを書きます。
 
 ### 6.2. 受け渡し条件と構造定義の判断基準
@@ -181,7 +181,7 @@ YAML のルートには以下のキーを配置します。
 1. **判断基準**: 下流の実装者がパーサ・バリデータ・ファイル配置処理を実装でき、テスト担当が正常データと境界値・異常データのテストケースを導出できること。
 2. **インライン定義と正本参照の選択**:
    - 外部取引先（問屋や外部システム）との CSV / JSON 連携など、リポジトリ内に別途スキーマ定義が存在しない場合は、`schema.fields` に型・必須性・制約（`constraints`）・マッピング（`mapping`）を具体的に記述します。
-   - 同一システム内のランナーとエージェント間の契約など、TypeScript 型定義や JSON Schema が正本として存在する場合は、`files[].schema_ref` および `schema.references` で正本パスを指し、`files[].required_fields` に必須キーを列挙して二重管理を防ぎます。
+   - TypeScript 型定義や JSON Schema が正本として存在する場合（同一システム内のランナーとエージェント間の契約など）は、記述方法を 5.6 の 3 項目めに従って正本を参照します。
 
 ### 6.3. 失敗時の扱いの判断基準
 
@@ -253,5 +253,19 @@ error_handling:
 
 ### 8.1. 成果物の検証手順
 
-1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し、`schema_ref` / `references` の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
-2. **異常系の導出**: `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）と `required_fields` から正常系・異常系の確認ケースを導出し、各ケースで継続・停止、ファイルの保持・退避、再試行・引き継ぎの期待結果が一意に決まることを確かめます。
+1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し（`ifx-index` に登録しない契約は `based_on` の参照元仕様と照合し）、`schema_ref` / `references` の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
+2. **構造・書式の検証**: 次のコマンドを `<path>`（対象 YAML）で実行し、終了コード 0 を合格とします。非 0 の場合は出力された指摘を直して再実行し、解消しない指摘は登録簿へ引き継ぎます。
+   - `npx prettier --check <path>`: 書式の確認（不合格時は `npx prettier --write <path>` で整形する）。
+   - `npm run validate:schema:file -- --schema <schema-path> --data <path>`: 専用スキーマがある場合の構造検証。modeline が `no-ifx-file-schema` で構造検証を省く間は実行せず、`x-spec-meta.type` と rulebook 宣言の照合を含むリポジトリ全体の `npm run validate:schema` で確かめます。
+3. **異常系の導出**: `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）と `required_fields` から正常系・異常系の確認ケースを導出し、各ケースで継続・停止、ファイルの保持・退避、再試行・引き継ぎの期待結果が一意に決まることを確かめます。
+
+### 8.2. 変更・廃止時の追従対象
+
+改訂・廃止の手順と `status` の扱いは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。ifx-file の変更・廃止時は、次の対象を同じ変更で追従させます。担当は適用先のメンバー定義で割り当てます。
+
+| 追従対象                                      | 確認する内容                                           | 担当 Role code |
+| --------------------------------------------- | ------------------------------------------------------ | -------------- |
+| `ifx-index` の `spec_ref`                     | 仕様 ID の一致、廃止時の登録解除                       | `BA`           |
+| 参照元の `ifx-cmd`（`based_on` の参照元仕様） | 受け渡しファイルの契約の記述との整合                   | `BA`           |
+| `schema_ref` / `schema.references` の正本     | 参照先の実在、`required_fields` と正本の必須項目の一致 | `ARC`          |
+| reader・writer の実装とテスト                 | 命名・配置・必須項目・異常時の動作の反映               | `DEV`          |

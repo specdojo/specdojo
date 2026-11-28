@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-F4MG",
+  "run_id": "pjr-f4mg-20261127T135541Z-cf9c48cc",
+  "updated_at": "2026-11-27T14:39:14.916Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T14:19:46.577Z",
+      "completed_at": "2026-11-27T14:38:25.241Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-27T14:38:56.403Z",
+      "completed_at": "2026-11-27T14:39:14.916Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-27T14:19:46.554Z",
+      "notes": [
+        "PJR-BXYM が統合され、入門の型の組（5 つの型）が docs/ja/specdojo/guides/civic-tech-starter-guide.md に決まった。BXYM は review（人の確かめ待ち）だが、その組を正として入門の型の組の英語版を作る。組が後で変わった場合の扱いは個票の対応結果に書く。"
+      ]
+    }
+  ]
+}

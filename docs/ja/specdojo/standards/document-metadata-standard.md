@@ -55,6 +55,7 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - `project` をプロダクト仕様の受け皿にしない。sample は見本にする成果物の `type` を使い、`id` とファイル名の `-sample` で識別する。`template` はテンプレート自身の種別であり、生成物の種別ではない。
 - `lint:fm` の frontmatter 検査では、Markdown 成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` をそれぞれの `rulebook` の宣言と照合する。宣言と異なる値（従来の `project` や `sample` を含む）は即時エラーとし、宣言された置き換え先を表示する。`rulebook: none` は照合対象外とする。
 - 照合は主 rulebook の宣言を使い、`includes` はたどらない。rulebook は完全 ID で解決し、同じ ID のローカル文書を同梱文書より優先する。解決不能・曖昧・宣言欠落は検査エラーとする。未修飾 ID は一意に解決できる場合のみ許容する。
+- `.specdojo/index-config.yaml` に `locales` がある場合、同じ論理 ID の rulebook は参照元と同じ言語を優先し、無ければ `locales` の宣言順で最初に存在する言語を使う。言語中立の参照元もこの宣言順に従う。未宣言時の重複、同一言語内の重複、言語中立 ID と言語別 ID の衝突は曖昧として検出する。
 - `validate:schema:yaml`（`yaml-schema --modeline`）と `validate:schema:file` は、YAML 成果物・sample のトップレベルまたは `x-spec-meta` の `type` と、テンプレートの `metadata_template.type` を主 rulebook の宣言と照合する。`specdojo-schema: none` / `validate=false` は構造の検証だけを省略し、メタ情報の照合は省略しない。平坦な YAML catalog テンプレートは生成物のメタ情報雛形を持たないため、その `type: template` は照合しない。
 - YAML メタ情報の旧値 `domain` / `command` / `message` は `rulebook: none` の場合もエラーとし、それぞれ `data` / `api` / `api` への置き換えを表示する。本文中のデータ型や CloudEvents のイベント種別は対象外とする。
 - YAML の表示用ページ（`generated/` 配下）は元 YAML のトップレベルまたは `x-spec-meta` の `type` を引き継ぐ。配置パスから分類を補わず、欠落も補完しない。生成ページも `lint:fm` の宣言照合対象とする。ただし、ジョブ定義・評価記録など `type` を持たない YAML の表示用ページは成果物 Frontmatter を付けずに生成する。これらの表示ページは Markdown の Frontmatter 必須原則の対象外とし、正本 YAML の構造・メタ情報は対応する schema と YAML 検証を正本とする。
@@ -292,7 +293,7 @@ specdojo:
 
 ### 6.2. 継続品質評価（`grade`）
 
-Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/` 配下にサイドカーとして記録します。本リポジトリの文書は `<doc-id>.yaml`、`project.repos` に宣言したリポジトリの文書は `<repo 名>/<doc-id>.yaml` に保存し、`<repo 名>` には `repos[].name`、ファイル名には文書 ID の `:` を `.` に置き換えた値を使います。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は同じリポジトリ・文書 ID のファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
+Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/` 配下にサイドカーとして記録します。本リポジトリの文書は `<doc-id>.yaml`、`project.repos` に宣言したリポジトリの文書は `<repo 名>/<doc-id>.yaml` に保存し、`<repo 名>` には `repos[].name`、ファイル名には文書 ID の `:` を `.` に置き換えた値を使います。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は同じリポジトリ・文書 ID のファイルを冪等に上書きします。履歴は job run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
 
 | 項目                | 意味                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------ |

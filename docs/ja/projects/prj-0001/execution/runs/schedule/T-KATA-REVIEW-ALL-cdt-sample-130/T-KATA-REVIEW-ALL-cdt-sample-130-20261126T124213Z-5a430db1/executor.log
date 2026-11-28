@@ -1,0 +1,16 @@
+R3（読みやすさ）として `docs/ja/specdojo/samples/cdt-sample.md` の文を 3 か所直しました。意味・背景・例外・制約は変えていません。Prettier の整形チェックは通っています。markdownlint は `npx markdownlint-cli2` で確認し、0 件でした。ただし `package.json` にあるのは `markdownlint-cli` なので、検証結果は `not_applicable` とし、正式な lint は後で runner が実行する `npm run lint:md` に任せます。
+
+**直した 3 か所**
+
+- **R3-1（概要の「責務の境界」）**: 「これら」が何を指すか読み取りにくかったため、「三つの分類」に置き換えました（W4）。
+- **R3-2（分類定義の導入文）**: 「この三つの属性名」は、後に続く節の見出しを指しています。そのため「商品区分・取扱区分・棚札タグの三つの属性名」と名前を挙げました（W4）。
+- **R3-3（区分を変更する場合）**: 棚札の貼り替えの文に括弧の補足が 2 つ重なって長く、本文で他に使っていない「店番担当」という語もありました。「店番をする店主代表または家族利用者代表は、適用日までに店頭の棚札を新しい取扱区分の表示名（…）に貼り替える」に直しました（W3、W5、W8）。「店番担当」を消したのは、用語を増やさないための判断です。この点は迷ったので「要判断」を付けています。
+
+**直していないもの**
+
+- **F001**（棚札の貼り替えの責任者がいない）: 前の段で該当の文がすでに足されていて、解消済みです。もともとの観点 `vp-ops-operability` は R3 では使わない観点なので、ここでは扱っていません。
+- frontmatter の `status`（`ready`）はそのままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3 読みやすさとして cdt-sample.md の 3 か所（指示語 2 件、長い文と用語 1 件）を直した。F001 は前の段で解消済みで、R3 で使わない観点のため扱っていない。","handoff":["R3-1: R3 / 1. 概要（責務の境界） / 「これら」が指す先が前の箇条書きから一つに決まりにくい / 「これらは」を「三つの分類は」に直した / W4 / -","R3-2: R3 / 2. 分類定義（導入文） / 「この三つの属性名」が後に続く節の見出しを指していて、読む時点では指す先が分からない / 「商品区分・取扱区分・棚札タグの三つの属性名」と名前を挙げた / W4 / -","R3-3: R3 / 3.2.2. 区分を変更する場合 / 棚札の貼り替えの文が長く、括弧の補足が 2 つ重なり、本文で他に使っていない「店番担当」という語がある / 「店番をする店主代表または家族利用者代表は、適用日までに店頭の棚札を新しい取扱区分の表示名（`★定番` / `季節限定` / `お試し`）に貼り替える」にした / W3、W5、W8。迷った理由: 「店番担当」を役割名として残す案もあったが、本文の他の箇所が店主代表・家族利用者代表の二者で書かれているため、語を増やさない案を選んだ / 要判断","F001（`vp-ops-operability`、旧 75 行目）は、前の段で 3.2.2 に棚札の貼り替えの文が足されていて解消済み。kata-guide の「kata の観点の組」では `vp-ops-operability` を R3 で使わないため、この段では扱っていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdt-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cdt-sample.md","status":"not_applicable","summary":"参考として実行し 0 issues","reason":"package.json の devDependencies にあるのは markdownlint-cli で、markdownlint-cli2 ではない。正式な lint は親 runner の npm run lint:md が行う"}]}
+</specdojo_executor_evidence>

@@ -1,7 +1,8 @@
 import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { appendScopeWaitNotes } from "./change-scope.js";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { repoRelative } from "../../shared/git.js";
 import {
   ensureReviewGrade,
   reviewGradeFreshness,
@@ -23,6 +24,7 @@ import { canCompleteTask, foldEventsToState, readAllEventFiles } from "../events
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
 import {
+  buildInPlaceStem,
   finalizeResultSectionsForDeliverable,
   generateSinglePlan,
   reviewGradeSubject,
@@ -30,7 +32,13 @@ import {
 } from "../plans.js";
 import type { RegisterResumeTarget } from "../register-resume.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
-import { findRunRecord, recordPathForRead, recordRef, recordStem } from "../run-records.js";
+import {
+  findRunRecord,
+  recordPathForRead,
+  recordRef,
+  recordStem,
+  taskRecordPaths,
+} from "../run-records.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { buildScheduleIndex } from "../schedule/schedule.js";
 import { qualifyTaskId } from "../shared.js";
@@ -231,22 +239,35 @@ export function reviewGradeSidecarPaths(params: {
   return [...new Set(sidecars)].sort();
 }
 
+// Repo-relative result sidecars of this task's own subjects. Tasks without a project own none.
+function taskGradeResultPaths(params: {
+  task: ReadyTaskView;
+  projectId: string | undefined;
+  catalogPath: string | undefined;
+  repoRoot: string;
+}): string[] {
+  if (!params.projectId) return [];
+  return reviewGradeSidecarPaths({ ...params, projectId: params.projectId }).map((path) =>
+    repoRelative(params.repoRoot, resolve(params.repoRoot, path)),
+  );
+}
+
 /**
  * A resumed review reuses the exec branch, which still holds the grade from its first checkpoint.
  * Bring the grade the runner just checked into the branch so the review agent and the completion
  * check judge the same grade as the runner (PJR-ZSRD). Returns the refreshed repo-relative paths.
  */
-export function refreshReviewGradeCheckpoint(params: {
+export async function refreshReviewGradeCheckpoint(params: {
   task: ReadyTaskView;
   projectId: string | undefined;
   catalogPath: string | undefined;
   repoRoot: string;
   worktree: ExecWorktree;
   failureLogPath?: string;
-}): string[] {
+}): Promise<string[]> {
   const { task, projectId } = params;
   if ((task.mode ?? "edit") !== "review" || !projectId) return [];
-  const refreshed = refreshWorktreeCheckpoint({
+  const refreshed = await refreshWorktreeCheckpoint({
     repoRoot: params.repoRoot,
     worktreePath: params.worktree.path,
     paths: reviewGradeSidecarPaths({ ...params, projectId }),
@@ -350,6 +371,23 @@ export async function prepareSingleTask(
   // review to different agents (e.g. local LLMs) without editing the roster. They take an agent
   // nickname whose command is resolved from agent-members.yaml; a mode without an override falls back
   // to normal auto-selection.
+  // A human task runs automatically only with an explicit per-task agent (--by, a stage executor
+  // override, or an agent pinned on the task). Mode-level --edit-by / --review-by apply to every
+  // task of that mode and must not pull human tasks into plan generation.
+  const hasExplicitAgent = Boolean(
+    agentNicknameOverride ||
+    stageAgentOverrides.executor ||
+    pinnedExecutor(task) ||
+    (pipelineResume && skipClaim),
+  );
+  if ((task.execution ?? "agent") === "human" && !hasExplicitAgent) {
+    process.stdout.write(
+      `  Task "${task.name ?? task.id}" (${task.id}) has execution: human.\n` +
+        `  This task requires human execution. Use --by <nickname> to override.\n`,
+    );
+    return "failure";
+  }
+
   const overrideResolution = resolveAgentOverride(
     mode,
     task.agent_pipeline
@@ -528,7 +566,7 @@ export async function prepareSingleTask(
     const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
     const refreshed = dryRun
       ? []
-      : refreshReviewGradeCheckpoint({
+      : await refreshReviewGradeCheckpoint({
           task,
           projectId,
           catalogPath: planGenPaths.catalogPath,
@@ -562,7 +600,15 @@ export async function prepareSingleTask(
         recordPathForRead(executionPath, "plan", task.id),
         resultPath,
         claimEventPath,
-        ...gradeCheckpointPaths({ repoRoot, executionPath }),
+        ...gradeCheckpointPaths(
+          { repoRoot, executionPath },
+          taskGradeResultPaths({
+            task,
+            projectId,
+            catalogPath: planGenPaths.catalogPath,
+            repoRoot,
+          }),
+        ),
       ]),
       pipelineRunId: executorTarget.runId,
       pipelineResumeStage: "executor",
@@ -578,7 +624,10 @@ export async function prepareSingleTask(
   }
 
   // Plans are generated on demand here; `exec refresh` does not manage them.
-  if (!skipClaim || !findRunRecord(executionPath, "plan", task.id))
+  const existingPlan = skipClaim ? findRunRecord(executionPath, "plan", task.id) : null;
+  const plannedPath =
+    existingPlan ?? taskRecordPaths(executionPath, task.id, buildInPlaceStem(task.id)).plan;
+  if (!dryRun && !existingPlan)
     await generateSinglePlan({
       executionPath,
       projectId: projectId ?? "",
@@ -595,17 +644,19 @@ export async function prepareSingleTask(
       recordPathForRead(executionPath, "plan", task.id),
       rateLimitOverrides.changeScopeWaits,
     );
-  const planPrompt = loadPrompt(executionPath, task.id);
-  if (!planPrompt) {
+  const planPrompt = dryRun ? "" : (loadPrompt(executionPath, task.id) ?? "");
+  if (!dryRun && !planPrompt) {
     process.stdout.write(`  Plan not found for ${task.id}.\n`);
     return "failure";
   }
-  const prompt = task.agent_pipeline
-    ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
-    : planPrompt;
-  const pipelineRunId = task.agent_pipeline
-    ? recordStem(recordPathForRead(executionPath, "plan", task.id))
-    : undefined;
+  const prompt =
+    task.agent_pipeline && !dryRun
+      ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
+      : planPrompt;
+  const pipelineRunId =
+    task.agent_pipeline && !dryRun
+      ? recordStem(recordPathForRead(executionPath, "plan", task.id))
+      : undefined;
 
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
   const worktreeName = worktreeNameFromTaskId(worktreeTaskId);
@@ -636,7 +687,7 @@ export async function prepareSingleTask(
     process.stdout.write(claimMsg + "\n");
     process.stdout.write(`  [dry-run] Command: ${agentCandidates[0]?.command ?? ""}\n`);
     process.stdout.write(`  [dry-run] CWD: ${worktree.path}\n`);
-    process.stdout.write(`  [dry-run] Plan: ${prompt.length} chars\n`);
+    process.stdout.write(`  [dry-run] Plan: ${plannedPath}\n`);
     return {
       task,
       actor,
@@ -725,7 +776,10 @@ export async function prepareSingleTask(
     recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     claimEventPath,
-    ...gradeCheckpointPaths({ repoRoot, executionPath }),
+    ...gradeCheckpointPaths(
+      { repoRoot, executionPath },
+      taskGradeResultPaths({ task, projectId, catalogPath: planGenPaths.catalogPath, repoRoot }),
+    ),
   ]);
   const checkpointFailureLogPath = pipelineRunId
     ? integrateLogPath(
@@ -740,7 +794,7 @@ export async function prepareSingleTask(
     : undefined;
   let worktree: ExecWorktree;
   try {
-    worktree = checkpointAndEnsureWorktree({
+    worktree = await checkpointAndEnsureWorktree({
       context: { repoRoot, schedulePath, executionPath },
       worktreeTaskId,
       base: worktreeBase,
@@ -764,7 +818,7 @@ export async function prepareSingleTask(
   reportProductWorktrees(worktree);
   // A fresh claim checkpoints the current grade; a resume keeps the branch and needs a refresh.
   const reviewGradeRefreshed = skipClaim
-    ? refreshReviewGradeCheckpoint({
+    ? await refreshReviewGradeCheckpoint({
         task,
         projectId,
         catalogPath: planGenPaths.catalogPath,

@@ -1,0 +1,83 @@
+---
+specdojo:
+  id: prj-0001:pjr-86rk-docs-next-banner-hidden
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: medium
+  difficulty: easy
+  owner: DEV
+  registered_at: "2026-11-25T12:09:58Z"
+  due_on: "2026-11-30"
+  completed_at: "2026-11-27T13:49:12Z"
+  conclusion: 開発中の版の帯の高さを --vp-layout-top-height に反映し、960px 以上では帯を固定して local nav の上書きを VitePress の scoped 規則に勝たせた。幅 640・960・1280・1440 で本番の版から帯の高さだけずれる
+  derived_from:
+    - PJR-98HS
+---
+
+# PJR-86RK 文書サイトの開発中の版の帯が、広い画面でメニューに隠れるのを直す
+
+## 1. 概要
+
+文書サイトの開発中の版（`/specdojo/next/`）で、ページの先頭に出す帯「これは開発中の版の文書です」が、狭い画面では見えるが、広い画面では上のメニュー（ナビゲーションの帯）に隠れて見えない（利用者の報告、2026-11-25）。広い画面でも帯が見えるように直す。
+
+## 2. 入力
+
+- 利用者の報告（2026-11-25）: VitePress のサイトで next/ 以下を見ると、狭い画面では頭に「これは開発中の文書です」と出るが、画面が広くなるとメニューに隠れる
+- 確かめた事実（2026-11-25）: 帯は packages/docs-site/.vitepress/theme/NextChannelBanner.vue で、theme/index.ts の layout-top の slot に置いている
+
+## 3. 完了条件
+
+- 開発中の版で、広い画面（VitePress が上のナビゲーションと左のサイドバーを固定して出す幅）でも、帯がナビゲーションやサイドバーに隠れず、全文が読める。狭い画面の見え方は変えない。
+- 帯の高さが変わっても（文が折り返すなど）、ナビゲーション・サイドバー・本文が帯と重ならない。VitePress の `layout-top` の slot に置く要素の高さを、VitePress がずらしに使う `--vp-layout-top-height` に反映するなど、VitePress の決まった方法で直す。方法は executor が決め、理由を個票の対応結果に書く。
+- 本番の版（帯を出さない）の見え方は変えない。
+- 直し方を確かめる単体テスト、または文書サイトのビルドの結果（`--vp-layout-top-height` などが出ていること）を確かめる検査を足す。ブラウザでの見え方の確かめはオーケストレーターが行う。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 作業を終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+
+- 2 回目の実行（2026-11-27）で、狭い画面の空白を直している。1 回目の後、開発中の版を `SPECDOJO_DOCS_CHANNEL=next` の開発サーバーで開き、ヘッドレスのブラウザで確かめた。幅 1440 では帯がナビゲーションの上に全文出て直っていたが、幅 640 では帯とヘッダーの間に帯 1 つ分ほどの空白ができた。狭い画面では VitePress のナビゲーションが固定されず帯の下に並ぶため、`--vp-layout-top-height` の分も下がって二重に空いたとみられる。
+  - 狭い画面（VitePress がナビゲーションを固定しない幅）では、帯とヘッダーの間に余分な空白を作らない。広い画面の直りは保つ。
+  - 原因と直し方を個票の対応結果に書いている。単体テストか検査で、幅による扱いの違いを確かめている。
+
+- 3 回目の実行（2026-11-27）で、中間の幅の空白を直している。2 回目の後、開発中の版と本番の版を開発サーバーで開き、ヘッドレスのブラウザで比べた。幅 1440 と 640 は直っていたが、幅 960（VitePress がサイドバーと「On this page」の帯を出す幅）では、「On this page」の帯と本文の間が本番の版の約 50px に対して約 125px あり、帯の高さの 2 倍ほど余計に空いていた。
+  - 幅 960 から 1440 の間でも、帯の分以外に本文の上へ余分な空白を作らない。本番の版（帯なし）と比べて、本文の位置のずれが帯の高さと同じになる。
+  - 幅ごとの VitePress の配置（ナビゲーションと local nav の固定の有無）と、それに対する直し方を個票の対応結果に書いている。単体テストか検査で、幅による扱いの違いを確かめている。
+
+- 4 回目の実行（2026-11-27）で、幅 960 の本文の位置を直している。3 回目の後、オーケストレーターが開発中の版と本番の版の開発サーバーをヘッドレスのブラウザで同じ幅で写して比べた結果は次のとおり。
+  - 幅 1280: 本文（frontmatter の枠）の上端は本番 133px・開発中 171px で、差 38px（帯の高さ）。直っている。
+  - 幅 960: 「On this page」の帯の下端は本番 111px・開発中 149px で、差 38px（正しい）。本文の上端は本番 160px・開発中 236px で、差 76px（帯 2 つ分）。local nav より下の本文の側で、帯の高さがもう 1 回足されている。
+  - 幅 960 から 1279 で、本文の上端の差が帯の高さ（約 38px）になるように直す。3 回目の推定（`_ASSUMPTION_`）で外した `.VPLocalNav` の `padding-top` 以外に、本文の側で `--vp-layout-top-height` を使う VitePress の規則（`.VPContent`・`.VPDoc` などの `has-sidebar` や幅別の規則）を、`node_modules/vitepress` の CSS から特定し、どの規則で何 px 足されていたかを個票の対応結果に書く。
+  - 幅 640・1280・1440 の直りは保つ。
+
+## 4. 作業内容
+
+| No  | 作業                               | 担当 | 状態 | メモ                                                                |
+| --- | ---------------------------------- | ---- | ---- | ------------------------------------------------------------------- |
+| 1   | 帯が隠れる原因の確認と直し方の決定 | DEV  | done | `layout-top` の高さを `--vp-layout-top-height` へ反映していないため |
+| 2   | 帯の直しと検査の追加               | DEV  | done | ヘルパーと単体テストを追加                                          |
+| 3   | 広い画面と狭い画面での見え方の確認 | DEV  | open | ブラウザ確認はオーケストレーターが行う                              |
+
+## 5. 対応結果
+
+### 5.1. 実施内容
+
+- 原因: VitePress は固定のナビゲーション・サイドバー・本文を `--vp-layout-top-height` の分だけ下げる。帯はこの変数へ高さを反映しておらず、広い画面（固定表示）でナビゲーションに隠れた。
+- 直し方: `NextChannelBanner.vue` で帯の実測の高さを `ResizeObserver` で監視し、`document.documentElement` の `--vp-layout-top-height` へ反映する。理由は、VitePress の決まった方法であり、文の折り返しで高さが変わっても追従するため。帯を出さない本番では要素が無く、変数も設定しないため見え方は変わらない。狭い画面では VitePress がこの変数を使わないため変わらない。
+- 追加: `packages/docs-site/.vitepress/theme/layout-top-height.ts`（変数の設定・解除）と、その単体テスト `tests/packages/docs-site/layout-top-height.test.ts`。
+- 2 回目の対応（狭い画面の空白）: 原因は、VitePress の `VPNav` が幅 960px 未満では `position: relative` のまま `top: var(--vp-layout-top-height)` を持つため、帯が文書の流れで既に占める高さに加えて変数の分も下がり、二重に空いたこと。直し方は、`matchMedia("(min-width: 960px)")` に一致する幅（ナビゲーションが固定される幅）でだけ変数を設定し、それ未満では解除する（`applyLayoutTopHeight` の第 3 引数 `isFixedNav`、`change` イベントで追従）。広い画面の直りは変えない。単体テストに、固定されない幅で変数を設定しないケースを追加した。
+- 3 回目の対応（中間の幅の空白）: 幅ごとの VitePress の配置は次のとおり。960px 未満はナビゲーション・local nav とも固定されず文書の流れに並ぶため、変数を設定しない。960px 以上はナビゲーションとサイドバーが固定され、`.VPContent` の margin-top が変数を使う。960〜1279px では local nav（「On this page」の帯）が sticky で表示され、`padding-top` にも同じ変数を使うため、帯が文書の流れに残ったままだと帯・local nav の padding・本文の margin で高さが重なり、帯の高さの約 2 倍が余計に空いた。直し方は、960px 以上で帯を `position: fixed`（`z-index` は VitePress の `--vp-z-index-layout-top`）にして文書の流れから外し、本文のずれを `.VPContent` の margin-top の 1 回分（帯の高さ）にそろえること。あわせて `.VPLocalNav` の `padding-top` を 0 にし、sticky の `top` へ変数を足して、local nav の見える位置は変えない。帯が無い版では変数が未設定で `0px` になり、既定と同じ値になる。単体テストで、960px 以上の `@media` に帯の固定と local nav の上書きがあることを確かめた。ブラウザでの幅 960・1440・640 の確認はオーケストレーターが行う（_ASSUMPTION_: VitePress の CSS から推定した直し方で、実測は未実施）。
+- 4 回目の対応（幅 960 の本文の位置）: `node_modules/vitepress` の CSS で `--vp-layout-top-height` を使う規則は、`VPNav` の `top`、`VPSidebar` の `top`、`VPLocalNav` の `padding-top`、`VPContent` の `margin-top`（`.VPContent` と 960px 以上の `.VPContent.has-sidebar`）、`VPDoc` の `.aside-container` の `padding-top`（1280px 以上で出る右の目次）、`VPNavScreen`・`VPHero` である。本文の上端に効くのは `.VPLocalNav` の `padding-top` と `.VPContent.has-sidebar` の `margin-top` の 2 つで、`.VPDoc` には本文を下げる規則がない。3 回目に足した `.VPLocalNav { padding-top: 0 }` は、VitePress の scoped 規則 `.VPLocalNav[data-v-…]`（詳細度 0,2,0）に負けて効いていなかった。このため幅 960〜1279 では、local nav の `padding-top` で帯の高さが 1 回（文書の流れで local nav が帯の分だけ高くなる）、`.VPContent.has-sidebar` の `margin-top` でもう 1 回足され、本文が帯 2 つ分（76px）ずれていた。同じ理由で、上書きした `top` も効かず local nav は VitePress の既定の `top: var(--vp-nav-height)` のままで、`padding-top` の分だけ下端が下がって見た目の差が 38px になっていた（測定結果と一致する）。直し方は、上書きのセレクタを `html .Layout > .VPLocalNav`（詳細度 0,2,1）にして scoped の規則に勝たせること。local nav の `padding-top` が 0 になり、sticky の `top` が `nav の高さ + 帯の高さ` になるので、local nav の下端・本文の上端とも本番から帯の高さ 1 回分だけずれる。1280px 以上は local nav が `display: none` で、960px 未満は上書きの `@media` の外なので、幅 640・1280・1440 の扱いは変わらない。単体テストは、上書きのセレクタが scoped の規則より詳細度の高い形であることを確かめるよう改めた（_ASSUMPTION_: CSS と詳細度からの推定で、ブラウザでの実測は未実施）。
+- 残課題: ブラウザでの見え方の確認（作業 3）はオーケストレーターが行う。
+
+### 5.2. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: 文書サイトの開発中の版で、広い画面でも「開発中の版」の帯がナビゲーションに隠れず表示されるようにした。
+
+## 6. 関連ドキュメント
+
+- 派生元: `PJR-98HS`（開発中の版の帯）。

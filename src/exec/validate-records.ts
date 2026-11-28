@@ -103,13 +103,14 @@ export function validateRunRecordLayout(options: {
   }
 
   const runs = resolve(runRecordsDirectory(executionPath));
-  // These have independent formats and lifecycles (PJR-VH8D / PJR-9BY9 / PJR-PZBP).
+  // These have independent formats and lifecycles (PJR-VH8D / PJR-9BY9 / PJR-PZBP / PJR-32PN).
   const separateTrees = new Set([
     "grade/results",
     "grade/generated",
     "jobs/runs",
     "exec/events",
     "exec/trials",
+    "exec/stops",
     "exec/plans",
     "exec/results",
     "exec/evidence",

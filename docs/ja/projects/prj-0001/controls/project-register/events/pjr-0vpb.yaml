@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bf40f61ee3234eccac10a840b0a73f19
+- v: 1
+  id: reg_a97215ff255d460c9675e39c6a41c770
+  ts: "2026-11-22T12:57:44Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 型の grade（2026-11-22）で ifx-api・ifx-msg は needs-work だったが、原因が 0VPB の範囲の外のため、別に起票して 0VPB を close することを indie が決めた。オーケストレーターは差分と対応結果を完了条件と照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: ifx-api・ifx-msg・dec の rulebook と sample から共通の運用の記述を外した。dec は rulebook・sample とも pass。ifx-api・ifx-msg の needs-work は仕様の中身（info.version・responses・題材）の問題で、PJR-AEKE で扱う
+  previous_event_id: reg_c98824e1b8a24942a8f6f59a304c8f80

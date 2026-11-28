@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T21:30:47Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-itc-index-sample-130",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "QE",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "sol-executor"
+  }
+}

@@ -13,7 +13,7 @@ specdojo:
   agent: sol-executor
   approach: condense
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
   condense_records:
     - location: 導入文・修正前15行「SpecDojo におけるタスク実行…状態と状態遷移を定義する」
       category: repetition

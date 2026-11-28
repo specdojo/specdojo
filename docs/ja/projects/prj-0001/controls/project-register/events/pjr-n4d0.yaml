@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6dd35ce953a34a6b9ef4516b6746c083
+  ts: "2026-11-23T00:36:16Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: OpenFisca-Japan の作業（利用側の prj-0001）で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 同じ項目を何回か流すと、プロダクトの commit のタイトルがすべて同じになる
+    - field: description
+      from: ""
+      to: --force-restart や --resume で同じ項目を流し直すたびに、プロダクトの commit の 1 行目が項目のタイトルのままになり、履歴で回ごとの変更を区別できない。push の前に利用者が rebase の reword で直す必要がある
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+- v: 1
+  id: reg_0acfbdfe35b6471b9ae8e7d0b9a0aa56
+  ts: "2026-11-23T01:03:34Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 期限を決め、CHANGELOG の書き方を prj-0001 の運用にそろえた（2026-11-23）
+  changes:
+    - field: due
+      from: "-"
+      to: "2026-11-30"
+  previous_event_id: reg_6dd35ce953a34a6b9ef4516b6746c083
+- v: 1
+  id: reg_c7830d401e424a0c8eba37cf4b539ecf
+  ts: "2026-11-23T02:10:48Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0acfbdfe35b6471b9ae8e7d0b9a0aa56
+- v: 1
+  id: reg_e489e032d8304ff4bc08619efcf38870
+  ts: "2026-11-23T02:38:51Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  previous_event_id: reg_c7830d401e424a0c8eba37cf4b539ecf
+- v: 1
+  id: reg_e0d64967874e4916b7b4508e5c00cf9b
+  ts: "2026-11-23T02:43:23Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+      to: "-"
+  previous_event_id: reg_e489e032d8304ff4bc08619efcf38870
+- v: 1
+  id: reg_3f0eba584d954043b9d3944a6389d377
+  ts: "2026-11-23T02:59:11Z"
+  action: wait
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
+  previous_event_id: reg_e0d64967874e4916b7b4508e5c00cf9b
+- v: 1
+  id: reg_f7addeb40aca4da68bc63383e3f015c7
+  ts: "2026-11-23T03:30:46Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
+      to: "-"
+  previous_event_id: reg_3f0eba584d954043b9d3944a6389d377
+- v: 1
+  id: reg_b33efbe4560841edad13e8562867ff63
+  ts: "2026-11-23T03:35:04Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f7addeb40aca4da68bc63383e3f015c7
+- v: 1
+  id: reg_daeeca6475cb4d83939d1d8b41239b80
+  ts: "2026-11-23T04:21:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、exec smoke が成功した。prj-0001 にはプロダクトのリポジトリがないため、実際の 1 行目は利用側で確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 同じ項目の 2 回目以降のプロダクトの commit の 1 行目の末尾に、空白と (run N) を付けるようにした（案 c）。1 回目と merge メッセージは従来どおり
+  previous_event_id: reg_b33efbe4560841edad13e8562867ff63

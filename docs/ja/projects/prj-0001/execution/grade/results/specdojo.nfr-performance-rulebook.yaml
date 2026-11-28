@@ -4,18 +4,18 @@ document: specdojo:nfr-performance-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-11-05T20:27:53.190Z"
-graded_by: flash-high-executor
-content_hash: 8d0daaa51562c8468341096fbbee7d0500f22715e28ab28b1bb3e8b1025d097a
+verdict: pass
+score: 92
+graded_at: "2026-11-23T15:17:10.623Z"
+graded_by: sonnet-review-executor
+content_hash: d0159fb1ff6bdd993c8ecbde4c27cc653082327b3e0341bce1dc49967bb6b7c9
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 94
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -27,14 +27,14 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,35 +103,41 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 3
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 56
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: nfr-performance ドキュメントに未決事項や論点を記載する項目が必須構成に指定されていないため、POの承認判断に必要な情報が不足する可能性がある。
-    message_ja: nfr-performance ドキュメントに未決事項や論点を記載する項目が必須構成に指定されていないため、POの承認判断に必要な情報が不足する可能性がある。
+    rule: vp-dev-testability
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: sample を schema・lint で確認する手順または参照先が本書に示されておらず、ready 化前の確認方法が読み取れない。
+    message_ja: sample を schema・lint で確認する手順または参照先が本書に示されておらず、ready 化前の確認方法が読み取れない。
   - id: F002
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 56
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 課題やリスクを課題管理等へ転記するための項目やルールが定義されていない。
-    message_ja: 課題やリスクを課題管理等へ転記するための項目やルールが定義されていない。
+    rule: vp-qe-omissions-consistency
+    line: 48
+    anchor: "| 4    | 測定・検証方法       | ○        | 要件IDごとの測定方法・測定環境・計測条件・判定タイミング |"
+    message: 5 節の表は測定・検証方法の内容を「測定方法・測定環境・計測条件・判定タイミング」とし、6.4 節は「測定方法・判定タイミング・合格条件」としており、列構成が一致しない。sample には「合格条件」列がない。
+    message_ja: 5 節の表は測定・検証方法の内容を「測定方法・測定環境・計測条件・判定タイミング」とし、6.4 節は「測定方法・判定タイミング・合格条件」としており、列構成が一致しない。sample には「合格条件」列がない。
   - id: F003
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 非機能要件 / 性能 作成ルール"
-    message: 参照サンプルが本ルールで定義した必須本文構成（第5節）に従っておらず、成果物の正解例として不適切である。
-    message_ja: 参照サンプルが本ルールで定義した必須本文構成（第5節）に従っておらず、成果物の正解例として不適切である。
+    line: 13
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample は「本文要件」の章に揃っていないため、sample を揃えることを本書を `ready` にする前提条件とする。"
+    message: >-
+      sample は「本文要件」の章構成（第 1 章から第 6 章）に既に揃っているのに、「揃っていない」と記述している。sample との対応関係を現状に合わせて書き直し、ready
+      化の前提条件を実態に合わせて更新する必要がある。
+    message_ja: >-
+      sample は「本文要件」の章構成（第 1 章から第 6 章）に既に揃っているのに、「揃っていない」と記述している。sample との対応関係を現状に合わせて書き直し、ready
+      化の前提条件を実態に合わせて更新する必要がある。
   - id: F004
     severity: minor
     rule: vp-ops-release-readiness
-    line: 37
-    anchor: "## 4. 推奨 Frontmatter 項目"
-    message: "`ready` 状態へ移行するための条件や、リリース判断に必要な前提事項の定義がない。"
-    message_ja: "`ready` 状態へ移行するための条件や、リリース判断に必要な前提事項の定義がない。"
+    line: 13
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample は「本文要件」の章に揃っていないため、sample を揃えることを本書を `ready` にする前提条件とする。"
+    message: ready 化の前提条件として「sample を揃えること」を挙げているが、すでに揃っている。残る前提条件（`recipe`・`template` の要否判断）に書き換えないと、公開判断の材料が誤る。
+    message_ja: ready 化の前提条件として「sample を揃えること」を挙げているが、すでに揃っている。残る前提条件（`recipe`・`template` の要否判断）に書き換えないと、公開判断の材料が誤る。

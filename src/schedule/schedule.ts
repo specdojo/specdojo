@@ -1,4 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { type Command } from "commander";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
@@ -449,8 +448,6 @@ export function printSchedulePaths(opts: { project?: string }): void {
 
 export function registerScheduleCommands(program: Command): void {
   const sch = program.command("schedule").description("Schedule build commands");
-
-  registerDeprecatedWhereAlias(sch, printSchedulePaths);
 
   const bcmd = sch
     .command("build", { hidden: true })

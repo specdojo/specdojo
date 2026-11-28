@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "queue_id": "after-rebuild-d-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T07:34:54.173Z",
+  "updated_at": "2026-11-21T07:49:52.961Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-VCER",
+        "--executor-by",
+        "opus-executor",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--reporter-by",
+        "gemma26-reporter",
+        "--fallback-reporter-by",
+        "sonnet-reporter",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T07:34:54.597Z",
+      "completed_at": "2026-11-21T07:49:52.958Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

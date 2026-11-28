@@ -2,6 +2,7 @@ import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { loadRegisterItems, resolveRegisterPaths } from "../../register/register.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import { buildInPlaceStem } from "../plans.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
@@ -18,12 +19,14 @@ import {
   type RegisterFailureMode,
   type RegisterItemSummary,
 } from "../register.js";
+import { TERMINAL_STATUSES_SET } from "../../register/item.js";
 import { findRunRecord, taskRecordPaths } from "../run-records.js";
 import { qualifyTaskId } from "../shared.js";
 import { CrossProcessMutex } from "../slot-lock.js";
 import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
 import { loadRosterForExecutionPath } from "./agent.js";
 import { execLifecyclePoolPath, execLocksDir } from "./lock.js";
+import { isUnstartedScopeReservation } from "./change-scope-state.js";
 import {
   ChangeScopeGate,
   inferChangeScope,
@@ -189,20 +192,20 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
       const { item } = resolveRegisterRunTarget(projectId, pjrId);
       requireRunnableRegisterItem(item);
       const worktree = findExecWorktree(repoRoot, qualifyTaskId(projectId, item.id));
-      if (!worktree) {
-        process.stdout.write(`[dry-run]   ${item.id}: no exec worktree — not resumable\n`);
-        continue;
-      }
       const lookup = findResumableRegisterRun({
         repoRoot,
-        worktreePath: worktree.path,
+        worktreePath: worktree?.path ?? repoRoot,
         executionPath,
         taskId: item.id,
         ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
       });
+      if (!worktree && lookup.kind === "resumable" && lookup.target.stage !== "prepare") {
+        process.stdout.write(`[dry-run]   ${item.id}: no exec worktree — not resumable\n`);
+        continue;
+      }
       process.stdout.write(
         lookup.kind === "resumable"
-          ? `[dry-run]   ${item.id}: resume the ${lookup.target.stage} stage of run ${lookup.target.runId} in ${worktree.path}\n`
+          ? `[dry-run]   ${item.id}: resume the ${lookup.target.stage} stage of run ${lookup.target.runId} in ${worktree?.path ?? "a new worktree"}\n`
           : `[dry-run]   ${item.id}: not resumable (${lookup.reason})\n`,
       );
     }
@@ -223,7 +226,7 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
       const category = requireRunnableRegisterItem(item);
       const stem = buildInPlaceStem(pjrId.toLowerCase());
       process.stdout.write(
-        `[dry-run] register item: ${item.id} — ${item.title}  [${item.type}/${category}]\n`,
+        `[dry-run] register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}/${category}]\n`,
       );
       if (pipelineMode) {
         const { executor, reporterCandidates } = resolveRegisterPipelineCommand(
@@ -293,7 +296,21 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
   const summaries: RegisterItemSummary[] = [];
   // 再開は既存 worktree の reporter 段だけを実行する。それ以外の経路（plan 生成・executor 実行）
   // は通らないため、通常実行と同じ並列・直列の枠だけを共有する。
-  const scopeGate = new ChangeScopeGate(executionPath, parseUnknownScopePolicy(opts.unknownScope));
+  const scopeGate = new ChangeScopeGate(
+    executionPath,
+    parseUnknownScopePolicy(opts.unknownScope),
+    {},
+    (blockerId) => {
+      try {
+        return TERMINAL_STATUSES_SET.has(
+          resolveRegisterRunTarget(projectId, blockerId).item.status,
+        );
+      } catch {
+        return false;
+      }
+    },
+    (item) => isUnstartedScopeReservation({ item, projectId, repoRoot, schedulePath }),
+  );
   const runItem = async (
     pjrId: string,
     lifecycleLock?: AsyncLock,
@@ -315,12 +332,18 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     });
     let lease: ChangeScopeLease | undefined;
     let integrated = false;
+    let prepared = false;
     try {
       // Wait outside the lifecycle lock: its holder must be able to integrate and release us.
       lease = await scopeGate.acquire(pjrId, scope);
+      // A retry may fail before setup while still owning an older unintegrated worktree.
+      prepared = !!findExecWorktree(repoRoot, qualifyTaskId(projectId, pjrId));
       const itemOpts = {
         ...optsForItem(pjrId),
         changeScopeWaits: lease.waits,
+        onScopePrepared: () => {
+          prepared = true;
+        },
         onScopeIntegrated: async () => {
           integrated = true;
           await lease?.finish(true);
@@ -343,7 +366,8 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         reason,
       };
     } finally {
-      await lease?.finish(integrated);
+      if (prepared || integrated) await lease?.finish(integrated);
+      else await lease?.cancelPreparation();
     }
   };
 

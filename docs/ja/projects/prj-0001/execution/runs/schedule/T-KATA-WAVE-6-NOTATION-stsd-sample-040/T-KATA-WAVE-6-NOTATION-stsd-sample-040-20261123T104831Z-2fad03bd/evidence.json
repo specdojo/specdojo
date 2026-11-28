@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-NOTATION-stsd-sample-040",
+  "run_id": "T-KATA-WAVE-6-NOTATION-stsd-sample-040-20261123T104831Z-2fad03bd",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T10:49:17.363Z",
+    "completed_at": "2026-11-23T10:50:24.071Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/stsd-rulebook.md | 20 +++++++++-----------\n 1 file changed, 9 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "passed",
+      "summary": "--write で表の列幅を整えた後、整形済み"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:stsd-rulebook\n  type: rulebook\n  deliverable_type: data\n  status: draft\n  target_format: markdown\n  recipe: specdojo:stsd-recipe\n  sample: specdojo:stsd-sample\n  template: specdojo:stsd-template\n  includes:\n    - specdojo:stsd-mermaid-rulebook\n  based_on:\n    - specdojo:rulebook-authoring-standard\n---\n\n# ステータス定義（Status Definition: STSD）作成ルール\n\nStatus Definition Documentation Rulebook\n\n… output omitted …\nの全遷移について終了、正常系への復帰、または人間の判断への引き渡しを説明できます。\n- 状態名、通称、イベント名が用語集・業務データ辞書・関連 CDFD と矛盾していません。\n\n### 6.8. 改訂時の影響確認\n\n- 状態値・状態名・遷移 ID を変えるときは、参照する業務データ辞書・CDFD・業務ルール、型・schema、状態遷移テスト・受入条件の追従を確認します。\n\n## 7. 禁止事項\n\n- 同じ対象の状態一覧と状態遷移図を別文書へ分けません。\n- 状態名に `is_active`、`FLAG_01`、数値だけのコードなど、実装上の識別子を使いません。\n- 物理テーブル、画面ページ、API 呼び出し、関数実行を業務状態または業務イベントとしてそのまま記載しません。\n- 遷移ラベルから遷移 ID やイベントを省略したり、条件を実装式だけで表したりしません。\n- 直上の図にない遷移を遷移表へ追加しません。\n- 「状態遷移」の図と表を別章へ分けたり、分割図の表を一括して後置したりしません。\n- CDFD、業務データ辞書、用語集に同じ状態一覧や遷移表を複製しません。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6181 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6181 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-stsd-sample-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdoj\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":2380}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  20:05:31\n   Duration  3.74s (transform 8.85s, setup 1.59s, import 13.18s, tests 8.21s, environment 2ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-stsd-sample-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-stsd-sample-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "stsd-rulebook.md を簡潔にした。PJR-76N9 の決まりに合わせて判断の主語を外し、stsd-mermaid-rulebook と重なる完成判定と禁止事項(疑似状態・複合状態)を消して参照にまとめた。F001・F002 は現行の記述で既に解消済み、condense の記録 4 件(保持)は必要な規定に当たるため据え置き。stsd-mermaid-rulebook・sample・recipe・template は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "F001(状態値の一意性の再掲)と F002(分岐の同じイベントの限定)は、編集前の stsd-rulebook.md で既に解消済み(状態一覧の注記で「ファイル命名・ID規則」を参照し、「図」の節で同じイベントによる分岐に限定している)。result の `進め方と実践の型の適用` に解消済みとして記録すること。",
+    "condense の記録 4 件(stsd-job-run, stsd-register-entry x2, stsd-routine-run、すべて retain)は、遷移表を正本・図を投影とする規定と、図の分割基準・共有状態の宣言による必要な保持と判断し、規定を変更しなかった。",
+    "stsd-mermaid-rulebook.md は新たな指摘も冗長な記述もないため変更しなかった。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-stsd-sample-040/T-KATA-WAVE-6-NOTATION-stsd-sample-040-20261123T104831Z-2fad03bd/executor.log",
+      "bytes": 4148,
+      "truncated": false
+    }
+  ]
+}

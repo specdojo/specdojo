@@ -1,0 +1,48 @@
+レビュー結果: `incomplete` です。対象サンプルは pass ですが、型の追加完了条件を満たしていません。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` を 3 件に実行しました。対象は `opr-access-control-sample`、`opr-rulebook`、`opr-sample` です。出力は 3 件とも空で、評価結果は最新です。
+- `opr-batch-sample` と `opr-support-sample` の鮮度は個別に再確認していません。plan が最新と示した内容を使っています。
+- 対象サンプルの grade は `pass`、score 95、finding は minor 2 件です。
+- `opr-access-control-sample` は DC-001 から DC-005 を満たしています。
+  - 章立ては 1 から 12 章すべてあり、rulebook の構成に沿っています。
+  - `rulebook` は `specdojo:opr-rulebook` を指しています。
+  - 適用範囲、対象外（特権アカウント）、申請の受付条件（9.1 の表）が示されています。
+  - 未決事項は `_UNDECIDED_` の表で、決まるまでの扱いが書かれています。
+- 型の評価対象のうち、次は最新の `pass` です。
+  - `opr-sample`（94）
+  - `opr-access-control-sample`（95）
+  - `opr-backup-restore-sample`（98）
+  - `opr-change-sample`（96）
+  - `opr-incident-sample`（91）
+  - `opr-monitoring-sample`（92）
+  - `opr-template`（100）
+
+**未充足事項**
+1. `opr-rulebook` が `needs-work`（score 94）です。
+   - F002 は major です。`opr-batch-sample`・`opr-change-sample`・`opr-support-sample` が `rulebook: specdojo:opd-rulebook` を宣言しており、template の 12 章構成にもなっていません。
+   - `opr-change-sample` は、その後の再 grade で `pass` になっています。
+2. `opr-batch-sample` が `needs-work`（score 66）です。major が 8 件あります。
+3. `opr-support-sample` が `fail`（score 57）です。blocker が 1 件、major が 14 件あります。
+4. 2 と 3 の grade は 2026-11-21 のもので、他の sample より古いです。
+
+型の追加完了条件は「型すべてに最新の `pass`」です。1 から 3 が `needs-work` または `fail` のため `incomplete` とします。
+
+**finding の扱い**
+- 対象サンプルの F001・F002 は同じ指摘で、緊急権限と `OPS` による付与が `opr-sample` の記述と食い違うというものです。
+- 本書の概要が `opr-sample` の差分であることを示しています。9.4 の緊急権限は、`opr-sample` が「置かない」とした点を具体化したものです。この finding 単体ではタスクを止めません。
+
+**改善指示**
+- `opr-batch-sample` と `opr-support-sample` を、`opr-rulebook` の 12 章構成と `specdojo:opr-rulebook` 参照に直し、再 grade して `pass` にする。
+- 上記の後に `opr-rulebook` を再 grade して `pass` にする。
+- `opr-sample` 側で、緊急権限と付与の実施者の記述を `opr-access-control-sample` に合わせる。または差分であることを `opr-access-control-sample` の概要に明示する。
+
+**確認できなかった範囲**
+- grade の再評価は、plan の方針どおり行っていません。
+- 先行する edit タスクの result は特定していません。
+- grade サイドカーの中身は直接読んでいません。
+- `grade list --incomplete` は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: incomplete。対象サンプル opr-access-control-sample は grade pass(95)・最新で完了条件 DC-001〜005 を満たす。ただし型の追加完了条件として、opr-rulebook が needs-work(94, major1)、opr-batch-sample が needs-work(66)、opr-support-sample が fail(57) のため未充足。確認できなかった範囲: サイドカー直接読取、grade list --incomplete、batch/support の鮮度の個別再確認、先行 edit result の特定。","handoff":["opr-batch-sample と opr-support-sample を opr-rulebook の12章構成・rulebook: specdojo:opr-rulebook に直して再grade(pass)にする","opr-rulebook を再grade(pass)にする","opr-sample と opr-access-control-sample の緊急権限・付与実施者の食い違い(F001/F002)を解消または差分明示する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-access-control-sample.md --changed-only","status":"passed","summary":"出力なし(最新)"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opr-rulebook.md --changed-only","status":"passed","summary":"出力なし(最新)"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-sample.md --changed-only","status":"passed","summary":"出力なし(最新)"}]}
+</specdojo_executor_evidence>

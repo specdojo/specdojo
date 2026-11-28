@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T04:54:59Z",
+  "type": "unblock",
+  "task_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-120",
+  "by": "sol-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sol-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-120/T-KATA-REVIEW-CALIBRATION-opr-sample-120-20261124T041837Z-62e42db3/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-120/T-KATA-REVIEW-CALIBRATION-opr-sample-120-20261124T041837Z-62e42db3/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-120-20261124T041837Z-62e42db3",
+    "pipeline_resume_claimed": "true"
+  }
+}

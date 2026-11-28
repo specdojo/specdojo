@@ -12,7 +12,7 @@ specdojo:
   owner: ARC
   approach: fully-guided
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Edit Plan: PJR-2C9W

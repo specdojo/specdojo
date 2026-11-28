@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T05:33:08Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-110",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PO"
+  }
+}

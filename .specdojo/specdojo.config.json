@@ -1,6 +1,12 @@
 {
   "version": 1,
   "current_project": "prj-0001",
+  "external_projects": {
+    "prj-0002": {
+      "path": "../specdojo-prj-0002",
+      "project_id": "prj-0002"
+    }
+  },
   "projects": {
     "prj-0001": {
       "base_path": "docs/ja/projects/prj-0001",
@@ -17,6 +23,9 @@
       "run": {
         "register_date_timezone": "Asia/Tokyo",
         "exec_defaults": ".specdojo/exec-defaults.yaml"
+      },
+      "sync": {
+        "enabled": true
       }
     }
   }

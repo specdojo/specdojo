@@ -1,0 +1,26 @@
+R3（読みやすさ）として `docs/ja/specdojo/samples/nfr-integrity-sample.md` の 6 か所の文を直しました。意味、判断に要る背景・例外・制約は変えていません。直した後に `npx prettier --check` を実行し、通りました。markdownlint などの検査は親 runner が実行します。
+
+**直した文**
+
+- **R3-1（概要）**: 「〜ため、〜ため、いずれも」と理由が 2 つ並ぶ文を、影響を述べる文と結論の文に分けました（W3・W2）。
+- **R3-2（除外条件）**: 「その記録自体」を「在庫調整の記録」にしました（W4）。
+- **R3-3（監査証跡）**: 「監査証跡は…を残す」の主語と述語のねじれを「監査証跡には…を残す」に直しました（W2）。
+- **R3-4（完全性要件一覧）**: 「pass/fail」を、4 章と rulebook の表記に合わせて「合否」にしました（W8・`vp-ux-language-consistency`）。
+- **R3-5（測定・検証方法）**: 違反を見つけたときの扱いを述べる長い 1 文を、記録する文と、店主代表が照合して訂正する文に分けました（W3・W1）。
+- **R3-6（測定・検証方法）**: 見直しの 2 つの条件を「または」でつなぎ、どちらか一方で見直すと読めるようにしました（W5）。
+
+**判断を人に残す点**
+
+- **R3-7（要判断）**: 違反を課題として記録する人は、本文から決まりません（W1）。共通サンプル文脈に根拠がないので、主語を足していません。整合性チェックを誰が実行するかの `_UNDECIDED_` と一緒に決める案と、「店番が記録する」と書く案があります。
+
+**この段で扱わなかった grade の finding**
+
+- **F001**（保持期間の根拠と `based_on`）: 観点が `vp-qe-omissions-consistency` なので R2 に任せます。sample にはすでに `dec-*` への導線があります。
+- **F002**（rulebook 側の古い `_UNDECIDED_`）: 直す先が rulebook なので R5 に任せます。
+- **F003**（ready 化の条件）: 観点の `vp-ops-release-readiness` は、kata の段のレビューでは使わない観点です。
+
+作業中に `tmp/r3edit.py` を作り、削除しようとしましたが承認待ちで消せていません。`tmp/` は commit の対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）の観点で nfr-integrity-sample の文を 6 か所直した（W1〜W5・W8）。意味、判断に要る背景・例外・制約は変えていない。prettier --check は通った。","handoff":["R3-1: R3 / 1. 概要（対象・目的） / 理由の「〜ため」が 2 つ並び、文が長く主述が読みにくい / 「…毎営業日の判断に、つけ残高の誤りは顧客との信頼関係に影響する。このため、いずれも違反を 0 件とする基準にする。」に分けた / W3・W2 / -","R3-2: R3 / 2. 適用範囲・前提条件 / 「その記録自体」の指示語が指す先がすぐ読み取れない / 「在庫調整の記録」に置き換えた / W4 / -","R3-3: R3 / 2. 適用範囲・前提条件 / 「監査証跡は…を残す」で主語と述語がねじれている / 「監査証跡には…を残す」にした / W2 / -","R3-4: R3 / 3. 完全性要件一覧 / 表の前の文の「pass/fail」が 4 章と rulebook の表記「合否」とそろっていない / 「合否を判定する基準」にした / W8・vp-ux-language-consistency / -","R3-5: R3 / 4. 測定・検証方法 / 違反を検出したときの扱いが 1 文に詰まっていて長く、記録と訂正の主体の区別が読みにくい / 「…課題として記録する。店主代表は翌営業日の開店前に、記録を現物・ノート・入金の控えと照合して訂正する。」に分けた / W3・W1 / -","R3-6: R3 / 4. 測定・検証方法 / 見直しの 2 つの条件が読点だけで並び、両方そろったときだけ見直すとも読める / 条件の間に「または」を入れた / W5 / -","R3-7: R3 / 4. 測定・検証方法 / 違反を課題として記録する人が本文から決まらない / - / W1。共通サンプル文脈に根拠がないため主語を足していない。整合性チェックの実行者の _UNDECIDED_（`opd-integrity-check`）と一緒に決める案と、「店番が記録する」と書く案がある / 要判断","grade の F001（観点 `vp-qe-omissions-consistency`）は R2、F002（rulebook 側の `_UNDECIDED_`）は R5 に任せる。F003（`vp-ops-release-readiness`）は kata-guide で kata の段のレビューから外している観点のため、扱わない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-integrity-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは sample だけで、plan / result / 個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml が含まれないため"}]}
+</specdojo_executor_evidence>

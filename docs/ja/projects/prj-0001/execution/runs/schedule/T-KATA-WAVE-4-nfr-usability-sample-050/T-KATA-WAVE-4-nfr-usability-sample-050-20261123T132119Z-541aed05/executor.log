@@ -1,0 +1,24 @@
+`docs/ja/specdojo/samples/nfr-usability-sample.md` を、rulebook が定める 5 章構成の操作性要件の完成例に書き直しました（38 行 → 約 80 行）。対象 sample への markdownlint は 0 件でした。lint・schema などの検査は親 runner に任せており、まだ実行していません。
+
+**主な変更**
+
+- **ヘッダー（Frontmatter）**: `part_of` に非機能要件インデックスの sample、`based_on` にプロジェクト概要の sample を加えました。`status` は `draft` のままです。
+- **概要（対象・目的）**: 店主代表と家族利用者代表が、会計とつけの操作を説明書なしで終えられるようにすることを目的にしました。基準値の根拠は「つけ残高を 1 分以内で確認」という初期目標です。
+- **適用範囲・利用者前提**: 対象の業務・画面と対象外の業務を表にしました。利用者は熟練利用者と新任利用者の 2 区分に分け、熟練度と利用頻度を書きました。端末は店頭のタブレット 1 台とし、画面の大きさなど分からない点は `_ASSUMPTION_` で残しました。
+- **操作性要件一覧**: `nfr-usb-001`〜`006` の 6 件を、rulebook の 5 列（`id`／内容／指標／基準／備考）で書きました。指標は完了率・誤操作率・完了時間・習熟時間・エラー表示の対処方法含有率・取り消せない操作の確認網羅率で、率にはすべて分母を書いています。
+- **測定・検証方法**: 要件ごとに、測定の手段、被験者の人数、判定の時期、判定者を書きました。
+- **関連ドキュメント導線**: 非機能要件インデックス、プロジェクト概要、受入条件、総合テスト、画面仕様への導線を置きました。基準値や画面を変えたときに見直す文書も書いています。まだ無い文書はバッククォートで仮置きしています。
+
+**grade の指摘への対応**
+
+- 解消: F001、F002、F005、F007〜F019（F002 は rulebook に未決事項の章がないため、未決の値を `_UNDECIDED_` / `_ASSUMPTION_` として本文に置く形で対応）
+- 本文には入れていません: F003・F020・F021（承認する人や ready への条件、文書を保守する役割）は PJR-76N9 の決まりで sample に書けないため。F004・F006（作業の分け方、見積もり、追跡）は操作性要件の文書が扱う範囲の外なので、本文に書きませんでした。
+
+**判断が必要な点**
+
+- 基準値と被験者の数（80%、2%、60 秒、30 分、90 秒、5 名・3 名）は、rulebook の例と共通サンプル文脈から置いた仮の値です。確定するかどうかを決めてもらう必要があります。
+- 判定者の列で、役割名（利用者代表）と Role code（QE）が混ざっています。rulebook でどちらの表記にするかを決める必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/nfr-usability-sample.md` を rulebook の 5 章構成（概要（対象・目的）／適用範囲・利用者前提／操作性要件一覧／測定・検証方法／関連ドキュメント導線）に沿った駄菓子屋きぬやの操作性要件の完成例に書き直した。要件は `nfr-usb-001`〜`006` の 6 件で、rulebook の標準 5 列を使い、率の指標には分母を書いた。測定の手段・判定の時期・判定者も書いた。grade の F001・F002・F005・F007〜F019 を解消した。F003・F004・F006・F020・F021 は PJR-76N9 の決まりまたは文書の範囲外のため本文に書かず、handoff に回した。","handoff":["F003・F020・F021（承認する人・ready への条件・文書を保守する役割）は、PJR-76N9 の決まりで sample の本文に書かないため対応していない。承認と昇格は登録簿の個票で追う。","F004（検証作業の分け方と見積もり）と F006（未決事項の追跡方針と報告先）は、操作性要件の文書が扱う範囲の外のため本文に書いていない。計画は schedule と登録簿で扱う。viewpoint を型の sample に当てるときの基準の見直しを提案する。","確定が必要な値（現在は sample 用の仮の値）: `nfr-usb-001` の完了率 80%・被験者 5 名、`nfr-usb-002` の誤操作率 2%、`nfr-usb-003` の 60 秒（初期目標の 1 分から決めた値）、`nfr-usb-004` の習熟時間 30 分と熟練利用者の目安 90 秒（`_ASSUMPTION_`）、端末の画面 10 インチ前後とブラウザでの表示（`_ASSUMPTION_`）。","rulebook の変更案: 「測定・検証方法」の判定者の表記を、Role code（例 QE）と役割名（例 利用者代表）のどちらにするか rulebook に書く。rulebook の良い例は `UX・QA` だが、共通の Role code に UX はない。","rulebook の変更案: rulebook に未決事項の章がないため、基準値が未確定のときの書き方（`_UNDECIDED_` を基準の列に書き、暫定で判定するか）を記述ガイドに足すと、可用性の sample と書き方がそろう。","仮置きの参照名 `sac-store-sales`、`uis-credit-ledger`、`uis-stock-list` は sample として存在しない。`sac-sample` は旧形式の薄い sample のため wikilink にせず、非機能要件インデックスの sample と同じ参照名をバッククォートで使った。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-usability-sample.md","status":"passed","summary":"対象 sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-usability-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,5 @@
+`docs/ja/specdojo/samples/opr-support-sample.md` の冗長な 2 箇所を直しました。検査は実行していません。`lint:md` などの検査は親 runner が実行します。意味と完了条件は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2箇所の冗長さを修正し、他は判断に要る記述として保持した。","handoff":[],"condense_records":[{"location":"2. 手順適用範囲・前提 の模擬 4 件の直後の文","category":"repetition","action":"reference","reason":"月次点検の記録への残し方は 11. 証跡 末尾に確認日・環境・合否まで書かれているため、証跡への参照に置き換えた。残し先と記録項目は 11. 証跡 で維持される。","cause":{"type":"document"}},{"location":"4. 障害対応手順 の 2 文目","category":"repetition","action":"delete","reason":"`opr-index` 参照と同じ内容を言い換えた文のため削除した。判定の条件の所在を示す文は残した。","cause":{"type":"document"}},{"location":"1. 概要 の未決事項の表と 10.1 の応答の目標","category":"table-prose","action":"retain","reason":"表は未決事項ごとの手順上の扱いと影響章を示し、判断に要る暫定運用を担うため残した。","cause":{"type":"document"}},{"location":"12. 関連ドキュメント導線 末尾の見直し文","category":"repetition","action":"retain","reason":"方針・`opr-index` 変更時に同時に見直す表と条件を示す、固有の保守条件のため残した。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","reason":"親 runner が実行する検査のため"}]}
+</specdojo_executor_evidence>

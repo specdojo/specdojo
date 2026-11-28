@@ -46,8 +46,14 @@ import {
 } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { taskRecordPaths } from "../../../src/exec/run-records.js";
+import { registerGradeResultPaths } from "../../../src/exec/run/register-grade-scope.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
 import { projectMergeBlockers } from "../../../src/exec/repo-integration.js";
+import {
+  acquireSchedulerLockAsync,
+  releaseSchedulerLock,
+  schedulerLockPath,
+} from "../../../src/exec/events.js";
 import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
 import { ensureReviewGrade, type ReviewGradeInvoke } from "../../../src/review/grade.js";
 import { runGrade } from "../../../src/grade/run.js";
@@ -200,21 +206,21 @@ function scaffoldTask(
   return { planPath, resultPath, claimEventPath };
 }
 
-function prepare(
+async function prepare(
   fixture: Fixture,
   taskId: string,
   worktreeTaskId: string = taskId,
   planContent?: string,
   resultContent?: string,
   failureLogPath?: string,
-): ExecWorktree {
+): Promise<ExecWorktree> {
   const { planPath, resultPath, claimEventPath } = scaffoldTask(
     fixture,
     taskId,
     planContent,
     resultContent,
   );
-  return checkpointAndEnsureWorktree({
+  return await checkpointAndEnsureWorktree({
     context: fixture.context,
     worktreeTaskId,
     base: fixture.worktreeBase,
@@ -231,13 +237,13 @@ function prepare(
 
 // The checkpoint commit lives on the exec branch; the root keeps its own uncommitted copies of the
 // scaffolded files until the merge releases them, exactly as the runner does.
-function mergeIntoRoot(
+async function mergeIntoRoot(
   fixture: Fixture,
   worktree: ExecWorktree,
   taskId: string,
   options: { message?: string; failureLogPath?: string } = {},
-): void {
-  mergeWorktreeIntoCurrent({
+): Promise<void> {
+  await mergeWorktreeIntoCurrent({
     context: fixture.context,
     worktree,
     taskId,
@@ -278,13 +284,13 @@ afterEach(() => {
 });
 
 describe("exec worktree ops", () => {
-  it("allows unrelated staged root changes and preserves them while checkpointing", () => {
+  it("allows unrelated staged root changes and preserves them while checkpointing", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     writeFile(join(fixture.repo, "README.md"), "staged by user\n");
     git(fixture.repo, "add", "README.md");
 
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
 
     expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
     expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
@@ -292,13 +298,13 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("rejects a staged root change that overlaps a checkpoint path", () => {
+  it("rejects a staged root change that overlaps a checkpoint path", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const paths = scaffoldTask(fixture, taskId);
     git(fixture.repo, "add", taskRecordPaths("execution", taskId).plan);
 
-    expect(() =>
+    await expect(
       checkpointAndEnsureWorktree({
         context: fixture.context,
         worktreeTaskId: taskId,
@@ -306,13 +312,13 @@ describe("exec worktree ops", () => {
         checkpointPaths: [paths.planPath, paths.resultPath, paths.claimEventPath],
         commitMessage: `exec(${taskId}): prepare execution`,
       }),
-    ).toThrow(/Root index has staged checkpoint changes/);
+    ).rejects.toThrow(/Root index has staged checkpoint changes/);
     expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
   });
 
   it.each(["pre-commit", "commit-msg"])(
     "unstages checkpoint paths after %s failure without changing the root index",
-    (hook) => {
+    async (hook) => {
       const fixture = setupRepository();
       const taskId = "T-T-doc-010";
       writeFile(join(fixture.repo, "README.md"), "staged by user\n");
@@ -336,9 +342,9 @@ describe("exec worktree ops", () => {
         "checkpoint.log",
       );
 
-      expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
-        /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
-      );
+      await expect(
+        prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath),
+      ).rejects.toThrow(/Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s);
 
       expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
       expect(git(fixture.repo, "diff", "--cached", "--binary")).toBe(rootIndexBefore);
@@ -366,7 +372,7 @@ describe("exec worktree ops", () => {
     },
   );
 
-  it("unstages a checkpoint when its staged-change inspection fails", () => {
+  it("unstages a checkpoint when its staged-change inspection fails", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const actualGitResult = worktreeGit.gitResult;
@@ -378,7 +384,7 @@ describe("exec worktree ops", () => {
       return result;
     });
 
-    expect(() => prepare(fixture, taskId)).toThrow(
+    await expect(prepare(fixture, taskId)).rejects.toThrow(
       /Failed to inspect execution checkpoint changes/,
     );
     inspection.mockRestore();
@@ -389,7 +395,7 @@ describe("exec worktree ops", () => {
     expect(worktreeStatusPaths(worktree.path)).toHaveLength(3);
   });
 
-  it("keeps checkpoint edits and deletions in the worktree after a rejected commit", () => {
+  it("keeps checkpoint edits and deletions in the worktree after a rejected commit", async () => {
     const fixture = setupRepository();
     const changed = "execution/grade/results/doc.yaml";
     const deleted = "execution/grade/criteria/doc.yaml";
@@ -403,7 +409,7 @@ describe("exec worktree ops", () => {
     chmodSync(hookPath, 0o755);
     const paths = scaffoldTask(fixture, "T-T-doc-010");
 
-    expect(() =>
+    await expect(
       checkpointAndEnsureWorktree({
         context: fixture.context,
         worktreeTaskId: "T-T-doc-010",
@@ -417,7 +423,7 @@ describe("exec worktree ops", () => {
         ],
         commitMessage: "test: rejected checkpoint",
       }),
-    ).toThrow(/Checkpoint commit failed/);
+    ).rejects.toThrow(/Checkpoint commit failed/);
 
     const worktree = findExecWorktree(fixture.repo, "T-T-doc-010")!;
     for (const repo of [fixture.repo, worktree.path]) {
@@ -427,43 +433,77 @@ describe("exec worktree ops", () => {
     }
   });
 
-  it("carries grade result and criteria through checkpoint, update and merge", () => {
+  it("carries grade result and criteria through checkpoint, update and merge", async () => {
     const fixture = setupRepository();
     const paths = ["execution/grade/results/doc.yaml", "execution/grade/criteria/doc.yaml"];
     for (const path of paths) writeFile(join(fixture.repo, path), "grade: before\n");
     writeFile(join(fixture.repo, "execution/grade/generated/ignored.json"), "{}\n");
-    const worktree = prepare(fixture, "GRADE");
+    const worktree = await prepare(fixture, "GRADE");
     for (const path of paths) {
       expect(git(worktree.path, "show", `HEAD:${path}`)).toBe("grade: before");
       writeFile(join(worktree.path, path), "grade: after\n");
     }
     expect(existsSync(join(worktree.path, "execution/grade/generated/ignored.json"))).toBe(false);
     commitWorktreeChanges({ context: fixture.context, worktree, taskId: "GRADE" });
-    mergeIntoRoot(fixture, worktree, "GRADE");
+    await mergeIntoRoot(fixture, worktree, "GRADE");
     for (const path of paths)
       expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: after\n");
   });
 
-  it("preserves a newer root grade instead of discarding it during merge", () => {
+  it("leaves other samples' grade results out of the task checkpoint (PJR-A54F)", () => {
+    const fixture = setupRepository();
+    const own = "execution/grade/results/own.yaml";
+    const other = "execution/grade/results/other.yaml";
+    const criteria = "execution/grade/criteria/doc.yaml";
+    for (const path of [own, other, criteria]) writeFile(join(fixture.repo, path), "grade: x\n");
+
+    const actual = gradeCheckpointPaths(fixture.context, [own]).map((path) =>
+      path.slice(fixture.repo.length + 1),
+    );
+
+    expect(actual.sort()).toEqual([criteria, own].sort());
+  });
+
+  it("carries no grade results for a register item without graded targets (PJR-NRWJ)", () => {
+    const fixture = setupRepository();
+    const other = "execution/grade/results/other.yaml";
+    const criteria = "execution/grade/criteria/doc.yaml";
+    for (const path of [other, criteria]) writeFile(join(fixture.repo, path), "grade: x\n");
+    const own = registerGradeResultPaths({
+      repoRoot: fixture.repo,
+      projectId: "prj-0001",
+      catalogPath: undefined,
+      item: { targets: ["prj-0001:not-in-catalog"] },
+    });
+
+    const actual = gradeCheckpointPaths(fixture.context, own).map((path) =>
+      path.slice(fixture.repo.length + 1),
+    );
+
+    expect(own).toEqual([]);
+    expect(actual).toEqual([criteria]);
+  });
+
+  it("preserves a newer root grade instead of discarding it during merge", async () => {
     const fixture = setupRepository();
     const path = "execution/grade/results/doc.yaml";
     writeFile(join(fixture.repo, path), "grade: checkpoint\n");
-    const worktree = prepare(fixture, "GRADE-NEWER");
+    const worktree = await prepare(fixture, "GRADE-NEWER");
     writeFile(join(fixture.repo, path), "grade: newer\n");
-    expect(() => mergeIntoRoot(fixture, worktree, "GRADE-NEWER")).toThrow(
+    await expect(mergeIntoRoot(fixture, worktree, "GRADE-NEWER")).rejects.toThrow(
       /Grade sidecar changed after checkpoint/,
     );
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
   });
 
-  it("refreshes a newer root grade into a resumed worktree and merges it (PJR-ZSRD)", () => {
+  it("refreshes a newer root grade into a resumed worktree and merges it (PJR-ZSRD)", async () => {
     const fixture = setupRepository();
     const path = "execution/grade/results/doc.yaml";
     writeFile(join(fixture.repo, path), "grade: checkpoint\n");
-    const worktree = prepare(fixture, "GRADE-REFRESH");
+    const worktree = await prepare(fixture, "GRADE-REFRESH");
     writeFile(join(fixture.repo, path), "grade: newer\n");
 
-    const refreshed = refreshWorktreeCheckpoint({
+    const refreshed = await refreshWorktreeCheckpoint({
       repoRoot: fixture.repo,
       worktreePath: worktree.path,
       paths: [join(fixture.repo, path), join(fixture.repo, "execution/grade/results/none.yaml")],
@@ -473,18 +513,18 @@ describe("exec worktree ops", () => {
     expect(refreshed).toEqual([path]);
     expect(git(worktree.path, "show", `HEAD:${path}`)).toBe("grade: newer");
     expect(worktreeStatusPaths(worktree.path)).toEqual([]);
-    mergeIntoRoot(fixture, worktree, "GRADE-REFRESH");
+    await mergeIntoRoot(fixture, worktree, "GRADE-REFRESH");
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
   });
 
-  it("does not commit when the resumed worktree already has the root grade", () => {
+  it("does not commit when the resumed worktree already has the root grade", async () => {
     const fixture = setupRepository();
     const path = "execution/grade/results/doc.yaml";
     writeFile(join(fixture.repo, path), "grade: same\n");
-    const worktree = prepare(fixture, "GRADE-SAME");
+    const worktree = await prepare(fixture, "GRADE-SAME");
     const head = git(worktree.path, "rev-parse", "HEAD");
 
-    const refreshed = refreshWorktreeCheckpoint({
+    const refreshed = await refreshWorktreeCheckpoint({
       repoRoot: fixture.repo,
       worktreePath: worktree.path,
       paths: [join(fixture.repo, path)],
@@ -566,7 +606,7 @@ describe("exec worktree ops", () => {
       expect(await reviewGrade("REVIEW-PASS", GRADE_RUN_DOCUMENT)).toMatchObject({
         action: "executed",
       });
-      const successful = prepare(
+      const successful = await prepare(
         fixture,
         "REVIEW-PASS",
         "REVIEW-PASS",
@@ -580,7 +620,7 @@ describe("exec worktree ops", () => {
           action: "failed",
           detail: expect.stringContaining("agent actual-grader: failure"),
         });
-        const worktree = prepare(
+        const worktree = await prepare(
           fixture,
           "REVIEW-FAIL",
           "REVIEW-FAIL",
@@ -591,7 +631,7 @@ describe("exec worktree ops", () => {
       })();
       const successfulReview = (async () => {
         await failingReview;
-        mergeIntoRoot(fixture, successful, "REVIEW-PASS");
+        await mergeIntoRoot(fixture, successful, "REVIEW-PASS");
       })();
       const [{ outcome, worktree: retained }] = await Promise.all([
         failingReview,
@@ -617,20 +657,20 @@ describe("exec worktree ops", () => {
     }
   });
 
-  it("keeps an unrelated root grade created after branching while merging the task", () => {
+  it("keeps an unrelated root grade created after branching while merging the task", async () => {
     const fixture = setupRepository();
-    const worktree = prepare(fixture, "GRADE-UNRELATED");
+    const worktree = await prepare(fixture, "GRADE-UNRELATED");
     const path = "execution/grade/results/other-doc.yaml";
     writeFile(join(fixture.repo, path), "grade: independent\n");
-    mergeIntoRoot(fixture, worktree, "GRADE-UNRELATED");
+    await mergeIntoRoot(fixture, worktree, "GRADE-UNRELATED");
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: independent\n");
   });
 
-  it("checkpoints, commits, and merges a task so its deliverable lands on root", () => {
+  it("checkpoints, commits, and merges a task so its deliverable lands on root", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
     expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
       `exec(${taskId}): prepare execution`,
@@ -648,24 +688,53 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toContain("docs/a.md");
     expect(committed.targets).toContain(taskRecordPaths("execution", taskId).result);
 
-    mergeIntoRoot(fixture, worktree, taskId);
+    await mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("v1 from task 010\n");
     expect(
       readFileSync(taskRecordPaths(join(fixture.repo, "execution"), taskId).result, "utf8"),
     ).toContain("status: complete");
   });
 
-  it("previews a merge without treating releasable checkpoint copies as overlap", () => {
+  it("keeps the scheduler lock while a merge hook runs without blocking another waiter", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
+    const hook = join(fixture.repo, ".git", "hooks", "pre-merge-commit");
+    writeFile(hook, "#!/bin/sh\nsleep 1\n");
+    chmodSync(hook, 0o755);
+    let merged = false;
+    const merge = mergeIntoRoot(fixture, worktree, taskId).then(() => {
+      merged = true;
+    });
+    // The timer must fire before the slow hook returns. A synchronous merge would starve it.
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(merged).toBe(false);
+    expect(existsSync(schedulerLockPath(fixture.schedulePath))).toBe(true);
+    const waiter = acquireSchedulerLockAsync(fixture.schedulePath, {
+      actor: "next",
+      lockTimeoutMs: 5000,
+      lockStaleMs: 300000,
+    });
+    await merge;
+    const lock = await waiter;
+    expect(merged).toBe(true);
+    releaseSchedulerLock(lock);
+    expect(
+      gitResult(fixture.repo, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status,
+    ).not.toBe(0);
+  });
+
+  it("previews a merge without treating releasable checkpoint copies as overlap", async () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = await prepare(fixture, taskId);
     const releaseRootPaths = [
       taskRecordPaths(fixture.executionPath, taskId).plan,
       taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
 
-    expect(() =>
+    await expect(
       mergeWorktreeIntoCurrent({
         context: fixture.context,
         worktree,
@@ -673,17 +742,17 @@ describe("exec worktree ops", () => {
         releaseRootPaths,
         dryRun: true,
       }),
-    ).not.toThrow();
+    ).resolves.toBeUndefined();
     expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
     for (const path of releaseRootPaths) expect(existsSync(path)).toBe(true);
   });
 
   it.each([false, true])(
     "unrelated staged block event stops integration with recovery instructions (dry-run: %s)",
-    (dryRun) => {
+    async (dryRun) => {
       const fixture = setupRepository();
       const taskId = "T-T-doc-010";
-      const worktree = prepare(fixture, taskId);
+      const worktree = await prepare(fixture, taskId);
       const event = "execution/exec/events/other-task-block.json";
       writeFile(join(fixture.repo, event), '{"type":"block"}\n');
       git(fixture.repo, "add", event);
@@ -711,7 +780,7 @@ describe("exec worktree ops", () => {
             message.includes(event) && message.includes("git restore --staged -- <path>"),
         ),
       ).toBe(true);
-      expect(() =>
+      await expect(
         mergeWorktreeIntoCurrent({
           context: fixture.context,
           worktree,
@@ -719,23 +788,23 @@ describe("exec worktree ops", () => {
           releaseRootPaths,
           dryRun,
         }),
-      ).toThrow(/Staged changes.*other-task-block\.json.*git restore --staged/);
+      ).rejects.toThrow(/Staged changes.*other-task-block\.json.*git restore --staged/);
       expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(head);
       expect(git(fixture.repo, "status", "--porcelain")).toBe(status);
       expect(git(fixture.repo, "diff", "--cached", "--binary")).toBe(index);
       expect(gitResult(fixture.repo, ["rev-parse", "--verify", "MERGE_HEAD"]).status).not.toBe(0);
 
       git(fixture.repo, "restore", "--staged", "--", event, "README.md");
-      mergeIntoRoot(fixture, worktree, taskId);
+      await mergeIntoRoot(fixture, worktree, taskId);
       expect(readFileSync(join(fixture.repo, event), "utf8")).toBe('{"type":"block"}\n');
       expect(readFileSync(join(fixture.repo, "README.md"), "utf8")).toBe("unstaged\n");
     },
   );
 
-  it("restores files already released when releasing a later path fails", () => {
+  it("restores files already released when releasing a later path fails", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    prepare(fixture, taskId);
+    await prepare(fixture, taskId);
     const planPath = taskRecordPaths(fixture.executionPath, taskId).plan;
     const invalidDirectory = taskRecordPaths(fixture.executionPath, taskId).directory;
     const planBefore = readFileSync(planPath, "utf8");
@@ -750,12 +819,12 @@ describe("exec worktree ops", () => {
     expect(existsSync(invalidDirectory)).toBe(true);
   });
 
-  it("discards a stale worktree/branch left by a prior lifecycle so a fresh claim checkpoints cleanly", () => {
+  it("discards a stale worktree/branch left by a prior lifecycle so a fresh claim checkpoints cleanly", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
     // Prior lifecycle: the task was prepared on its exec branch but never merged.
-    const stale = prepare(fixture, taskId);
+    const stale = await prepare(fixture, taskId);
     expect(findExecWorktree(fixture.repo, taskId)).not.toBeNull();
 
     // Fresh claim rewrites the root scaffold as untracked files.
@@ -773,7 +842,7 @@ describe("exec worktree ops", () => {
     ).toThrow();
 
     // Re-preparing creates a fresh worktree and commits the scaffold only on its exec branch.
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     expect(worktree.created).toBe(true);
     expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
     expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
@@ -789,14 +858,14 @@ describe("exec worktree ops", () => {
     ).toBeNull();
   });
 
-  it("makes a merged task deliverable visible to the next task worktree", () => {
+  it("makes a merged task deliverable visible to the next task worktree", async () => {
     const fixture = setupRepository();
 
     // Task 010: edit a shared deliverable, then commit + merge + remove.
-    const wt1 = prepare(fixture, "T-T-doc-010");
+    const wt1 = await prepare(fixture, "T-T-doc-010");
     writeFile(join(wt1.path, "docs", "shared.md"), "produced by task 010\n");
     commitWorktreeChanges({ context: fixture.context, worktree: wt1, taskId: "T-T-doc-010" });
-    mergeIntoRoot(fixture, wt1, "T-T-doc-010");
+    await mergeIntoRoot(fixture, wt1, "T-T-doc-010");
     removeWorktree({
       context: fixture.context,
       worktree: wt1,
@@ -805,16 +874,16 @@ describe("exec worktree ops", () => {
     });
 
     // Task 020 branches from the updated root HEAD and must see task 010's deliverable.
-    const wt2 = prepare(fixture, "T-T-doc-020");
+    const wt2 = await prepare(fixture, "T-T-doc-020");
     expect(readFileSync(join(wt2.path, "docs", "shared.md"), "utf8")).toBe(
       "produced by task 010\n",
     );
   });
 
-  it("aborts a conflicting merge so the tree is not left mid-merge", () => {
+  it("aborts a conflicting merge so the tree is not left mid-merge", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
 
     // Root and the exec branch both add the same deliverable with different content: an add/add
     // conflict that git cannot auto-resolve.
@@ -825,7 +894,7 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
-    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow();
+    await expect(mergeIntoRoot(fixture, worktree, taskId)).rejects.toThrow();
 
     // The failed merge must be rolled back: no merge in progress, the deliverable untouched, and
     // the root's own uncommitted copies of the checkpoint files put back (nothing else dirty).
@@ -838,10 +907,10 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
   });
 
-  it("aborts a merge commit rejected by a hook and records the full integration output", () => {
+  it("aborts a merge commit rejected by a hook and records the full integration output", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
@@ -880,12 +949,12 @@ describe("exec worktree ops", () => {
     );
     writeFileSync(join(fixture.repo, ".git", "reject-merge"), "reject\n", "utf8");
 
-    expect(() =>
+    await expect(
       mergeIntoRoot(fixture, worktree, taskId, {
         message: `exec(${taskId}): merge hook failure`,
         failureLogPath,
       }),
-    ).toThrow(
+    ).rejects.toThrow(
       "git merge failed: typecheck: src/a.ts(1,1): error TS2322: intentional merge failure",
     );
 
@@ -901,10 +970,10 @@ describe("exec worktree ops", () => {
     expect(failureLog).toContain("--- merge --abort ---\nexit: 0");
   });
 
-  it("completes a resumed merge whose conflicts are only the item's own bookkeeping after two waits", () => {
+  it("completes a resumed merge whose conflicts are only the item's own bookkeeping after two waits", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
     const resultRel = taskRecordPaths("execution", taskId).result;
     const eventRel = `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`;
@@ -950,7 +1019,7 @@ describe("exec worktree ops", () => {
     git(worktree.path, "add", "--", eventRel, "package.json", "tools/build-if-stale.mjs");
     git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
 
-    mergeWorktreeIntoCurrent({
+    await mergeWorktreeIntoCurrent({
       context: fixture.context,
       worktree,
       taskId,
@@ -975,7 +1044,7 @@ describe("exec worktree ops", () => {
     expect(git(fixture.repo, "status", "--porcelain", "-uall")).toBe("");
   });
 
-  it("keeps register events appended on the merge target while the item was waiting", () => {
+  it("keeps register events appended on the merge target while the item was waiting", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const registerRel = "docs/prj/controls/project-register";
@@ -1030,7 +1099,7 @@ describe("exec worktree ops", () => {
     writeFile(join(fixture.repo, eventRel), serializeRegisterEvents(events));
     git(fixture.repo, "add", "--", ticketRel, eventRel);
     git(fixture.repo, "commit", "-m", "register item waiting");
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     const bookkeepingPaths = [join(fixture.repo, ticketRel), join(fixture.repo, eventRel)];
     // `prepare` leaves root-side replicas of the plan, result, and claim event. The production
     // integration releases them before merging, so the test passes them the same way.
@@ -1077,7 +1146,7 @@ describe("exec worktree ops", () => {
     git(worktree.path, "add", "--", ticketRel, eventRel);
     git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
 
-    mergeWorktreeIntoCurrent({
+    await mergeWorktreeIntoCurrent({
       context: fixture.context,
       worktree,
       taskId,
@@ -1116,10 +1185,10 @@ describe("exec worktree ops", () => {
     expect(git(fixture.repo, "status", "--porcelain", "-uall", "--", registerRel)).toBe("");
   });
 
-  it("aborts a resumed merge when a conflict falls outside the item's own bookkeeping", () => {
+  it("aborts a resumed merge when a conflict falls outside the item's own bookkeeping", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     const resultRel = taskRecordPaths("execution", taskId).result;
     const bookkeepingPaths = [
       taskRecordPaths(fixture.executionPath, taskId).plan,
@@ -1136,7 +1205,7 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
-    expect(() =>
+    await expect(
       mergeWorktreeIntoCurrent({
         context: fixture.context,
         worktree,
@@ -1144,7 +1213,7 @@ describe("exec worktree ops", () => {
         releaseRootPaths: bookkeepingPaths,
         resolveConflictsWithBranchPaths: bookkeepingPaths,
       }),
-    ).toThrow(/git merge failed/);
+    ).rejects.toThrow(/git merge failed/);
     expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
     expect(readFileSync(join(fixture.repo, resultRel), "utf8")).toContain("status: waiting");
@@ -1177,10 +1246,10 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("target\n");
   });
 
-  it("blocks edited plans while allowing regenerated files to remain outside commits", () => {
+  it("blocks edited plans while allowing regenerated files to remain outside commits", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
 
     // Simulate an agent that also touches a plan and a generated file (must not be committed).
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
@@ -1208,12 +1277,12 @@ describe("exec worktree ops", () => {
     expect(stillDirty).toContain("execution/generated/");
   });
 
-  it("namespaces the branch and worktree by project while keeping the bare task id for the checkpoint", () => {
+  it("namespaces the branch and worktree by project while keeping the bare task id for the checkpoint", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const worktreeTaskId = `prj-0001:${taskId}`;
 
-    const worktree = prepare(fixture, taskId, worktreeTaskId);
+    const worktree = await prepare(fixture, taskId, worktreeTaskId);
 
     // Branch and worktree name are project-qualified (`:` normalized to `-`).
     expect(worktree.branch).toBe("exec/prj-0001-T-T-doc-010");
@@ -1227,13 +1296,13 @@ describe("exec worktree ops", () => {
     expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
   });
 
-  it("removes a merged worktree and deletes its exec branch", () => {
+  it("removes a merged worktree and deletes its exec branch", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-    mergeIntoRoot(fixture, worktree, taskId);
+    await mergeIntoRoot(fixture, worktree, taskId);
 
     removeWorktree({ context: fixture.context, worktree, taskId, deleteBranch: true });
 
@@ -1243,10 +1312,10 @@ describe("exec worktree ops", () => {
     ).toThrow();
   });
 
-  it("reports that the worktree is gone when safe branch deletion fails", () => {
+  it("reports that the worktree is gone when safe branch deletion fails", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "unmerged.md"), "unmerged work\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
@@ -1265,9 +1334,9 @@ describe("exec worktree ops", () => {
     ).not.toThrow();
   });
 
-  it("prunes only merged project exec branches that no worktree uses", () => {
+  it("prunes only merged project exec branches that no worktree uses", async () => {
     const fixture = setupRepository();
-    const active = prepare(fixture, "T-T-doc-010", "prj-0001:T-T-doc-010");
+    const active = await prepare(fixture, "T-T-doc-010", "prj-0001:T-T-doc-010");
     const merged = "exec/prj-0001-PJR-MERGED";
     const unmerged = "exec/prj-0001-PJR-UNMERGED";
     const otherProject = "exec/prj-0002-PJR-MERGED";
@@ -1310,10 +1379,10 @@ describe("exec worktree ops", () => {
     });
   });
 
-  it('blocks committing when an agent promotes a new deliverable to "ready"', () => {
+  it('blocks committing when an agent promotes a new deliverable to "ready"', async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
 
     // Agent creates a deliverable already promoted to ready (ready is a human-only gate).
     writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\ntype: spec\nstatus: ready\n");
@@ -1328,10 +1397,10 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("blocks committing with a notation reason when the result violates markdownlint", () => {
+  it("blocks committing with a notation reason when the result violates markdownlint", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
 
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
     // The reporter wrote an unwrapped `depends_on` next to `_TODO_`; this is what
@@ -1350,7 +1419,7 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it('blocks committing when an agent flips an existing deliverable from draft to "ready"', () => {
+  it('blocks committing when an agent flips an existing deliverable from draft to "ready"', async () => {
     const fixture = setupRepository();
     // A draft deliverable exists at root before the task runs.
     writeFile(join(fixture.repo, "docs", "d.yaml"), "id: d\ntype: spec\nstatus: draft\n");
@@ -1358,7 +1427,7 @@ describe("exec worktree ops", () => {
     git(fixture.repo, "commit", "-m", "add draft deliverable");
 
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\ntype: spec\nstatus: ready\n");
 
     expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
@@ -1366,10 +1435,10 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("allows committing deliverable edits that keep the status unpromoted", () => {
+  it("allows committing deliverable edits that keep the status unpromoted", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
 
     writeFile(
       join(worktree.path, "docs", "d.yaml"),
@@ -1381,10 +1450,15 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toContain("docs/d.yaml");
   });
 
-  it("blocks a review task that tampers with a deliverable", () => {
+  it("blocks a review task that tampers with a deliverable", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-030";
-    const worktree = prepare(fixture, taskId, taskId, planWithIdentity(taskId, { mode: "review" }));
+    const worktree = await prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "review" }),
+    );
 
     // A prompt-injected review agent tampers with a deliverable alongside its result.
     writeFile(join(worktree.path, "docs", "tampered.md"), "injected change\n");
@@ -1401,7 +1475,7 @@ describe("exec worktree ops", () => {
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("docs/tampered.md");
   });
 
-  it("blocks edit commit, merge, and removal while retaining non-target changes and evidence", () => {
+  it("blocks edit commit, merge, and removal while retaining non-target changes and evidence", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
@@ -1413,7 +1487,7 @@ describe("exec worktree ops", () => {
     git(fixture.repo, "add", ".specdojo/doc-index.json");
     git(fixture.repo, "commit", "-m", "add doc index");
 
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1440,7 +1514,7 @@ describe("exec worktree ops", () => {
     expect(
       readFileSync(taskRecordPaths(join(worktree.path, "execution"), taskId).result, "utf8"),
     ).toContain("`src/sneaky.ts`");
-    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow(UncommittedChangesError);
+    await expect(mergeIntoRoot(fixture, worktree, taskId)).rejects.toThrow(UncommittedChangesError);
     expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
       UncommittedChangesError,
     );
@@ -1455,11 +1529,11 @@ describe("exec worktree ops", () => {
     rmSync(join(worktree.path, "src", "sneaky.ts"));
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.targets).toContain("docs/a.md");
-    mergeIntoRoot(fixture, worktree, taskId);
+    await mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
   });
 
-  it("commits only the result targets for an execution: human edit task", () => {
+  it("commits only the result targets for an execution: human edit task", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-140";
 
@@ -1470,7 +1544,7 @@ describe("exec worktree ops", () => {
     git(fixture.repo, "add", ".specdojo/doc-index.json");
     git(fixture.repo, "commit", "-m", "add doc index");
 
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1514,10 +1588,10 @@ describe("exec worktree ops", () => {
     ["template-maintenance", "templates"],
   ])(
     "allows %s type files and explains unresolved IDs without widening ancillary scope",
-    (approach, dir) => {
+    async (approach, dir) => {
       const fixture = setupRepository();
       const taskId = "T-T-doc-010";
-      const worktree = prepare(
+      const worktree = await prepare(
         fixture,
         taskId,
         taskId,
@@ -1561,14 +1635,14 @@ describe("exec worktree ops", () => {
     },
   );
 
-  it.each(["modify", "delete"])("blocks %s of a tracked non-target file", (operation) => {
+  it.each(["modify", "delete"])("blocks %s of a tracked non-target file", async (operation) => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const path = "docs/specdojo/schemas/v1/existing.schema.yaml";
     writeFile(join(fixture.repo, path), "type: object\n");
     git(fixture.repo, "add", path);
     git(fixture.repo, "commit", "-m", "add existing schema");
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1604,13 +1678,13 @@ describe("exec worktree ops", () => {
       before: "export const types = [];\n",
       after: 'export const types = ["esil-index"];\n',
     },
-  ])("preserves the kata-wave-1 excluded edit to $path", ({ path, before, after }) => {
+  ])("preserves the kata-wave-1 excluded edit to $path", async ({ path, before, after }) => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     writeFile(join(fixture.repo, path), before);
     git(fixture.repo, "add", path);
     git(fixture.repo, "commit", "-m", "add kata-wave-1 ancillary file");
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1629,7 +1703,7 @@ describe("exec worktree ops", () => {
       `files=${path}`,
     );
     expect(git(worktree.path, "rev-parse", "HEAD")).toBe(worktreeHead);
-    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow(UncommittedChangesError);
+    await expect(mergeIntoRoot(fixture, worktree, taskId)).rejects.toThrow(UncommittedChangesError);
     expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
       UncommittedChangesError,
     );
@@ -1641,10 +1715,90 @@ describe("exec worktree ops", () => {
     expect(readFileSync(records.log("integrate.log"), "utf8")).toContain(path);
   });
 
-  it("does not write block evidence during a dry run", () => {
+  describe("kata domain deliverable targets (PJR-5T0Q)", () => {
+    const samplePath = "docs/ja/specdojo/samples/tsp-index-sample.md";
+    const sampleDoc = (body: string) =>
+      `---\nspecdojo:\n  id: specdojo:tsp-index-sample\n  type: sample\n  status: draft\n---\n\n# Sample\n\n${body}\n`;
+
+    function setupKataCatalog(fixture: Fixture): void {
+      const catalogPath = join(fixture.repo, "catalog");
+      writeFile(
+        join(catalogPath, "dct-kata.yaml"),
+        [
+          "domain: kata",
+          "base_path: /docs/ja/specdojo",
+          "groups:",
+          "  - name: samples",
+          "    base_path: samples",
+          "    deliverables:",
+          "      - local_id: tsp-index-sample",
+          "        path: tsp-index-sample.md",
+          "",
+        ].join("\n"),
+      );
+      writeFile(join(fixture.repo, samplePath), sampleDoc("before"));
+      git(fixture.repo, "add", "catalog", samplePath);
+      git(fixture.repo, "commit", "-m", "add kata catalog");
+      fixture.context = { ...fixture.context, catalogPath };
+    }
+
+    it("commits a condense edit to a kata domain sample targeted by its specdojo id", async () => {
+      const fixture = setupRepository();
+      setupKataCatalog(fixture);
+      const taskId = "T-KATA-tsp-index-sample-080";
+      const worktree = await prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach: "condense",
+          targets: ["specdojo:tsp-index-sample"],
+        }),
+      );
+      writeFile(join(worktree.path, samplePath), sampleDoc("after"));
+
+      const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+      expect(committed.targets).toContain(samplePath);
+    });
+
+    it("keeps blocking a condense edit to a type document that the catalog does not list", async () => {
+      const fixture = setupRepository();
+      setupKataCatalog(fixture);
+      const rulebookPath = "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md";
+      writeFile(
+        join(fixture.repo, rulebookPath),
+        "---\nspecdojo:\n  id: specdojo:tsp-index-rulebook\n---\n\n# Rulebook\n",
+      );
+      git(fixture.repo, "add", rulebookPath);
+      git(fixture.repo, "commit", "-m", "add rulebook");
+      const taskId = "T-KATA-tsp-index-rulebook-080";
+      const worktree = await prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach: "condense",
+          targets: ["specdojo:tsp-index-rulebook"],
+        }),
+      );
+      writeFile(
+        join(worktree.path, rulebookPath),
+        "---\nspecdojo:\n  id: specdojo:tsp-index-rulebook\n---\n\n# Rulebook changed\n",
+      );
+
+      expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+        UncommittedChangesError,
+      );
+    });
+  });
+
+  it("does not write block evidence during a dry run", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1664,11 +1818,11 @@ describe("exec worktree ops", () => {
     ).toBe(false);
   });
 
-  it("keeps default block logs in the selected run when called with a task ID", () => {
+  it("keeps default block logs in the selected run when called with a task ID", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0137";
     const stem = "pjr-0137-20261106T160500Z-aabbccdd";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       stem,
       stem,
@@ -1693,7 +1847,7 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("keeps retrofit implementation evidence outside commit scope", () => {
+  it("keeps retrofit implementation evidence outside commit scope", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     writeFile(join(fixture.repo, "docs", "a.md"), "before retrofit\n");
@@ -1703,7 +1857,7 @@ describe("exec worktree ops", () => {
     );
     git(fixture.repo, "add", "docs/a.md", ".specdojo/doc-index.json");
     git(fixture.repo, "commit", "-m", "add retrofit target");
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1722,10 +1876,10 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("fails a schedule-originated edit task whose plan declares no targets", () => {
+  it("fails a schedule-originated edit task whose plan declares no targets", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1739,10 +1893,10 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("falls back to the exclusion list for a register-originated task without targets", () => {
+  it("falls back to the exclusion list for a register-originated task without targets", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0137";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1765,11 +1919,11 @@ describe("exec worktree ops", () => {
     { withRefs: true, mode: "review" as const },
   ])(
     "commits the current run and its attempts ($mode, artifact refs=$withRefs)",
-    ({ withRefs, mode }) => {
+    async ({ withRefs, mode }) => {
       const fixture = setupRepository();
       const taskId = "PJR-0137";
       const stem = "pjr-0137-20261106T160500Z-aabbccdd";
-      const worktree = prepare(
+      const worktree = await prepare(
         fixture,
         stem,
         stem,
@@ -1840,13 +1994,13 @@ describe("exec worktree ops", () => {
     },
   );
 
-  it("blocks register commits until non-target additions are reviewed", () => {
+  it("blocks register commits until non-target additions are reviewed", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0142";
     writeFile(join(fixture.repo, "custom", "kept.md"), "# tracked custom dir\n");
     git(fixture.repo, "add", "custom/kept.md");
     git(fixture.repo, "commit", "-m", "add custom dir");
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1910,13 +2064,13 @@ describe("exec worktree ops", () => {
       "?? tmp/test-schema.yaml",
     ]);
 
-    mergeIntoRoot(fixture, worktree, taskId);
+    await mergeIntoRoot(fixture, worktree, taskId);
     expect(existsSync(join(fixture.repo, "docs", "a.md"))).toBe(true);
     expect(existsSync(join(fixture.repo, "modify.py"))).toBe(true);
     expect(existsSync(join(fixture.repo, "scratch", "patch.js"))).toBe(false);
   });
 
-  it("commits edits to tracked root files and resolved targets for a register task", () => {
+  it("commits edits to tracked root files and resolved targets for a register task", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0143";
     writeFile(
@@ -1925,7 +2079,7 @@ describe("exec worktree ops", () => {
     );
     git(fixture.repo, "add", ".specdojo/doc-index.json");
     git(fixture.repo, "commit", "-m", "add doc index");
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1950,10 +2104,10 @@ describe("exec worktree ops", () => {
     ]);
   });
 
-  it('still blocks a register task that promotes a committable deliverable to "ready"', () => {
+  it('still blocks a register task that promotes a committable deliverable to "ready"', async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0144";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1968,10 +2122,26 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("blocks protected config changes even for a register-originated exclusion-list task", () => {
+  it("allows a register task to commit a ready test fixture", async () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0145";
+    const worktree = await prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+    writeFile(join(worktree.path, "tests", "fixtures", "d.yaml"), "id: d\nstatus: ready\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.targets).toContain("tests/fixtures/d.yaml");
+    expect(committed.committed).toBe(true);
+  });
+
+  it("blocks protected config changes even for a register-originated exclusion-list task", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0138";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -1989,7 +2159,7 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("does not block a regenerated gitignored doc index before commit", () => {
+  it("does not block a regenerated gitignored doc index before commit", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0138-GENERATED";
     writeFile(join(fixture.repo, ".gitignore"), ".specdojo/doc-index.json\n");
@@ -1997,7 +2167,7 @@ describe("exec worktree ops", () => {
     git(fixture.repo, "add", ".gitignore");
     git(fixture.repo, "add", "--force", ".specdojo/doc-index.json");
     git(fixture.repo, "commit", "-m", "add generated index fixture");
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -2014,10 +2184,10 @@ describe("exec worktree ops", () => {
     expect(committed.targets).not.toContain(".specdojo/doc-index.json");
   });
 
-  it("blocks protected config changes already committed by an agent", () => {
+  it("blocks protected config changes already committed by an agent", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0139";
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -2036,7 +2206,7 @@ describe("exec worktree ops", () => {
     );
   });
 
-  it("resolves a target absent from the doc index via the catalog's declared path", () => {
+  it("resolves a target absent from the doc index via the catalog's declared path", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
@@ -2056,7 +2226,7 @@ describe("exec worktree ops", () => {
     );
     const context = { ...fixture.context, catalogPath };
 
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -2069,13 +2239,13 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toContain("docs/new.md");
   });
 
-  it("removes a merged worktree even when only regenerated bookkeeping is dirty", () => {
+  it("removes a merged worktree even when only regenerated bookkeeping is dirty", async () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    const worktree = prepare(fixture, taskId);
+    const worktree = await prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-    mergeIntoRoot(fixture, worktree, taskId);
+    await mergeIntoRoot(fixture, worktree, taskId);
 
     // A regenerated, non-commit-target file (e.g. doc-index) left dirty in the worktree must not
     // block removal: git would refuse without --force, but the tool forces past it automatically.
@@ -2086,7 +2256,7 @@ describe("exec worktree ops", () => {
     expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
   });
 
-  it("commits a deletion alongside an addition and an edit", () => {
+  it("commits a deletion alongside an addition and an edit", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0140";
     writeFile(join(fixture.repo, "docs", "removed.yaml"), "id: removed\nstatus: draft\n");
@@ -2094,7 +2264,7 @@ describe("exec worktree ops", () => {
     git(fixture.repo, "add", "docs/removed.yaml", "docs/kept.yaml");
     git(fixture.repo, "commit", "-m", "add deliverables");
 
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -2117,14 +2287,14 @@ describe("exec worktree ops", () => {
     expect(git(worktree.path, "show", "HEAD:docs/added.yaml")).toContain("id: added");
   });
 
-  it("commits a deletion that a previously failed attempt already staged", () => {
+  it("commits a deletion that a previously failed attempt already staged", async () => {
     const fixture = setupRepository();
     const taskId = "PJR-0141";
     writeFile(join(fixture.repo, "docs", "removed.yaml"), "id: removed\nstatus: draft\n");
     git(fixture.repo, "add", "docs/removed.yaml");
     git(fixture.repo, "commit", "-m", "add deliverable");
 
-    const worktree = prepare(
+    const worktree = await prepare(
       fixture,
       taskId,
       taskId,
@@ -2144,7 +2314,7 @@ describe("exec worktree ops", () => {
     expect(git(worktree.path, "status", "--porcelain")).toBe("");
     expect(() => git(worktree.path, "cat-file", "-e", "HEAD:docs/removed.yaml")).toThrow();
 
-    mergeIntoRoot(fixture, worktree, taskId);
+    await mergeIntoRoot(fixture, worktree, taskId);
     expect(existsSync(join(fixture.repo, "docs", "removed.yaml"))).toBe(false);
   });
 });

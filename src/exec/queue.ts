@@ -6,6 +6,7 @@ import {
   tryAcquireLock,
   type LockHandle,
 } from "../shared/cross-process-lock.js";
+import { EXEC_STOP_EXIT_CODE } from "./stop-request.js";
 
 /**
  * Exec queue: an ordered reservation of existing specdojo commands (PJR-1565).
@@ -15,7 +16,7 @@ import {
  * process has exited (the runner awaits the process it spawned, never a process-name search).
  */
 
-export type QueueStepKind = "grade" | "exec-run" | "post-integration";
+export type QueueStepKind = "grade" | "exec-run" | "exec-resume" | "post-integration";
 export type QueueOnFailure = "stop" | "continue";
 export type QueueStepStatus = "pending" | "running" | "succeeded" | "failed";
 export type QueueState =
@@ -24,7 +25,7 @@ export type QueueState =
 export type QueueStep = {
   index: number;
   kind: QueueStepKind;
-  /** specdojo CLI argv for `grade` / `exec-run`; `["build-dist"]` for `post-integration`. */
+  /** specdojo CLI argv for `grade` / `exec-run` / `exec-resume`; `["build-dist"]` for `post-integration`. */
   argv: string[];
   on_failure: QueueOnFailure;
   status: QueueStepStatus;
@@ -49,6 +50,15 @@ export type QueueRecord = {
 
 export type QueueStepOutcome = { exitCode: number | null; summary: string };
 export type QueueStepExecutor = (step: QueueStep, record: QueueRecord) => Promise<QueueStepOutcome>;
+
+/**
+ * `exec stop --queue` hooks (PJR-32PN). `pending` returns the request message while a request is
+ * open; `finish` is called once when the queue stops for it, with the step it stopped at.
+ */
+export type QueueStopHooks = {
+  pending: () => string | undefined;
+  finish: (stoppedStep: number) => void;
+};
 
 const QUEUE_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 const FINISHED_STATES: readonly QueueState[] = [
@@ -96,7 +106,9 @@ export function parseQueueStepSpec(
   projectId: string,
 ): QueueStep {
   const where = `step ${index}`;
-  const tokens = spec.trim().split(/\s+/).filter(Boolean);
+  const allTokens = spec.trim().split(/\s+/).filter(Boolean);
+  // `exec queue status` prints steps as `specdojo exec run ...`, so accept that spelling too.
+  const tokens = allTokens[0] === "specdojo" ? allTokens.slice(1) : allTokens;
   if (tokens.some((token) => /["'`\\]/.test(token))) {
     throw new Error(`${where}: quotes and backslashes are not supported (no shell is used)`);
   }
@@ -118,11 +130,20 @@ export function parseQueueStepSpec(
     }
     return { ...base, kind: "exec-run", argv: withProject(["exec", "run", ...rest]) };
   }
+  if (head === "exec resume") {
+    // A queue step resumes one schedule task; resuming everything or by due time has no fixed target.
+    if (!hasOption(rest, "--task")) {
+      throw new Error(`${where}: exec resume needs --task <task-id> in a queue`);
+    }
+    const rejected = ["--due", "--dry-run"].find((option) => hasOption(rest, option));
+    if (rejected) throw new Error(`${where}: exec resume ${rejected} is not supported in a queue`);
+    return { ...base, kind: "exec-resume", argv: withProject(["exec", "resume", ...rest]) };
+  }
   if (head === "post-integration build-dist" && rest.length === 0) {
     return { ...base, kind: "post-integration", argv: ["build-dist"] };
   }
   throw new Error(
-    `${where}: unsupported step: ${spec.trim() || "(empty)"} (allowed: "grade run ...", "exec run ...", "post-integration build-dist")`,
+    `${where}: unsupported step: ${spec.trim() || "(empty)"} (allowed: "grade run ...", "exec run ...", "exec resume --task <task-id>", "post-integration build-dist")`,
   );
 }
 
@@ -156,7 +177,10 @@ function isQueueStep(value: unknown): value is QueueStep {
   return (
     isRecord(value) &&
     typeof value.index === "number" &&
-    (value.kind === "grade" || value.kind === "exec-run" || value.kind === "post-integration") &&
+    (value.kind === "grade" ||
+      value.kind === "exec-run" ||
+      value.kind === "exec-resume" ||
+      value.kind === "post-integration") &&
     Array.isArray(value.argv) &&
     value.argv.every((token) => typeof token === "string") &&
     (value.on_failure === "stop" || value.on_failure === "continue") &&
@@ -258,6 +282,7 @@ export async function runQueue(params: {
   log?: (line: string) => void;
   acquire?: (lockDir: string) => LockHandle | null;
   release?: (handle: LockHandle) => void;
+  stop?: QueueStopHooks;
 }): Promise<QueueRecord> {
   const log = params.log ?? ((line: string) => process.stdout.write(line));
   const initial = loadQueueRecord(params.recordPath);
@@ -289,6 +314,16 @@ export async function runQueue(params: {
       record.updated_at = new Date().toISOString();
       writeQueueRecord(params.recordPath, record);
     };
+    // Stop the queue at `step` so the same `exec queue run` starts from it again.
+    const stopAt = (step: QueueStep, reason: string): QueueRecord => {
+      record.state = "stopped";
+      record.stopped_step = step.index;
+      record.reason = reason;
+      save();
+      params.stop?.finish(step.index);
+      log(`[queue] ${record.queue_id}: stopped at step ${step.index} (${reason})\n`);
+      return record;
+    };
     record.state = "running";
     delete record.stopped_step;
     delete record.reason;
@@ -300,6 +335,8 @@ export async function runQueue(params: {
         log(`[queue] ${record.queue_id}: cancelled before step ${step.index}\n`);
         return record;
       }
+      const stopMessage = params.stop?.pending();
+      if (stopMessage !== undefined) return stopAt(step, `stopped by exec stop: ${stopMessage}`);
       log(`[queue] ${record.queue_id}: step ${step.index} start: ${queueStepDisplay(step)}\n`);
       step.status = "running";
       step.started_at = new Date().toISOString();
@@ -315,6 +352,18 @@ export async function runQueue(params: {
           exitCode: null,
           summary: error instanceof Error ? error.message : String(error),
         };
+      }
+      // A step drained by `exec stop` did not fail; it goes back to pending and runs again on resume.
+      if (outcome.exitCode === EXEC_STOP_EXIT_CODE && !syncCancellation()) {
+        step.status = "pending";
+        step.completed_at = new Date().toISOString();
+        step.exit_code = outcome.exitCode;
+        step.summary = `stopped by exec stop (${outcome.summary})`;
+        const message = params.stop?.pending();
+        return stopAt(
+          step,
+          message !== undefined ? `stopped by exec stop: ${message}` : "stopped by exec stop",
+        );
       }
       step.status = outcome.exitCode === 0 ? "succeeded" : "failed";
       step.completed_at = new Date().toISOString();
@@ -360,7 +409,11 @@ export function cancelQueue(recordPath: string, reason: string): QueueRecord {
 }
 
 /** One-line progress for `exec queue status` and `exec status`. */
-export function formatQueueSummary(record: QueueRecord, lockDir: string): string {
+export function formatQueueSummary(
+  record: QueueRecord,
+  lockDir: string,
+  stopRequest?: string,
+): string {
   const done = record.steps.filter(
     (step) => step.status === "succeeded" || step.status === "failed",
   ).length;
@@ -374,5 +427,6 @@ export function formatQueueSummary(record: QueueRecord, lockDir: string): string
   if (running) parts.push(`current=step ${running.index}: ${queueStepDisplay(running)}`);
   if (record.stopped_step !== undefined) parts.push(`stopped=step ${record.stopped_step}`);
   if (record.reason) parts.push(`reason=${record.reason}`);
+  if (stopRequest !== undefined) parts.push(`stop=requested (${stopRequest})`);
   return parts.join("\t");
 }

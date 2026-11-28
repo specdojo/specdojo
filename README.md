@@ -1,5 +1,13 @@
 # SpecDojo
 
+## English overview
+
+SpecDojo is an open-source toolkit that aims to make civic tech sustainable by reducing comprehension debt. Its kata provide patterns for reconstructing specifications and requirements from existing code and records, distinguishing evidence from assumptions, confirming them with people, and recording decisions.
+
+SpecDojo organizes specifications and design upstream of other spec-driven development tools, supporting both new work and the recovery of knowledge from existing systems.
+
+Start with the [Quick Start guide](https://specdojo.github.io/specdojo/en/specdojo/guides/quick-start-guide.html) and the [Civic Tech Starter Guide](https://specdojo.github.io/specdojo/en/specdojo/guides/civic-tech-starter-guide.html). The [English documentation](https://specdojo.github.io/specdojo/en/) includes five starter kata. The English edition is being built in stages; the full [documentation site](https://specdojo.github.io/specdojo/ja/) is in Japanese, which remains the source of truth.
+
 SpecDojo は、Spec道（仕様道）の道場です。
 仕様と設計を作り、運用まで保つための体系を整えます。判断を記帳し、型に沿って実戦で書き、評定で鍛え続け、講評で完了を判断します。人と生成 AI が同じ成果物を作成・検証・更新できるようにし、仕様駆動開発のツールに対しては、その上流で仕様と設計の体系を担います。
 
@@ -88,6 +96,8 @@ SpecDojo は開発時に使う文書・実行管理ツールなので、`--save-
 
 あわせて、`node_modules/` と SpecDojo の生成物（`docs/**/generated/*`、`.specdojo/doc-index.json` など）を Git の管理から外す行が `.gitignore` に用意されます。すでに `node_modules/` や生成物を Git で管理している場合は、表示される案内に従って管理から外し、コミットします。
 
+版を上げるときは `npx specdojo update` を使います。今の版と上げる先の版の間の `CHANGELOG.md` を示してから更新し、`config scaffold` で配ったファイルが新しい版と違うときは、差分を示して適用するかを聞きます。`--dry-run` で先に確かめられます。`update` を持たない版（0.9.2 まで）から上げる最初の 1 回は、`npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼びます。
+
 `@specdojo/docs-lint` は必須ではありません。SpecDojo 文書向けの検査を使う場合だけ、[ドキュメント編集ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/docs-editing-guide.html)に従って追加します。
 
 ### オーケストレーターを起動する
@@ -100,23 +110,15 @@ npm run orch:opus
 
 `orch:sonnet` も追加されます。これらの script は `specdojo orchestrator launch --provider claude` を経由して Claude Code を起動します。provider ごとの詳しい設定は [オーケストレーター運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html) を参照してください。
 
-| provider      | 配置先                                      | 起動（`package.json` がある場合） |
-| ------------- | ------------------------------------------- | --------------------------------- |
-| `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
-| `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
-| `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:sol` ほか           |
-| `antigravity` | 0.9.2 から使えない（下記）                  | -                                 |
+| provider   | 配置先                                      | 起動（`package.json` がある場合） |
+| ---------- | ------------------------------------------- | --------------------------------- |
+| `claude`   | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
+| `opencode` | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
+| `codex`    | `.specdojo/codex/orchestrator.md`           | `npm run orch:sol` ほか           |
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 
-0.9.2 から、SpecDojo は Antigravity CLI（`agy`）を起動しません。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。exec・grade などの agent 実行、`agent launch`・`orchestrator launch` は provider が `antigravity` の指定を agy の起動前にエラーで止め、`init`・`config scaffold`・`devcontainer scaffold` でも `antigravity` は選べません。0.9.1 の `init` で antigravity を選んだ場合は、`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか削除し、ほかの provider を使ってください。
-
-次の Antigravity CLI のグローバル設定は 0.9.2 から使えません（`config scaffold --provider antigravity` はエラーになります）。0.9.1 までは、Antigravity CLI を無人実行する場合に利用者のグローバル設定へ permission rule を追加していました。この設定はすべてのリポジトリに効くため、必ず先に差分を確認してから適用していました。
-
-```sh
-npx specdojo config scaffold --provider antigravity --global --dry-run
-npx specdojo config scaffold --provider antigravity --global
-```
+0.10.0 で、SpecDojo から Antigravity CLI（`agy`）を起動する対応を外しました。[Antigravity の FAQ](https://antigravity.google/docs/faq) が consumer plan の対象外としているのは、他社の agent や application の中に agy を包むこと（wrapping）です。利用者が agy を直接起動し、対話のオーケストレーターとして SpecDojo を操作することはできます。手順は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] の「agy を利用者が直接起動する」を参照してください。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があるとエラーになるため、その member と向き先の別名を消し、`exec-defaults.yaml` の参照をほかの member へ替え、SpecDojo から agy を起動する npm script を消してください。
 
 #### Dev Container を使う場合（任意）
 

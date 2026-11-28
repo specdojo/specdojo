@@ -1,0 +1,20 @@
+R2（構成）のレビューでは、構成上の問題が見つからなかったため、`docs/ja/specdojo/samples/pr-sample.md` は変更していません。grade の finding F001 は R2 の観点に当たらないので扱わず、後の段に回しました。
+
+**照らし合わせた範囲**
+
+- 構成の基準には `pr-rulebook` の「本文要件」と「記述ガイド」を使いました。rulebook の宣言が `template: not-needed` なので、照らし合わせる template はありません。
+- 章の順と粒度: 報告期間・完了事項・進行中事項・リスク・課題・次期予定の 5 章が、必須の順にすべてそろっています。足りない章も独自の章もないので、移動・分割・統合は要りません。
+- 表の列: 4 つの表とも、rulebook の記述ガイドが定める列名と順に一致しています。
+- 表と本文の配置: どの表の前にも「何と何の対応か」を示す 1 文があり、Sample 記述標準に沿っています。リスク・課題の章は影響度の判定基準を表の前に置いており、前提から結論の順に読めます。
+
+**F001 を扱わなかった理由**
+
+F001 は導入文に報告者・報告先がないという指摘で、観点は `vp-ba-stakeholder-clarity` です。kata-guide の「kata の観点の組」では、この観点は kata の段のレビューで使わないものに入っています。理由は、sample の業務の中身を R1・R5 の `vp-qe-kata-conformance` で確かめるためです。さらに R2 の観点（`vp-arc-document-structure`・`vp-qe-omissions-consistency`）にも当たらず、rulebook にも報告者・報告先を書く求めがありません。ガイドに外す定めがあるので「要判断」の印は付けず、R5 で rulebook の求めに照らして要否を確かめる案を handoff に残しました。
+
+**検査**
+
+ファイルを変更していないので、この段で実行が要る検査はありません。markdownlint は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: pr-sample の章の順・粒度・表の列・表と本文の配置は pr-rulebook の本文要件と記述ガイドに一致しており、移動・分割・統合の差分はない。sample は変更していない。template は not-needed のため照合対象なし。grade finding F001（vp-ba-stakeholder-clarity）は kata-guide で kata の段のレビューから外す観点であり、R2 の観点にも当たらないため扱わず、R5 に申し送った。","handoff":["R2-1: R2 / 全章（1. 報告期間〜5. 次期予定） / 章の順・粒度・表の列・表の前の 1 文を pr-rulebook の本文要件と記述ガイドに照らした。5 章が必須の順にそろい、4 つの表の列名も記述ガイドと一致するため、構成上の指摘はない / - / vp-arc-document-structure、vp-qe-omissions-consistency（pr-rulebook の本文要件・記述ガイド、sample-authoring-standard の構成の原則・記述ガイド。template は not-needed） / -","R2-2: R2 / H1 直下の導入文 / grade finding F001（報告者と報告先がない）は観点 `vp-ba-stakeholder-clarity` の指摘。kata-guide の「kata の観点の組」はこの観点を kata の段のレビューで使わない観点としており、R2 の観点（`vp-arc-document-structure`・`vp-qe-omissions-consistency`）にも当たらない。pr-rulebook の本文要件・記述ガイドにも報告者・報告先を書く求めはないため、R2 では直さない / - / 申し送り: rulebook の求めとして要るかを R5（vp-qe-kata-conformance）で確かめる。要る場合は rulebook 側の 4. 本文要件または 5. 記述ガイドに報告者・報告先の記述を加える案を検討する。grade result サイドカーは再評価時に更新されるため直接編集しない / -"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pr-sample.md","status":"not_applicable","summary":"sample を変更していない","reason":"変更した *.md ファイルがなく、markdownlint の適用条件を満たさない。Markdown の lint は親 runner の lint-md / lint-md-changed で実行される"},{"command":"npx prettier --check docs/ja/specdojo/samples/pr-sample.md","status":"not_applicable","summary":"sample を変更していない","reason":"変更したファイルがなく、Prettier の適用条件を満たさない"}]}
+</specdojo_executor_evidence>

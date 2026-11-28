@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "queue_id": "day-c-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T00:03:09.226Z",
+  "updated_at": "2026-11-23T00:31:48.940Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-0JVB",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:03:15.710Z",
+      "completed_at": "2026-11-23T00:11:36.581Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-BEQ8",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:11:36.584Z",
+      "completed_at": "2026-11-23T00:16:40.783Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-XHS8",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:16:40.790Z",
+      "completed_at": "2026-11-23T00:19:23.953Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-KYG4",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:19:23.957Z",
+      "completed_at": "2026-11-23T00:31:48.804Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

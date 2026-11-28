@@ -178,7 +178,7 @@ findings:
     line: 312
     anchor: >-
       | STA / GIT / IDM             |
-      [[prj-0001:stsd-task-execution\|タスク状態遷移]]、[[cdfd-uc-register\|登録簿フロー]]、[[cdfd-uc-schedule\|Schedule
+      [[stsd-task-execution\|タスク状態遷移]]、[[cdfd-uc-register\|登録簿フロー]]、[[cdfd-uc-schedule\|Schedule
       フロー]]、[[specdojo:exec-worktree-guide\|Worktree ガイド]] | 現行の状態・統合契約へ進む                                        |
     message: >-
       The same targets are labelled inconsistently (e.g. "タスク状態遷移" vs "状態遷移仕様（タスク実行）", "Job 設計" vs "Job 実行設計", "exec 運用"

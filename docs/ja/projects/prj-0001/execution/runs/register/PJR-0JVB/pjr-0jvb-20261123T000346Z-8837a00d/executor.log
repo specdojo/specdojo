@@ -1,0 +1,13 @@
+`--edit-by` や `--review-by` だけを渡した自動実行は、`execution: human` のタスクを拾わなくなりました。型検査とテストは実行していません。新規の回帰テストも追加していません。
+
+原因は、`--edit-by` で agent 候補が作られると、人のタスクの判定が素通りして plan 生成で失敗していたことです。判定は `schedule-prepare.ts` の「候補なし」の分岐にしか無く、cycle のように agent を渡すとそこを通りませんでした。
+
+- **`src/exec/run/schedule-mode.ts`**: 準備ループで、人のタスクを skip（`[run] skipped: ... — execution: human` を出力）するようにしました。`--by`、`--executor-by`、タスクに固定した agent のいずれかがあるときは対象に残します。
+- **`src/exec/run/schedule-prepare.ts`**: `prepareSingleTask` でも同じ判定を、override 解決の前に行うようにしました。
+- **個票**: `docs/ja/projects/prj-0001/controls/project-register/pjr-0jvb-exec-cycle-skip-human-tasks.md` の影響範囲・対応方針・対応結果・関連ドキュメントを埋めました。
+
+`pipelineResume && skipClaim` の条件は、再開中のタスクを止めないために入れました。これは `schedule-prepare.ts` 側だけにあります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"mode 単位の --edit-by/--review-by では execution: human のタスクを自動選択せず skip するよう修正。schedule-mode.ts と schedule-prepare.ts を変更し、個票を更新した。","handoff":["専用の回帰テスト（--edit-by 指定時に human タスクが skip されること）は未追加。tests/src/exec/run/ への追加を推奨。","skip 時は failure でなくログ出力のみ。cycle の集計表示の変更は行っていない。"],"validations":[{"command":"npx prettier --write (changed files)","status":"passed","summary":"変更した ts と md を整形済み"},{"command":"npm run typecheck","status":"not_run","summary":"親 runner が実行する","reason":"parent validation"}]}
+</specdojo_executor_evidence>

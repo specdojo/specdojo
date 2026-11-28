@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e40fd545058e4ceca5c072107a32b1d8
+  ts: "2026-11-25T22:34:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: claude の 5 時間の利用枠の上限を検出できず、代わりの agent に切り替わらない
+    - field: description
+      from: ""
+      to: claude の 5 時間の利用枠の上限（You've hit your 5-hour limit）で止まったタスクが、上限ではなくふつうの失敗として block になり、--on-rate-limit fallback の代わりの agent に切り替わらない。見張りも分類できない。
+    - field: input
+      from: ""
+      to: '["2026-11-26 01:25〜01:33 JST、全件レビューで 10 件が数秒で止まった。evidence の `final_message` は「You''ve hit your 5-hour limit · resets 2:20am (Asia/Tokyo)」、`block_reason` は「agent exited with non-zero code」（1 件は reporter exited with failure）。","exec-defaults の claude の `rate_limit_detection.stderr_patterns` は rate limit・429・overloaded・session limit だけで、5-hour limit を含まない。src/exec/limit.ts には 5-hour limit の分類がある。文言は stderr ではなく stdout に出ている。","rtn-exec-watch-scan の 1 回の実行（2026-11-26）では、この 10 件が「分けられなかった」に分類された。","exec-defaults.yaml は保護された設定のため、変更が要る場合は案を個票の対応結果に書き、反映は利用者の承認のもと feature ブランチで行う。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0BGE"]'
+- v: 1
+  id: reg_3bee9ddc3aab49e5b86dbd0a3c99e771
+  ts: "2026-11-26T10:40:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_e40fd545058e4ceca5c072107a32b1d8
+- v: 1
+  id: reg_7282e133248f4078bbe6528f5eb59ac2
+  ts: "2026-11-26T10:40:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_3bee9ddc3aab49e5b86dbd0a3c99e771
+- v: 1
+  id: reg_b9f26f89af16476a92651706c6991969
+  ts: "2026-11-26T10:41:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件の案に indie の承認（2026-11-26）を得て記載
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_7282e133248f4078bbe6528f5eb59ac2
+- v: 1
+  id: reg_3436585aa6694f1aa3a98b04a40355ac
+  ts: "2026-11-26T15:29:51Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b9f26f89af16476a92651706c6991969
+- v: 1
+  id: reg_e2af0e1a3b7d4f25afbe1a87638ab42e
+  ts: "2026-11-26T15:35:22Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3436585aa6694f1aa3a98b04a40355ac
+- v: 1
+  id: reg_35506e07725b4a7c810c241483fd8d1f
+  ts: "2026-11-26T20:22:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後に上限を真似た claude で JSEY を流し、sonnet-executor から sol-executor への切り替えを確かめた。reporter の段は agent を呼ばずに終わったため、実際の切り替えは通していない（判定は executor と同じ関数）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: claude の 5 時間の利用枠の上限を CLI の組み込みの検出で session limit として扱い、--on-rate-limit fallback で代わりの agent に切り替えるようにした。見張りの分類も usage_limit に足した
+  previous_event_id: reg_e2af0e1a3b7d4f25afbe1a87638ab42e

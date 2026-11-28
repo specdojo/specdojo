@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BEQ8",
+  "run_id": "pjr-beq8-20261123T001207Z-ddb0f4f3",
+  "updated_at": "2026-11-23T01:07:50.666Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T01:03:18.314Z",
+      "completed_at": "2026-11-23T01:03:34.283Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T01:06:50.142Z",
+      "completed_at": "2026-11-23T01:07:50.666Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T01:03:18.297Z",
+      "notes": [
+        "完了条件の2回目の実行にある、オーケストレーターが行った比較と測りの結果を個票の対応結果に書き写し、作業内容の表の該当の行をdoneにして完了として報告する。比較と測りは流し直さない。"
+      ]
+    }
+  ]
+}

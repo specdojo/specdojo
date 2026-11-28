@@ -1,0 +1,25 @@
+R1（目的の過不足）のレビューを終えました。足す・削る内容が見つからなかったので、sample は変更していません。schema 検査は通っています。
+
+照合に使ったのは次の 4 つです。
+
+- `pm-members-rulebook`
+- Sample 記述標準と、その共通サンプル文脈
+- `pm-roles-sample` の Role code
+- 成果物カタログ（`dct-kata.yaml`）の `pm-members-sample` の `done_criteria`
+
+**要る内容は揃っています**
+- rulebook の必須メタ項目（`id`・`type`・`status`・`title`・`rulebook`・`version`・`project_id`）があり、任意の `based_on` も入っています。
+- `members[]` には必須フィールドが揃っています。任意フィールド（`email: null`・`persona`・`focus`・`scheduler_strategy`・`note`）の書き方の例と、`rules` もあります。
+- `roles` の Role code はすべて `pm-roles` にあり、`[]` はありません。兼務（`[PM, BA, DEV]`）の例も入っています。
+
+**要らない内容や禁止事項に当たるものはありません**
+- `type: agent` の member や、`provider`・`command`・`mode`・`stage_role` は書かれていません。
+- 人物名は使われておらず、表示名と nickname は共通登場人物の役割名です。
+- `rules` の 3 件は、どれも project 固有の公開制約と交代時の扱いです。
+
+**R1 では扱わなかった指摘**
+F001（`display_name`「同行レビュー担当」が nickname・note と合わない）は、観点が `vp-ux-language-consistency` で R3 が扱うため、直さずに R3 に渡します。この表示名は共通サンプル文脈の登場人物の表と同じなので、変える場合はその表と `rules` 内の表記も一緒にそろえる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューを終えた。足す・削る内容がないため sample は変更していない。schema 検査は passed。","handoff":["No: 1 / 段: R1 / 箇所: `docs/ja/specdojo/samples/pm-members-sample.yaml` 全体 / 指摘: rulebook の必須メタ項目（`id`・`type`・`status`・`title`・`rulebook`・`version`・`project_id`）と `members[]` の必須フィールドが揃っている。任意フィールド（`email: null`・`persona`・`focus`・`scheduler_strategy`・`note`）と `rules` の例も入っている。rulebook の禁止事項（`type: agent`、`provider`・`command`・`mode`・`stage_role`、`roles: []`）と人物名の使用はなく、足す・削る内容はない / 直した案: 変更なし（現状を維持する） / 根拠: `specdojo:pm-members-rulebook` の推奨メタ項目・本文要件・禁止事項、`specdojo:sample-authoring-standard` の共通登場人物と記述ガイド、`dct-kata.yaml` の `pm-members-sample` の `done_criteria`、`pm-roles-sample` の Role code、schema 検査の結果 valid / 印: なし","No: 2 / 段: R1 / 箇所: `members[2].display_name`（`同行レビュー担当`）と、`rules` の 2 件目の表記 / 指摘: grade の finding F001 の観点は `vp-ux-language-consistency` で、kata-guide では R3 が扱う。このため R1 では直さず R3 に渡す。この表示名は Sample 記述標準の共通登場人物の表の「sample 内の役割」と同じなので、変える場合はその表と `rules` 内の表記も一緒にそろえる必要がある / 直した案: R3 で表示名を見直し、変える場合は `sample-authoring-standard` の共通登場人物の表も同時に直す案を出す / 根拠: `docs/ja/specdojo/guides/kata-guide.md` の「kata の観点の組」、`specdojo:sample-authoring-standard` の共通登場人物 / 印: 要判断"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/samples/pm-members-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/pm-members-sample.yaml: valid（変更していないファイルへの確かめとして実行）"}]}
+</specdojo_executor_evidence>

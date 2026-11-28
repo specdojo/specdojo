@@ -42,7 +42,7 @@ SpecDojo の導入から始め、オーケストレーターとの対話を通�
 
 ## 1. 導入とオーケストレーターの起動
 
-Node.js 22.13 以上と Git を用意します。SpecDojo は、成果物の更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、**別リポジトリ構成（Detached Unit）** を基本とします。
+Node.js 22.17 以上と Git を用意します。SpecDojo は、成果物の更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、**別リポジトリ構成（Detached Unit）** を基本とします。
 
 ```text
 landing-page-workspace/
@@ -56,8 +56,8 @@ landing-page-workspace/
 #### 前提
 
 - ワークスペースディレクトリに既存のプロダクトリポジトリ `landing-page/` があること。
-- Node.js 22.13 以上、npm、Git が利用可能であること。
-- オーケストレーターに使う AI provider（Claude Code、Codex、Antigravity、OpenCode など）の CLI が導入・ログイン済みであること。
+- Node.js 22.17 以上、npm、Git が利用可能であること。
+- オーケストレーターに使う AI provider（Claude Code、Codex、OpenCode など）の CLI が導入・ログイン済みであること。
 
 #### 導入と起動コマンド（本文）
 
@@ -88,6 +88,7 @@ Your display name [Project Owner]: サイト責任者      <- 表示名
 Orchestrator providers (...) [codex]: claude        <- 利用する AI ツールを選ぶ
 Delegate work to agents (exec)? [y/N]: y            <- y（AI への作業委譲を有効化）
 Create a Dev Container? [y/N]: n                    <- Enter（手元環境で進める）
+Keep agent sessions running with tmux (macOS / WSL / Linux)? [y/N]: n <- Enter（tmux を使わない）
 Create Git hooks with lefthook? [y/N]: n            <- Enter（初期設定では作らない）
 ```
 
@@ -97,7 +98,7 @@ Create Git hooks with lefthook? [y/N]: n            <- Enter（初期設定で�
 npm run orch:opus
 ```
 
-provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch:flash`、`npm run orch:opencode` などが利用できます。詳細は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] を参照してください。
+provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch:opencode` などが利用できます。詳細は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] を参照してください。
 
 #### 具体的対話
 
@@ -118,6 +119,8 @@ provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch
 - `docs/ja/projects/prj-0001/controls/project-register/` に登録簿の基本構造が作成されます。
 - `package.json` に `orch:<provider>` スクリプトが追加されます。
 - オーケストレーターが対話可能になります。
+
+SpecDojo の版を上げるときは、`npm install` ではなく `npx specdojo update` を使います。版の比較、その間の `CHANGELOG.md` の表示、lockfile に合わせた package manager での更新、`config scaffold` で配ったファイルの差分の確かめと対話での手直しを 1 回で行います。先に `npx specdojo update --dry-run` で、するはずのことを確かめられます。`update` を持たない版（0.9.2 まで）では `npx specdojo update` が `unknown command 'update'` で止まるため、そこから上げる最初の 1 回は `npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼びます。詳細は [[specdojo:command-reference|CLIコマンドリファレンス]] の `update` を参照してください。
 
 #### 折りたたんだコマンドと設定差分
 
@@ -151,6 +154,32 @@ landing-page-specdojo/
 ```
 
 </details>
+
+### 1.2. 使う環境のパターン
+
+`init` では、Dev Container を使うかと、tmux でセッションを保つかを選びます。組み合わせは次の 6 つです。最初に `npx specdojo doctor` で前提（Node.js・Git の名前とメール・agent の CLI、パターンに応じて Docker・Dev Container CLI・tmux）を確かめ、足りないものは表示される入れ方で入れます。
+
+| パターン              | `init` の答え・オプション                            | 前提の確かめ                                | 作られるもの・入り方                                                                                                                                           |
+| --------------------- | ---------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dev Container         | `--devcontainer --devcontainer-preset minimal`       | `npx specdojo doctor --devcontainer`        | `.devcontainer/`。VS Code の「Dev Containers: Reopen in Container」で開く                                                                                      |
+| Dev Container ＋ tmux | `--devcontainer`（recommended と full は tmux 込み） | `npx specdojo doctor --devcontainer --tmux` | `.devcontainer/` と `.specdojo/host/devcontainer-tmux.sh`。常時稼働ホストでの使い方は [[specdojo:remote-host-development-guide\|常時稼働ホストでの開発ガイド]] |
+| macOS                 | 既定（Dev Container・tmux とも使わない）             | `npx specdojo doctor`                       | 手元の端末でそのまま使う                                                                                                                                       |
+| macOS ＋ tmux         | `--tmux`                                             | `npx specdojo doctor --tmux`                | `.specdojo/host/local-tmux.sh`。`bash .specdojo/host/local-tmux.sh` でセッションに入る                                                                         |
+| WSL                   | 既定                                                 | `npx specdojo doctor`                       | WSL の端末でそのまま使う                                                                                                                                       |
+| WSL ＋ tmux           | `--tmux`                                             | `npx specdojo doctor --tmux`                | `.specdojo/host/local-tmux.sh`。`bash .specdojo/host/local-tmux.sh` でセッションに入る                                                                         |
+
+どのパターンでも、最初の 10 分の目標は「最初の todo を起票し、agent に 1 件流す」ことです。
+
+```bash
+npx specdojo doctor --tmux          # パターンに合わせてオプションを変える
+npx specdojo init --tmux            # 対話で答えてもよい
+bash .specdojo/host/local-tmux.sh   # tmux のパターンだけ。抜けるときは Ctrl-b d
+npm run orch:opus                   # オーケストレーターに「最初の todo を起票して流して」と頼む
+```
+
+- tmux のパターンでは、端末を閉じたり接続が切れたりしても、セッションの中で流したオーケストレーターや `exec run` が続きます。入り直すときは同じスクリプトを流します。
+- WSL では、作業ツリーを Windows 側（`/mnt/c` の下）ではなく Linux 側のホーム（例: `~/src`）に置きます。`/mnt/c` の下は遅く、ファイルの権限で詰まりやすいためです。`doctor` はこれを警告します。Dev Container を使う場合は、Docker Desktop の WSL 連携を有効にします。
+- macOS で tmux を入れるには `brew install tmux`、WSL・Linux では `sudo apt install tmux` を使います。
 
 ## 2. 管理対象リポジトリと Git flow の設定
 
@@ -516,16 +545,17 @@ npx specdojo register close \
 
 register には上記のほか、以下の種別があります。目的に応じて使い分けてください。詳しい種別の選び方と状態遷移は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
-| 種別             | 主な用途                               | 完了時の状態       |
-| ---------------- | -------------------------------------- | ------------------ |
-| `todo`           | 完了条件を定義して実行する作業項目     | `done`             |
-| `issue`          | 症状・原因・影響を調査して解決する問題 | `done`             |
-| `decision`       | 選択肢を比較し理由を残して下す意思決定 | `decided`          |
-| `question`       | まだ答えの出ていない論点や確認事項     | `decided`          |
-| `change-request` | 合意済みの仕様やスコープを変更する要求 | `done`             |
-| `risk`           | 発生前に備える潜在的な危険・不確実性   | `done`             |
-| `note`           | 後から参照するための観察記録・メモ     | `open`（蓄積）     |
-| `epic`           | 複数の作業を束ねるトラック単位の大括り | `done`（人が判断） |
+| 種別             | 主な用途                                   | 完了時の状態         |
+| ---------------- | ------------------------------------------ | -------------------- |
+| `todo`           | 完了条件を定義して実行する作業項目         | `done`               |
+| `issue`          | 症状・原因・影響を調査して解決する問題     | `done`               |
+| `decision`       | 選択肢を比較し理由を残して下す意思決定     | `decided`            |
+| `question`       | まだ答えの出ていない論点や確認事項         | `decided`            |
+| `change-request` | 合意済みの仕様やスコープを変更する要求     | `done`               |
+| `risk`           | 発生前に備える潜在的な危険・不確実性       | `done`               |
+| `note`           | 後から参照するための観察記録・メモ         | `open`（蓄積）       |
+| `epic`           | 複数の作業を束ねるトラック単位の大括り     | `done`（人が判断）   |
+| `handoff`        | セッション・LLM を切り替えるときの引き継ぎ | `done`（受け取った） |
 
 ## 4. 発展: worktreeで1タスクを隔離実行する
 

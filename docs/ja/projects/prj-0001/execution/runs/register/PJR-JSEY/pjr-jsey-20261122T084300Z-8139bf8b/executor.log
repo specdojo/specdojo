@@ -1,0 +1,9 @@
+個票の対応結果の表に 1 行追記し、確認対象の説明文と作業内容のメモを更新しました。変更は本個票だけです。個票の 3 つ目の完了条件にある親 runner の検証、統合、`review` 遷移はこれから走るので、まだ確認できていません。
+
+- **追記した行:** `2026-11-22 17:43` JST、確認対象 `PJR-WB78`、agent は `sonnet-executor`。
+- **確認対象の選定:** 対象一覧のうち、HEAD に含まれる最新の `review` 項目は `PJR-WB78` です（review 遷移 commit `011a483ab`、17:37 JST）。直前の `PJR-TF6F` は 17:15 JST の review なので、`PJR-WB78` のほうが新しいです。
+- **検証:** この executor が実行すべき検査は、plan に残っていません。`lint-md` などは親 runner の担当なので、ここでは走らせていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に 2026-11-22 17:43 / PJR-WB78 / sonnet-executor の行を追記し、確認対象の説明文と作業内容のメモを更新した。変更は個票のみ。","handoff":["親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[]}
+</specdojo_executor_evidence>

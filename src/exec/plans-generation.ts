@@ -17,6 +17,7 @@ import {
   crossDeliverableTargetDetails,
   deliverableBasedOn,
   deliverableBrief,
+  deliverableCatalogDomain,
   deliverableDependsOn,
   deliverableKataRefs,
   deliverableName,
@@ -31,7 +32,6 @@ import {
   gradeFindingsText,
   gradeFindingTargetPath,
   gradeResultRef,
-  gradeTargetKind,
   implementationEvidence,
   injectCommonConventions,
   kataRefState,
@@ -46,6 +46,7 @@ import {
   repoRelativePath,
   reviewDoneCriteriaRows,
   reviewGradeSummaryText,
+  reviewGradeTargetKind,
   rulebookIncludesText,
   targetDocIds,
   targetDocIdsForTask,
@@ -307,7 +308,13 @@ function buildReviewPlanMarkdown(
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
     _GRADE_SUBJECT_PATH_: gradeSubjectPath,
-    _GRADE_TARGET_: gradeTargetKind(task.approach),
+    _GRADE_TARGET_: reviewGradeTargetKind({
+      approach: task.approach,
+      subjectPath: gradeSubjectPath,
+      catalogDomain: task.local_id
+        ? deliverableCatalogDomain(catalogPath, task.local_id)
+        : undefined,
+    }),
     _GRADE_RESULT_PATH_: gradeResultRef(projectId, gradeSubjectPath),
     _GRADE_SUMMARY_: [
       reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),

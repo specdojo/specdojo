@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-usability-sample-080",
+  "run_id": "T-KATA-WAVE-4-nfr-usability-sample-080-20261123T143305Z-1a6ec034",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T14:33:44.287Z",
+    "completed_at": "2026-11-23T14:35:10.687Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-usability-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-usability-sample.md | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため、executor では実行しない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-usability-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-usability-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 操作性要件\n\n## 1. 概要（対象・目的）\n\n店主代表と、不定期に店番する家族利用者代表が、店頭のタブレットで現金会計とつけの記録・残高確認を説明書なしで終えられるよう、操作品質の基準を定める。守りたいのは、操作に迷って来店客を待たせること、会計やつけの誤登録、店番の交代ごとに操作を教え直す手間の 3 つである。\n\n基準の厳しさは、店主以\n… output omitted …\n` を測り直す。\n\n| 種別 | ドキュメントID | 目的 |\n| - | - | - |\n| NFR 全体の入口 | \\[\\[specdojo:nfr-index-sample\\|非機能要件]] | 他の非機能要件との位置づけ |\n| 根拠 | \\[\\[specdojo:prj-overview-sample\\|プロジェクト概要]] | 店番の継続とつけ残高を 1 分以内で確認する目標 |\n| 受入条件 | `sac-store-sales` | `nfr-usb-001`〜`nfr-usb-004` の合否判定 |\n| 総合テスト | \\[\\[specdojo:stc-sample\\|総合テストカタログ: 店頭の現金販売]] | `nfr-usb-005`・`nfr-usb-006` の会計画面でのエラー表示と確認 |\n| 画面仕様 | \\[\\[specdojo:uis-sample\\|販売登録画面 画面仕様]] | 会計の操作手順とエラー表示の正本 |\n| 画面仕様 | `uis-credit-ledger` | つけの記録・残高確認の操作手順（未作成） |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6288 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6288 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-usability-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-si\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1890}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  23:39:21\n   Duration  3.02s (transform 7.78s, setup 1.03s, import 11.46s, tests 6.49s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-usability-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-usability-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "第 2 章 適用範囲・利用者前提 の最初の導入文（「表は対象とする業務と画面、対象外とする業務を示す。」）",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "表の見出しと内容が示す事項の再説明。前半の文（基準値が成り立つ前提）は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第 2 章 の利用者属性の表の導入文（「次の表は、基準を分ける利用者属性を示す。」）",
+      "category": "table-prose",
+      "action": "merge",
+      "reason": "表の説明を削り、被験者を属性で選ぶという判断に要る一文だけにまとめた。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第 4 章 測定・検証方法 の導入文（「次の表は、要件 ID ごとの測定手段と条件、判定の時期、判定者を示す。」）",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "表の列見出しの再説明。基準値の参照先を示す文は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第 5 章 関連ドキュメント導線 の導入文（「次の表は、各要件の合否判定・試験・画面の正本と…示す。」）",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "表の列見出しの再説明。変更時に見直す対象の指示は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第 1 章 概要（対象・目的）の第 2 段落",
+      "category": "unneeded-background",
+      "action": "retain",
+      "reason": "基準の厳しさの根拠を示す判断に要る記述のため残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第 3 章 操作性要件一覧 の表の直後の補足段落（`nfr-usb-002` の分子の範囲）",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "表に書かれていない分子の除外条件と、他の要件との分担を示す例外のため残した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "表の内容をなぞる導入文 4 か所を削る・まとめる形で整理した。意味・基準値・導線は維持した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-usability-sample-080/T-KATA-WAVE-4-nfr-usability-sample-080-20261123T143305Z-1a6ec034/executor.log",
+      "bytes": 2753,
+      "truncated": false
+    }
+  ]
+}

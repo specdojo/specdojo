@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pr-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-pr-sample-150-20261126T093609Z-6f4e9675",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T09:36:58.607Z",
+    "completed_at": "2026-11-26T09:38:52.381Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pr-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/pr-sample.md | 10 +++++-----\n 1 file changed, 5 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/pr-sample.md",
+      "status": "passed",
+      "summary": "整形した。直した行のある表の列幅をそろえ直した。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pr-sample\n  type: project\n  status: draft\n  rulebook: specdojo:pr-rulebook\n---\n\n# 駄菓子屋きぬや 販売管理システム構築 進捗報告（2026-04-19 締め）\n\n駄菓子屋きぬや 販売管理システム構築の週次の進捗報告である。本報告は期間内の結果を要約し、リスク・課題・判断待ちは登録簿の個票 ID で参照する。\n\n## 1. 報告期間\n\n- 2026-04-13 から 2026-04-19（前回報告の終了日 2026-04-12 の翌日から）\n\n## 2. 完了事項\n\n次の表は、期間内に完了した作業と、完了を確かめられる schedule のタスク ID の対応を示す。\n\n| No. | 内容 | 根拠 ID |\n| - | - | - |\n| 1 | 在庫補充判定ルールの見直し案を確\n… output omitted …\n決まっておらず、補充点に達しても発注の担当がいない | 中 | 2026-04-21 までに、6 品目それぞれの補充責任者を `PO` が決める。判断待ちは `PJR-KP23` で追う。 | `PJR-KP22` |\n\n## 5. 次期予定\n\n次の表は、次の期間（2026-04-20 から 2026-04-26）に行う作業と担当・期日を示す。判断を求める事項は個票 ID で示す。\n\n| No. | 内容 | 担当 | 期日 |\n| - | - | - | - |\n| 1 | 未確定 6 品目の補充責任者の決定を求める（`PJR-KP23`） | `PM` | 2026-04-21 |\n| 2 | レジ締め手順の改訂案の残り 2 節を作成する（`T-14`） | `BA` | 2026-04-22 |\n| 3 | 日次報告様式の残り 2 項目の様式を確定する（`T-15`） | `BA` | 2026-04-23 |\n| 4 | 欠品データの入力時刻を集計し、16:00 より後の入力件数を確かめる（`PJR-KP21`） | `OPS` | 2026-04-24 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7740 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7740 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pr-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"durat\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1550}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  18:42:10\n   Duration  2.67s (transform 6.26s, setup 1.56s, import 8.23s, tests 6.27s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pr-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pr-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 整合のレビューで pr-sample.md の 2 か所を直した。完了事項 No.2 は「日次記録を開始し」の表現を mm-sample と合わせ、`PJR-KP22` の「2026-04-21 の定例で」は議事録・コミュニケーション計画のどちらとも合わないため「2026-04-21 までに」にした。相手側を直す案と、扱わなかった F001 は handoff に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/pr-sample.md 完了事項 No.2 / 指摘: 「欠品の日次記録を開始し」とあるが、mm-sample の 2026-04-19 の定例では、すでに前の週（2026-04-12〜04-18）の欠品 7 回を見直しており、今回の期間に記録を始めたことと食い違う / 直した案: 「欠品を 5 営業日すべてで日次記録した。」に変えた（反映済み） / 根拠: specdojo:mm-sample の「議題」と「決定事項」、vp-qe-kata-conformance / 印: なし",
+    "No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/pr-sample.md リスク・課題 `PJR-KP22` の対応方針 / 指摘: 「2026-04-21 の定例で」とあるが、mm-sample の定例は 2026-04-19 と 04-26 で、pm-communication-plan-sample は「定例会議は置かない」としており、04-21 の定例はどの sample にもない / 直した案: 「2026-04-21 までに、6 品目それぞれの補充責任者を `PO` が決める。」に変えた（反映済み。次期予定 No.1 の期日と同じ） / 根拠: specdojo:mm-sample の会議情報、specdojo:pm-communication-plan-sample の冒頭、vp-qe-kata-conformance / 印: なし",
+    "No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/mm-sample.md の議題「週次の欠品状況レビュー（2026-04-12〜04-18）」と決定事項の「欠品は7回」 / 指摘: 週の区切りが pr-sample の報告期間（rulebook に従う 2026-04-13〜04-19）と 1 日ずれており、件数も 7 回と 9 回で合わない / 直す案（相手側なので変えていない）: mm-sample の区切りを 2026-04-13〜04-19 にし、件数を pr-sample の 9 回にそろえるか、pr-sample の件数を mm-sample に合わせるかを決めて、片方を直す / 根拠: specdojo:pr-rulebook の「報告期間」、vp-qe-kata-conformance、vp-dev-change-impact / 印: 要判断",
+    "No: 4 / 段: R5 / 箇所: docs/ja/specdojo/samples/mm-sample.md（定例会議）と docs/ja/specdojo/samples/pm-communication-plan-sample.md（定例会議は置かない） / 指摘: 相手の 2 つの sample の間で、定例会議があるかどうかが食い違っている / 直す案（相手側なので変えていない）: コミュニケーション計画に在庫補充フロー改善の定例を足すか、議事録の会議を判断依頼の打ち合わせとして書き直すかを決める / 根拠: 両 sample の該当箇所、vp-qe-kata-conformance / 印: 要判断",
+    "No: 5 / 段: R5 / 箇所: docs/ja/product/010-business-specs/060-glossary/gl-common.yaml の tm-progress-report / 指摘: 用語集は進捗報告を「関係者に報告するビュー」と定義しているが、pr-sample は人が書く報告文書であり、意味の範囲が合わない / 直す案（相手側なので変えていない）: 用語集の定義を、生成するビューと人が書く報告文書の両方を含むように広げるか、製品用語として今のまま区別するかを決める / 根拠: gl-common.yaml の tm-progress-report、specdojo:pr-rulebook の「全体方針」 / 印: 要判断",
+    "No: 6 / 段: R5 / 箇所: grade の F001（line=3 の導入文、vp-ba-stakeholder-clarity） / 指摘: 報告者・報告先を書くよう求める指摘だが、kata ガイドの「kata の観点の組」は vp-ba-stakeholder-clarity を段のレビューでは使わない観点としており、R5 の観点にも当たらない。rulebook も報告者・報告先を必須にしていない / 直した案: sample は変えない。必要なら rulebook の本文要件に報告者・報告先を足すかを別に判断する / 根拠: docs/ja/specdojo/guides/kata-guide.md の「kata の観点の組」、specdojo:pr-rulebook の「本文要件」 / 印: 要判断"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pr-sample-150/T-KATA-REVIEW-ALL-pr-sample-150-20261126T093609Z-6f4e9675/executor.log",
+      "bytes": 7680,
+      "truncated": false
+    }
+  ]
+}

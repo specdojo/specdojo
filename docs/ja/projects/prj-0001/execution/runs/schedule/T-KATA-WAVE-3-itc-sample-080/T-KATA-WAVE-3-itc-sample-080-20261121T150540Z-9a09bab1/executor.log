@@ -1,0 +1,24 @@
+`docs/ja/specdojo/samples/itc-sample.md` で冗長な文を 1 か所削除し、ほかの候補 4 件は判断に必要なので残しました。prettier と markdownlint は対象ファイルで通っています。`npm run docs:build` は実行していません。
+
+**削除した箇所**
+- 「対象外」のレシート印刷の項目にあった「本 term では印刷を成功 Stub に固定し、会計記録への影響だけを見る。」を削除しました。同じ内容が「結合境界/依存/環境前提」の依存の表（`receipt-print` 行の「Stub（成功を返す）」「印刷結果を期待値に含めない」）にあり、二重の説明でした。
+- 依存の扱いの決定は表に残っているので、意味は変わっていません。
+
+**残した箇所**
+
+| 箇所 | 残した理由 |
+| --- | --- |
+| 「概要」の役割分担と `ready` 化の手順の段落 | この sample の担当者と、`ready` 化の前に満たす条件を示しているため。rulebook の共通運用の再掲ではない。 |
+| 「責務」の各項目にある具体値（例: 在庫5→3個） | rulebook の記述ガイド「責務（結合として保証）」が、観測できる成果を添えるよう求めているため。 |
+| 「結合境界/依存/環境前提」の観測点の項目 | rulebook の記述ガイドが観測点の整理を認めており、対象全体の観測点のまとめになっているため。 |
+| 各ケース表で繰り返される「境界/依存」の内容 | 1 行が 1 テストで、各行に書く必須の列のため。 |
+
+**検証**
+- `npx prettier --check docs/ja/specdojo/samples/itc-sample.md`：通過
+- `npx markdownlint-cli2 docs/ja/specdojo/samples/itc-sample.md`：0 件
+- `npm run docs:build`：未実行です。sample 記述ルールの最終チェック項目ですが、plan の検査には含まれていません。必要なら別に実行してください。
+- lint や schema などの検査は、指示どおり親 runner に任せました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"itc-sample の「対象外」にあった、依存の表と同じ内容の Stub 固定の文を 1 か所削除した。ほかの候補 4 件は判断に必要なため残した。prettier と markdownlint は対象ファイルで通過。npm run docs:build は未実行（sample 記述ルールの最終チェック項目だが plan の検査に含まれない）。","handoff":["npm run docs:build は未実行。sample 記述ルールの最終チェック項目だが plan の検査に含まれないため、必要なら別に実行して確認する。"],"condense_records":[{"location":"## 3. 対象外 / receipt-print の項目の末尾の文","category":"table-prose","action":"delete","reason":"「本 term では印刷を成功 Stub に固定し、会計記録への影響だけを見る」は、「結合境界/依存/環境前提」の依存の表の receipt-print 行（Stub（成功を返す）、印刷結果を期待値に含めない）と同じ説明。表に決定が残っているため意味を保てる","cause":{"type":"document"}},{"location":"## 1. 概要 / 第2段落（役割分担と ready 化の手順）","category":"canonical-restatement","action":"retain","reason":"この sample の担当者と、ready 化の前に満たす条件（証跡がテストコードと CI run へ辿れること）を示す固有の内容で、共通運用の再掲ではない","cause":{"type":"document"}},{"location":"## 2. 責務 / 各項目の具体値（例: 在庫5→3個）","category":"repetition","action":"retain","reason":"rulebook の記述ガイド「責務（結合として保証）」が、観測できる成果を添えるよう求めているため","cause":{"type":"document"}},{"location":"## 4. 結合境界/依存/環境前提 / 観測点の項目","category":"repetition","action":"retain","reason":"rulebook の記述ガイドが観測点の整理を認めており、対象全体の観測点のまとめとしてケース表の判断を助けるため","cause":{"type":"document"}},{"location":"## 6. テスト観点とケース / 各ケース表の境界/依存の列","category":"repetition","action":"retain","reason":"表の 1 行が 1 テストで、各行に書く必須の列のため","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/itc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/itc-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

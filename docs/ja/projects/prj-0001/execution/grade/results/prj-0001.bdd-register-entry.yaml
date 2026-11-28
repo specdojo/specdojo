@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
 version: 1
-document: prj-0001:bdd-register-entry
+document: bdd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml
 target: deliverable
 rubric: grade-rubric-v2

@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-opr-incident-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-opr-incident-sample-140-20261125T021838Z-b34b60a6",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T02:19:23.030Z",
+    "completed_at": "2026-11-25T02:22:55.385Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML の変更なし",
+      "reason": "変更した *.yaml / *.yml ファイルがない"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/opr-sample.md",
+      "status": "not_applicable",
+      "summary": "ファイルの変更なし",
+      "reason": "変更した *.md / *.ts / *.js / *.json / *.yaml / *.yml ファイルがない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "executor は plan / result / 個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6984 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6984 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opr-incident-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opr-incident-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4 正しさ: opr-sample.md の事実（frontmatter の type・キー、参照 id、章見出し・表の列、ロールコード、OPD 由来の数値と条件）を schema・template・pm-roles-sample・opd-*-sample と照合し、誤りは見つからなかったため差分なし。F001/F004 は kata の段のレビューで外す観点、F002/F003 は解消済み。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4 確かめの表: 1) frontmatter `type: operations` — 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml の deliverableType enum と opr-rulebook の「設定内容」— 一致。",
+    "R4 確かめの表: 2) frontmatter の `rulebook`・`based_on`・`supersedes` — 正本 docs/specdojo/schemas/v1/common-frontmatter.schema.yaml（`based_on` 72 行・`supersedes` 75 行）と opr-rulebook — 一致。",
+    "R4 確かめの表: 3) frontmatter と本文 wikilink の参照 id（opd-index-sample、opr-index-sample、opd-incident-management-sample、opr-incident/monitoring/backup-restore/batch/change/access-control/support-sample）— 正本 各 sample の frontmatter `id` — すべて実在で一致。",
+    "R4 確かめの表: 4) 章見出し 1〜12 と各表の列名 — 正本 docs/ja/specdojo/templates/opr-template.md — 一致。",
+    "R4 確かめの表: 5) ロールコード `OPS`（Operations / Release Manager）・`DEV`（Developer）・`PO`（Project Owner）— 正本 docs/ja/specdojo/samples/pm-roles-sample.yaml — 一致。",
+    "R4 確かめの表: 6) 営業時間 10:00〜18:00、P1 15 分以内・30 分で紙の販売控えへ切替（判断は `PO`）、P2 当日閉店まで、P3 次の月次点検 — 正本 opd-index-sample.md の運用の範囲・前提、体制・責任分界、障害対応方針 — 一致。",
+    "R4 確かめの表: 7) 死活 営業時間中 5 分無応答、夜間バックアップ 9:30 判定、死活の誤検知 月 3 件以上で閾値見直し — 正本 opd-index-sample.md の監視・アラート方針と opd-monitoring-sample.md 46・49・71 行 — 一致。",
+    "R4 確かめの表: 8) RTO/RPO の仮扱い（翌営業日開店までに前日閉店時点へ）、監査ログ保管 1 年、閉店後 1 日 1 回取得 — 正本 opd-index-sample.md のバックアップ・リストア方針と権限・アカウント運用 — 一致。",
+    "R4 確かめの表: 9) 変更種別ごとの承認者・時間帯・ロールバック条件（版の更新・価格一括変更は `PO`・閉店後、表示修正は `OPS`）— 正本 opd-index-sample.md の変更管理 — 一致。",
+    "R4 確かめの表: 10) 再実行の上限（自動を含め 1 日 2 回、手動は 1 回まで）— 正本 opr-batch-sample.md 113 行 — 一致（OPD に値の正本はなく、分冊との照合）。",
+    "R4 確かめの表: 11) 剥奪の時期（店番をやめた日、保守作業が終わった日のうち）— 正本 opd-access-control-sample.md 48・52 行 — 一致。",
+    "R4 確かめの表: 12) 月次点検は最初の休業日、実施漏れは翌週、問い合わせの応答目標 — 正本 opd-index-sample.md の定期運用方針と問い合わせ運用方針 — 一致。",
+    "R4 確かめの表: 13) `closing_date`・`run_id`・`ticket_id` などの業務上の識別子 — 正本なし（共通サンプル文脈の業務上の仮定）— 確かめの対象外。",
+    "finding の扱い: F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は kata-guide の「kata の観点の組」で kata の段のレビューから外す観点（kata の承認と ready 化は登録簿で追う）のため対応しない。F002 は概要の未決事項の表に「監査ログ以外の証跡の保管期間」の行があり解消済み。F003 は関連ドキュメント導線の表に分冊 8 件があり `opr-incident-sample` も作成済のため解消済み（観点は R5 の担当）。",
+    "R5 への申し送り: 障害対応手順 P1 の一次対応「つけの新規記録を止め」は、OPD の「つけ残高を確認できない間は受けない」より範囲が広く読める（販売だけ記録できない P1 の場合）。正しさの誤りではなく整合の論点として R5 で確認する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opr-incident-sample-140/T-KATA-REVIEW-ALL-opr-incident-sample-140-20261125T021838Z-b34b60a6/executor.log",
+      "bytes": 8251,
+      "truncated": false
+    }
+  ]
+}

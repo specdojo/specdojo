@@ -1,0 +1,18 @@
+`exec run` は、名前で指定された `disabled` の member を起動の前にエラーにするようになりました。親の検証コマンドは実行していません。単体テストと型検査は executor 側で通っています。
+
+- **修正箇所:** 起動コマンドを作る共通関数 `resolveMemberCommand`（`src/exec/agent-config.ts`）で `disabled: true` の member を断ります。
+  - 名前の指定、routing、strategy の `agent`、`fallback_executor`、trial、resume はすべてこの関数を通ります。
+  - エラーの文には nickname と `.specdojo/agent-members.yaml` が入ります。
+- **別名と代わりの選択:**
+  - 別名から辿った実体が無効な場合は、`resolveAgentMember`（`src/shared/specdojo-config.ts`）が元から解決しません。
+  - 代わりの agent を選ぶときは、`selectCandidates` が `disabled` を除いて次の候補へ進みます。
+- **`grade run --by`:** 先に断る今の動きは変えていません。
+- **テスト:** `tests/src/exec/agent-config-command.test.ts` に 3 件足しました（名前の指定・command 上書き（routing 相当）・代わりの選択）。
+- **個票:** `pjr-77jb-exec-run-named-disabled-member.md` の「対応結果」に、解決内容、確認結果、決めた内容、回避策の判断、CHANGELOG 文案を書きました。
+- **個票の作業内容の表:** この個票には作業内容の表がなかったため、更新していません。
+- **変更しなかったもの:** `CHANGELOG.md` は変えていません。
+- **回避策 afbebe967:** 戻してよいと判断しました。戻す操作は保護された設定のため、人間の判断に委ねます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"resolveMemberCommand に disabled 確認を追加し、名前指定・routing・fallback の全経路で起動前にエラーにした。単体テスト3件を追加。個票の対応結果を更新。","handoff":["afbebe967（exec-defaults の antigravity の `command_template` を外した回避策）は、戻してよいと判断した。member を disabled にすれば `resolveMemberCommand` が起動前に断り、agy は `isBlockedProvider` でも遮断される。protected 設定のためこの項目では変更しておらず、戻すかどうかは人間が決める。","CHANGELOG 案（Fixed）: `exec run` で `disabled` の member を名前で指定（`--executor-by`・`--reporter-by` など）すると、起動の前にエラーにするようにした。","個票に作業内容の表が無かったため、表の更新は行っていない。"],"validations":[{"command":"npx vitest run tests/src/exec/agent-config-command.test.ts","status":"passed","summary":"22 tests passed"},{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit exited 0"},{"command":"npx prettier --write tests/src/exec/agent-config-command.test.ts src/exec/agent-config.ts","status":"passed","summary":"both files unchanged"}]}
+</specdojo_executor_evidence>

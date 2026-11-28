@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 typecheck
+> tsc -b --noEmit
+
+packages/docs-site/.vitepress/external-links.ts(9,8): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './product-repos.js'?
+packages/docs-site/.vitepress/external-links.ts(34,28): error TS7006: Parameter 'message' implicitly has an 'any' type.
+
+
+--- stderr ---

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150",
+  "run_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261128T084025Z-7ede9603",
+  "updated_at": "2026-11-28T08:47:02.847Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-28T08:40:46.615Z",
+      "completed_at": "2026-11-28T08:45:42.342Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-150/T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261128T084025Z-7ede9603/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-28T08:46:40.333Z",
+      "completed_at": "2026-11-28T08:47:02.847Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-150/T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261128T084025Z-7ede9603/result.md"
+    }
+  }
+}

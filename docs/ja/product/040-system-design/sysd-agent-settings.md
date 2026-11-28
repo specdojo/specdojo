@@ -87,6 +87,6 @@ reporter なしで作る result の項目は次のとおりで、要約や判断
 | 全体入口   | [システム設計](sysd-index.md)                                        | 設定・実装SSOTの所在                 |
 | 横断ルール | [システム設計横断ルール](sysd-cross-cutting-policy.md)               | 責務、設定、失敗、worktreeの必須事項 |
 | 重要フロー | [システム設計重要フロー](sysd-critical-flows.md)                     | 並列・統合・ID・PR・延期再開         |
-| Job        | [Job実行設計](sysd-job-execution.md)                                 | Job Runからexec基盤への委譲          |
+| Job        | [Job実行設計](sysd-job-execution.md)                                 | job runからexec基盤への委譲          |
 | 運用手順   | [外部エージェントCLI更新](../090-operations/opr-agent-cli-update.md) | CLI更新と証跡                        |
 | 検証       | `tests/src/exec/*.test.ts`                                           | member選択、worktree、retry、resume  |

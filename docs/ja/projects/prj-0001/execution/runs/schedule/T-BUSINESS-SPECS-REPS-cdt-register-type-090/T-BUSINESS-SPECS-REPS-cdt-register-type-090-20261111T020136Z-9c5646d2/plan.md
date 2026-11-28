@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: retrofit
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Review Plan: T-BUSINESS-SPECS-REPS-cdt-register-type-090

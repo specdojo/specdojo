@@ -1,7 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  },
   "permissions": {
-    "allow": ["Edit(**)"],
+    "allow": [
+      "Edit(**)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git grep *)",
+      "Bash(git rm *)",
+      "Bash(git mv *)",
+      "Bash(npm run *)",
+      "Bash(npm test)",
+      "Bash(npm test *)",
+      "Bash(npx prettier *)",
+      "Bash(npx markdownlint-cli2 *)",
+      "Bash(npx markdownlint *)",
+      "Bash(npx eslint *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(npx slidev *)",
+      "Bash(npx specdojo *)",
+      "Bash(specdojo *)"
+    ],
     "deny": [
       "Edit(node_modules/**)",
       "Edit(.specdojo/**)",
@@ -26,7 +50,26 @@
       "Edit(./.gitlab-ci.yaml)",
       "Edit(./azure-pipelines.yml)",
       "Edit(./azure-pipelines.yaml)",
-      "Edit(./Jenkinsfile)"
+      "Edit(./Jenkinsfile)",
+      "Bash(git rm -r *)",
+      "Bash(git rm -f *)",
+      "Bash(git rm --force *)",
+      "Bash(git rm --cached *)",
+      "Bash(git mv -f *)",
+      "Bash(git mv --force *)",
+      "Bash(git push)",
+      "Bash(git push *)",
+      "Bash(gh *)",
+      "Bash(/usr/bin/git push)",
+      "Bash(/usr/bin/git push *)",
+      "Bash(/usr/bin/gh *)",
+      "Bash(/usr/local/bin/git push)",
+      "Bash(/usr/local/bin/git push *)",
+      "Bash(/usr/local/bin/gh *)",
+      "Bash(specdojo guarded-push*)",
+      "Bash(npx specdojo guarded-push*)",
+      "Bash(./node_modules/.bin/specdojo guarded-push*)",
+      "Bash(node dist/specdojo.js guarded-push*)"
     ]
   }
 }

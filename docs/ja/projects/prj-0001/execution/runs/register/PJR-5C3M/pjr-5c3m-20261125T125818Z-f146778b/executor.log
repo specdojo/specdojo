@@ -1,0 +1,24 @@
+reporter が result を描くときに、bare URL を autolink（`<https://...>`）に直し、コードの書式の前後の空白を除くようにしました。テストで確かめたのは、関連する 3 つのテスト範囲（shared・exec・register）だけです。全 187 ファイル・3224 件が通りました。修正後に実際の review の段を 1 件流す確認はまだしていません。
+
+**止まっていた原因**
+- **MD038**: 自動修復は reporter が返した文にしかかかっていませんでした。申し送りに合流する executor の `handoff` は修復を通らずにそのまま描かれ、そこにあったコンマと空白だけのコードの書式が 3 回とも残りました。
+- **MD034**: 描く途中で山括弧を `&lt;` `&gt;` に置き換えていました。そのため reporter が autolink で書いても bare URL に戻っていました。
+
+**直したこと**
+- **規則**: MD034 の扱いは変えず、規則の側を直しました。`.github/instructions/markdown.instructions.md` の外部 URL の書き方を「autolink で書く。bare URL は MD034 に当たるため書かない」に改めました。理由は個票の対応結果に書いてあります。
+- **描画**（`src/exec/results.ts` の `reporterFreeText`）: reporter と executor のどちらが書いた文でも、URL を autolink にそろえ、コードの書式の前後の空白を除きます。あわせて、autolink の山括弧を残し、URL の中の `_` をコードの書式で囲まないようにしました。URL を囲む処理は `src/register/item.ts` から `src/shared/text.ts` へ移し、登録簿の表と共有しています。
+- **reporter への指示**: プロンプトと書式のやり直しの指示に、代わりの書き方を足しました。URL は `<https://example.com/page>` の形で書くこと、コードの書式を空白で始めたり終えたりしないこと、区切りのコンマと空白は言葉で書くことです。
+- **テスト**: `tests/src/shared/text.test.ts` と `tests/src/exec/result-markdownlint.test.ts` に検査を足しました。executor の `handoff` に bare URL と空白入りのコードの書式を含めても、result が lint を通ることも確かめています。描画で直るようになったため、それらを違反として期待していた既存の 3 件は、通ることを確かめる検査に置き換えたり削ったりしました。
+- **個票**: 対応結果と関連ドキュメントを埋めました。書いた文自体がコンマと空白だけのコードの書式で MD038 に当たったため、言葉の書き方に直しています。
+
+**ほかの検査**
+- 変更したファイルの Prettier 整形は通りました。
+- 変更した 2 つの Markdown の markdownlint と `npm run validate:history-links` も通りました。
+- `npm run typecheck` などは親 runner が実行します。
+
+**まだ必要なこと**
+統合した後に、人かオーケストレーターが review の段を 1 件流し、止まらないことを確かめてから close してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"result の自由記述を描く処理で bare URL を autolink に直し、コードの書式の前後の空白を除くようにした（reporter と executor の `handoff` の両方に効く）。autolink の山括弧と URL の中の `_` は保持する。reporter のプロンプトと書式のやり直しの指示に代わりの書き方を足した。markdown.instructions.md の外部 URL の書き方を autolink だけに改め、検査を足し、個票の対応結果を埋めた。","handoff":["直した後に review の段を 1 件流して止まらないことを確かめる作業は、agent の起動を伴うため executor では行っていない。統合の後に人かオーケストレーターが流して確かめてから PJR-5C3M を close する。","規則の変更として、`.github/instructions/markdown.instructions.md` の履歴蓄積ファイルのリンク記法を「autolink で書く。bare URL は MD034 に当たるため書かない」に改めた。MD034 の設定は変えていない。"],"validations":[{"command":"npx vitest run tests/src/shared tests/src/exec tests/src/register","status":"passed","summary":"187 files / 3224 tests passed"},{"command":"npx prettier --write (変更した ts・md ファイル)","status":"passed","summary":"整形済み。item.ts だけ再整形された"},{"command":"npx markdownlint .github/instructions/markdown.instructions.md docs/ja/projects/prj-0001/controls/project-register/pjr-5c3m-reporter-bare-url-md034.md","status":"passed","summary":"個票の MD038 を直した後はエラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし"},{"command":"review の段を 1 件流して reporter が止まらないことの確認","status":"requires_human","summary":"実際の agent CLI の起動が必要。統合の後に review の段を 1 件流して確かめる"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,21 @@
+R1 の段で直す必要があったのは F001 の 1 件だけで、`docs/ja/specdojo/samples/imp-business-sample.md` だけを修正しました。markdownlint などの検査は親 runner が実行するので、こちらでは走らせていません。
+
+**F001 の直し**
+
+成功条件「平日 16:00-18:00 の平均会計時間が 90 秒以内」の現状値が `_UNDECIDED_` のままなのに、未解決事項の表に載っていませんでした。rulebook の未解決事項の章は調査不足の事項を載せるよう求めているので、R1 の `vp-qe-kata-conformance`（rulebook の求めを満たしているか）の不足として直しました。
+
+- 未解決事項に「会計時間の現状値の計測」の行を足しました（決定期限 2026-05-13、担当 `BA`、転記先 `PJR-B4Q4`（`question`））。
+- 成功条件の表の現状値の欄は、この行を指す書き方に変えました。
+- 表は prettier で整え直しました。
+
+**R1 のほかの確認**
+
+ほかに足す・削る内容は見つかりませんでした。6 章の構成、必須の列名、目的の行数は rulebook の求めを満たしています。
+
+**要判断**
+
+`PJR-B4Q4` は架空の ID です。ほかの sample や登録簿からは参照されておらず、既にある `PJR-B4Q1` から `PJR-B4Q3` に続く番号として付けました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 の段で F001 の 1 件を直した。成功条件の現状値の `_UNDECIDED_` を未解決事項の表に「会計時間の現状値の計測」（2026-05-13、`BA`、`PJR-B4Q4`（`question`））として足し、成功条件の表の現状値の欄からこの行を指すようにした。変更したのは docs/ja/specdojo/samples/imp-business-sample.md だけ。","handoff":["No: 1 / 段: R1 / 箇所: 変更要求の概要の成功条件の表（1 つ目の成功条件の現状値）と未解決事項の表 / 指摘: 現状値が `_UNDECIDED_` のままなのに、未解決事項に計測の論点がない。rulebook の未解決事項の章（判断待ち・調査不足を示す）の求めに足りない（F001） / 直した案: 未解決事項に「会計時間の現状値の計測」の行（不足情報: 2026-05-07〜2026-05-13 の平日 16:00-18:00 の平均処理時間、決定期限 2026-05-13、担当 `BA`、転記先 `PJR-B4Q4`（`question`））を足し、成功条件の現状値の欄を「_UNDECIDED_: 未解決事項「会計時間の現状値の計測」で記入する」に変えた / 根拠: imp-business-rulebook の本文要件（未解決事項の章の目的）と記述ガイドの未解決事項（調査が必要な事項は `question` として登録簿へ転記する）。観点は R1 の `vp-qe-kata-conformance`。grade の `vp-ba-business-value` は kata-guide で kata の段では使わない観点のため、R1 の観点に置き換えて扱った / 印: なし","No: 2 / 段: R1 / 箇所: 未解決事項の表の転記先 `PJR-B4Q4` / 指摘: 足した行の転記先の登録項目 ID は架空のもので、ほかの sample や登録簿からは参照されていない / 直した案: 既にある `PJR-B4Q1` から `PJR-B4Q3` に続く番号として `PJR-B4Q4` を付けた。ほかの番号の付け方にするかは人が決める / 根拠: 既存の未解決事項の行の ID の付け方 / 印: 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/imp-business-sample.md","status":"passed","summary":"対象の sample の表を整え直した"}]}
+</specdojo_executor_evidence>

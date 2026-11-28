@@ -1,0 +1,33 @@
+`trc-requirements-to-tests-rulebook.md` を、指摘 F001〜F010 に合わせて改訂しました。変更したのはこの 1 ファイルだけで、sample・frontmatter の宣言・result は触っていません。どの章も H3 までにとどめ、Prettier で整形したあと markdownlint を通して 0 件でした。
+
+改訂の中身は次のとおりです。
+
+- **項目単位の対応（F001・F005）**: 文書単位の対応はテスト成果物の `relations.verifies`、項目単位の対応はテスト成果物の「トレース」の表（`trace_key` と仕様ID）を正本としました。マトリクスの 1 行は「要求文書 ID と項目 ID の組」で、例は `bac-checkout BAC-01` です。標準 6 列は列ごとに、何から作りどう導くかを書きました。
+- **生成の手順（F002・F007・F009）**: 生成用の CLI は `src` に見当たりませんでした。そこで新しい節「生成の手順」に、手作業で生成する 5 段階を書きました。母集団の列挙、テストの抽出、項目単位の対応づけ、照合、サマリ件数と母集団件数の突き合わせの順です。「トレース対象の前提」の良い例は、プレースホルダの代わりに、母集団の件数、抽出条件、生成日、生成元のコミットを示す形にしました。
+- **手で書く範囲（F009・F010）**: 全体方針に「編集の境界」を加えました。作成者が書くのは次の 5 つだけです。それ以外は生成元を直して再生成します。
+  - 目的と適用範囲
+  - トレース対象の前提
+  - サマリで優先する要求項目とその理由
+  - ギャップごとの対応方針
+  - 変更履歴
+- **`一部充足` の条件（F003）**: 成立しない「参照先が未作成」を外し、次のどれかに当たる場合としました。
+  - 対応テストのいずれかが `draft`
+  - `trace_key` を参照するケースがない（検証ケース未記載）
+  - 要求文書が `relations.verifies` にない
+- **母集団外の参照（F004）**: マトリクスとは別の表（参照ID / テストID / ギャップ）で示します。この表の行は充足状況を持たず、サマリの充足状況ごとの件数にも数えません。
+- **`based_on` の規則（F006）**: 母集団とした要求文書と、抽出したテスト文書の ID をすべて書く規則にしました。索引は抽出に使った場合だけ加えます。
+- **禁止事項**: 「`relations.verifies` の文書 ID だけで項目との対応を判定する」を追加しました。
+
+申し送りが 3 点あります。
+
+- **sample が改訂後の rulebook と食い違っている**: 指摘 F006・F008・F010 が該当し、後続の sample-maintenance で直す必要があります。主な食い違いは次の 4 つです。
+  - `based_on` が索引だけになっている
+  - ギャップ表に担当・期限の列がある
+  - 対応テストがある `req-r1-004` を `未着手` としている
+  - 更新規則が手編集を前提にしている
+- **stc の sample に `relations.verifies` がない**: `stc-sample.md` には `relations.verifies` がありません。このままでは「生成の手順」の手順 2 で抽出されません。直すかどうか判断が必要です。
+- **兄弟 rulebook の同種の欠落**: `trc-requirements-to-specs-rulebook.md` にも、項目単位の対応、母集団外の参照、編集の境界について同じ欠けがあります。直すなら別タスクとして揃える必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"trc-requirements-to-tests-rulebook.md を grade finding F001〜F010 に沿って改訂した。項目単位の対応の正本（トレース表）と行の単位、手作業による「生成の手順」、列ごとの生成元と導出規則、手で書く範囲（編集の境界）、`一部充足` の条件、母集団外の参照の扱いと件数からの除外、`based_on` の規則を定めた。sample・frontmatter 宣言は変更していない。","handoff":["sample-maintenance: `trc-requirements-to-tests-sample.md` を改訂後の rulebook に合わせる（F006: `based_on` に母集団の要求文書と抽出したテスト文書をすべて書く / F008: ギャップ表の担当・期限の列を削り、対応テストがある `req-r1-004` の `未着手` を直し、前提に生成手段・生成日・生成元の版を書く / F010: 更新規則を手編集から再生成の形に改め、要求ID を `<要求文書ID> <項目ID>`、対応テストID を `<テスト文書ID> <trace_key>` の形式にする）。","`stc-sample.md` に `relations.verifies` がないため、「生成の手順」の手順 2 で抽出されない。sample を完成例として作り直す際は、`bac-sample` を `verifies` に持つ atc/stc を前提にするか、stc-sample への追加を別タスクで判断する。","`trc-requirements-to-specs-rulebook.md` にも項目単位の対応・母集団外の参照・編集の境界について同じ欠けがある。直すなら別タスクで揃えるかを判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md","status":"passed","summary":"最初の check で差分が出たため --write で整形した。その後 markdownlint を実行"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

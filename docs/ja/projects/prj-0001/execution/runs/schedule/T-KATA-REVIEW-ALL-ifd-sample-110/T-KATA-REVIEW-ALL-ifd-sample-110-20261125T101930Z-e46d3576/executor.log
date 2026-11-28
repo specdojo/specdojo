@@ -1,0 +1,15 @@
+R1（目的の過不足）のレビューを終えました。直したのは `docs/ja/specdojo/samples/ifd-sample.md` の 1 か所だけです。
+
+**直した箇所:** 「メモ / 将来課題」の表の後の文です。「配置・経路の改訂時は ARC が…、QE が…、OPS が…、PO が…」という、文書を改訂するときの役割の割り当てを削りました。Sample 記述標準の記述ガイドと禁止事項は、文書を作る・確かめる・承認する役割の割り当てや進み具合を本文に書くことを禁じています。rulebook の全体方針でも、改訂の扱いはドキュメントメタ情報標準に従うことになっています。
+
+**直さなかった点（要判断 2 件）:**
+- 「概要」の、登場人物の役割と Role code（ARC・DEV・QE・PO）の対応を書いた文。本文の表で使う Role code を説明しているので、文書の中身として役割を扱う例外に当たると判断して残しました。
+- 「メモ / 将来課題」の表の `担当` 列。rulebook がこの章に求めるのは「論点と影響（当面の扱い）」だけで、引き継ぎ先の個票と重なる可能性があります。ただ、課題の担当は中身だとも読めるので削っていません。
+
+ほかの必須章（概要・インフラ構成図・配置と境界の定義・通信経路と情報の境界・技術前提・制約と検証観点）は、rulebook の判定条件を満たしており、欠けている内容も余分な内容もありませんでした。カタログの完了条件と共通サンプル文脈（人物名を使わず役割名で書く）にも沿っています。
+
+**検査:** `npx prettier --check` は通りました。lint などはこの後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認し、ifd-sample.md の「メモ / 将来課題」の表の後にあった、改訂のときの役割の割り当ての文を削った。ほかの必須章は rulebook・Sample 記述標準・`done_criteria` に対し、欠けている内容も余分な内容もない。","handoff":["R1-1: R1 / 6. メモ / 将来課題（表の後の文） / 「配置・経路の改訂時は ARC が `cnd-kinuya` と連携設計、QE が該当経路の検証対象、OPS が監視・運用参照を追従させ、PO が店舗外への送信・利用範囲を再判断する」は、文書を改訂するときの役割の割り当てを本文に書いており、Sample 記述標準の記述ガイドと禁止事項に当たる。rulebook の全体方針でも、改訂はドキュメントメタ情報標準に従う / この文を削り、架空の課題 ID の注記と実運用の判断の文だけを残した / `vp-qe-kata-conformance`（種別の責務、specdojo:sample-authoring-standard の記述ガイド・禁止事項）、`vp-arc-single-responsibility` / -","R1-2: R1 / 1. 概要（第 2 段落の末尾） / 「技術メンターが ARC、開発担当が DEV、同行レビュー担当が QE、店主代表が公開・利用判断の PO を担う学習用の責務対応とする」は、登場人物の役割と Role code の対応を書いている。rulebook が概要に求める項目（対象環境、図で判断すること、上位入力、対象外）には含まれない / - / `vp-po-purpose-alignment`、`vp-qe-kata-conformance`。5.2 の `主確認ロール` 列と 6 章の `担当` 列で使う Role code の説明になっており、文書の中身として役割を扱う例外に当たると判断して残した。選ばなかった案は、この文を削り、表の列名を役割名（開発担当など）に変える案 / 要判断","R1-3: R1 / 6. メモ / 将来課題（表の `担当` 列） / rulebook がこの章に求めるのは論点と影響（当面の扱い）で、`担当` 列は引き継ぎ先の個票（`kinuya:pjr-i001` など）で追う内容と重なる可能性がある / - / `vp-qe-kata-conformance`（specdojo:ifd-mermaid-rulebook の本文要件「メモ / 将来課題」、Sample 記述標準の記述ガイド）。課題の担当は文書の中身とも読め、承認や進み具合の記述とまでは言えないので残した。選ばなかった案は、`担当` 列を削って `解消条件・引き継ぎ先` 列にまとめる案 / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifd-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ifd-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml・*.yml がない"}]}
+</specdojo_executor_evidence>

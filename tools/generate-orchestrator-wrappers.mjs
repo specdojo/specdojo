@@ -8,10 +8,14 @@
 // 増やす場合は、先に頭だけを持つファイルを作ってから対象一覧へ加える。頭の内容は provider
 // ごとに異なり機械的に導けないため、このスクリプトでは生成しない。
 
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { ORCHESTRATOR_SOURCE, ORCHESTRATOR_WRAPPERS } from "./validate-orchestrator-sync.mjs";
+import {
+  ORCHESTRATOR_SOURCE,
+  ORCHESTRATOR_WRAPPERS,
+  SKILL_COPIES,
+} from "./validate-orchestrator-sync.mjs";
 
 const MARKDOWN_FRONTMATTER = /^---\r?\n[\s\S]*?^---\r?\n/mu;
 const TOML_INSTRUCTIONS = /^(developer_instructions\s*=\s*"""\r?\n)[\s\S]*?(^""")/mu;
@@ -52,6 +56,16 @@ export function generateOrchestratorWrappers(rootDir = process.cwd()) {
     updated.push(wrapper.path);
   }
 
+  // skill の写しは正本のファイル全体をそのまま置く。写し先がなければ作る。
+  for (const copy of SKILL_COPIES) {
+    const content = readFileSync(resolve(rootDir, copy.source), "utf8");
+    const copyPath = resolve(rootDir, copy.path);
+    if (existsSync(copyPath) && readFileSync(copyPath, "utf8") === content) continue;
+    mkdirSync(dirname(copyPath), { recursive: true });
+    writeFileSync(copyPath, content, "utf8");
+    updated.push(copy.path);
+  }
+
   return updated;
 }
 
@@ -64,7 +78,7 @@ export function runGenerateOrchestratorWrappers({
     const updated = generateOrchestratorWrappers(rootDir);
     if (updated.length === 0) {
       confirm(
-        `orchestrator body sync: already up to date (${ORCHESTRATOR_WRAPPERS.length} targets)\n`,
+        `orchestrator body sync: already up to date (${ORCHESTRATOR_WRAPPERS.length + SKILL_COPIES.length} targets)\n`,
       );
       return 0;
     }

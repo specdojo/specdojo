@@ -16,7 +16,6 @@ import {
 
 // Vitest はリポジトリ直下を cwd にして実行される。
 const REPO_ROOT = resolve(process.cwd());
-// antigravity is not selectable since 0.9.2 (PJR-NJE4); its rejection is tested separately.
 const PROVIDERS = ["claude", "codex", "opencode", "copilot"] as const;
 
 const tempDirs: string[] = [];
@@ -116,7 +115,6 @@ describe("specdojo init and config scaffold agent rosters", () => {
         const member = resolveAgentMember(roster, alias.nickname);
         expect(member?.nickname, alias.nickname).toBe(alias.alias_of);
         expect(member?.model, alias.nickname).toBeTruthy();
-        expect(member?.provider, alias.nickname).not.toBe("antigravity");
         expect(resolveMemberCommand(defaults, member!)).toContain(`--model ${member!.model}`);
       }
 
@@ -148,24 +146,6 @@ describe("specdojo init and config scaffold agent rosters", () => {
         "utf8",
       );
       expect(loadAsAgentRoster(copilot)?.members.length).toBeGreaterThan(0);
-    },
-  );
-
-  it(
-    "rejects antigravity in init and config scaffold with the reason, without writing agy settings",
-    { timeout: 120_000 },
-    () => {
-      const repo = createEmptyRepo();
-
-      const init = runCli(repo, ["init", "--yes", "--exec", "--provider", "claude,antigravity"]);
-      const scaffold = runCli(repo, ["config", "scaffold", "--provider", "antigravity"]);
-
-      for (const result of [init, scaffold]) {
-        expect(result.status, result.stdout).not.toBe(0);
-        expect(result.stderr).toContain("do not launch Antigravity (agy)");
-        expect(result.stderr).toContain("Additional Terms (Section 6)");
-      }
-      expect(existsSync(join(repo, ".specdojo", "antigravity"))).toBe(false);
     },
   );
 });

@@ -3,13 +3,11 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { load } from "js-yaml";
 import {
   ORCHESTRATOR_NPM_SCRIPTS,
   applyProviderScaffoldPlan,
   buildProviderScaffoldPlan,
   listProviderTemplates,
-  mergeProviderGlobalSettings,
   runProviderScaffold,
   specdojoPackageRootDir,
 } from "../../../src/shared/provider-scaffold.js";
@@ -34,12 +32,14 @@ async function makeClaudeTemplateFixture(packageRoot: string): Promise<void> {
   await writeFile(path.join(templateDir, "README.md"), "# readme\n", "utf8");
 }
 
-const ANTIGRAVITY_GLOBAL_SETTINGS = {
-  permissions: {
-    allow: ["command(git status)", "command(npm run)"],
-    deny: ["command(git push)", "write_file(.specdojo/)"],
-  },
-};
+const CLAUDE_EDIT_GIT_REMOVE_DENIES = [
+  "Bash(git rm -r *)",
+  "Bash(git rm -f *)",
+  "Bash(git rm --force *)",
+  "Bash(git rm --cached *)",
+  "Bash(git mv -f *)",
+  "Bash(git mv --force *)",
+];
 
 const CLAUDE_REMOTE_WRITE_DENIES = [
   "Bash(git push)",
@@ -51,6 +51,13 @@ const CLAUDE_REMOTE_WRITE_DENIES = [
   "Bash(/usr/local/bin/git push)",
   "Bash(/usr/local/bin/git push *)",
   "Bash(/usr/local/bin/gh *)",
+];
+
+// The guarded push entry is for the interactive orchestrator only (PJR-GDMB).
+const CLAUDE_GUARDED_PUSH_DENIES = [
+  "Bash(specdojo guarded-push*)",
+  "Bash(npx specdojo guarded-push*)",
+  "Bash(./node_modules/.bin/specdojo guarded-push*)",
 ];
 
 const CLAUDE_ORCHESTRATOR_READ_ALLOWS = [
@@ -82,17 +89,6 @@ const CLAUDE_ORCHESTRATOR_WRITE_DENIES = [
   "Bash(gh repo sync:*)",
 ];
 
-async function makeAntigravityTemplateFixture(packageRoot: string): Promise<void> {
-  const templateDir = path.join(packageRoot, "templates", "antigravity");
-  await mkdir(templateDir, { recursive: true });
-  await writeFile(path.join(templateDir, "orchestrator.md"), "# orchestrator\n", "utf8");
-  await writeFile(
-    path.join(templateDir, "settings.global.json"),
-    `${JSON.stringify(ANTIGRAVITY_GLOBAL_SETTINGS, null, 2)}\n`,
-    "utf8",
-  );
-}
-
 afterEach(() => {
   vi.restoreAllMocks();
   process.exitCode = undefined;
@@ -121,6 +117,7 @@ describe("specdojoPackageRootDir", () => {
       "Bash(git add *)",
       "Bash(git commit *)",
       ...CLAUDE_REMOTE_WRITE_DENIES,
+      ...CLAUDE_GUARDED_PUSH_DENIES,
     ]);
   });
 
@@ -132,11 +129,13 @@ describe("specdojoPackageRootDir", () => {
       ),
     ) as { permissions?: { allow?: string[]; deny?: string[] } };
 
-    expect(settings.permissions?.allow).toEqual(["Edit(**)"]);
+    expect(settings.permissions?.allow).toContain("Edit(**)");
     expect(settings.permissions?.deny).toEqual([
       ...PROTECTED_DIRECTORY_PREFIXES.map((prefix) => `Edit(${prefix}**)`),
       ...[...PROTECTED_EXACT_PATHS].map((protectedPath) => `Edit(./${protectedPath})`),
+      ...CLAUDE_EDIT_GIT_REMOVE_DENIES,
       ...CLAUDE_REMOTE_WRITE_DENIES,
+      ...CLAUDE_GUARDED_PUSH_DENIES,
     ]);
   });
 
@@ -176,7 +175,7 @@ describe("specdojoPackageRootDir", () => {
     );
   });
 
-  it("ships command denials for Codex, OpenCode, and Antigravity", async () => {
+  it("ships command denials for Codex and OpenCode", async () => {
     const packageRoot = specdojoPackageRootDir();
     const codexRules = await readFile(
       path.join(packageRoot, "templates", "codex", "rules", "specdojo.rules"),
@@ -207,79 +206,6 @@ describe("specdojoPackageRootDir", () => {
     expect(opencodeOrchestrator).toContain("  edit: allow");
     expect(opencodeOrchestrator).not.toContain('    ".specdojo/**": deny');
     expect(opencodeOrchestrator).toContain("model: ollama-local/gemma4:31b-mlx-work-64k");
-
-    const antigravity = JSON.parse(
-      await readFile(
-        path.join(packageRoot, "templates", "antigravity", "settings.global.json"),
-        "utf8",
-      ),
-    ) as { permissions: { deny: string[] } };
-    expect(antigravity.permissions.deny).toEqual(
-      expect.arrayContaining([
-        "command(git push)",
-        "command(gh)",
-        "command(/usr/bin/git push)",
-        "command(/usr/bin/gh)",
-      ]),
-    );
-  });
-
-  it("ships scoped Antigravity permissions without the all-permissions bypass", async () => {
-    const packageRoot = specdojoPackageRootDir();
-    const settings = JSON.parse(
-      await readFile(
-        path.join(packageRoot, "templates", "antigravity", "settings.global.json"),
-        "utf8",
-      ),
-    ) as { permissions: { allow: string[]; deny: string[] } };
-    const execDefaults = await readFile(
-      path.join(packageRoot, "templates", "antigravity", "exec-defaults-snippet.yaml"),
-      "utf8",
-    );
-
-    // グローバル設定は利用者のすべてのリポジトリに効くため、読み取りの git コマンドだけを許可する。
-    expect(settings.permissions.allow).toEqual([
-      "command(git status)",
-      "command(git diff)",
-      "command(git log)",
-      "command(git show)",
-    ]);
-    expect(settings.permissions.deny).toEqual(
-      expect.arrayContaining([
-        "command(git push)",
-        "command(gh)",
-        "read_file(.env)",
-        "write_file(.specdojo/exec-defaults.yaml)",
-        "write_file(package.json)",
-      ]),
-    );
-    expect(execDefaults).not.toContain("--dangerously-skip-permissions");
-    expect(execDefaults).toContain("--model {model}");
-    expect(execDefaults).not.toMatch(/gemini-3\.1-pro|claude-sonnet-4-6|claude-opus-4-6/);
-  });
-
-  it("ships Antigravity members that carry currently provided models by model family", async () => {
-    const packageRoot = specdojoPackageRootDir();
-    const snippet = load(
-      await readFile(
-        path.join(packageRoot, "templates", "antigravity", "agent-members-snippet.yaml"),
-        "utf8",
-      ),
-    ) as { members: Array<{ nickname: string; model?: string }> };
-
-    // model の ID は実体の model の 1 か所に書き、実体の名前は model の系統で付ける（PJR-ZM1K）。
-    expect(
-      Object.fromEntries(snippet.members.map((member) => [member.nickname, member.model])),
-    ).toEqual({
-      "flash-executor": "gemini-3.8-flash-medium",
-      "flash-high-executor": "gemini-3.8-flash-high",
-      "flash-high-review-executor": "gemini-3.8-flash-high",
-      "flash-reporter": "gemini-3.8-flash-medium",
-      "agy-sonnet-executor": "claude-sonnet-5-5-medium",
-      "agy-opus-executor": "claude-opus-5-5-high",
-      "agy-opus-review-executor": "claude-opus-5-5-high",
-      "agy-gpt-oss-executor": "gpt-oss-120b-medium",
-    });
   });
 
   it("ships Codex agent definitions that do not use retired or migration models", async () => {
@@ -433,6 +359,7 @@ describe("buildProviderScaffoldPlan", () => {
 
       expect(plan.provider).toBe("opencode");
       expect(plan.entries.map((entry) => entry.destinationRelPath)).toEqual([
+        ".agents/skills/specdojo-exec-in-session/SKILL.md",
         ".opencode/agents/opencode-executor.md",
         ".opencode/agents/opencode-reporter.md",
         ".opencode/agents/opencode-review-executor.md",
@@ -441,27 +368,6 @@ describe("buildProviderScaffoldPlan", () => {
       ]);
       const opencodeJsonEntry = plan.entries.find((e) => e.destinationRelPath === "opencode.json");
       expect(opencodeJsonEntry?.destinationPath).toBe(path.join(repoRoot, "opencode.json"));
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("keeps the opt-in global settings template out of the repository plan", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-    try {
-      const packageRoot = path.join(dir, "pkg");
-      const repoRoot = path.join(dir, "repo");
-      await makeAntigravityTemplateFixture(packageRoot);
-
-      const plan = await buildProviderScaffoldPlan({
-        packageRoot,
-        repoRoot,
-        provider: "antigravity",
-      });
-
-      expect(plan.entries.map((entry) => entry.destinationRelPath)).toEqual([
-        ".specdojo/antigravity/orchestrator.md",
-      ]);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
@@ -482,135 +388,79 @@ describe("buildProviderScaffoldPlan", () => {
   });
 });
 
-describe("mergeProviderGlobalSettings", () => {
-  it("preserves existing settings, appends missing permissions, and backs up the original", async () => {
+describe("buildProviderScaffoldPlan skill distribution", () => {
+  const SKILL_CANONICAL = ".agents/skills/specdojo-exec-in-session/SKILL.md";
+  const CLAUDE_SKILL_WRAPPER = ".claude/skills/specdojo-exec-in-session/SKILL.md";
+
+  it.each([
+    ["claude", [SKILL_CANONICAL, CLAUDE_SKILL_WRAPPER]],
+    ["codex", [SKILL_CANONICAL]],
+    ["opencode", [SKILL_CANONICAL]],
+    ["copilot", [SKILL_CANONICAL]],
+  ])("places the skill files that %s reads", async (provider, expected) => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {
-      const packageRoot = path.join(dir, "pkg");
-      const homeDir = path.join(dir, "home");
-      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
-      const settingsPath = path.join(settingsDir, "settings.json");
-      const original = {
-        colorScheme: "dark",
-        permissions: {
-          allow: ["command(custom)"],
-          deny: ["command(git push)"],
-          customList: ["keep-me"],
-        },
-      };
-      const originalContent = `${JSON.stringify(original, null, 4)}\n`;
-      await makeAntigravityTemplateFixture(packageRoot);
-      await mkdir(settingsDir, { recursive: true });
-      await writeFile(settingsPath, originalContent, "utf8");
-      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot: specdojoPackageRootDir(),
+        repoRoot: dir,
+        provider,
+      });
 
-      await mergeProviderGlobalSettings("antigravity", {
+      const skillPaths = plan.entries
+        .map((entry) => entry.destinationRelPath)
+        .filter((relPath) => relPath.includes("/skills/"));
+      expect(skillPaths).toEqual(expected);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("ships the canonical skill and the Claude Code wrapper unchanged from their sources", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const read = (relPath: string) => readFile(path.join(packageRoot, relPath), "utf8");
+
+    expect(await read("templates/agent-skills/specdojo-exec-in-session/SKILL.md")).toBe(
+      await read(SKILL_CANONICAL),
+    );
+    expect(await read("templates/claude/skills/specdojo-exec-in-session/SKILL.md")).toBe(
+      await read(CLAUDE_SKILL_WRAPPER),
+    );
+  });
+
+  it("does not list or accept the shared skill directory as a provider", async () => {
+    const packageRoot = specdojoPackageRootDir();
+
+    expect(await listProviderTemplates(packageRoot)).not.toContain("agent-skills");
+    await expect(
+      buildProviderScaffoldPlan({ packageRoot, repoRoot: packageRoot, provider: "agent-skills" }),
+    ).rejects.toThrow(/Unknown provider template: agent-skills/);
+  });
+
+  it("keeps an existing skill without force and replaces it with force", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = specdojoPackageRootDir();
+      const existingPath = path.join(dir, ...SKILL_CANONICAL.split("/"));
+      await mkdir(path.dirname(existingPath), { recursive: true });
+      await writeFile(existingPath, "# customized\n", "utf8");
+      const plan = await buildProviderScaffoldPlan({
         packageRoot,
-        homeDir,
-        dryRun: false,
+        repoRoot: dir,
+        provider: "claude",
       });
 
-      const merged = JSON.parse(await readFile(settingsPath, "utf8"));
-      expect(merged).toEqual({
-        colorScheme: "dark",
-        permissions: {
-          allow: ["command(custom)", "command(git status)", "command(npm run)"],
-          deny: ["command(git push)", "write_file(.specdojo/)"],
-          customList: ["keep-me"],
-        },
-      });
-      const backups = (await readdir(settingsDir)).filter((name) =>
-        name.startsWith("settings.json.backup-"),
+      const outcomes = await applyProviderScaffoldPlan(plan, { force: false });
+
+      const skipped = outcomes.filter((outcome) => !outcome.written);
+      expect(skipped.map((outcome) => outcome.entry.destinationRelPath)).toEqual([SKILL_CANONICAL]);
+      expect(await readFile(existingPath, "utf8")).toBe("# customized\n");
+      expect(existsSync(path.join(dir, ...CLAUDE_SKILL_WRAPPER.split("/")))).toBe(true);
+
+      await applyProviderScaffoldPlan(plan, { force: true });
+
+      expect(await readFile(existingPath, "utf8")).toBe(
+        await readFile(path.join(packageRoot, ...SKILL_CANONICAL.split("/")), "utf8"),
       );
-      expect(backups).toHaveLength(1);
-      expect(await readFile(path.join(settingsDir, backups[0]!), "utf8")).toBe(originalContent);
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("shows additions on dry-run without writing settings or a backup", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-    try {
-      const packageRoot = path.join(dir, "pkg");
-      const homeDir = path.join(dir, "home");
-      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
-      const settingsPath = path.join(settingsDir, "settings.json");
-      const original = '{"colorScheme":"terminal"}\n';
-      const output: string[] = [];
-      await makeAntigravityTemplateFixture(packageRoot);
-      await mkdir(settingsDir, { recursive: true });
-      await writeFile(settingsPath, original, "utf8");
-      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
-        output.push(String(chunk));
-        return true;
-      });
-
-      await mergeProviderGlobalSettings("antigravity", {
-        packageRoot,
-        homeDir,
-        dryRun: true,
-      });
-
-      expect(await readFile(settingsPath, "utf8")).toBe(original);
-      expect((await readdir(settingsDir)).filter((name) => name.includes(".backup-"))).toEqual([]);
-      expect(output.join("")).toContain(
-        "[dry-run] global settings diff: ~/.gemini/antigravity-cli/settings.json",
-      );
-      expect(output.join("")).toContain('+ "command(git status)"');
-      expect(output.join("")).toContain('+ "write_file(.specdojo/)"');
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("is idempotent and does not create another backup when nothing is added", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-    try {
-      const packageRoot = path.join(dir, "pkg");
-      const homeDir = path.join(dir, "home");
-      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
-      await makeAntigravityTemplateFixture(packageRoot);
-      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-
-      await mergeProviderGlobalSettings("antigravity", {
-        packageRoot,
-        homeDir,
-        dryRun: false,
-      });
-      await mergeProviderGlobalSettings("antigravity", {
-        packageRoot,
-        homeDir,
-        dryRun: false,
-      });
-
-      expect((await readdir(settingsDir)).filter((name) => name.includes(".backup-"))).toEqual([]);
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("rejects an invalid existing permission list without modifying it", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-    try {
-      const packageRoot = path.join(dir, "pkg");
-      const homeDir = path.join(dir, "home");
-      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
-      const settingsPath = path.join(settingsDir, "settings.json");
-      const original = '{"permissions":{"allow":"all"}}\n';
-      await makeAntigravityTemplateFixture(packageRoot);
-      await mkdir(settingsDir, { recursive: true });
-      await writeFile(settingsPath, original, "utf8");
-
-      await expect(
-        mergeProviderGlobalSettings("antigravity", {
-          packageRoot,
-          homeDir,
-          dryRun: false,
-        }),
-      ).rejects.toThrow(/permissions\.allow must be an array of strings/);
-      expect(await readFile(settingsPath, "utf8")).toBe(original);
-      expect((await readdir(settingsDir)).filter((name) => name.includes(".backup-"))).toEqual([]);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
@@ -671,37 +521,6 @@ describe("applyProviderScaffoldPlan", () => {
 });
 
 describe("runProviderScaffold", () => {
-  it.each([false, true])(
-    "refuses antigravity before writing repository or user-level files (global: %s)",
-    async (global) => {
-      const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-      try {
-        const packageRoot = path.join(dir, "pkg");
-        const repoRoot = path.join(dir, "repo");
-        const homeDir = path.join(dir, "home");
-        await makeAntigravityTemplateFixture(packageRoot);
-        await mkdir(repoRoot, { recursive: true });
-
-        await expect(
-          runProviderScaffold("antigravity", {
-            packageRoot,
-            repoRoot,
-            homeDir,
-            force: false,
-            dryRun: false,
-            global,
-          }),
-        ).rejects.toThrow(
-          /Cannot scaffold provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity/,
-        );
-        expect(existsSync(path.join(repoRoot, ".specdojo", "antigravity"))).toBe(false);
-        expect(existsSync(path.join(homeDir, ".gemini"))).toBe(false);
-      } finally {
-        await rm(dir, { recursive: true, force: true });
-      }
-    },
-  );
-
   it("rejects global mode for unsupported providers before writing repository files", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {
@@ -713,7 +532,6 @@ describe("runProviderScaffold", () => {
         runProviderScaffold("claude", {
           packageRoot,
           repoRoot,
-          homeDir: path.join(dir, "home"),
           force: false,
           dryRun: false,
           global: true,

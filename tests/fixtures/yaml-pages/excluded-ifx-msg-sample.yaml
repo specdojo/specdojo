@@ -1,0 +1,107 @@
+# specdojo-schema: none reason=external-asyncapi
+# 構造は AsyncAPI 2.6.0 に対応した検証器（例: AsyncAPI CLI の validate）で確かめる。
+# _ASSUMPTION_: 駄菓子屋きぬやの店舗端末が在庫の変化を本部へ通知する学習用の例。
+# 一覧 ifx-index-sample には未掲載の連携で、採用するときは一覧に行を足してから spec_ref を付ける。
+# 同一覧の対象外（仕入先システム連携、キャッシュレス決済など）は題材にしない。
+# _UNDECIDED_: 本部が在庫の通知を受けるかは未合意。PO（店主代表）が採否と ready への昇格を判断する。
+asyncapi: 2.6.0
+info:
+  title: 在庫変更イベント仕様
+  version: 1.0.0
+  description: >-
+    店舗端末の在庫管理が、商品の在庫数が変わったことを発行し、本部の在庫集計が購読する。
+    発生の契機は販売の確定・仕入れの登録・棚卸しの訂正。
+    配信は at-least-once、順序は同じ `subject`（商品）の中だけ保証する。
+    購読者は `source` と `id` の組で重複を捨て、同じ商品で `time` が古いイベントは無視する。
+    メッセージは CloudEvents の structured モードで、`contentType` は `application/cloudevents+json`、
+    `data` の形式（`datacontenttype`）は `application/json` に固定する。`defaultContentType` は同じ既定を示す。
+    互換: 任意の `data` 項目の追加は MINOR を上げ、購読者は知らない項目を無視する。互換を壊す変更は `type` の `.v1` を上げる。
+
+x-spec-meta:
+  id: specdojo:ifx-msg-sample
+  type: api
+  status: draft
+  rulebook: specdojo:ifx-msg-rulebook
+  based_on:
+    - specdojo:ifx-index-sample
+
+defaultContentType: application/cloudevents+json
+
+servers:
+  broker:
+    url: mqtt://broker.kinuya.example.com
+    protocol: mqtt
+    description: メッセージブローカー（例示用のドメイン）
+
+channels:
+  inventory.stock.changed:
+    description: >-
+      在庫数が変わった通知。発行者: 店舗端末の在庫管理。購読者: 本部の在庫集計。
+      `subscribe` は、発行者が送り、購読者が受け取れることを表す。
+    subscribe:
+      message:
+        $ref: "#/components/messages/StockChangedEvent"
+
+components:
+  messages:
+    StockChangedEvent:
+      name: StockChangedEvent
+      title: 在庫変更イベント
+      contentType: application/cloudevents+json
+      payload:
+        $ref: "#/components/schemas/CloudEventStockChanged"
+
+  schemas:
+    CloudEventStockChanged:
+      type: object
+      additionalProperties: false
+      required:
+        - specversion
+        - type
+        - source
+        - id
+        - time
+        - datacontenttype
+        - data
+      properties:
+        specversion:
+          type: string
+          enum: ["1.0"]
+        type:
+          type: string
+          enum: [com.kinuya.stock.changed.v1]
+        source:
+          type: string
+          example: /inventory
+        id:
+          type: string
+          description: イベントID（`source` との組で一意）
+        time:
+          type: string
+          format: date-time
+        datacontenttype:
+          type: string
+          enum: ["application/json"]
+        subject:
+          type: string
+          description: 対象識別子（任意）
+          example: product/PROD-0001
+        data:
+          $ref: "#/components/schemas/StockChangedData"
+
+    StockChangedData:
+      type: object
+      additionalProperties: false
+      required: [product_id, delta, current_quantity]
+      properties:
+        product_id:
+          type: string
+          pattern: "^PROD-[0-9]{4}$"
+          description: 商品ID（例 PROD-0001）
+        delta:
+          type: integer
+          description: 増減量（減少は負の値）
+        current_quantity:
+          type: integer
+          minimum: 0
+          description: 変更後の在庫数

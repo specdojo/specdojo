@@ -1,0 +1,40 @@
+`docs/ja/specdojo/samples/opd-index-sample.md` を、駄菓子屋きぬやの運用方針の完成例として書き直しました（169 行）。編集したのはこのファイルだけで、rulebook と隣の sample には触れていません。result も書いていません。
+
+**検証**
+- `npx prettier --write` で整形し、`npx markdownlint-cli2` は指摘 0 件でした。
+- 共通登場人物の人物名が本文にないことも確かめました。
+- 親 runner が流す検査（`npm run lint:md` など）は実行していません。
+
+**主な変更**
+- **章構成**: rulebook どおりの全 12 章にしました。章が足りないこと（F015）、章番号のずれ（F016〜F018）、型との不整合（F019・F022）を直しています。
+- **frontmatter と冒頭**: `rulebook` の参照を `specdojo:opd-index-rulebook` に直しました（F020）。本文冒頭の「参照:」行は消しました（F011）。
+- **SLO・SLA・KPI**: 監視SaaS・APM 前提の行をやめました。KPI は共通の期待効果（記録の継続 90%・つけ残高の確認 1 分・欠品 50% 減）を使い、区分の列を足しました。SLA は対象外とし、未達の月の報告先と課題登録も書きました（F001・F005・F006・F010・F021）。
+- **体制**: RACI を Role code（`PO`・`OPS`・`DEV`）と店番担当で書きました。当番と、優先度ごとの連絡先・期限も表にしています（F008・F014・F023）。
+- **新しく書いた運用方針**:
+  - 監視の閾値と通知先、障害時の紙の販売控えへの切替と転記
+  - 変更の承認者とロールバックの条件、バックアップ方針
+  - 権限の棚卸しと監査ログ、定期運用、問い合わせの分類と応答目標（F009・F012・F013・F025）
+- **未決事項**: 概要に未決事項の表を置き、判断者と決まるまでの扱いを書きました（F002・F024）。
+- **範囲と依存**: 対象・対象外・営業時間（10:00〜18:00）・前提の外部要素を書き、上位の nfr sample への依存も示しました（F003・F004・F007）。
+- PJR-76N9 に従い、この文書を作る・確かめる・承認する役割の割り当ては書いていません。
+
+**決めていただくこと**（`_UNDECIDED_` のまま残しました）
+- オフライン時の記録方法
+- 営業時間内の稼働率の目標
+- RTO/RPO とバックアップの保管期間
+- 営業時間外の緊急連絡手段
+
+**仮置きした値**（既存の sample にない値で、決める段で見直しが要ります）
+- P1 の連絡期限 15 分、紙の控えへの切替判断 30 分
+- 監査ログの保管 1 年
+- 死活監視の閾値 5 分
+- 問い合わせの応答目標
+
+**残る課題**（隣の文書の申し送りです）
+- **rulebook**: 記述ガイドの良い例が「監視の稼働率集計」「Ops Lead へ連絡」と SaaS 前提の書き方です。Role code に揃える変更案を出します。
+- **隣の sample**: 監視・障害対応・権限の分冊と `opr-index-sample` が、まだ SaaS 前提で古い本文構成のままです。そのため本書の導線の表では、分冊をリンクにせず「予定」としています。
+- **上位の nfr sample**: 可用性と運用に目標値がないため、`based_on` はつないでいません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-index-sample.md を opd-index-rulebook の全 12 章に沿って、駄菓子屋きぬやの文脈と Role code で書き直し、grade の指摘 F001〜F025 に対応した。prettier と markdownlint は通過。","handoff":["`PO` が決める未決事項（`_UNDECIDED_` のまま残した値）: オフライン時の記録方法、営業時間内の稼働率の目標、RTO/RPO とバックアップの保管期間、営業時間外の緊急連絡手段。","既存の sample にない値を仮置きした: P1 の連絡期限 15 分と紙の控えへの切替判断 30 分、監査ログの保管 1 年、死活監視の閾値 5 分、問い合わせの応答目標。上位の nfr が決まる段で見直しが要る。","rulebook の変更案: `opd-index-rulebook` の記述ガイドの良い例（「監視の稼働率集計」「Ops Lead へ連絡」）が SaaS 前提の書き方で、sample-authoring-standard の Role code 規約と食い違う。Role code（`OPS` など）の例に置き換える。","隣の sample の申し送り: `opd-monitoring-sample`・`opd-incident-management-sample`・`opd-access-control-sample`・`opr-index-sample` は SaaS 前提の題材（Ops Lead、#ops、API 5xx など）と、本文冒頭の「参照:」行が残っている。本書の導線の表では、これらの分冊を「予定」として id で仮置きした。","上位の `nfr-availability-sample`・`nfr-operations-sample` は目標値のない最小例なので `based_on` はつながず、本文の参照にとどめた。nfr が厚くなったら `based_on` と `_UNDECIDED_` の値を揃える。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opd-index-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opd-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していないため"}]}
+</specdojo_executor_evidence>

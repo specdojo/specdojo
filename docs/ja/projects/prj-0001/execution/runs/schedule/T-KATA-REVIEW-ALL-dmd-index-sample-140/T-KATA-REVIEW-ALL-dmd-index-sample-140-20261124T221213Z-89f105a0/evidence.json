@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-dmd-index-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-dmd-index-sample-140-20261124T221213Z-89f105a0",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T22:12:56.212Z",
+    "completed_at": "2026-11-24T22:15:53.475Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/dmd-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/dmd-index-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため、executor では実行していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:dmd-index-sample\n  type: data\n  status: draft\n  rulebook: specdojo:dmd-index-rulebook\n---\n\n# データ移行設計（全体構成）: 駄菓子屋きぬや 販売管理システム\n\n## 1. 概要（index）\n\n商品ノートと常連客ノートの記録を転記用の表へ書き写し、店頭タブレットの販売管理システムへ取り込む。本書は、取り込み直しても同じ結果になる手順と、元ノートと一致したことを示す照合の方法を定める。範囲は `mip-index` が移行対象とした商品台帳・現在庫・顧客台帳とつけ残高である。対象ごとの書き写し方と取り込みの詳細は、対象別のデータ移行設計（Data Migration Design: DMD）`dmd-<term>` に置く。\n\n## 2. 共通方針（抽出/変換/除外/冪等性\n… output omitted …\ndit-data` | データ「顧客台帳とつけ残高」を受ける。顧客ごとの残高だけを移す |\n| 非対象 | 過去の販売ノート | 販売ノート → - | - | - | - | 紙のまま保管し、問い合わせ時に参照する |\n| 非対象 | 仕入ノート | 仕入ノート → - | - | - | - | 仕入先との連携が初期リリースの対象外で、移行先に記録先がない |\n| 非対象 | つけ販売の明細 | 常連客ノート（つけ欄の明細） → - | - | - | - | 移行後の請求には残高だけを使うため。明細はノートで参照する |\n\n## 6. 関連ドキュメント（必須）\n\n- `dmd-item-data`: 商品台帳の書き写し方と取り込み\n- `dmd-stock-data`: 最終棚卸の記入表から在庫への取り込み\n- `dmd-credit-data`: 顧客台帳とつけ残高の書き写し方と取り込み\n- `mip-index`: 移行計画（移行対象、成功条件と判定者、業務停止時間）\n- `mtp-index`: 移行リハーサル計画（作業時間の測定と照合の合否の確かめ方）"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6860 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6860 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dmd-index-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1703}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  07:19:35\n   Duration  2.68s (transform 7.74s, setup 860ms, import 10.13s, tests 5.83s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dmd-index-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dmd-index-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4 正しさ: dmd-index-sample の事実を rulebook・schema・関連 sample と突き合わせ、2 件の誤り（`run_id` の `<term>` を論理名と呼んでいた点、照合表の保管期間まで mip-index が委ねたと読める点）を直した。合否の判定者（サンプル照合の判定者が mip-index にない）と F001 は R5 へ引き継いだ。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4-1: R4 / 3. `run_id` 規約（命名/採番/記録/参照方法） / `<term>` を「対象の論理名」としていたが、dmd-rulebook では論理名キーは `credit-data` の形で、本書の対象一覧でも論理名は「商品台帳」などの日本語名である。`item`・`stock`・`credit` は論理名ではない / 「対象の略号」に直した / vp-arc-technical-constraints（正本: docs/ja/specdojo/rulebooks/dmd-rulebook.md のファイル名の項、docs/ja/specdojo/samples/dmd-sample.md の `DMD-20261207-credit-01`） / -",
+    "R4-2: R4 / 4. 検証の共通方針（種別/基準/証跡/保管） / 保管期間の `_UNDECIDED_` が、照合表と旧ノートの両方を `mip-index` が委ねた値と読めた。mip-index-sample が dmd-index に委ねているのは旧ノートの保管期間だけである / 「旧ノートの保管期間は `mip-index` が本書に委ねた値である。」に限定した / vp-qe-verifiability（正本: docs/ja/specdojo/samples/mip-index-sample.md の移行後ハイパーケア方針の「旧ノート」の行） / -",
+    "R4-3: R4 / 4. 検証の共通方針（種別/基準/証跡/保管） / 「合否の判定は `mip-index` の成功条件に定めた判定者が決める」とあるが、mip-index-sample の受入基準にサンプル照合に当たる項目がなく、判定者が決まっていない。件数照合は開発担当、重要値照合（つけ残高・在庫数）は店主代表と確かめられた / -（判定者を新しく決める業務上の判断と F001 の Role code 併記が重なるため、R5 で一緒に扱う） / vp-qe-verifiability。直す案: 種別ごとに判定者（件数照合は開発担当（DEV）、重要値照合は店主代表（PO）、サンプル照合はどちらが判定するかを決めて書く）を併記する。直さなかったのは、根拠のない判定者を R4 で決めないため / 要判断",
+    "R4-4: R4 / 4. 検証の共通方針（種別/基準/証跡/保管） / 別の kata の食い違い: dmd-sample のサンプル照合は、氏名の全角・半角の違いを「`dmd-index` の許容差」としている。dmd-index が許容差として認めるのは商品名の表記ゆれだけである / -（直す対象は dmd-sample） / vp-qe-verifiability。直す案: R5 で dmd-index に顧客の氏名の表記ゆれを許容差として足すか、dmd-sample の許容差の根拠を dmd-sample 自身に書き換える / 要判断",
+    "R4 確かめの表（reporter が指摘の表の後に置く）: No / 主張 / 正本 / 確かめ方 / 結果 / 根拠 — C1 / frontmatter の `type: data`・`rulebook: specdojo:dmd-index-rulebook` / docs/ja/specdojo/rulebooks/dmd-index-rulebook.md の推奨 Frontmatter 項目、docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml / 読み取り / 一致 / rulebook が `specdojo.type: data` を指定し、schema の type の列挙に `data` がある。rulebook の `sample` も specdojo:dmd-index-sample",
+    "C2 / 章の構成（6 章の順序） / dmd-index-rulebook の本文要件 / 読み取り / 一致 / 見出し 6 つが本文要件の表と同じ順・同じ名前",
+    "C3 / `run_id` の命名 `DMD-YYYYMMDD-<term>-NN` と当日内連番 / dmd-index-rulebook の記述ガイドの `run_id` 規約 / 読み取り / 一致 / 良い例が `DMD-YYYYMMDD-<term>-NN`（当日内連番）",
+    "C4 / `<term>` の値 `item`・`stock`・`credit` / docs/ja/specdojo/samples/dmd-sample.md / grep で読み取り / 一致（呼び方だけ直した） / dmd-sample の識別キーが `DMD-20261207-credit-01`",
+    "C5 / 記録先 `migration/<run_id>/` と照合表の名前 `<run_id>-check-count`・`-sample`・`-value` / docs/ja/specdojo/samples/mtp-sample.md、dmd-sample.md、cop-sample.md / grep で読み取り / 一致 / mtp-sample の証跡の行、dmd-sample のログ保存先の行",
+    "C6 / 対応DMD の ID `dmd-item-data`・`dmd-stock-data`・`dmd-credit-data` / dmd-rulebook のファイル名の項（`dmd-<term>`、例 `order-data`）、cop-sample / 読み取り / 一致（`dmd-credit-data` は cop-sample・mtp-sample と同じ。item・stock の個別 sample はなく確かめられない） / dmd-rulebook が `<term>` を kebab-case の論理名キーとしている",
+    "C7 / 対象・非対象が mip-index の移行対象一覧の「データ」「非対象」の行を受ける / docs/ja/specdojo/samples/mip-index-sample.md の移行対象一覧 / 読み取り / 一致 / データ 3 行と、非対象のうちデータの行（過去の販売ノート・仕入ノート・つけ販売の明細）が一致する。仕入先との連携・会計処理はデータではないため載せていない",
+    "C8 / 担当 `DEV` が Role code である / docs/ja/specdojo/standards/people-and-organization-definition-standard.md、dmd-index-rulebook の対象一覧 / 読み取り / 一致 / Role の表に `DEV`",
+    "C9 / 取り込み直しは切替日の正午の開店前に限る / mip-index-sample の前提・制約とカットオーバー概要 / 読み取り / 一致 / 正午に開店し、取り込みは午前の休業中だけ",
+    "C10 / 合否の判定者は mip-index の成功条件に定めた判定者 / mip-index-sample の項目ごとの受入基準 / 読み取り / 一部不一致 / 件数の一致は開発担当、つけ残高・在庫数は店主代表。サンプル照合に当たる項目はない（R4-3）",
+    "C11 / 保管期間を mip-index が本書に委ねた / mip-index-sample の移行後ハイパーケア方針 / 読み取り / 不一致（直した） / 委ねたのは旧ノートの保管期間だけ（R4-2）",
+    "C12 / 商品名の表記ゆれだけを許容差とする / 同じ系列の dmd-sample / 読み取り / 不一致（相手側） / dmd-sample が氏名の表記ゆれを dmd-index の許容差としている（R4-4）",
+    "C13 / 抽出・変換・除外・冪等性・ログの方針と駄菓子屋の業務の値 / 正本なし（共通サンプル文脈の仮定） / sample-authoring-standard の共通サンプル文脈と食い違わないかを読み取り / 確かめの対象外 / 業務の仮定で、共通サンプル文脈と矛盾しない",
+    "F001（source=grade、`vp-ba-stakeholder-clarity`、判定者の Role code 併記）は R4 の観点（`vp-arc-technical-constraints`・`vp-dev-implementation-readiness`・`vp-dev-testability`・`vp-qe-verifiability`）に当たらないため直していない。R1〜R3 と同じく R5 へ引き継ぐ。R4-3 と同じ箇所なので一緒に判断する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-dmd-index-sample-140/T-KATA-REVIEW-ALL-dmd-index-sample-140-20261124T221213Z-89f105a0/executor.log",
+      "bytes": 9119,
+      "truncated": false
+    }
+  ]
+}

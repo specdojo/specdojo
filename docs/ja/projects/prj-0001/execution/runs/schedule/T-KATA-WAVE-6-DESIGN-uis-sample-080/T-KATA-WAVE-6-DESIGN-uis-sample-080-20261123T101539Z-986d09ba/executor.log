@@ -1,0 +1,8 @@
+`docs/ja/specdojo/samples/uis-sample.md` の冗長な 1 文を削りました。ほかの候補は意味を変えるため残しました。親 runner の検査（`npm run lint:md` など）は、私は実行していません。
+
+- **削った箇所:** 「2. 対象ユーザー/利用目的」末尾の「画面を操作するのは店員・店主で、来店客には担当者が合計請求金額と釣銭を伝える。」です。直前の表が、操作者と、請求額と預かり金を照合して釣銭を渡す場面をすでに述べています。
+- **残した箇所:** 「4.1. 状態と操作可否」の「認証失効・権限不足時は『再ログイン』だけを許す」を残しました。状態表の「登録中」行だけでは、この例外を読み取れないためです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"uis-sample.md の冗長な1文を削除。他は意味維持のため保持。","handoff":[],"condense_records":[{"location":"2. 対象ユーザー/利用目的 末尾の段落","category":"table-prose","action":"delete","reason":"直前の表が操作者と、請求額・預かり金の照合と釣銭の受け渡しをすでに述べているため、表と本文の二重の説明として削除した。意味と必須情報は維持される。","cause":{"type":"document"}},{"location":"4.1. 状態と操作可否 直下の段落（認証失効・権限不足時は「再ログイン」だけを許す）","category":"table-prose","action":"retain","reason":"状態表の「登録中」行だけでは読み取れない例外の規定であり、判断に要るため保持した。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>

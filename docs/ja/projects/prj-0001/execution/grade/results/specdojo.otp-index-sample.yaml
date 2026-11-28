@@ -4,11 +4,11 @@ document: specdojo:otp-index-sample
 path: docs/ja/specdojo/samples/otp-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-10-16T20:32:35.720Z"
-graded_by: agy-expert-executor
-content_hash: bfd9a8ab7c0feafc1874886d34e823da3a7c43329ebd6c617adce192644a61b0
+verdict: pass
+score: 97
+graded_at: "2026-11-23T10:00:02.565Z"
+graded_by: sonnet-review-executor
+content_hash: 39e5ef3b56c3fdd4113508fff5f78a79f24e6cf7badf172d0dd708b6ff89bf9e
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,49 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 4
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用切替計画（ハイパーケア含む） サンプル"
-    message: Frontmatter に必須項目である `title` が定義されていない。
-    message_ja: Frontmatter に必須項目である `title` が定義されていない。
-  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 15
-    anchor: "- バックアップ: 夜間フル、日中差分（保持30日）"
-    message: 「3. バックアップ/リストア」において、記述ガイド 6.3 で求められている「保管先」の明記が不足している。
-    message_ja: 「3. バックアップ/リストア」において、記述ガイド 6.3 で求められている「保管先」の明記が不足している。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 20
-    anchor: "- 移行タイミング: 切替前日 20:00"
-    message: 「4. 権限/アカウント移行」において、記述ガイド 6.4 で求められている「旧/新の拳限差分」の明記が不足している。
-    message_ja: 「4. 権限/アカウント移行」において、記述ガイド 6.4 で求められている「旧/新の拳限差分」の明記が不足している。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 31
-    anchor: "- 受付: #support（09:00-18:00）"
-    message: 「6. 問合せ窓口/一次対応」において、記述ガイド 6.6 で求められている「エスカレーション条件」の明記が不足している。
-    message_ja: 「6. 問合せ窓口/一次対応」において、記述ガイド 6.6 で求められている「エスカレーション条件」の明記が不足している。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 51
-    anchor: "- 重大障害0件が30日継続"
-    message: 「10. 移行完了後のクローズ条件」において、記述ガイド 6.10 で求められている「クローズ判断者」および「最終報告物」の明記が不足している。
-    message_ja: 「10. 移行完了後のクローズ条件」において、記述ガイド 6.10 で求められている「クローズ判断者」および「最終報告物」の明記が不足している。
-  - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用切替計画（ハイパーケア含む） サンプル"
-    message: Frontmatter の `type` が `project` となっており、ルールブックで指定された `migration` と矛盾している。
-    message_ja: Frontmatter の `type` が `project` となっており、ルールブックで指定された `migration` と矛盾している。
+    line: 100
+    anchor: "## 11. 関連ドキュメント（必須）"
+    message: 「5. 運用手順の変更点」の参照列にある `opr-sales` などの分冊が「関連ドキュメント」に導線として挙がっておらず、`opr-index` 経由で辿れることも書かれていない。
+    message_ja: 「5. 運用手順の変更点」の参照列にある `opr-sales` などの分冊が「関連ドキュメント」に導線として挙がっておらず、`opr-index` 経由で辿れることも書かれていない。

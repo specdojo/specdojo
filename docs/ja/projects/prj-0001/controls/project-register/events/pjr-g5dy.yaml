@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_44c87e3445254546bd7dd44580af9ac7
+  ts: "2026-11-27T10:33:12Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard の「人の対応が要るもの」の表に内容の列を足す
+    - field: description
+      from: ""
+      to: 表が種別・項目（ID）・次にすることだけで、項目が何かをパッと見て分からないため、個票のタイトルや対象の成果物の名前を出す列を足す
+    - field: input
+      from: ""
+      to: '["利用者（indie）が、dashboard の「人の対応が要るもの」の表に内容が書かれていないため、パッと見て分からないと指摘した（2026-11-27）","表は src/dashboard/dashboard.ts の renderActionRequiredSection が作り、行は aggregateActionRequired が集める。今の列は種別・項目・次にすること"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_b6d1bed5fbd340f99887e795f58f5786
+  ts: "2026-11-27T10:34:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_44c87e3445254546bd7dd44580af9ac7
+- v: 1
+  id: reg_9ae00fab58b84290af9480e28479b1ea
+  ts: "2026-11-27T11:56:48Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b6d1bed5fbd340f99887e795f58f5786
+- v: 1
+  id: reg_8541498cf9234ceebe76bb271361b4a9
+  ts: "2026-11-27T12:03:35Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9ae00fab58b84290af9480e28479b1ea
+- v: 1
+  id: reg_fd254f4877144975bd46d149c382b696
+  ts: "2026-11-27T12:06:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8541498cf9234ceebe76bb271361b4a9
+- v: 1
+  id: reg_09edb262768f4f96bd7f5f3b7c15436b
+  ts: "2026-11-27T12:11:06Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_fd254f4877144975bd46d149c382b696
+- v: 1
+  id: reg_b64ec72777c04eec93a27fef8a3c49f0
+  ts: "2026-11-27T12:18:52Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_09edb262768f4f96bd7f5f3b7c15436b
+- v: 1
+  id: reg_435e6f63d7004f76a1e06688453681c0
+  ts: "2026-11-27T12:22:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の統合後に dashboard build を流し、review・decision の行にタイトル、human・blocked の行に文書の名前が出ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: dashboard の「人の対応が要るもの」の表に「内容」の列を足した。登録簿の項目は個票のタイトル、schedule の task は対象の文書の名前を出す
+  previous_event_id: reg_b64ec72777c04eec93a27fef8a3c49f0

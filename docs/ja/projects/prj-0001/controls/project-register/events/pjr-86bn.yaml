@@ -1,0 +1,159 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0b08e4a4447f440c9b9b05e1f187aec8
+  ts: "2026-11-22T05:42:09Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 第 3 波の itc の型を grade の指摘に沿って直す
+    - field: description
+      from: ""
+      to: 第 3 波の 090 で itc の型（rulebook pass 93（minor 6）、sample needs-work 89（major 2・minor 4））が合格に届かなかったため、grade の指摘を直して評価し直す
+    - field: input
+      from: ""
+      to: '["2026-11-22、T-KATA-WAVE-3-itc-sample-090 の review で、型の評価は rulebook pass 93（minor 6）、sample needs-work 89（major 2・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-rulebook.yaml と specdojo.itc-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_b96338ad2e8b43749387ddf74fad7c23
+  ts: "2026-11-22T06:14:01Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0b08e4a4447f440c9b9b05e1f187aec8
+- v: 1
+  id: reg_5e62e008b9c243e487f5da2adf685f61
+  ts: "2026-11-22T06:16:38Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b96338ad2e8b43749387ddf74fad7c23
+- v: 1
+  id: reg_116e9cafd92248909387a943af03569d
+  ts: "2026-11-22T06:19:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 読むだけの標準のパスが変更の範囲と推定され、並べた項目が順番待ちになったため名前だけにする
+  changes:
+    - field: input
+      from: '["2026-11-22、T-KATA-WAVE-3-itc-sample-090 の review で、型の評価は rulebook pass 93（minor 6）、sample needs-work 89（major 2・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-rulebook.yaml と specdojo.itc-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
+      to: '["2026-11-22、T-KATA-WAVE-3-itc-sample-090 の review で、型の評価は rulebook pass 93（minor 6）、sample needs-work 89（major 2・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-rulebook.yaml と specdojo.itc-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は sample-authoring-standard（sample の記述の標準、読むだけで変えない）に従って残してよい。"]'
+  previous_event_id: reg_5e62e008b9c243e487f5da2adf685f61
+- v: 1
+  id: reg_b858aca18d024b46b0144e3eab7ed712
+  ts: "2026-11-22T07:05:02Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_116e9cafd92248909387a943af03569d
+- v: 1
+  id: reg_2c2d5b0d43234f97ab29e8ba207cb955
+  ts: "2026-11-22T07:07:39Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md-changed"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md-changed"
+  previous_event_id: reg_b858aca18d024b46b0144e3eab7ed712
+- v: 1
+  id: reg_e1366ef8982747bc8489b8bd15d65468
+  ts: "2026-11-22T07:10:09Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md-changed"
+      to: "-"
+  previous_event_id: reg_2c2d5b0d43234f97ab29e8ba207cb955
+- v: 1
+  id: reg_1f33779bb0c6461d9f476f04ac7774d9
+  ts: "2026-11-22T07:10:41Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e1366ef8982747bc8489b8bd15d65468
+- v: 1
+  id: reg_9b3bb4e7c9464c39954e02e0e153eabb
+  ts: "2026-11-22T07:16:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が itc の rulebook と sample だけであること、対応結果、2 回目の後の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: itc の型を 2 回の手直しで grade の指摘に沿って直し、評価し直しで合格の基準を満たした
+  previous_event_id: reg_1f33779bb0c6461d9f476f04ac7774d9

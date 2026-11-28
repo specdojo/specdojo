@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/cxd-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-15T02:01:56.237Z"
-graded_by: sol-review-executor
-content_hash: fd6977cc93800ef7eb1106d30804638dc99c5d09ad4abc854d03177b4bba35ad
+score: 98
+graded_at: "2026-11-23T15:59:45.384Z"
+graded_by: sonnet-review-executor
+content_hash: fb1ebd1cc0e38ccfecc217fda55121b5bf8507bbaa586ef25db13b730d7a39ed
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 65
+    anchor: 次の表は、図中の Person と業務上の利用者区分、CLI との接点を対応させる。
+    message: >-
+      Person 表の列見出しが `cxd-template` の「境界上の接点」と sample・rulebook 6.3.2 の「境界上の接点・確認責務」で一致していません。template から生成した成果物と sample
+      の照合がぶれるため、template 側を rulebook の推奨列に合わせて統一すべきです。
+    message_ja: >-
+      Person 表の列見出しが `cxd-template` の「境界上の接点」と sample・rulebook 6.3.2 の「境界上の接点・確認責務」で一致していません。template から生成した成果物と sample
+      の照合がぶれるため、template 側を rulebook の推奨列に合わせて統一すべきです。

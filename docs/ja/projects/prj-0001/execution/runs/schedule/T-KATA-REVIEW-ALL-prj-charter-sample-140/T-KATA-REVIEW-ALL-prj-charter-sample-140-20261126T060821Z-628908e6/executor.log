@@ -1,0 +1,26 @@
+R4（正しさ）の確かめでは、sample に誤りは見つかりませんでした。`docs/ja/specdojo/samples/prj-charter-sample.md` は編集しておらず、変更したファイルはありません。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: project` と `rulebook` の値 | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、rulebook の「設定内容」 | 読み取り | 一致 | schema の 7 行目に列挙値 `project` があり、rulebook は `type` を `project`、`rulebook` を `specdojo:prj-charter-rulebook` と定める |
+| 2 | wikilink と `based_on` の参照先 10 件 | `docs/ja/specdojo/samples/` 配下の frontmatter | grep で `id` を照合 | 一致 | 10 件の `id` がすべてある |
+| 3 | プロジェクト ID `prj-0001` | 同じ系列の sample（`dct-sample.yaml` など） | grep | 一致 | ほかの sample と同じ ID を使っている |
+| 4 | 初期ステークホルダーの ID 4 件と Role code（`PO`・`DEV`・`-`） | `prj-stakeholder-register-sample.md` | 読み取り | 一致 | 同 sample の 24〜27 行目と同じ |
+| 5 | 品質の合格条件にある「技術・公開」「初期受入」ゲートと、記録先 `execution/reviews/release-1/result.md` | `pm-quality-management-plan-sample.md` | grep | 一致 | 同 sample の 28〜29 行目と 41〜42 行目 |
+| 6 | 各表の列の構成（認可対象、目的、スコープ、権限委譲、GO / Not GO、承認、未決事項） | rulebook の 6.2〜6.9 | 読み取り | 一致 | 列名と必須の判断観点 5 つがそろっている |
+| 7 | GO / Not GO 表に「合格条件」列があること | `prj-charter-template.md` | grep | 一致 | template の 91 行目に合格条件列がある |
+| 8 | 店主代表に留保する判断の項目 | rulebook の 6.6 | 読み取り | 一致 | 予算枠、公開可否、ライセンス、主要スコープ変更、GO / Not GO を明示している |
+
+**grade の finding の扱い**
+
+- **F001・F002**（`vp-pm-plan-feasibility`・`vp-pm-control-reporting`）: kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点のため、直していません。
+- **F003**（template に合格条件列がない）: template の 91 行目に合格条件列があり、すでに解消していました。
+- **F004**（「店主」の表記ゆれ）: 63 行目はすでに「店主代表に示す」になっており、解消していました。
+
+検査は、指定された検査を親 runner が実行するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で prj-charter-sample の事実 8 件を schema・rulebook・template・参照先 sample と突き合わせ、すべて一致したため sample は変更しない。F003・F004 は既に解消済み、F001・F002 は kata の段で使わない観点のため扱わない。","handoff":["R4-1: R4 / 全体（frontmatter・wikilink・ID・パス） / 確かめの表: (1) frontmatter `type: project`・`rulebook` — 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml と rulebook「設定内容」 — 読み取り — 一致（schema 7 行目に列挙値 project）; (2) wikilink と `based_on` の参照先 10 件 — 正本 docs/ja/specdojo/samples 配下の frontmatter — grep で `id` を照合 — 一致（10 件すべてある）; (3) プロジェクト ID `prj-0001` — 正本 dct-sample.yaml などの同系列 sample — grep — 一致; (4) STH-SHOP-OWNER・STH-DEVELOPER・STH-TECH-MENTOR・STH-FAMILY-USER と Role code PO・DEV・- — 正本 prj-stakeholder-register-sample.md — 読み取り — 一致（24〜27 行目）; (5) 品質ゲート「技術・公開」「初期受入」と記録先 `execution/reviews/release-1/result.md` — 正本 pm-quality-management-plan-sample.md — grep — 一致（28〜29・41〜42 行目）; (6) 各表の列の構成と GO / Not GO の判断観点 5 つ — 正本 prj-charter-rulebook.md 6.2〜6.9 — 読み取り — 一致; (7) GO / Not GO 表の合格条件列 — 正本 prj-charter-template.md — grep — 一致（91 行目）; (8) 店主代表に留保する判断 — 正本 rulebook 6.6 — 読み取り — 一致。誤りがないため sample を変更しない / 直した案: - / 根拠: vp-arc-technical-constraints、vp-qe-verifiability / 印: -","R4-2: R4 / 7. 本格実行開始の GO / Not GO 判断 / grade F003（template に合格条件列がない）は、template の 91 行目に合格条件列があり、すでに解消している / 直した案: - / 根拠: prj-charter-template.md 91 行目、rulebook 6.8 / 印: -","R4-3: R4 / 4. 初期ステークホルダー / grade F004（「店主」の表記ゆれ）は、63 行目がすでに「店主代表に示す」になっており、解消している / 直した案: - / 根拠: sample 63 行目 / 印: -","R4-4: R4 / 9. 未決事項 / grade F001（担当の列がない）と F002（引き継ぎ先の記録がない）は、kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点（`vp-pm-plan-feasibility`・`vp-pm-control-reporting`）のため扱わない。rulebook 6.9 は未決事項の列を論点・影響・当面の扱いと定めており、sample はこれに合っている / 直した案: - / 根拠: kata-guide「kata の観点の組」、rulebook 6.9 / 印: -"],"validations":[]}
+</specdojo_executor_evidence>

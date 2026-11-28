@@ -1,0 +1,29 @@
+判定は `incomplete` です。sample の評価結果は最新ですが `needs-work` で、この schedule の規則では完了扱いにできません。成果物と result は変更していません。
+
+**評価結果の鮮度**
+- sample と rulebook の両方で、`npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` の出力は空で、終了コードは 0 でした。
+- verdict を決める直前に `--changed-only` をもう一度実行し、同じく出力は空でした。review 中に成果物は変わっていません。
+
+**評価結果**
+- sample（`docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-sample.yaml`）: `verdict: needs-work`、`score: 96`、指摘は major 1 件・minor 1 件です。
+- rulebook: `verdict: pass`、`score: 98`、指摘は minor 1 件です。
+
+**判断根拠**
+- plan の追加完了条件は「型すべてに最新の `--target kata` の `pass` が必要。`needs-work` は `incomplete`」です。sample が `needs-work` なので、この条件を満たしていません。
+- F002（major）: sample の「環境/データ/外部依存」章の前提表に、解消していない `_ASSUMPTION_` が 2 件残っています（取消の期待結果、レシートへの取引番号の印字）。完了を妨げる指摘です。
+- F001（minor）: sample の概要が引く分割基準から「金額の提示」が抜けています。atc-index-sample の 62 行目は「商品の登録→金額の提示→会計確定→レシートの受け渡し」です。
+- 直前の edit タスク（080、condense）の result は `status: complete` でした。変更は sample の重複説明 2 箇所の削除だけで、F001・F002 は扱っていません。
+
+**改善指示**
+1. F002: 前提 2 件を解消して `_ASSUMPTION_` を外します。解消できない場合は、型として残してよい条件を rulebook に書き、そのうえで再評価します。
+2. F001: 概要の分割基準に「金額の提示」を加えて正本に揃えるか、引用をやめて参照だけにします。
+3. rulebook の F001（minor）: sample の観点 6.2「主要操作の自力完了」を、rulebook の命名規則（名詞＋成立/保証/整合）に揃えます。
+4. 直したあと、sample を `--target kata` で評価し直します。
+
+**確認できなかった範囲**
+- `done_criteria`（DC-001〜DC-005）の個別の判定は評価結果の視点別スコアに任せ、review では照合し直していません。
+- `prj-overview` と bac-sample は読んでいません（評価済みの範囲のため）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: incomplete。sample（atc-sample）と rulebook（atc-rulebook）の `--target kata` の評価結果は、`--changed-only` / `--incomplete` の出力が空で最新、verdict 直前の再確認でも空（review 中の変更なし）。rulebook は pass（score 98、minor 1）。sample は needs-work（score 96、major 1 / minor 1）で、plan の追加完了条件『型すべてに最新の kata pass が必要。needs-work は incomplete』を満たさない。F002（major、vp-ops-release-readiness）: 「環境/データ/外部依存」章の前提表に解消していない _ASSUMPTION_ が 2 件（確定前の取消の期待結果、レシートへの取引番号の印字）残り、完了を妨げる。F001（minor）: 概要が引く atc-index の分割基準から『金額の提示』が抜けている（atc-index-sample の 62 行目は『商品の登録→金額の提示→会計確定→レシートの受け渡し』）。直前の edit タスク（T-KATA-WAVE-3-atc-sample-080、condense）の result は `status: complete` で、変更は sample の重複説明 2 箇所の削除だけ。F001・F002 は扱っていない。確認できなかった範囲: `done_criteria`（DC-001〜DC-005）の個別の判定は評価結果の視点別スコアに任せ、review では照合し直していない。`prj-overview` と bac-sample は評価済みの範囲のため読んでいない。","handoff":["F002（major）: atc-sample の前提表に残る _ASSUMPTION_ 2 件を、PO・DEV の判断で解消するか、残してよい条件を atc-rulebook に書いてから kata の再評価を行う。","F001（minor）: atc-sample の概要が引く分割基準に『金額の提示』を加えて atc-index-sample に揃えるか、引用をやめて参照だけにする。","atc-rulebook の F001（minor）: sample の観点 6.2『主要操作の自力完了』を rulebook の命名規則（名詞＋成立/保証/整合）に揃えるか、例外の条件を rulebook に書く。","修正後、atc-sample を --target kata で再評価し、pass を得てから review をやり直す。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-sample.md --changed-only","status":"passed","summary":"出力なし（exit 0）。評価結果は最新。verdict 直前の再確認でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-sample.md --incomplete","status":"passed","summary":"出力なし（exit 0）。評価パイプラインは完了済み"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/atc-rulebook.md --changed-only","status":"passed","summary":"出力なし（exit 0）。評価結果は最新。verdict 直前の再確認でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/atc-rulebook.md --incomplete","status":"passed","summary":"出力なし（exit 0）"}]}
+</specdojo_executor_evidence>

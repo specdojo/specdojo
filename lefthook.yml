@@ -8,6 +8,12 @@ pre-commit:
     git-lock-warning:
       run: "[ -f dist/specdojo.js ] && node dist/specdojo.js git --project prj-0001 --warn-unlocked || true"
 
+    # register_sync を有効にしたため、develop などで個票・イベントを直接変える commit を止める。
+    # 登録簿の専用ブランチの上では通す。hook の入口を devDependency に頼らせないため dist を使い、無ければ何もしない。
+    register-branch-guard:
+      glob: "docs/ja/projects/prj-0001/{controls/project-register,execution/exec/events}/**"
+      run: "[ ! -f dist/specdojo.js ] || node dist/specdojo.js register branch-guard --project prj-0001 --staged"
+
     # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
     # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
     # フルビルドの検証は CI 側で実行する想定。
@@ -31,7 +37,7 @@ pre-commit:
     # 比較して通り、整形後の SSOT との差分が commit へ入る」順序事故が起きるからである。
     # 生成は冪等で、prettier が整形しない .toml 側のずれもここで吸収する。
     orchestrator-sync:
-      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*,templates/antigravity/orchestrator.md}"
+      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*,.agents/skills/specdojo-exec-in-session/SKILL.md,.claude/skills/specdojo-exec-in-session/SKILL.md,templates/agent-skills/**,templates/claude/skills/**}"
       run: npm run orchestrator:sync
       stage_fixed: true
 
@@ -85,9 +91,10 @@ commit-msg:
 pre-push:
   commands:
     # use_stdin のコマンドが複数あると標準入力は 1 つにしか渡らないため、main の保護と
-    # 実行記録の配置の検査（PJR-1ZQK、CI の Check execution record layout と同じ）を 1 つにまとめる。
+    # 実行記録の配置の検査（PJR-1ZQK、CI の Check execution record layout と同じ）と、register のブランチへの
+    # push の検査（PJR-FBP0、CI の Check register branch push と同じ）を 1 つにまとめる。
     protect-main:
-      run: input="$(cat)"; printf '%s\n' "$input" | node tools/protect-main-push.mjs && printf '%s\n' "$input" | node tools/check-run-record-layout-push.mjs --project prj-0001
+      run: input="$(cat)"; printf '%s\n' "$input" | node tools/protect-main-push.mjs && printf '%s\n' "$input" | node tools/check-run-record-layout-push.mjs --project prj-0001 && printf '%s\n' "$input" | node tools/check-register-push.mjs --project prj-0001
       use_stdin: true
 
 # specdojo の bin は dist/specdojo.js を指すため、merge / checkout で src が更新された

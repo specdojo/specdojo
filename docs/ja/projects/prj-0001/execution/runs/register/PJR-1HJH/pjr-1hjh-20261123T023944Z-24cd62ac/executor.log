@@ -1,0 +1,23 @@
+Claude の edit executor の既定の設定に、作業場所を保つ設定と git の許可を足しました。関連する 4 つのテストファイル（142 件）は通っています。`npx tsc -b` と `npx vitest run tests/src/exec tests/src/shared tests/src/commands/init.test.ts` を並べて流した 1 回目は、120 秒で打ち切られて結果を見ていません。型検査（`npm run typecheck`）は未確認で、親 runner の検証で確かめられます。
+
+変更したのは配布の `templates/claude/settings.edit.json` です。
+
+- **作業場所:** `env` に `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1` を入れました。executor が `cd` したあとも、Bash の作業場所は project の worktree に戻ります。
+- **git の許可:** 読み取りの `git status`・`git diff`・`git log`・`git show`・`git grep` と、差分に残る `git rm`・`git mv` を allow しました。
+- **git の拒否:** `git rm` の `-r`・`-f`・`--force`・`--cached` と、`git mv` の `-f`・`--force` を deny しました。`git push` と `gh` は従来どおり deny で、`git reset`・`git checkout`・`git commit`・`rm` は allow にないので拒まれます。
+- **テストと文書:** `tests/src/exec/agent-config-allow-commands.test.ts` と `tests/src/shared/provider-scaffold.test.ts` を更新し、`exec-config-guide.md` の claude の edit executor の節に作業場所と許可コマンドを書きました。
+- **個票:** 対応結果に決定、変更ファイル、申し送り、「CHANGELOG に書く事項」（区分 Fixed と文案）を書きました。
+
+`CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR` の効果は、個票にある利用側（Linux の devcontainer）での確認に基づいています。この run では実機の executor で確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"配布の settings.edit.json に CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR と git の読み取り・git rm・git mv の許可を追加し、git rm -r/-f/--force/--cached と git mv -f/--force を deny した。テストとガイドを更新し、個票の対応結果に決定・申し送り・CHANGELOG 文案を記入した。","handoff":["prj-0001 自身の .specdojo/claude/settings.edit.json は未変更。統合後に利用者の承認のもとでオーケストレーターが feature ブランチで同じ env・allow・deny を反映する。","CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR の効果は個票の利用側確認（Linux の devcontainer）に基づく。この run では実機の executor で再確認していない。","CHANGELOG.md は未変更。個票の対応結果に「CHANGELOG に書く事項」（区分 Fixed と文案）を記載した。"],"validations":[{"command":"npx vitest run tests/src/exec/agent-config-allow-commands.test.ts tests/src/shared/provider-scaffold.test.ts tests/src/exec/agent-protected-config.test.ts tests/src/commands/init.test.ts","status":"passed","summary":"4 ファイル 142 件が成功"},{"command":"npx prettier --write templates/claude/settings.edit.json tests/src/exec/agent-config-allow-commands.test.ts tests/src/shared/provider-scaffold.test.ts docs/ja/specdojo/guides/exec-config-guide.md","status":"passed","summary":"対象ファイルを整形した"},{"command":"npx tsc -b","status":"not_run","summary":"並列実行がタイムアウトでバックグラウンド化され、結果を確認していない。親 runner の typecheck に委ねる"}]}
+</specdojo_executor_evidence>
+
+バックグラウンドで流していた広い範囲のテストは、144 ファイル 2471 件がすべて通りました。続けて流した `npx tsc -b` も出力なしの終了コード 0 で、型エラーはありませんでした。
+
+前の報告では `npx tsc -b` を `not_run` としていました。実際には実行済みで、通っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"配布の settings.edit.json に CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR と git の読み取り・git rm・git mv の許可を追加し、git rm -r/-f/--force/--cached と git mv -f/--force を deny した。テストとガイドを更新し、個票の対応結果に決定・申し送り・CHANGELOG 文案を記入した。","handoff":["prj-0001 自身の .specdojo/claude/settings.edit.json は未変更。統合後に利用者の承認のもとでオーケストレーターが feature ブランチで同じ env・allow・deny を反映する。","CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR の効果は個票の利用側確認（Linux の devcontainer）に基づく。この run では実機の executor で再確認していない。","CHANGELOG.md は未変更。個票の対応結果に「CHANGELOG に書く事項」（区分 Fixed と文案）を記載した。"],"validations":[{"command":"npx vitest run tests/src/exec tests/src/shared tests/src/commands/init.test.ts","status":"passed","summary":"144 ファイル 2471 件が成功"},{"command":"npx tsc -b","status":"passed","summary":"型エラーなし（終了コード 0）"},{"command":"npx prettier --write templates/claude/settings.edit.json tests/src/exec/agent-config-allow-commands.test.ts tests/src/shared/provider-scaffold.test.ts docs/ja/specdojo/guides/exec-config-guide.md","status":"passed","summary":"対象ファイルを整形した"}]}
+</specdojo_executor_evidence>

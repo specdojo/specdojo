@@ -1,0 +1,25 @@
+R5（整合）で見つけた食い違いを、`docs/ja/specdojo/samples/ifx-api-sample.yaml` の 4 か所で直しました。相手側の sample を直すべき 1 件は変更せず、直した案として報告に残しています。編集後のファイルは Prettier のチェックと YAML として読めることの確認を通りました。lint などの検査は親 runner が実行します。
+
+**直したこと**
+- **預かり金の扱い（4 行目と `SaleLine.description`）:** 預かり金を「本部が商品マスタから計算する」と書いていました。預かり金・釣銭は店舗端末の記録（`tendered_yen`・`change_yen`）にあり、本部が計算できる値ではありません。「税区分・税額・合計は本部が計算し、預かり金・釣銭は送らない」に分けました。
+- **429 と 500 の応答の再送:** どちらも「同じ取引 ID で送り直す」とあり、自動で再送するように読めました。これは横断方針の sample（`scp-IDM-001`・`scp-RET-001`）とファイル連携の sample の「自動で再送しない、未受付と確かめてから再送する」と食い違います。次のように直しました。
+  - 429：未受付なので自動では送らず、`Retry-After` の秒数が過ぎた後に店番担当の操作で送り直す。
+  - 500：自動では送らない。PO（店主代表）と DEV が照合し、未受付と確かめた場合だけ送り直す。
+
+**食い違いがなかったもの**
+次の点は関連 sample と一致していたので、変えていません。
+- 取引 ID の形式 `TX-YYYYMMDD-NNNN` と最大 16 文字
+- 201 の応答で `sale_id` を保存してから会計を確定する順序
+- 409 を受付済みとして扱うこと
+- 商品データ辞書の sample が `CreateSaleResponse` を参照している点
+- 開発担当の表記（メンバー定義では PM・BA・DEV を兼ねる）
+- 用語集との表記
+
+**相手側を直す案（要判断）**
+外部 I/F 一覧の sample（`ifx-index-sample.yaml`）の 57 行目は「保存失敗後の回復方式が未決」としています。一方この API は 409 で既存の `sale_id` を返すため、ローカルの保存に失敗した後でも、同じ取引 ID で送り直せば回復できます。未決として残るのは受付照会だけです。一覧側の記述をそう狭めるか、回復の手順そのものは未決のまま残すかを決める必要があります。
+
+grade の指摘 F001〜F006 は前の段の版で直っており、この段では繰り返していません。F005（表示用に生成したページが古い）は R5 の観点の外で、ページの作り直しは作業の対象外としました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: ifx-api-sample.yaml を同じ系列の sample・参照先・用語集と突き合わせ、預かり金の扱い（2 か所）と 429・500 の再送の記述（2 か所）を関連 sample に合わせて直した。外部 I/F 一覧側を直す案を 1 件 handoff に残した。","handoff":["No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/ifx-api-sample.yaml 4 行目の `_ASSUMPTION_` と `SaleLine.description` / 指摘: 預かり金を「本部が商品マスタから計算する」と書いていた。ifx-file-sample の `TX-*.json` は預かり金・釣銭（`tendered_yen`・`change_yen`）を店舗側の記録とし、ifx-index-sample の timing でも店番担当が店舗で確かめる値としており、本部が計算できる値ではない / 直した案: 「税区分・税額・合計は送らず本部が計算する。預かり金・釣銭は店舗端末の記録だけに残して送らない」に分けた（反映済み） / 根拠: [[specdojo:ifx-file-sample]] の `TX-YYYYMMDD-NNNN.json` の description と `required_fields`、[[specdojo:ifx-index-sample]] の「本部への売上登録」の timing / 印: 反映済み","No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/ifx-api-sample.yaml の 429 と 500 の応答の description / 指摘: 「同じ取引 ID で送り直す」とだけあり自動で再送するように読めた。sysd-cross-cutting-policy-sample の `scp-IDM-001`（重複排除が保証されても自動再送を追加しない、未受付を確かめた場合だけ同じ取引で再開する）、`scp-RET-001`（会計登録は自動 retry しない）、ifx-file-sample の `_UNDECIDED_`（自動再送せず店頭で保留する）と食い違う / 直した案: 429 は「未受付。自動では送り直さず、`Retry-After` の秒数が過ぎた後に店番担当の操作で同じ取引 ID を送り直す」、500 は「自動では送り直さない。PO（店主代表）と DEV が本部受付とローカル記録を照合し、未受付と確かめた場合だけ同じ取引 ID で送り直す」とした（反映済み） / 根拠: [[specdojo:sysd-cross-cutting-policy-sample]] の `scp-IDM-001`・`scp-RET-001`、[[specdojo:ifx-file-sample]] の 183〜184 行目、[[specdojo:ifx-index-sample]] の error_handling（店主代表と開発担当が照合する） / 印: 反映済み","No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/ifx-index-sample.yaml 57 行目の `_UNDECIDED_`（相手側。変更していない） / 指摘: 一覧側は「結果不明時の受付照会と保存失敗後の回復方式が未決」としている。詳細契約の ifx-api-sample は 409 で既存の `sale_id` を返すため、ローカル保存に失敗した後でも同じ取引 ID の再送で受付済みを回復できる。契約の未決は受付照会だけ（ifx-api-sample 3 行目）で、両者の未決の範囲が食い違う / 直す案: ifx-index-sample の 57 行目を「結果不明時の受付照会が未決（保存失敗後の回復は同契約の 409 による既存 `sale_id` の返却で扱う）」へ狭める。回復の手順（いつ再送してよいか）を未決として残すなら、ifx-api-sample の `_UNDECIDED_` に「保存失敗後の回復手順」を足して両者をそろえる / 根拠: [[specdojo:ifx-api-sample]] の 409 の応答と info.description の冪等性、[[specdojo:ifx-index-sample]] の 57 行目 / 印: 要判断","No: 4 / 段: R5 / 箇所: 確かめて食い違いがなかった項目 / 指摘: 次は食い違いがなく変更していない。取引 ID の形式 `TX-YYYYMMDD-NNNN` と `maxLength: 16`（ifx-file-sample のファイル名と一致）、201 で `sale_id` を保存してから会計を確定する順序（`scp-ERR-001` と一致）、409 を受付済みとして扱うこと（ifx-file-sample の `api_sync_status` が accepted）、bdd-sample の `schema_ref`（`CreateSaleResponse` は存在し `sale_id` と `status: ACCEPTED` が一致）、開発担当の表記（pm-members-sample の developer は PM・BA・DEV を兼ねる）、用語集（取引・冪等などの kata 固有の項目なし）、共通サンプル文脈（単一店舗・現金販売） / 直した案: なし / 根拠: 各 sample の該当箇所と docs/ja/product/010-business-specs/060-glossary/ の grep / 印: なし","grade の指摘 F001〜F006 は前の段の版で解消済み（`_ASSUMPTION_` の分離、Role code、`details` の構造、コメントの重複の削除）で、R5 では繰り返していない。F005（docs/ja/specdojo/samples/generated/ifx-api-sample.md が古い）は R5 の観点の外で、git 管理外の生成物のため作業の対象外とした。yaml-pages で作り直す必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"node -e (yaml.parse で ifx-api-sample.yaml を読む)","status":"passed","summary":"編集後の YAML を読み込め、500 の description が反映されていることを確かめた"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"schema の対象外","reason":"sample の先頭に `specdojo-schema: none reason=external-openapi` の宣言があり、照合する SpecDojo の schema がない"}]}
+</specdojo_executor_evidence>

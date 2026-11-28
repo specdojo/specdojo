@@ -1,0 +1,18 @@
+R2（構成）の確認が終わりました。今の版の構成には直すところがなかったため、sample は変更していません。
+
+**確認したこと**
+- **章の順と見出し:** 1〜7 章の順と見出しは rulebook の本文構成と template に一致します。8 章「Next.js のサーバーとクライアントの境界」は枠組み固有の章で、rulebook は必須章の後ろに 1〜2 章まで足すことを許しています。
+- **表と本文の配置:** 「テストと検証」は前置きの 1 文、コマンドの表、表に収まらないテストの内容、未決事項の順です。コード例はそれぞれの規則のすぐ後にあります。前提から結論の順に読めます。
+- **F001 と F002（`server-only` の重複）:** R1 が直した版（commit `bbad1006a7`）で、該当の文は「DB 接続とつけ残高の更新を行うファイルは、先頭で `server-only` を import する。」に削られています。理由は禁止事項の表だけに残っているので、R2 で手を入れるものは残っていません。
+
+**指摘**
+
+1. No: 1 / 段: R2 / 箇所: 8 章の先頭の項目（旧 93 行目、今の 104 行目）/ 指摘: F001・F002 の重複（`server-only` の規則と禁止事項の表）は R1 の版で解消済み。表に理由、8 章に手順だけが残る / 直した案: なし（今のまま） / 根拠: `cdr-rulebook` の本文要件（「表に書いた禁止は本文の章で繰り返さない」）、commit `bbad1006a7` の差分 / 印: なし
+2. No: 2 / 段: R2 / 箇所: 6 章「テストと検証」の最後の項目（`specdojo catalog validate` と Frontmatter の照合）/ 指摘: 本書を変えたときの検証コマンドが表の外の箇条書きにある。表の 1 行に移すと、カタログとの照合（手で行う確認）が長いセルになり、rulebook のセル内改行を使わない決まりに反するため移していない / 直した案: 今のまま。表に寄せる場合は、コマンド `specdojo catalog validate`、対象「本書の Frontmatter」、実行条件「本書を変更したとき」の行を足し、照合は箇条書きに残す / 根拠: `cdr-rulebook` の「テストと検証の書き方」（表の列と、カタログとの照合を合格条件とする記述）、markdown 記述ルールの表（セル内改行を使わない）/ 印: 要判断
+3. No: 3 / 段: R2 / 箇所: 8 章の位置 / 指摘: 8 章を 2 章「モジュールと import」の近くへ移す案を検討した。rulebook が固有の章を必須章の後ろに置くと決めているため、移さない / 直した案: なし（今のまま） / 根拠: `cdr-rulebook` の本文要件（固有の章は必須章の後ろ）、template の末尾の注記 / 印: なし
+
+検証は親の runner が実行します。変更したファイルがないため、Prettier と markdownlint は当てはまりません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）を確認した。章の順・粒度・表と本文の配置は cdr-rulebook の本文構成と cdr-template に一致し、移動・分割・統合の差分は要らないため sample は変更していない。F001・F002（server-only の重複）は R1 の版（bbad1006a7）で解消済み。","handoff":["No: 1 / 段: R2 / 箇所: docs/ja/specdojo/samples/cdr-sample.md の 8 章「Next.js のサーバーとクライアントの境界」の先頭の項目（旧 93 行目、今の 104 行目） / 指摘: grade の F001（`vp-arc-conciseness`）と F002（`vp-qe-kata-conformance`）が指した、禁止事項の表と 8 章の重複は、R1 の版（commit bbad1006a7）で「クライアントから読み込まれた場合にビルドを失敗させる」が削られて解消している。理由は表だけ、8 章は `server-only` を import する手順だけに残る / 直した案: なし（今のまま） / 根拠: `cdr-rulebook` の本文要件（表に書いた禁止は本文の章で繰り返さない）、commit bbad1006a7 の差分 / 印: なし","No: 2 / 段: R2 / 箇所: docs/ja/specdojo/samples/cdr-sample.md の 6 章「テストと検証」の最後の項目（`specdojo catalog validate` と、`applyTo`・`specdojo.id`・`specdojo.rulebook` のカタログとの照合） / 指摘: 本書を変えたときの検証コマンドがコマンドの表の外にある。照合は手で行う確認で、表の 1 行にまとめるとセルが長くなりセル内改行を使わない決まりに反するため移していない / 直した案: 今のまま。表に寄せる場合は、コマンド `specdojo catalog validate`、対象「本書の Frontmatter」、実行条件「本書を変更したとき」、失敗時「`based_on` の ID を直す」の行を足し、カタログとの照合は箇条書きに残す / 根拠: `cdr-rulebook` の「テストと検証の書き方」（表の列と、カタログとの照合を合格条件とする記述）、.github/instructions/markdown.instructions.md の表の規則 / 印: 要判断","No: 3 / 段: R2 / 箇所: docs/ja/specdojo/samples/cdr-sample.md の 8 章の位置 / 指摘: 8 章を 2 章「モジュールと import」の近くへ移す案を検討した。rulebook が枠組み固有の章を必須章の後ろに置くと決め、template の末尾の注記も同じなので移さない / 直した案: なし（今のまま） / 根拠: `cdr-rulebook` の本文要件（固有の章は必須章の後ろに 1〜2 章まで）、`cdr-template` の末尾の注記 / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdr-sample.md","status":"not_applicable","summary":"変更したファイルがないため実行していない","reason":"Prettier の適用条件（変更した *.md など）を満たすファイルがない"},{"command":"npx markdownlint docs/ja/specdojo/samples/cdr-sample.md","status":"not_applicable","summary":"変更したファイルがないため実行していない","reason":"markdownlint の適用条件（変更した *.md）を満たすファイルがない"}]}
+</specdojo_executor_evidence>

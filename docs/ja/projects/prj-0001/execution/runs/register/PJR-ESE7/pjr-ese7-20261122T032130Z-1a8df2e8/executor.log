@@ -1,0 +1,17 @@
+exec の記帳コマンドの `--by` で、`register` と同じ予約名 3 つ（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けるようにしました。個票の完了条件のうち、統合後にオーケストレーターが行う確認は未実施です。
+
+実行した検査は、対象の 2 テストファイル（129 件）、`npm run typecheck`、`npm run lint:ts`、`npm run lint:md:changed` です。テストと typecheck は通り、`lint:ts` はエラー 0 件・警告 40 件、`lint:md:changed` は出力なしでした。警告には、`specdojo-config.ts` が 1,000 行を超えているという `max-lines` の警告が含まれます。
+
+- **実装**: `src/shared/specdojo-config.ts` に `assertValidExecActor` を追加しました。予約名は名簿に関係なく通し、それ以外は従来の検証に任せます。予約名の一覧は `RESERVED_REGISTER_ACTORS` を使い、別の一覧は作っていません。
+- **切り替え箇所**: `src/exec/core.ts` と `src/exec/commands.ts` の `--by` 検証をこの関数に切り替えました。
+- **grade**: `grade` の `--by` は agent 限定のままです。
+- **予約名の判断**: ほか 2 つ（`SpecDojo`・`night-orchestrator`）も、`register` と揃えるため受け付けます。この理由は個票の対応結果に書きました。
+- **state の組み立て**: `foldEventsToState` は名簿を参照しないため、`exec refresh`・`exec status` に変更は要りません。予約名の `release` イベントがエラーなしで `todo` に戻ることをテストで確認しました。
+- **テスト**: `tests/src/shared/specdojo-config.test.ts` に予約名・名簿の人・未知の名前の 3 件、`tests/src/exec/events.test.ts` に state のテスト 1 件を追加しました。
+- **文書**: `command-reference` の exec の記帳の節と `exec-operation-guide` の blocked 復帰の節に追記しました。
+- **個票**: 作業内容の表を `done` にし、対応結果と `### 5.1. CHANGELOG に書く事項`（区分は Changed）を書きました。`CHANGELOG.md` は変更していません。
+- **`pjr-ese7.yaml`**: `events/pjr-ese7.yaml` が作業ツリーで変更済みになっています。私は編集しておらず、引用符の形式が変わっただけです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"exec の --by が予約名（SpecDojo・specdojo-orchestrator・night-orchestrator）を受け付けるようにした。assertValidExecActor を追加して exec の core・commands に適用し、単体テスト、文書、個票の対応結果と CHANGELOG 文案を更新した。","handoff":["統合後に、オーケストレーターが第 3 波の 090 の 1 件を `exec release --by specdojo-orchestrator` で戻して流し、記帳と run が通ることを確かめる（executor では実行していない）。","`events/pjr-ese7.yaml` は私が編集していないが作業ツリーで変更済み（引用符の形式のみ）。runner 管理のファイルのため、そのまま扱ってよいか確認する。","`src/shared/specdojo-config.ts` は 1,000 行を超えており `max-lines` の警告が出ている（既存の傾向で、今回の追加は 7 行）。"],"validations":[{"command":"npx vitest run tests/src/exec/events.test.ts tests/src/shared/specdojo-config.test.ts","status":"passed","summary":"2 ファイル 129 件が成功"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0 件、警告 40 件"},{"command":"npm run lint:md:changed","status":"passed","summary":"出力なし"}]}
+</specdojo_executor_evidence>

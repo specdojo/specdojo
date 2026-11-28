@@ -1,0 +1,15 @@
+前回の親の検証の `test-unit` で 1 件だけ落ちていたテストを直しました。修正したファイルは単体で実行して 9 件すべて通っています。
+
+- **テストの修正**: `tests/src/cli-verb-taxonomy.test.ts` は、`agent` のサブコマンドに `launch` と `run` があることを期待していました。`agent launch` はこの項目で意図して消したので、期待を `run` だけに直しました。
+- **ほかの残りの確認**: `tests` を grep し、`agent launch` や `antigravity` を前提にしたテストはもう無いと確かめました。まだ一致する箇所は次の 3 種類で、どれも意図して残しています。
+  - agy の member があると名簿の読み込みがエラーになることのテスト
+  - 生成する `post-create.sh` に agy のインストールが入らないことの検査
+  - agy と関係のない track 名の `launch`
+- **個票**: 作業内容の 5 行目のメモと、対応結果の「洗い出しの結果」に、今回の修正と grep の結果を書き足しました。5 行目は `open` のままです。全体の検証は executor の後に runner が実行するため、ここでは結果を確かめられないからです。
+- **整形と静的検査**: 変更した 2 ファイルを `prettier` で整形しました。整形が入ったのは個票だけです。`npm run validate:history-links` も通っています。
+
+schema の 2 ファイルの enum から `antigravity` を外したのは前回の試行で、今回は手を入れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"親の test-unit で落ちた tests/src/cli-verb-taxonomy.test.ts の agent サブコマンドの期待を run だけに直し、単体で通した。tests の grep で agent launch・antigravity を前提にしたテストが残っていないことを確かめ、個票の作業内容と対応結果を更新した。","handoff":["作業内容の 5 行目（検証を通す）は、親の検証の結果を executor が確かめられないため open のまま残した。親の検証が通れば done にする。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/cli-verb-taxonomy.test.ts","status":"passed","summary":"9 件すべて通過"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md tests/src/cli-verb-taxonomy.test.ts","status":"passed","summary":"整形を適用（テストのファイルは変更なし）"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md"},{"target":"docs/specdojo/schemas/v1/agent-members.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/agent-members.schema.yaml"},{"target":"docs/specdojo/schemas/v1/exec-defaults.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/exec-defaults.schema.yaml"}]}
+</specdojo_executor_evidence>

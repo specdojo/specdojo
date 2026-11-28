@@ -1,0 +1,9 @@
+`docs/ja/specdojo/samples/cdr-sample.md` の冗長な 1 行を削りました。lint などの検査は親 runner が実行するため、この executor では何も実行していません。
+
+削ったのは「2. モジュールと import」の最後の箇条書き（`consistent-type-imports` に従う旨）です。「1. 基本方針」に「構文と import の規則は ESLint の設定を正とする」とあり、同じ内容の繰り返しでした。テストと検証の表にも `npm run lint` の対象として型の import が載っています。
+
+ほかの候補は意味を変えずに削れる箇所がなく、すべて残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdr-sample.md の重複 1 行を削除。他の候補は判断情報を含むため保持。","handoff":[],"validations":[],"condense_records":[{"location":"## 2. モジュールと import の最終箇条書き（型の import は consistent-type-imports に従う）","category":"repetition","action":"delete","reason":"「1. 基本方針」の『import の規則は ESLint の設定を正とする』と「6. テストと検証」の lint 行で既に示されており、同じ主張の繰り返しのため。規則の意味は失われない。","cause":{"type":"document"}},{"location":"## 6. テストと検証 の表と、続く箇条書き","category":"table-prose","action":"retain","reason":"表はコマンドと実行条件、箇条書きは境界テストと未決事項で、役割が異なり二重の説明ではない。","cause":{"type":"document"}},{"location":"## 7. 禁止事項 の表","category":"canonical-restatement","action":"retain","reason":"各行は理由付きの禁止事項で、本文の規則と同じ文ではない。rulebook が必須とする表のため残す。","cause":{"type":"document"}},{"location":"冒頭の _ASSUMPTION_ 段落","category":"unneeded-background","action":"retain","reason":"参照先が架空の文書で、CLI 版の設計を根拠にしない旨は、判断に要る前提として必要。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

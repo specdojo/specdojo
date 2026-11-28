@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+# 止まったタスク・register 項目・列を見つけて理由の種類に分け、見張りのイベントの記録と
+# 朝報告に残す（PJR-40EE）。exec-defaults の watch.remedies で選んだ種類だけ再開のコマンドを
+# 切り離して起動する（PJR-3M4M、既定は手を打たない）。実行中の run を待たないよう、exec の実行
+# ロックを取らない specdojo action で 30 分ごとに動かす。
+id: rtn-exec-watch-scan
+name: 止まった実行の見張り
+description: 30 分ごとに止まったものを見つけ、理由の種類・根拠・次にすべきことを見張りの記録と朝報告に残す。exec-defaults の watch.remedies で選んだ手当てだけを打ち、commit はしない。
+# 2026-11-28: indie の依頼で、しばらくすべての routine を止める（codex の週間上限が近いため）。再開は indie の指示による。
+enabled: false
+interval: 30m
+policy:
+  missed_run: skip
+  overlap: skip
+action:
+  kind: specdojo
+  args: [orchestrator, watch-scan]

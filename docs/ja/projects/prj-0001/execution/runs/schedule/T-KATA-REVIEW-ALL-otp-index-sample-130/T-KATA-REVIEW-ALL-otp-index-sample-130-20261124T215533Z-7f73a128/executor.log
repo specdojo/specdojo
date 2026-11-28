@@ -1,0 +1,13 @@
+R3（読みやすさ）の文の直しを `docs/ja/specdojo/samples/otp-index-sample.md` の 6 か所に入れました。変更したのはこの 1 ファイルだけです。直したのは文の形と表記だけで、意味・制約・例外は変えていません。根拠の事実を確かめられなかった 2 件は、直さずに「要判断」の指摘として残しました。
+
+grade の指摘 F001（関連ドキュメントに `opr-sales` などの分冊がない）は、前の段ですでに解消していました。関連ドキュメントの章に 4 冊とも載っています。章の構成に関わる指摘で R3 の担当でもないため、追加の変更はしていません。
+
+指摘の内容は、次の evidence の `handoff` に 1 件ずつ書きました。
+
+検証の結果です。
+- `npx prettier --write` で表の列幅を整え、`npx markdownlint-cli2` は問題 0 件でした。
+- `npm run lint:md` などの検査は、親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として otp-index-sample.md に文の直しを 6 件入れた（長文の分割、主語の補い、表記の統一）。grade の F001 は前の段で解消済み。根拠を確かめられない 2 件は直さずに要判断として handoff に残した。","handoff":["R3-1: R3 / 1. 概要（index） / 冒頭の 1 文が長く、切り替える対象と目指す状態が 1 文に重なっている / 「運用へ切り替えるための共通方針を定める。目指す状態は、店主代表と家族利用者代表がシステムの記録だけで店を回せることである。」の 2 文に分けた / W3 / -","R3-2: R3 / 2. 監視/アラート / 日次締めの差異の行の通知先が「店番が気付き、店主代表」となっていて、主語と述語がねじれている / ほかの行の書き方（「画面の警告表示で店番」）に合わせて「日次締めの画面表示で店番と店主代表」にした / W2、`vp-ux-language-consistency` / -","R3-3: R3 / 3. バックアップ/リストア / リストアの検証の文が長く、戻す主体が「開発担当の検証用端末」の修飾に埋もれている / 「開発担当が前日のバックアップを検証用端末へ戻す。」と合格の条件の文に分けた / W1、W3、W5 / -","R3-4: R3 / 4. 権限/アカウント移行 / 検証方法の最後の文で、合格の条件と直す手順が読点でつながっている / 「…拒否されたら合格とする。1 つでも違えば、正午の開店前に設定を直す。」に分けた / W3 / -","R3-5: R3 / 9. 旧システムの停止/参照方針 / 「問い合わせ」がファイルのほかの箇所と rulebook の表記「問合せ」と違う / 「問合せ」にそろえた / W8、`vp-ux-language-consistency` / -","R3-6: R3 / 10. 移行完了後のクローズ条件 / 最終報告物の文が長く、報告の名前が文の最後まで出てこない / 「最終報告物はハイパーケア終了報告 1 枚とし、…をまとめる。この報告をもって `opr-index` の運用へ引き継ぐ。」に分けた / W3、W5 / -","R3-7: R3 / 2. 監視/アラート / 日次締めの差異の行の初動ルール「差異の理由を日次締め記録へ書く。理由が分からなければ開発担当へ連絡する」の主語が、通知先の店番か店主代表か決まらない / - / W1。要判断の理由: 主語を店主代表と書く根拠が rulebook と関連する sample で確かめられず、事実を足すことになる。選ばなかった案は「店主代表が」を補う案 / 要判断","R3-8: R3 / 4. 権限/アカウント移行 / 移行タイミングの「アカウントを発行する」の主語がない / - / W1。要判断の理由: cop-index-sample は手順 4 で開発担当が権限を確かめるとするだけで、発行する主体を書いていない。選ばなかった案は「開発担当が」を補う案 / 要判断","F001（grade、`vp-qe-omissions-consistency`）は前の段で解消済み: 「関連ドキュメント（必須）」に `opr-sales`・`opr-credit`・`opr-daily-closing`・`opr-shift-handover` が載っている。構成の指摘で R3 の担当でもないため、追加の変更はしていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"表の列幅を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/otp-index-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"*.yaml・*.yml の変更がない"}]}
+</specdojo_executor_evidence>

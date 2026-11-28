@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 1. `docs/ja/specdojo/samples/nfr-usability-sample.md` の鮮度確認\n\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-usability-sample.md --changed-only\n```\n\n- `verdict`: `pass`\n- `score`: 97\n- `finding_counts`: blocker 0 / major 0 / minor 2 / note 0\n\n#### 2. `docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` の鮮度確認\n\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md --changed-only\n```\n\n- `verdict`: `pass`\n- `score`: 98\n- `finding_counts`: blocker 0 / major 0 / minor 2 / note 0",
+  "rationale": [
+    "評価結果の鮮度は、`specdojo grade list --target kata --path ... --changed-only` の実行結果が出力なしであることから、最新であることを確認した。",
+    "`docs/ja/specdojo/samples/nfr-usability-sample.md` において、完了条件 `DC-001`〜`DC-005` は `grade` の結果から充足されていると判断した。指標ごとの `_UNDECIDED_` 化も行われている。",
+    "`docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` においても、`grade` の結果から `DC-001`〜`DC-003` が充足されていることを確認した。",
+    "先行する edit タスクの実行記録および検証結果については、本作業では確認できていない。"
+  ],
+  "improvements": [
+    "`docs/ja/specdojo/samples/nfr-usability-sample.md` の `finding` にある通り、`sac-store-sales` 等の wikilink 形式の不備や、判定者列の Role code 表記の揺れ（`F002`）の修正が必要。",
+    "`docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` の `finding` にある通り、Frontmatter の `recipe` / `template` が `undecided` であることの説明、および `ready` への移行に向けた残作業の記録（`F002`）が必要。"
+  ],
+  "approach": "### approach に応じた確認\n\n- `docs/ja/specdojo/samples/nfr-usability-sample.md` の磨き込み：`grade` の `finding` にある通り、wikilink 形式の不備や Role code の表記揺れが残っているが、plan で求められた成果物の整備（指標の `_UNDECIDED_` 化など）は完了している。",
+- `docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` の磨き込み：`grade` の `finding` にある通り、`recipe` / `template` の `undecided` 状態に関する記述および `ready` への残作業に関する記述が不足している。",
+  "verdict": "complete-with-findings"
+}

@@ -1,0 +1,1022 @@
+// `orchestrator watch-scan`: 止まった schedule のタスク・register 項目・列を見つけて理由の種類に分け、
+// 見張りのイベントの記録へ 1 件 1 行で足し、朝の報告を書き直す。exec-defaults の `watch.remedies` で
+// 手当てを選んだ種類だけ、再開のコマンドを起動する（PJR-3M4M）。選ばなければ手は打たない。
+// 手で始めた run・人やオーケストレーターの claim・見張りの対象外の印が付いた対象は、記録にも
+// 手当てにも回さない（PJR-T4E0）。
+import {
+  appendFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+import { isLiveLock } from "../shared/cross-process-lock.js";
+import { buildScheduleIndex } from "../shared/schedule-index.js";
+import { readRegisterEventsFromContent, registerEventFilePath } from "../register/events.js";
+import type { PjrItem } from "../register/item.js";
+import { buildEvent, foldEventsToState, readAllEventFiles, writeEventFile } from "./events.js";
+import { listQueueRecords, queueLockPath, type QueueRecord } from "./queue.js";
+import { buildInitialStateFromStrategy } from "./schedule/initial.js";
+import type { ExecEventV1 } from "./types.js";
+import {
+  decideWatchHold,
+  isProjectRunLive,
+  listProcesses,
+  readWatchControl,
+  WATCH_HOLD_LABELS,
+  watchActionGate,
+  watchDirectory,
+  watchEventsLogPath,
+  type ProcessInfo,
+  type WatchControlLine,
+  type WatchHold,
+} from "./watch-control.js";
+import {
+  classifyStall,
+  STALL_CATEGORY_LABELS,
+  type StallCategory,
+  type StallObservation,
+  type StallTargetKind,
+  type StallText,
+} from "./watch-scan-classify.js";
+import {
+  countRecentRemedies,
+  decideRemedy,
+  hasAnyRemedy,
+  launchDetachedRemedy,
+  type RemedyDecision,
+  type RemedyLauncher,
+  type ResolvedWatchRemedies,
+  type WatchRemedyLine,
+  type WatchRemedyStoppedLine,
+} from "./watch-remedy.js";
+
+export const WATCH_SCAN_ACTOR = "watch-scan";
+export const WATCH_DIAGNOSIS_HEADING = "\n## 7. agent の診断案\n";
+const LOG_TAIL_BYTES = 256 * 1024;
+
+export type WatchStalledLine = {
+  v: 1;
+  ts: string;
+  event: "stalled";
+  key: string;
+  target: { kind: StallTargetKind; id: string };
+  state: string;
+  since: string;
+  category: StallCategory;
+  detail: string;
+  basis: { source: string; excerpt: string };
+  next_action: string;
+  by: string;
+};
+
+export type WatchClearedLine = {
+  v: 1;
+  ts: string;
+  event: "cleared";
+  key: string;
+  target: { kind: StallTargetKind; id: string };
+  /** 止まりが見えなくなったときの対象の状態（`done` など）。対象が見つからなければ `gone`。 */
+  state?: string;
+  by: string;
+};
+
+export type WatchLogLine =
+  WatchStalledLine | WatchClearedLine | WatchRemedyLine | WatchRemedyStoppedLine | WatchControlLine;
+
+const WATCH_LOG_EVENTS = new Set([
+  "stalled",
+  "cleared",
+  "remedy",
+  "remedy_stopped",
+  "paused",
+  "resumed",
+]);
+
+export { isProjectRunLive, watchEventsLogPath };
+
+/** 見張りが触らなかった対象。記録に開いている止まりがあれば、その行を添える。 */
+export type WatchHeldEntry = {
+  target: { kind: StallTargetKind; id: string };
+  state: string;
+  since: string;
+  hold: WatchHold;
+  open?: WatchStalledLine;
+};
+
+/** 対象を見分ける鍵（`schedule-task:<id>` など）。 */
+export function targetKey(target: { kind: string; id: string }): string {
+  return `${target.kind}:${target.id}`;
+}
+
+export function watchReportsDirectory(executionPath: string): string {
+  return join(dirname(watchDirectory(executionPath)), "reports", "watch-scan");
+}
+
+/** 同じ止まりを見分ける鍵。状態に入った時刻が変われば別の止まりとして数える。 */
+export function stallKey(observation: Pick<StallObservation, "kind" | "id" | "state" | "since">) {
+  return `${observation.kind}:${observation.id}:${observation.state}:${observation.since}`;
+}
+
+// ================================
+// Event log
+// ================================
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isWatchLogLine(value: unknown): value is WatchLogLine {
+  return (
+    isRecord(value) &&
+    value.v === 1 &&
+    typeof value.event === "string" &&
+    WATCH_LOG_EVENTS.has(value.event) &&
+    typeof value.key === "string" &&
+    typeof value.ts === "string" &&
+    isRecord(value.target)
+  );
+}
+
+/** 記録を読む。壊れた行は飛ばし、行番号を warnings へ返す。 */
+export function parseWatchLog(
+  text: string,
+  source: string,
+): {
+  lines: WatchLogLine[];
+  warnings: string[];
+} {
+  const lines: WatchLogLine[] = [];
+  const warnings: string[] = [];
+  text.split(/\r?\n/u).forEach((raw, index) => {
+    if (!raw.trim()) return;
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      if (isWatchLogLine(parsed)) lines.push(parsed);
+      else warnings.push(`${source}:${index + 1}: not a watch-scan line`);
+    } catch {
+      warnings.push(`${source}:${index + 1}: invalid JSON`);
+    }
+  });
+  return { lines, warnings };
+}
+
+/** 記録の上でまだ解けていない止まり（stalled の後に cleared がない鍵）。 */
+export function openStalls(lines: readonly WatchLogLine[]): Map<string, WatchStalledLine> {
+  const open = new Map<string, WatchStalledLine>();
+  for (const line of lines) {
+    if (line.event === "stalled") open.set(line.key, line);
+    else if (line.event === "cleared") open.delete(line.key);
+  }
+  return open;
+}
+
+export type WatchScanDiff = {
+  appended: (WatchStalledLine | WatchClearedLine)[];
+  current: WatchStalledLine[];
+  held: WatchHeldEntry[];
+};
+
+export type WatchScanDiffOptions = {
+  /** 触らない対象（`targetKey` ごと）。新しく足さず、開いている止まりも解かない。 */
+  held?: ReadonlyMap<string, WatchHold>;
+  /** 今の対象の状態（`targetKey` ごと）。`cleared` の行に残す。 */
+  states?: ReadonlyMap<string, string>;
+};
+
+/**
+ * 今回見つけた止まりと記録を比べ、足す行を決める。記録にまだ開いている鍵は足し直さず、
+ * 今回見つからなかった開いている鍵には cleared を足す。`current` は報告に載せる今の止まりで、
+ * 記録に先にあったものは最初に見つけた行（時刻）を使う。触らない対象（`held`）は足さず、
+ * 開いている止まりもそのまま残して `held` に返す。`current` だけが手当ての候補になる。
+ */
+export function diffWatchScan(
+  previous: readonly WatchLogLine[],
+  observations: readonly StallObservation[],
+  now: string,
+  options: WatchScanDiffOptions = {},
+): WatchScanDiff {
+  const open = openStalls(previous);
+  const appended: (WatchStalledLine | WatchClearedLine)[] = [];
+  const current: WatchStalledLine[] = [];
+  const held: WatchHeldEntry[] = [];
+  const seen = new Set<string>();
+  for (const observation of observations) {
+    const key = stallKey(observation);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const existing = open.get(key);
+    const hold = options.held?.get(targetKey(observation));
+    if (hold) {
+      held.push({
+        target: { kind: observation.kind, id: observation.id },
+        state: observation.state,
+        since: observation.since,
+        hold,
+        ...(existing ? { open: existing } : {}),
+      });
+      continue;
+    }
+    if (existing) {
+      current.push(existing);
+      continue;
+    }
+    const classified = classifyStall(observation);
+    const line: WatchStalledLine = {
+      v: 1,
+      ts: now,
+      event: "stalled",
+      key,
+      target: { kind: observation.kind, id: observation.id },
+      state: observation.state,
+      since: observation.since,
+      category: classified.category,
+      detail: classified.detail,
+      basis: classified.basis,
+      next_action: classified.nextAction,
+      by: WATCH_SCAN_ACTOR,
+    };
+    appended.push(line);
+    current.push(line);
+  }
+  for (const [key, line] of open) {
+    if (seen.has(key)) continue;
+    const state = options.states
+      ? (options.states.get(targetKey(line.target)) ?? "gone")
+      : undefined;
+    appended.push({
+      v: 1,
+      ts: now,
+      event: "cleared",
+      key,
+      target: line.target,
+      ...(state ? { state } : {}),
+      by: WATCH_SCAN_ACTOR,
+    });
+  }
+  return { appended, current, held };
+}
+
+// ================================
+// Observations
+// ================================
+
+function readTail(path: string): string {
+  const size = statSync(path).size;
+  const text = readFileSync(path, "utf8");
+  return size > LOG_TAIL_BYTES ? text.slice(-LOG_TAIL_BYTES) : text;
+}
+
+function repoPath(root: string, path: string): string {
+  return relative(root, path).split("\\").join("/");
+}
+
+const PARENT_LOG_RE = /^parent-validation-attempt-(\d+)-(.+)\.log$/u;
+
+/**
+ * run の記録から分類の材料を読む。親の検証は検査ごとに最後の試行で、失敗したものだけを読む。
+ * executor.log は plan と成果物の本文を含み、文言で誤って分けるため読まない。
+ */
+export function readRunLogs(runDir: string, root: string): StallText[] {
+  if (!existsSync(runDir)) return [];
+  const latest = new Map<string, { attempt: number; name: string }>();
+  for (const name of readdirSync(runDir).sort()) {
+    const match = PARENT_LOG_RE.exec(name);
+    if (!match) continue;
+    const attempt = Number(match[1]);
+    const check = match[2]!;
+    const prior = latest.get(check);
+    if (!prior || prior.attempt < attempt) latest.set(check, { attempt, name });
+  }
+  const logs: StallText[] = [];
+  for (const check of [...latest.keys()].sort()) {
+    const path = join(runDir, latest.get(check)!.name);
+    const text = readTail(path);
+    if (/^exit code: 0$/mu.test(text)) continue;
+    logs.push({ source: repoPath(root, path), text });
+  }
+  const integrate = join(runDir, "integrate.log");
+  if (existsSync(integrate))
+    logs.push({ source: repoPath(root, integrate), text: readTail(integrate) });
+  return logs;
+}
+
+function stringMeta(meta: Record<string, unknown> | undefined): Record<string, string> | undefined {
+  if (!meta) return undefined;
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(meta)) {
+    if (typeof value === "string") result[key] = value;
+    else if (typeof value === "number" || typeof value === "boolean") result[key] = String(value);
+  }
+  return result;
+}
+
+export type WatchScanContext = {
+  root: string;
+  executionPath: string;
+  now: Date;
+  staleMs: number;
+  /** 実行ロックが生きている間は、実行中の状態を中断と見なさない。 */
+  runLive: boolean;
+};
+
+function isStale(context: WatchScanContext, since: string | undefined): boolean {
+  if (!since) return false;
+  const time = Date.parse(since);
+  return Number.isFinite(time) && context.now.getTime() - time >= context.staleMs;
+}
+
+/** schedule のタスクのうち、blocked（延期を含む）と、更新が止まった doing。 */
+export function collectScheduleObservations(
+  schedulePath: string,
+  context: WatchScanContext,
+  states?: Map<string, string>,
+): StallObservation[] {
+  const schedule = buildScheduleIndex(schedulePath);
+  const events = readAllEventFiles(schedulePath);
+  const snapshot = foldEventsToState(
+    events,
+    schedule,
+    schedulePath,
+    buildInitialStateFromStrategy(schedulePath, schedule),
+  );
+  const lastBlock = new Map<string, { path: string; event: ExecEventV1 }>();
+  for (const entry of events)
+    if (entry.event.type === "block") lastBlock.set(entry.event.task_id, entry);
+  const observations: StallObservation[] = [];
+  for (const taskId of Object.keys(snapshot.tasks).sort()) {
+    const state = snapshot.tasks[taskId]!;
+    states?.set(targetKey({ kind: "schedule-task", id: taskId }), state.state);
+    if (state.state === "blocked") {
+      const block = lastBlock.get(taskId);
+      const meta = stringMeta(block?.event.meta ?? state.meta);
+      const evidence = meta?.evidence_ref;
+      observations.push({
+        kind: "schedule-task",
+        id: taskId,
+        state: meta?.limit_deferred === "true" ? "deferred" : "blocked",
+        since: block?.event.ts ?? state.last_ts ?? "-",
+        ...(state.claimed_by ? { actor: state.claimed_by } : {}),
+        ...(block
+          ? { message: { source: repoPath(context.root, block.path), text: block.event.msg } }
+          : {}),
+        ...(meta ? { meta } : {}),
+        // runner の block は pipeline の段か limit の印を持つ。どちらもないものは手で止めたもの。
+        ...(block && !meta?.pipeline_stage && meta?.limit_deferred === undefined
+          ? { manual: true }
+          : {}),
+        logs: evidence ? readRunLogs(dirname(resolve(context.root, evidence)), context.root) : [],
+      });
+    } else if (state.state === "doing" && !context.runLive && isStale(context, state.last_ts)) {
+      observations.push({
+        kind: "schedule-task",
+        id: taskId,
+        state: "doing",
+        since: state.last_ts ?? "-",
+        ...(state.claimed_by ? { actor: state.claimed_by } : {}),
+        logs: [],
+        interrupted: true,
+      });
+    }
+  }
+  return observations;
+}
+
+function latestRegisterRunDir(executionPath: string, id: string): string | undefined {
+  const directory = join(executionPath, "runs", "register", id);
+  if (!existsSync(directory)) return undefined;
+  const runs = readdirSync(directory, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const last = runs[runs.length - 1];
+  return last ? join(directory, last) : undefined;
+}
+
+const REGISTER_WATCHED_STATUSES = new Set(["in-progress", "waiting", "review"]);
+
+/** register 項目のうち、`waiting`・`review` と、更新が止まった `in-progress`。 */
+export function collectRegisterObservations(
+  items: readonly PjrItem[],
+  projectRegisterPath: string,
+  context: WatchScanContext,
+  states?: Map<string, string>,
+): StallObservation[] {
+  const observations: StallObservation[] = [];
+  for (const item of [...items].sort((a, b) => a.id.localeCompare(b.id))) {
+    states?.set(targetKey({ kind: "register-item", id: item.id }), item.status);
+    if (!REGISTER_WATCHED_STATUSES.has(item.status)) continue;
+    const eventsPath = registerEventFilePath(projectRegisterPath, item.id);
+    const events = existsSync(eventsPath)
+      ? readRegisterEventsFromContent(readFileSync(eventsPath, "utf8"), eventsPath)
+      : [];
+    const last = events[events.length - 1];
+    const since = last?.ts ?? item.registeredAt;
+    if (item.status === "in-progress" && (context.runLive || !isStale(context, since))) continue;
+    const runDir =
+      item.status === "waiting" ? latestRegisterRunDir(context.executionPath, item.id) : undefined;
+    observations.push({
+      kind: "register-item",
+      id: item.id,
+      state: item.status,
+      since,
+      ...(last ? { actor: last.actor } : {}),
+      ...(last
+        ? { message: { source: repoPath(context.root, eventsPath), text: last.reason } }
+        : {}),
+      logs: runDir ? readRunLogs(runDir, context.root) : [],
+      ...(item.status === "in-progress" ? { interrupted: true } : {}),
+    });
+  }
+  return observations;
+}
+
+/** 列のうち、止まった（stopped）ものと、ロックがなく更新が止まった running。 */
+export function collectQueueObservations(
+  records: readonly QueueRecord[],
+  context: WatchScanContext,
+  isQueueLive: (queueId: string) => boolean,
+  states?: Map<string, string>,
+): StallObservation[] {
+  const observations: StallObservation[] = [];
+  for (const record of records) {
+    states?.set(targetKey({ kind: "queue", id: record.queue_id }), record.state);
+    const source = repoPath(
+      context.root,
+      join(context.executionPath, "queues", `${record.queue_id}.json`),
+    );
+    if (record.state === "stopped") {
+      const step = record.steps.find((item) => item.index === record.stopped_step);
+      // 根拠の抜き出しは 1 行目を使うため、止まった段の対象が分かる行を先に置く。
+      const text = [
+        step ? `step ${step.index} (${step.kind}): specdojo ${step.argv.join(" ")}` : undefined,
+        record.reason,
+        step?.summary,
+      ]
+        .filter(Boolean)
+        .join("\n");
+      observations.push({
+        kind: "queue",
+        id: record.queue_id,
+        state: "stopped",
+        since: record.updated_at,
+        ...(text ? { message: { source, text } } : {}),
+        logs: [],
+      });
+    } else if (
+      record.state === "running" &&
+      !isQueueLive(record.queue_id) &&
+      isStale(context, record.updated_at)
+    ) {
+      observations.push({
+        kind: "queue",
+        id: record.queue_id,
+        state: "running",
+        since: record.updated_at,
+        message: { source, text: "" },
+        logs: [],
+        interrupted: true,
+      });
+    }
+  }
+  return observations;
+}
+
+export function isQueueLockLive(executionPath: string, queueId: string): boolean {
+  return isLiveLock(queueLockPath(executionPath, queueId));
+}
+
+// ================================
+// Morning report
+// ================================
+
+const TARGET_LABELS: Record<StallTargetKind, string> = {
+  "schedule-task": "schedule のタスク",
+  "register-item": "register 項目",
+  queue: "列",
+};
+
+const CATEGORY_ORDER: readonly StallCategory[] = [
+  "needs_decision",
+  "needs_target_sync",
+  "usage_limit",
+  "load_timeout",
+  "interrupted",
+  "unknown",
+];
+
+function code(text: string): string {
+  const safe = text.replace(/`/gu, "'").replace(/\r?\n/gu, " ").trim() || "-";
+  return `\`${safe}\``;
+}
+
+/** 報告の日付（register の日付と同じ時間帯）。 */
+export function reportDate(now: Date, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
+
+export function renderWatchReport(options: {
+  projectId: string;
+  date: string;
+  scannedAt: string;
+  current: readonly WatchStalledLine[];
+  held?: readonly WatchHeldEntry[];
+  clearedToday: readonly WatchClearedLine[];
+  warnings: readonly string[];
+  /** この日に打った手当て。 */
+  remediesToday?: readonly WatchRemedyLine[];
+  /** この日に回数の上限で止めた手当て。 */
+  stoppedToday?: readonly WatchRemedyStoppedLine[];
+  /** 上限の解除を待っている止まり。 */
+  waiting?: readonly { id: string; until: string }[];
+}): string {
+  const counts = CATEGORY_ORDER.map((category) => {
+    const count = options.current.filter((line) => line.category === category).length;
+    return `- ${STALL_CATEGORY_LABELS[category]}（${code(category)}）: ${count}`;
+  });
+  const sections: string[] = [];
+  let index = 0;
+  for (const category of CATEGORY_ORDER) {
+    const lines = options.current
+      .filter((line) => line.category === category)
+      .sort((a, b) => a.target.id.localeCompare(b.target.id));
+    if (lines.length === 0) continue;
+    index += 1;
+    const items = lines.map((line) =>
+      [
+        `- ${code(line.target.id)}（${TARGET_LABELS[line.target.kind]}、${code(line.state)}、${code(line.since)} から）`,
+        `  - 理由: ${STALL_CATEGORY_LABELS[line.category]}（${code(line.detail)}）`,
+        `  - 根拠: ${code(line.basis.source)} の ${code(line.basis.excerpt)}`,
+        `  - 次にすべきこと: ${line.next_action}`,
+        `  - 最初に見つけた時刻: ${code(line.ts)}`,
+      ].join("\n"),
+    );
+    sections.push(`### 2.${index}. ${STALL_CATEGORY_LABELS[category]}\n\n${items.join("\n")}`);
+  }
+  const held = options.held?.length
+    ? [...options.held]
+        .sort((a, b) => a.target.id.localeCompare(b.target.id))
+        .map((entry) =>
+          [
+            `- ${code(entry.target.id)}（${TARGET_LABELS[entry.target.kind]}、${code(entry.state)}、${code(entry.since)} から）`,
+            `  - 触らない理由: ${WATCH_HOLD_LABELS[entry.hold.reason]}（${code(entry.hold.detail)}）`,
+          ].join("\n"),
+        )
+        .join("\n")
+    : "- なし";
+  const cleared = options.clearedToday.length
+    ? options.clearedToday
+        .map(
+          (line) =>
+            `- ${code(line.target.id)}（${TARGET_LABELS[line.target.kind]}、${code(line.ts)}${line.state ? `、${code(line.state)} になった` : ""}）`,
+        )
+        .join("\n")
+    : "- なし";
+  const remedyLines = [
+    ...(options.remediesToday ?? []).map(
+      (line) =>
+        `- ${code(line.target.id)}（${TARGET_LABELS[line.target.kind]}、${code(line.ts)}）: ${line.summary}（${code(line.action)}、${line.attempt}/${line.max_attempts} 回目）\n  - コマンド: ${code(`specdojo ${line.argv.join(" ")}`)}\n  - 出力: ${code(line.log)}`,
+    ),
+    ...(options.stoppedToday ?? []).map(
+      (line) =>
+        `- ${code(line.target.id)}（${TARGET_LABELS[line.target.kind]}、${code(line.ts)}）: 手当てを止めた（${line.reason}）。記録とログを読み、人かオーケストレーターが続きを決める`,
+    ),
+    ...(options.waiting ?? []).map(
+      (item) => `- ${code(item.id)}: 上限の解除（${code(item.until)}）を待っている`,
+    ),
+  ];
+  const remedies = remedyLines.length ? remedyLines.join("\n") : "- なし";
+  const warnings = options.warnings.length
+    ? options.warnings.map((warning) => `- ${code(warning)}`).join("\n")
+    : "- なし";
+  return `---
+specdojo:
+  id: ${options.projectId}:watch-scan-report-${options.date.replaceAll("-", "")}
+  type: project
+  status: draft
+  rulebook: none
+---
+
+# 見張りの朝報告 ${options.date}
+
+- 最後に見た時刻: ${code(options.scannedAt)}
+- 見張りは exec-defaults の \`watch.remedies\` で選んだ手当てだけを打つ。それ以外の次にすべきことは人かオーケストレーターが行う。
+- 見張りの対象外は、手で始めた run・再開・直しの途中のため、記録に足さず解きもせず、手当ても打たない。
+
+## 1. 集計
+
+${counts.join("\n")}
+
+## 2. 止まっているもの
+
+${sections.join("\n\n") || "止まっているものはない。"}
+
+## 3. 見張りの対象外
+
+${held}
+
+## 4. 手当て
+
+${remedies}
+
+## 5. この日に解けたもの
+
+${cleared}
+
+## 6. 読めなかった記録
+
+${warnings}
+`;
+}
+
+// ================================
+// Scan
+// ================================
+
+export type WatchScanInput = {
+  projectId: string;
+  root: string;
+  executionPath: string;
+  schedulePath?: string;
+  register?: { items: readonly PjrItem[]; projectRegisterPath: string };
+  timeZone: string;
+  now: Date;
+  staleMs: number;
+  dryRun: boolean;
+  /** exec-defaults の `watch` を解決した手当て。省略時は手を打たない。 */
+  remedies?: ResolvedWatchRemedies;
+  /** 手当てのコマンドの起動。テストで差し替える。 */
+  launch?: RemedyLauncher;
+  /** 実行ロックの判定。テストで差し替える。 */
+  isRunLive?: () => boolean;
+  /** 人（名簿の `type: human`）とオーケストレーターの名前。この claim の対象には触らない。 */
+  manualActors?: ReadonlySet<string>;
+  /** 動いているプロセスの一覧。既定は /proc から読む。 */
+  listProcesses?: () => ProcessInfo[];
+  /**
+   * 別の run が実行ロックを持っているとき。`scan`（既定）は読み取りと記録を続けて手当てだけを
+   * 次の回に回し、`skip` は何もせず次の回に回す。
+   */
+  ifBusy?: "scan" | "skip";
+};
+
+export type WatchScanSkip = { reason: "paused" | "busy"; detail: string };
+
+export type WatchRemedyOutcome = {
+  /** 起動した（dry-run では起動する）手当て。1 回の見張りで 1 件まで。 */
+  launched?: WatchRemedyLine;
+  stopped: WatchRemedyStoppedLine[];
+  waiting: { id: string; until: string }[];
+  /** 別の run が実行ロックを持つため、手当てを次の回に回した。 */
+  deferredByLock: boolean;
+};
+
+export type WatchScanOutcome = {
+  current: WatchStalledLine[];
+  held: WatchHeldEntry[];
+  appended: WatchLogLine[];
+  warnings: string[];
+  logPath: string;
+  reportPath: string;
+  remedy: WatchRemedyOutcome;
+  /** 見張りを止めているか、`ifBusy: skip` で別の run がロックを持っていて、何もしなかった。 */
+  skipped?: WatchScanSkip;
+};
+
+function noRemedy(): WatchRemedyOutcome {
+  return { stopped: [], waiting: [], deferredByLock: false };
+}
+
+function attempt<T>(label: string, warnings: string[], read: () => T[]): T[] {
+  try {
+    return read();
+  } catch (error) {
+    warnings.push(`${label}: ${error instanceof Error ? error.message : String(error)}`);
+    return [];
+  }
+}
+
+function compactTimestamp(iso: string): string {
+  return iso.replace(/[-:]/gu, "");
+}
+
+/**
+ * 今の止まりに手当てを決める。手当ては実行ロックを取る再開のコマンドなので、別の run が動いて
+ * いる間は何もせず、起動は 1 回の見張りで古い止まりから 1 件だけにする。回数の上限に達した
+ * 止まりは 1 度だけ `remedy_stopped` を残す。
+ */
+export function planWatchRemedies(input: {
+  projectId: string;
+  root: string;
+  executionPath: string;
+  current: readonly WatchStalledLine[];
+  observations: ReadonlyMap<string, StallObservation>;
+  history: readonly WatchLogLine[];
+  config: ResolvedWatchRemedies;
+  now: Date;
+  nowText: string;
+  runLive: boolean;
+}): WatchRemedyOutcome {
+  const outcome = noRemedy();
+  if (!hasAnyRemedy(input.config)) return outcome;
+  const stoppedKeys = new Set(
+    input.history.filter((line) => line.event === "remedy_stopped").map((line) => line.key),
+  );
+  const ordered = [...input.current].sort(
+    (a, b) => a.since.localeCompare(b.since) || a.target.id.localeCompare(b.target.id),
+  );
+  for (const line of ordered) {
+    const observation = input.observations.get(line.key);
+    const attempts = countRecentRemedies(
+      input.history,
+      line.target,
+      input.now,
+      input.config.attemptWindowMs,
+    );
+    const decision: RemedyDecision = decideRemedy({
+      stall: {
+        key: line.key,
+        target: line.target,
+        state: line.state,
+        since: line.since,
+        category: line.category,
+        ...(observation?.meta ? { meta: observation.meta } : {}),
+        ...(observation?.message ? { message: observation.message.text } : {}),
+      },
+      config: input.config,
+      projectId: input.projectId,
+      now: input.now,
+      attempts,
+    });
+    if (decision.kind === "wait") {
+      outcome.waiting.push({ id: line.target.id, until: decision.until });
+    } else if (decision.kind === "stop") {
+      if (stoppedKeys.has(line.key)) continue;
+      outcome.stopped.push({
+        v: 1,
+        ts: input.nowText,
+        event: "remedy_stopped",
+        key: line.key,
+        target: line.target,
+        category: line.category,
+        attempts: decision.attempts,
+        reason: `${input.config.maxAttempts} 回まで手を打ったが止まったまま`,
+        by: WATCH_SCAN_ACTOR,
+      });
+    } else if (decision.kind === "launch" && !outcome.launched) {
+      if (input.runLive) {
+        outcome.deferredByLock = true;
+        continue;
+      }
+      const log = join(
+        input.executionPath,
+        "watch",
+        "remedies",
+        `${compactTimestamp(input.nowText)}-${line.target.id}.log`,
+      );
+      outcome.launched = {
+        v: 1,
+        ts: input.nowText,
+        event: "remedy",
+        key: line.key,
+        target: line.target,
+        category: line.category,
+        action: decision.plan.action,
+        summary: decision.plan.summary,
+        argv: decision.plan.argv,
+        attempt: attempts + 1,
+        max_attempts: input.config.maxAttempts,
+        log: repoPath(input.root, log),
+        by: WATCH_SCAN_ACTOR,
+      };
+    }
+  }
+  return outcome;
+}
+
+// schedule のタスクには見張りを actor にした note を残し、`exec status` でも手当てが分かるようにする。
+// note は meta を持たせない。meta を持つ event は状態の meta を置き換え、再開に要る limit や
+// pipeline の印を消すためである。
+function recordScheduleNote(schedulePath: string, line: WatchRemedyLine): void {
+  writeEventFile(
+    schedulePath,
+    buildEvent("note", {
+      task: line.target.id,
+      by: WATCH_SCAN_ACTOR,
+      msg: `watch-scan remedy ${line.action} (${line.attempt}/${line.max_attempts}): specdojo ${line.argv.join(" ")}; log=${line.log}`,
+    }),
+  );
+}
+
+function reportPathFor(input: WatchScanInput): string {
+  const date = reportDate(input.now, input.timeZone);
+  return join(
+    watchReportsDirectory(input.executionPath),
+    `watch-scan-${date.replaceAll("-", "")}.md`,
+  );
+}
+
+/** 見張りの前の確かめ。全体の停止の印と、`ifBusy: skip` のときの実行ロックを見る。 */
+function scanGate(input: WatchScanInput, runLive: boolean): WatchScanSkip | undefined {
+  const gate = watchActionGate(
+    input.executionPath,
+    readWatchControl(input.executionPath),
+    () => runLive,
+  );
+  if (gate.allowed) return undefined;
+  if (gate.reason === "busy" && (input.ifBusy ?? "scan") === "scan") return undefined;
+  return { reason: gate.reason, detail: gate.detail };
+}
+
+function collectObservations(
+  input: WatchScanInput,
+  context: WatchScanContext,
+  warnings: string[],
+  states: Map<string, string>,
+): StallObservation[] {
+  return [
+    ...(input.schedulePath
+      ? attempt("schedule", warnings, () =>
+          collectScheduleObservations(input.schedulePath!, context, states),
+        )
+      : []),
+    ...(input.register
+      ? attempt("register", warnings, () =>
+          collectRegisterObservations(
+            input.register!.items,
+            input.register!.projectRegisterPath,
+            context,
+            states,
+          ),
+        )
+      : []),
+    ...attempt("queue", warnings, () => {
+      const { records, errors } = listQueueRecords(input.executionPath);
+      warnings.push(...errors.map((error) => `queue: ${error}`));
+      return collectQueueObservations(
+        records,
+        context,
+        (id) => isQueueLockLive(input.executionPath, id),
+        states,
+      );
+    }),
+  ];
+}
+
+/** 触らない対象を決める。プロセスの一覧は止まりが 1 件以上あるときだけ読む。 */
+function collectHolds(
+  input: WatchScanInput,
+  observations: readonly StallObservation[],
+): Map<string, WatchHold> {
+  const held = new Map<string, WatchHold>();
+  if (observations.length === 0) return held;
+  const holdContext = {
+    control: readWatchControl(input.executionPath),
+    manualActors: input.manualActors ?? new Set<string>(),
+    processes: (input.listProcesses ?? listProcesses)(),
+  };
+  for (const observation of observations) {
+    const hold = decideWatchHold(observation, holdContext);
+    if (hold) held.set(targetKey(observation), hold);
+  }
+  return held;
+}
+
+export function runWatchScan(input: WatchScanInput): WatchScanOutcome {
+  const warnings: string[] = [];
+  const logPath = watchEventsLogPath(input.executionPath);
+  const reportPath = reportPathFor(input);
+  const runLive = input.isRunLive ? input.isRunLive() : isProjectRunLive(input.executionPath);
+  const skipped = scanGate(input, runLive);
+  if (skipped)
+    return {
+      current: [],
+      held: [],
+      appended: [],
+      warnings,
+      logPath,
+      reportPath,
+      remedy: noRemedy(),
+      skipped,
+    };
+  const context: WatchScanContext = {
+    root: input.root,
+    executionPath: input.executionPath,
+    now: input.now,
+    staleMs: input.staleMs,
+    runLive,
+  };
+  const states = new Map<string, string>();
+  const observations = collectObservations(input, context, warnings, states);
+  const held = collectHolds(input, observations);
+  const previous = existsSync(logPath)
+    ? parseWatchLog(readFileSync(logPath, "utf8"), repoPath(input.root, logPath))
+    : { lines: [], warnings: [] };
+  warnings.push(...previous.warnings);
+  const now = input.now.toISOString().replace(/\.\d{3}Z$/u, "Z");
+  // 触らない対象は `diff.current` に入らないため、手当ての候補にもならない。
+  const diff = diffWatchScan(previous.lines, observations, now, { held, states });
+  const remedy = input.remedies
+    ? planWatchRemedies({
+        projectId: input.projectId,
+        root: input.root,
+        executionPath: input.executionPath,
+        current: diff.current,
+        observations: new Map(observations.map((item) => [stallKey(item), item])),
+        history: previous.lines,
+        config: input.remedies,
+        now: input.now,
+        nowText: now,
+        runLive,
+      })
+    : noRemedy();
+  const appended: WatchLogLine[] = [
+    ...diff.appended,
+    ...(remedy.launched ? [remedy.launched] : []),
+    ...remedy.stopped,
+  ];
+  const date = reportDate(input.now, input.timeZone);
+  const all = [...previous.lines, ...appended];
+  const isToday = (line: WatchLogLine): boolean =>
+    reportDate(new Date(line.ts), input.timeZone) === date;
+  const clearedToday = all.filter(
+    (line): line is WatchClearedLine => line.event === "cleared" && isToday(line),
+  );
+  const remediesToday = all.filter(
+    (line): line is WatchRemedyLine => line.event === "remedy" && isToday(line),
+  );
+  const stoppedToday = all.filter(
+    (line): line is WatchRemedyStoppedLine => line.event === "remedy_stopped" && isToday(line),
+  );
+  if (!input.dryRun) {
+    // 記録を先に書いてから起動する。起動に失敗しても、打とうとした手当ては記録に残る。
+    if (appended.length > 0) {
+      mkdirSync(dirname(logPath), { recursive: true });
+      appendFileSync(logPath, appended.map((line) => `${JSON.stringify(line)}\n`).join(""), "utf8");
+    }
+    if (remedy.launched) {
+      const launched = remedy.launched;
+      if (launched.target.kind === "schedule-task" && input.schedulePath) {
+        try {
+          recordScheduleNote(input.schedulePath, launched);
+        } catch (error) {
+          warnings.push(
+            `remedy note ${launched.target.id}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
+      try {
+        (input.launch ?? launchDetachedRemedy)(
+          launched.argv,
+          resolve(input.root, launched.log),
+          input.root,
+        );
+      } catch (error) {
+        warnings.push(
+          `remedy launch ${launched.target.id}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+    mkdirSync(dirname(reportPath), { recursive: true });
+    // 診断用ロックを取れない回や、診断へ進む前に落ちた回も、既存の案を残す。
+    const previousReport = existsSync(reportPath) ? readFileSync(reportPath, "utf8") : "";
+    const diagnosisOffset = previousReport.indexOf(WATCH_DIAGNOSIS_HEADING);
+    const diagnosisSection = diagnosisOffset < 0 ? "" : previousReport.slice(diagnosisOffset);
+    const temporaryReport = `${reportPath}.${process.pid}.tmp`;
+    writeFileSync(
+      temporaryReport,
+      renderWatchReport({
+        projectId: input.projectId,
+        date,
+        scannedAt: now,
+        current: diff.current,
+        held: diff.held,
+        clearedToday,
+        warnings,
+        remediesToday,
+        stoppedToday,
+        waiting: remedy.waiting,
+      }) + diagnosisSection,
+      "utf8",
+    );
+    renameSync(temporaryReport, reportPath);
+  }
+  return {
+    current: diff.current,
+    held: diff.held,
+    appended,
+    warnings,
+    logPath,
+    reportPath,
+    remedy,
+  };
+}

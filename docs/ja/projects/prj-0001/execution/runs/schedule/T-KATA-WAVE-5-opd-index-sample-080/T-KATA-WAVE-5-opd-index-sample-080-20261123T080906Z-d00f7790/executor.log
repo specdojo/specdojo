@@ -1,0 +1,12 @@
+`docs/ja/specdojo/samples/opd-index-sample.md` で、表と重複する 2 文を削りました。残りの候補は意味を保つため据え置きました。Markdown の lint は親 runner が実行するため、ここでは走らせていません。
+
+- **「運用の範囲・前提」の導入文:** 「複数店舗、EC、…は対象外とする」を削りました。同じ内容が直後の表の「対象外」行にあります。
+- **「SLO・SLA・KPI」の導入文:** 「外部と約束する SLA は初期リリースでは置かない」を削りました。同じ内容が表の SLA 行（対象外）にあります。
+
+据え置きの例:
+- 「バックアップ・リストア方針」の RPO 補足は、表にない当日分の戻し方を述べているため残しました。
+- 「障害対応方針」冒頭の優先度の参照文は、正本への参照なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-index-sample.md の冗長な 2 文を削除（表との二重説明）。意味・必須情報は維持。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"親 runner が実行する allowlist 検査のため executor では実行しない"}],"condense_records":[{"location":"2. 運用の範囲・前提 導入文の 2 文目","category":"table-prose","action":"delete","reason":"対象外の列挙が直後の表の「対象外」行と同一で、削っても意味は変わらない","cause":{"type":"document"}},{"location":"3. SLO・SLA・KPI 導入文の「SLA は初期リリースでは置かない」","category":"table-prose","action":"delete","reason":"表の SLA 行（対象外）が同じ内容を示しているため","cause":{"type":"document"}},{"location":"8. バックアップ・リストア方針 末尾の RPO 補足文","category":"repetition","action":"retain","reason":"表にない当日分の戻し方という判断情報を含むため","cause":{"type":"document"}},{"location":"6. 障害対応方針 冒頭の優先度の参照文","category":"canonical-restatement","action":"retain","reason":"再掲ではなく正本の表への参照で、判断に必要な導線であるため","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

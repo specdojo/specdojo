@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_61492a6a49d94828bc7532ca1eb7a369
+  ts: "2026-11-26T22:16:44Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec release の --force を、動いていない run の claim に限ってオーケストレーターに許す
+    - field: description
+      from: ""
+      to: PJR-E189 の決定（候補 A）を実装する。specdojo-orchestrator の --force は、claim を持つ run が動いていないと CLI が確かめられるときだけ通し、判定できないときは断る。--reset-worktree と --all-blocked は利用者の承認を得て使う運用のまま。
+    - field: input
+      from: ""
+      to: '["PJR-E189 で候補 A を採った（indie、2026-11-26）","いまの CLI は、--force を人の actor のときだけ通す（src/exec/events.ts の canOverrideCrossActor）","2026-11-26 に、opus-executor が claim したまま止まった review 9 件と imp-interface-140 を、indie が --force で戻した","担当 DEV・期限 2026-12-31 は indie の指示（2026-11-26）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-E189"]'
+- v: 1
+  id: reg_b111e96e647540e394a3c54e53f941e9
+  ts: "2026-11-27T13:17:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_61492a6a49d94828bc7532ca1eb7a369
+- v: 1
+  id: reg_11faa46751464a03b6a28e3dc78c4318
+  ts: "2026-11-27T13:22:10Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b111e96e647540e394a3c54e53f941e9
+- v: 1
+  id: reg_2100d3a7d53b4de2a35b40b65355bf5b
+  ts: "2026-11-27T13:37:28Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_11faa46751464a03b6a28e3dc78c4318
+- v: 1
+  id: reg_411ef80a560e4a82958933e7ca094f95
+  ts: "2026-11-27T23:10:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 実装・単体テスト・コマンドリファレンスを確かめ、本文の変更を利用者の承認のもと develop へ反映（9cdba95144）。統合後の JSEY の smoke が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 停止を CLI が確かめられる run の claim に限り、specdojo-orchestrator も exec release --force で戻せるようにした。配布するオーケストレーターの本文にも条件を反映した
+  previous_event_id: reg_2100d3a7d53b4de2a35b40b65355bf5b

@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_058c593f43d64524b87c7a7cd0a8cfad
+  ts: "2026-11-24T13:58:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の判断のもと、product の文書を文書サイトに取り込む todo を起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトに repos で宣言したプロダクトのリポジトリの文書を取り込む
+    - field: description
+      from: ""
+      to: repos を分けた構成で、プロダクトのリポジトリの docs/ja/product/ を文書サイトに取り込み、project の文書と行き来できるようにする
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","product の文書の読ませ方は、サイトのビルドに repos の product の文書を取り込む案 2 にする（利用者の判断、2026-11-24）","担当は DEV、期限は 2026-11-30、executor は opus（利用者、2026-11-24）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs-site
+- v: 1
+  id: reg_bebb5d1cf2f148b1ac3d8dd192d8e5df
+  ts: "2026-11-24T17:18:26Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_058c593f43d64524b87c7a7cd0a8cfad
+- v: 1
+  id: reg_cf1b928d49964b83b515f880dfe7895f
+  ts: "2026-11-24T17:32:44Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bebb5d1cf2f148b1ac3d8dd192d8e5df
+- v: 1
+  id: reg_d81f4037398f47b79c656ce74fa21feb
+  ts: "2026-11-24T17:35:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（opus-executor）で実装。差分と対応結果を完了条件に照らし、repos を宣言した試しのリポジトリ（prj-9001＋specdojo-lp）でサイトをビルドして product のページ・サイドバーの節・wikilink の解決を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+  previous_event_id: reg_cf1b928d49964b83b515f880dfe7895f

@@ -1,5 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
-import { warnDeprecated } from "../shared/deprecation.js";
 import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
@@ -9,7 +7,7 @@ import { loadRegisterItemDocs } from "../register/item.js";
 import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import {
-  assertValidActor,
+  assertValidExecActor,
   getProjectRegisterPath,
   getProjectViewpointsPath,
   getProjectRoutinesPath,
@@ -41,17 +39,15 @@ import {
   resolveSchedulerStrategy,
   runLockedEventCommand,
   runReleaseAllBlocked,
-  runSimpleEventCommand,
   scaffoldClaimResult,
   type LockedEventAction,
 } from "./core.js";
 import {
-  acquireSchedulerLock,
+  acquireSchedulerLockAsync,
   canBlockTask,
   canCancelTask,
   canClaimTask,
   canCompleteTask,
-  canReleaseTask,
   canReopenTask,
   canUnblockTask,
   claimOwnerOf,
@@ -63,7 +59,6 @@ import {
 } from "./events.js";
 import { noProductChangeWarnings } from "./executor-outcome-checks.js";
 import { registerExecHandoffCommands } from "./handoff.js";
-import { registerRecordMigrationCommand } from "./migrate-records.js";
 import {
   archivePlan,
   buildInPlaceStem,
@@ -97,11 +92,15 @@ import { resolveOwnerForLocalId } from "./strategy.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
 import { registerExecSmokeCommand } from "./smoke.js";
+import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
+import { registerExecStopCommand, writeStopRequestSummary } from "./stop-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
+import { registerExecWatchCommand } from "./watch-command.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
 import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
+import { checkReleaseWithRunSafety } from "./release-safety.js";
 
 export function printExecPaths(opts: { project?: string }): void {
   try {
@@ -126,9 +125,10 @@ export function printExecPaths(opts: { project?: string }): void {
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
   registerExecHandoffCommands(exec);
-  registerRecordMigrationCommand(exec);
   registerExecSmokeCommand(exec);
   registerExecQueueCommands(exec);
+  registerExecStopCommand(exec);
+  registerExecWatchCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -174,8 +174,14 @@ export function registerExecCommands(program: Command): void {
     },
     release: {
       type: "release",
-      check: ({ schedule, snapshot }, taskId, actor, opts) =>
-        canReleaseTask(schedule, snapshot, taskId, actor, resolveForceOverride(opts, actor)),
+      check: (state, taskId, actor, opts) =>
+        checkReleaseWithRunSafety(
+          resolveProjectContext(opts).executionPath,
+          state,
+          taskId,
+          actor,
+          resolveForceOverride(opts, actor),
+        ),
     },
     cancel: {
       type: "cancel",
@@ -185,45 +191,16 @@ export function registerExecCommands(program: Command): void {
 
   const types: ExecEventType[] = [
     "claim",
-    "note",
     "block",
     "unblock",
     "complete",
     "reopen",
     "release",
     "cancel",
-    "link",
-    "estimate",
   ];
 
-  const deprecatedEventCommands: Record<string, { description: string; migration: string }> = {
-    note: {
-      description:
-        "Deprecated: record notes in tickets or execution results instead (will be removed in 0.10.0)",
-      migration:
-        "Record notes in tickets or execution results instead. This command will be removed in 0.10.0.",
-    },
-    link: {
-      description:
-        "Deprecated: declare dependencies in tickets (depends_on) or catalog instead (will be removed in 0.10.0)",
-      migration:
-        "Declare dependencies in tickets (depends_on) or catalog instead. This command will be removed in 0.10.0.",
-    },
-    estimate: {
-      description:
-        "Deprecated: manage estimates and difficulty in register tickets instead (will be removed in 0.10.0)",
-      migration:
-        "Manage estimates and difficulty in register tickets instead. This command will be removed in 0.10.0.",
-    },
-  };
-
   for (const t of types) {
-    const deprecation = deprecatedEventCommands[t];
-    const cmd = exec
-      .command(t)
-      .description(
-        deprecation ? deprecation.description : `Write ${t} event JSON into exec/events/ (UTC)`,
-      );
+    const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
     addCommonAddOptions(cmd, {
       requireTask: t !== "release" && t !== "complete",
       msgDefault: DEFAULT_EVENT_MESSAGES[t],
@@ -231,7 +208,7 @@ export function registerExecCommands(program: Command): void {
 
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
-    if (t === "complete" || t === "block" || t === "release") addForceOption(cmd);
+    if (t === "complete" || t === "block" || t === "release") addForceOption(cmd, t === "release");
     if (t === "unblock") addTakeOverOption(cmd);
     if (t === "release") {
       cmd.option(
@@ -246,23 +223,14 @@ export function registerExecCommands(program: Command): void {
       );
     }
 
-    if (t in lockedActions) {
-      const action = lockedActions[t as LockedEventAction["type"]];
-      cmd.action(async (opts) => {
-        if (action.type === "release" && opts.allBlocked) {
-          await runReleaseAllBlocked(opts);
-          return;
-        }
-        await runLockedEventCommand(opts, action);
-      });
-    } else {
-      cmd.action((opts) => {
-        if (deprecation) {
-          warnDeprecated(`exec ${t}`, deprecation.migration);
-        }
-        runSimpleEventCommand(opts, t);
-      });
-    }
+    const action = lockedActions[t as LockedEventAction["type"]];
+    cmd.action(async (opts) => {
+      if (action.type === "release" && opts.allBlocked) {
+        await runReleaseAllBlocked(opts);
+        return;
+      }
+      await runLockedEventCommand(opts, action);
+    });
   }
 
   const vcmd = exec
@@ -528,7 +496,7 @@ export function registerExecCommands(program: Command): void {
       const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
       const actor = requireNonEmpty("by", opts.by);
       const roster = loadRosterForOpts(opts);
-      assertValidActor(actor, roster);
+      assertValidExecActor(actor, roster);
       const strategy = resolveSchedulerStrategy(opts, actor, roster);
       const dryRun = !!opts.dryRun;
       const msg = String(opts.msg ?? "auto-claim");
@@ -538,7 +506,11 @@ export function registerExecCommands(program: Command): void {
       const lockTimeoutMs = Number(opts.lockTimeoutMs);
       const lockStaleMs = Number(opts.lockStaleMs);
 
-      lockDir = acquireSchedulerLock(schedulePath, { actor, lockTimeoutMs, lockStaleMs });
+      lockDir = await acquireSchedulerLockAsync(schedulePath, {
+        actor,
+        lockTimeoutMs,
+        lockStaleMs,
+      });
 
       const state = loadValidatedExecState(schedulePath);
       if (!state) return;
@@ -776,6 +748,7 @@ export function registerExecCommands(program: Command): void {
     "doing",
   );
   statusCmd.action((opts) => {
+    exitQuietlyOnClosedStdout();
     try {
       const { schedulePath, executionPath } = resolveProjectContext(opts);
 
@@ -797,6 +770,7 @@ export function registerExecCommands(program: Command): void {
         const byMsg = filterBy ? ` for ${filterBy}` : "";
         process.stdout.write(`No ${filterState} tasks${byMsg}.\n`);
         writeActiveQueueSummary(executionPath);
+        writeStopRequestSummary(executionPath);
         writeNoProductChangeWarnings(opts.project, snapshot);
         exitWithCode(true);
         return;
@@ -832,14 +806,13 @@ export function registerExecCommands(program: Command): void {
         );
       }
       writeActiveQueueSummary(executionPath);
+      writeStopRequestSummary(executionPath);
       writeNoProductChangeWarnings(opts.project, snapshot);
       exitWithCode(true);
     } catch (error) {
       printCommandError(error, false);
     }
   });
-
-  registerDeprecatedWhereAlias(exec, printExecPaths);
 }
 
 // PJR-QQRH: keep runs blocked for missing product changes visible in `exec status`, whatever

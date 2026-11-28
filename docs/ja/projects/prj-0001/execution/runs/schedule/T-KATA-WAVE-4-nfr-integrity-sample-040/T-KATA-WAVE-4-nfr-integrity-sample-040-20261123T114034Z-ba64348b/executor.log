@@ -1,0 +1,28 @@
+`docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md` を簡潔にし、grade の指摘 14 件のうち 13 件に対応しました。F005 は採用していません（理由は後述）。sample・recipe・template は変更していません。変更したファイルはこの rulebook の 1 件だけです。確認は、prettier での整形と、このファイルへの markdownlint（0 件）までです。lint・schema などの検査は、この後に親 runner が実行します。
+
+**変えたこと**
+
+- **完成例の章を削除（F004・F009・F011・F013）:** 「サンプル」の章をまるごと消しました。完成例は Frontmatter で宣言した sample に任せます。消した例にあった問題（題材が GCS 基幹システム、要件 ID の飛び、判定者が職種名）も一緒になくなります。
+- **整合先とセキュリティ NFR との境界（F001）:** 「位置づけ」を表にし、`nfr-security-safety` との境界を書きました。認証・認可・アクセス監査はそちらに書き、本書は改ざんの検知を扱います。この区分は禁止事項にも足しました。
+- **概要の記述ガイド（F002）:** 完全性が損なわれたときの業務影響と、重要記録を選ぶ基準を書くよう求めました。良い例・悪い例も付けています。
+- **監査証跡の保持期間（F007）:** 「適用範囲・前提条件」で保持期間とその根拠を書くよう求めました。根拠の文書は `based_on` に挙げます。
+- **合否の判定（F003・F006・F013）:**
+  - 要件表の「基準」は数値・単位・集計期間で書き、割合の指標は分子と分母を定義するよう求めました。
+  - 測定・検証方法には、要件 ID ごとに測定手段・タイミング・合否条件・判定者の Role code を書くよう求めました。
+  - 呼び名は「整合性チェック」にそろえました。
+- **Frontmatter（F008）:** 正本が `id` / `type` / `status` を必須にしていることを明記しました。
+- **ready にする前の未解決事項（F012・F014・F010）:** `_UNDECIDED_` で書きました。`recipe`・`template` の要否が未判断であることと、sample を 5 章の構成にそろえることが条件です。
+- 文書の役割の割り当てや承認の進み具合は、成果物に求めていません。
+
+**直さなかったこと**
+
+- **F005（文書 ID の project 修飾）:** 採用していません。同じ NFR 分冊の `nfr-reliability-rulebook` は「プロダクト文書のため名前空間を付けない」としているので、それに合わせて ID は `nfr-integrity` のままです。
+- **F010（sample の構成が 5 章でない）:** この段では sample を変えない決まりなので、rulebook 側は未解決事項として書いただけです。
+
+**決めてほしいこと**
+
+判定者の扱いが同じ NFR 分冊の間で食い違っています。本書と `nfr-reliability` は、測定・検証方法に判定者の Role code を書かせます。`nfr-security-safety` は、検証の作業を担う役割を検証先の計画で割り当て、本書には書かない方針です。PJR-76N9 の決まりと照らして、どちらかにそろえる判断が要ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-integrity-rulebook を簡潔化。サンプル章を削除して完成例を sample に委ね、位置づけ表で nfr-security-safety との境界を明記、概要・適用範囲・要件一覧・測定検証の記述ガイドに判断基準と良い例・悪い例を追加、ready 前の未解決事項を _UNDECIDED_ で明示した。F005 は兄弟 NFR rulebook の慣行（プロダクト文書は名前空間なし）に合わせて不採用。","handoff":["F005（生成文書 ID の project 修飾）は不採用。`nfr-reliability-rulebook` が「プロダクト文書のため名前空間を付けない」としており、NFR 分冊の慣行に合わせて `nfr-integrity` を維持した。方針を変える場合は NFR 分冊全体で揃える必要がある。","F010（sample の構成が rulebook の 5 章に不一致）は、この段で sample を変更しない指示のため未解消。rulebook 側に _UNDECIDED_ として ready 前提条件を明記した。次の sample 改訂タスクで `specdojo:nfr-integrity-sample` を本文構成（標準テンプレ）の 5 章に揃える必要がある（駄菓子屋文脈、要件 ID の欠番なし、判定者は Role code）。","F012/F014（`recipe`/`template` が `undecided`）は要否判断が未了のため値は変えず、_UNDECIDED_ で論点と ready 前提条件を明記した。","判定者の扱いが NFR 分冊間で揺れている: 本書と `nfr-reliability-rulebook` は測定・検証方法に判定者の Role code を求め、`nfr-security-safety-rulebook` は「検証の作業を担う役割は検証先の計画で割り当て、本書では書かない」としている。PJR-76N9 との関係を含め統一方針の判断が必要。","直さなかった箇所: 本文構成（5 章・順序固定）と禁止事項の既存 3 項目の趣旨は根拠と整合するため維持した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/ の rulebook のみで、plan/result/個票などの履歴蓄積ファイルを変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML 変更なし","reason":"変更した *.yaml / *.yml ファイルがなく、rulebook は target_format 未指定（markdown）"}]}
+</specdojo_executor_evidence>

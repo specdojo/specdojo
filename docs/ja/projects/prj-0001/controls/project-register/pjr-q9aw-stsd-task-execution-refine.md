@@ -21,7 +21,7 @@ specdojo:
     - PJR-H2V8
   approach: fully-guided
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # PJR-Q9AW stsd-task-execution を磨き込む
@@ -61,7 +61,7 @@ stsd の試行（3APD）の段 3。draft した stsd-task-execution を fully-gu
 - Kata の判断材料（3APD の段 5 で使う。Kata は変えていない）:
   - `stsd-rulebook` の「状態遷移図」と `stsd-mermaid-rulebook` は、終了点を省くときに「継続状態」で説明するが、差し戻せる完了や記録が残る中止のような境界の書き方がない。
   - `stsd-mermaid-rulebook` の図の分割で、初期点を分割した各図に置くかが明示されていない。sample に分割の例がない。
-  - `stsd-rulebook` は frontmatter の `id` をプロジェクト修飾なしと説明するが、カタログから作る成果物は `prj-0001:stsd-task-execution` になる。
+  - `stsd-rulebook` は frontmatter の `id` をプロジェクト修飾なしと説明するが、カタログから作る成果物は `stsd-task-execution` になる。
 - orchestrator の確認: 変わった成果物は対象の 1 件だけで、Kata は変わっていない。親の検証はすべて通った。executor の報告によれば、宣言された資料のほかに `AGENTS.md`・運用の playbook・`prj-overview` も読んでいるが、本文の根拠にはしていない。
 - 残課題: なし（condense は PJR-MC63）。
 

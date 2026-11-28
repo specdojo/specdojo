@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150",
+  "run_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261128T102630Z-a0719568",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-28T10:26:41.088Z",
+    "completed_at": "2026-11-28T10:29:07.371Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/kra-day2-2026-11-26.json",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/watch-scan/watch-scan-20261126.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/watch-events.jsonl",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/opr-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-exec-cycle-ec6d82a63310.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-nightly-integration-tests-fc1d6ff7831c.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-nightly-integration-tests-feb648de1088.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/grade-qr23-then-g5dy-2026-11-27.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/kra-day4-2026-11-26.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/night-2026-11-27.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/night2-2026-11-27.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/qr23-86rk-2026-11-27.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/nightly-integration-tests/nightly-integration-tests-20261126T190033Z.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/nightly-integration-tests/nightly-integration-tests-20261127T190037Z.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/watch-scan/watch-scan-20261127.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/watch-scan/watch-scan-20261128.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/diagnoses/63dfcbdd4b6a79ba980292a840a30470dffb5d38df956352c4541a25c9e2019e.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/diagnoses/63dfcbdd4b6a79ba980292a840a30470dffb5d38df956352c4541a25c9e2019e.retry.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/diagnoses/651e2fc28fc906c4c988fe7aa4a702cabdd66f3cbe4b0a68b82edfc99c188ac2.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/diagnoses/7d53139af2412e3faed9e631b7b1139b2c952e4ce5650ca65260afaac8d13f8c.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/diagnoses/83185a230a6eea7f5bfaf8763c3efee82f0490f7ace0310cd372cc745a33aa92.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/watch/diagnoses/b8a981a29ee8aa6a35a2fb37c4c1af73089b9963d44fd6de63fc4c74beaac80f.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": ".../execution/queues/kra-day2-2026-11-26.json      | 18 ++--\n .../reports/watch-scan/watch-scan-20261126.md      | 98 +++++-----------------\n .../prj-0001/execution/watch/watch-events.jsonl    | 92 ++++++++++++++++++++\n docs/ja/specdojo/samples/opr-sample.md             | 24 +++---\n 4 files changed, 132 insertions(+), 100 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/opr-sample.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/opr-sample.md",
+      "status": "passed",
+      "summary": "表の整形を適用した"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\n\ndocs/ja/projects/prj-0001/execution/reports/watch-scan/watch-scan-20261128.md:290 error MD028/no-blanks-blockquote Blank line inside blockquote"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 9570 file(s), 91 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 67 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 9570 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/specdojo\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"duration_ms\":9}\n[parent-validation:test-file] {\n… output omitted …\nter-plan-escape.test.ts\",\"duration_ms\":6555}\n\n Test Files  19 passed (19)\n      Tests  507 passed (507)\n   Start at  19:29:52\n   Duration  7.88s (transform 7.66s, setup 1.15s, import 10.36s, tests 17.15s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n/specdojo/docs/specdojo/schemas/v1/ifx-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）として docs/ja/specdojo/samples/opr-sample.md を修正した。分冊が本書を `opr-index` として参照する系列に合わせて入口の記述と関連導線を直し、欠品記録の日次手順と証跡の行、opd-access-control-sample への導線を足した。相手側の文書を直す案は handoff に記載した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 1. 概要、12. 関連ドキュメント導線 / 分冊 8 本（opr-incident・opr-monitoring・opr-batch・opr-backup-restore・opr-change・opr-access-control・opr-support）はすべて本書を `[[specdojo:opr-sample|運用手順]]`（`opr-index`）として参照するが、本書は「手順群の入口は opr-index-sample」としていた / 概要を「本書は手順群の入口（`opr-index`）であり」に直し、関連導線の表から opr-index-sample の行を除いた / `vp-qe-kata-conformance`（kata 相互）、`opr-rulebook` の「`opr-index` が実行手順の SSOT であることを明示する」、grade F003 / 要判断（opr-sample と opr-index-sample が同じ店の同じ文書の完成例として 2 本並んでいる。選ばなかった案は、本書を分冊扱いのまま残し分冊 8 本の参照を opr-index-sample へ付け替える案。分冊の数と based_on の付け替えが大きく、本書が rulebook の SSOT 明示を満たせなくなるため選ばなかった）",
+    "R5-2: R5 / 相手側 opr-index-sample 12. 関連ドキュメント導線 / opr-index-sample が「分冊は障害対応だけとし、ほかの作業領域は本書で完結する」と書くが、分冊 sample は 7 領域ある / - / `vp-qe-kata-conformance`。相手側 docs/ja/specdojo/samples/opr-index-sample.md を直す案: opr-index-rulebook と opr-rulebook のどちらの sample を opr-index の完成例とするかを決め、残す側の導線表へ分冊 7 本を載せる。もう一方は廃止するか、役割の違い（index 専用の rulebook の例）を冒頭で明示する / 要判断",
+    "R5-3: R5 / 相手側 opr-index-sample 9. アカウント付与/剥奪手順・11. 証跡 / opr-index-sample は付与・剥奪の実施者を `DEV`、証跡名を「権限の記録」「棚卸しの記録」とし、本書・opr-access-control-sample（実施者 `OPS`、「権限変更記録」「棚卸し記録」）、opd-index-sample の RACI（権限の付与・剥奪の R は `OPS`）と食い違う。誤検知の閾値も「月 3 回を超えたら」で、本書・opr-monitoring・opd-monitoring の「月 3 件以上」と違う / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。相手側 opr-index-sample を、実施者 `OPS`、証跡名「権限変更記録」「棚卸し記録」、閾値「月 3 件以上」に揃える案 / -",
+    "R5-4: R5 / 3. 日次・週次・月次点検手順、11. 証跡 / 月次で欠品記録から KPI を集計するのに、欠品記録を作る手順と保存先が本書になかった（opd-index-sample の KPI「人気商品の欠品」、共通サンプル文脈の「欠品発生を日次で記録する」） / 日次（閉店後）の欠品の記録の行を点検表に、欠品記録の行（在庫の画面、`closing_date`・商品コード）を証跡表に足し、証跡表の後の文から欠品記録の記述を除いた / `vp-qe-kata-conformance`（適用先）、共通サンプル文脈の期待効果 / -",
+    "R5-5: R5 / 12. 関連ドキュメント導線 / 9 章で参照する opd-access-control-sample が関連導線の表になかった / 方針の行として opd-access-control-sample を足した / `vp-dev-change-impact` / -",
+    "R5-6: R5 / 相手側 opd-index-sample 1. 概要・9. 権限・アカウント運用・12. 関連ドキュメント導線 / opd-index-sample は「アカウントは店番担当と `DEV` に限り」とするが、opd-access-control-sample は運用の区分（`OPS`）を定めている。未決事項の表に、opr-change-sample と本書が持つ「変更の凍結期間」がない。関連導線の手順の行も opr-index-sample と opr-incident-sample の 2 本だけで、opr-sample と他の分冊がない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。相手側 docs/ja/specdojo/samples/opd-index-sample.md に次を入れる案: 9 章に `OPS` の運用の区分を足す、未決事項に凍結期間の行を足す、関連導線に opr-sample と分冊を載せる / -",
+    "grade finding の扱い: F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は、kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点とされているため、この段では扱っていない。F002 は、本書の未決事項の表に「監査ログ以外の証跡の保管期間」の行がすでにあり、証跡表の後の文もその扱いを指しているので、解消済みと判断した。F003 は R5-1 で解消した。ただし相手側の opr-index-sample は R5-2 で扱う。",
+    "用語集（docs/ja/product/010-business-specs/060-glossary/）は SpecDojo プロダクトの用語を扱い、店舗業務の語（店番担当・つけ・日次締めなど）を定義していないため、表記の食い違いはなかった。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-150/T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261128T102630Z-a0719568/executor.log",
+      "bytes": 7879,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-150/T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261128T102630Z-a0719568/parent-validation-attempt-1-lint-md-changed.log",
+      "bytes": 307,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+R5（整合）の段で食い違いを 1 件見つけ、`docs/ja/specdojo/samples/nfr-performance-sample.md` だけを直しました。ほかに要判断の点が 2 件あり、どちらも直さずに handoff に残しました。
+
+**直した食い違い（R5-1）**
+- **問題:** 監視の sample は、自動の監視をホスティング環境の死活と閉店後のバックアップに限っています。応答時間は監視の対象に入っていません。一方で性能要件の sample は「運用後は基準を監視の閾値として扱い、監視の手順で対応する」と書いていました。
+- **直し:** 「測定・検証方法」の末尾の文を、「運用後は確認で求めた値を基準と比べる。基準を超えたときの扱いは未決事項で決める」に書き換えました。
+- **関連の直し:** 「関連ドキュメント導線」の運用監視の行の目的も合わせて直しました。「未決事項」の表には「運用後に基準を超えたときの扱い」の行を足しました。決まるまでは値を記録するだけとします。
+
+**要判断として残した点（どちらも直していません）**
+- **R5-2:** 非機能要件の入口の sample は、性能の検証先として `stc-cash-sale`・`stc-credit-balance`・`stc-daily-close` の 3 つを挙げています。本書の導線は現金販売の総合テストカタログだけを指しています。残りの 2 つに当たる sample がないので wikilink を足せず、そのままにしました。
+- **R5-3:** 備考の「1 会計を 90 秒以内で終える業務目標」の出典は、影響調査（業務）の sample などにあります。ただし `based_on` にも導線の表にも入っていません。食い違いではないため、出典を足すかどうかは判断を待ちます。
+
+grade の F001（`vp-qe-verifiability`）は R4 の観点なので、この段では扱っていません。今の本文は、`nfr-perf-002`・`nfr-perf-004` を「基準の確定まで判定しない」とすでに書いており、指摘は解消済みと見ています。
+
+検査は Prettier の整形チェックだけを実行し、通りました。Markdown lint などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: 性能要件 sample の運用監視の記述を監視の sample（応答時間は自動監視の対象外）に合わせて直し、未決事項に運用後の超過時の扱いを追加した。","handoff":["R5-1: 段 R5 / 箇所 測定・検証方法、関連ドキュメント導線、未決事項 / 指摘 本書は「運用後は基準を監視の閾値として扱い、超えた場合は運用方針・設計: 監視の手順で対応する」としていたが、`specdojo:opd-monitoring-sample` は自動の監視をホスティング環境の死活と閉店後のバックアップに限り、応答時間を監視していない / 直した案 運用後は判定時期の確認で求めた値を基準と比べ、超過時の扱いは未決事項で決める文に改め、導線の運用監視の目的を「運用後の監視の対象。応答時間を監視に加えるときの変更先」にし、未決事項に「運用後に基準を超えたときの扱い」（当面は値を記録するだけで通知と初動に使わない）を追加した / 根拠 `vp-qe-kata-conformance`（kata 相互）、`vp-dev-change-impact` / 印 -","R5-2: 段 R5 / 箇所 関連ドキュメント導線 / 指摘 `specdojo:nfr-index-sample` の検証導線は性能の検証先に `stc-cash-sale`・`stc-credit-balance`・`stc-daily-close` を挙げるが、本書の導線は `specdojo:stc-sample`（店頭の現金販売）だけで `nfr-perf-005`・`nfr-perf-006` の総合テスト先を示していない / 直した案 - / 根拠 `vp-qe-kata-conformance`。つけ残高・日次締めの stc の sample が存在しないため wikilink を足せない。相手側の案として、nfr-index-sample の検証導線を sample の範囲（`stc-cash-sale`）に絞るか、stc の sample を足す時に本書の導線へ行を加える。選ばなかった案は存在しない id のバッククォート仮置きで行を足すこと（完成例に未作成の参照が増えるため） / 印 要判断","R5-3: 段 R5 / 箇所 性能要件一覧（`nfr-perf-001` の備考） / 指摘 「1 会計を 90 秒以内で終える業務目標」の出典は `specdojo:imp-business-sample` の成功条件（平日 16:00-18:00 の 1 会計あたり平均処理時間 90 秒以内）だが、本書の `based_on` にも関連ドキュメント導線にもない / 直した案 - / 根拠 `vp-dev-change-impact`。値は食い違っていないため直さなかった。案として、導線の根拠に imp-business-sample の行を足すか、`based_on` に加える。選ばなかった理由は、`based_on` は rulebook の上位入力の定めに従うため、R5 の判断だけで足すのを避けた / 印 要判断","F001（`vp-qe-verifiability`）は R4 の観点で、R5 では扱わない。現行本文は `nfr-perf-002`・`nfr-perf-004` を基準の確定まで判定せず値の記録のみとする旨を測定・検証方法の合格条件と末尾の段落に記載済みで、指摘は解消済みと判断した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-performance-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_applicable","summary":"親 runner が実行する","reason":"pipeline の parent validation として親 runner が実行するため"}]}
+</specdojo_executor_evidence>

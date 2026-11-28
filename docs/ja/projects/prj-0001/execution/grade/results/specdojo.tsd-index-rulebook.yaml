@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-27T20:05:14.213Z"
-graded_by: flash-high-executor
-content_hash: 1997573912cf2227a3363e4090f41ef229aad85b0778b56e0a6a5f93a2760bf2
+score: 98
+graded_at: "2026-11-23T15:55:47.560Z"
+graded_by: sonnet-review-executor
+content_hash: 070ef1a1e293ae4f2c466ec7ec84eabe08243b93b1e633c84eb523f8822544e1
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,6 +101,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: Technology Stack Index (TSD Index) Documentation Rules
+    message: sample の status が draft のままで、ready の rulebook に対応する完成例として扱えるか不明確なため、sample の ready 化の条件または状態を整合させる。
+    message_ja: sample の status が draft のままで、ready の rulebook に対応する完成例として扱えるか不明確なため、sample の ready 化の条件または状態を整合させる。

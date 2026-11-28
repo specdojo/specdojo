@@ -1,0 +1,19 @@
+R5（整合）として、同じ接頭辞の sample 4件、based_on と wikilink の参照先、用語集、共通サンプル文脈と照らし合わせました。食い違い 3 件は `docs/ja/specdojo/samples/imp-test-sample.md` 側で直しました。相手側の文書を直すべき点は 2 件で、どちらも直す案だけを残しています。Prettier の確認は通っています。lint などの検査は、このあと親の runner が実行します。
+
+**この sample で直したこと**
+
+- **`part_of`**: `[]` を `- prj-0001` にしました。並行する 4 件の sample とそろえています。
+- **並行する影響調査の参照**: `imp-data`・`imp-business` をインラインコードで書いていたので、`[[specdojo:imp-data-sample|...]]`・`[[specdojo:imp-business-sample|...]]` の wikilink にしました。文書が存在するときはリンクにするという Sample 記述標準と、rulebook の「互いの結論を参照する」に合わせています。
+- **移行テストの扱い（要判断）**: 影響調査（データ）と影響調査（運用）は移行テストを前提にしているのに、この sample では対象にも対象外にも挙がっていませんでした。対象外に足し、理由を「照合方法と合格条件は影響調査（データ）で決める」としました。選ばなかった案は、対象範囲に移行テストを加えて影響詳細一覧に 1 行足すことです。
+- **決定記録の書き方**: 影響調査（業務）にそろえ、決定記録の初出を「プロジェクト登録簿（PJR）の決定記録 `PJR-T5D1`」にしました。
+
+**相手側を直す案（どちらも変更していません）**
+
+- **影響調査（データ）の変更要求 ID**: 変更要求 ID が `PJR-C4A1` で、ほかの 4 件の `cr-2026-004` と食い違っています。本文の ID と `based_on` を `cr-2026-004` にそろえる案です。用語集では変更要求が登録簿の分類（change-request）なので、逆に全件を PJR 形式に寄せる案もあり、要判断としました。
+- **結合テストで確かめる範囲（要判断）**: 影響調査（データ）の受入確認は、結合テストで売上明細の値引き理由とキャンペーン適用履歴を確かめる前提です。一方、この sample の結合テスト 8 ケースが見るのは売上合計と値引き合計だけです。この sample の結合テストの範囲を広げるか、データ側の確認をデータ検証へ移すかは決めていません。
+
+grade の F001 は `vp-pm-plan-feasibility` の指摘で、kata のレビューでは使わない観点のため扱っていません。F002〜F005 は前の段までに直っていました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合のレビューで imp-test-sample の 3 件（part_of の補完、並行する影響調査への wikilink 化と移行テストの対象外への追加、PJR 初出の表記）を直し、相手側を直す案 2 件を残した。","handoff":["R5-1: R5 / frontmatter / `part_of` が `[]` で、並行する imp-business・imp-data・imp-interface・imp-operations の各 sample（`part_of: - prj-0001`）と食い違う / `part_of` を `- prj-0001` にした / `vp-qe-kata-conformance`（kata 相互） / -","R5-2: R5 / 目的と適用範囲 / 対象外の理由で参照する並行文書を `imp-data`・`imp-business` のインラインコードで書いており、ファイルが存在するのにリンクしていない（並行 sample は本 sample を wikilink で参照している） / `[[specdojo:imp-data-sample|影響調査（データ）サンプル]]`・`[[specdojo:imp-business-sample|影響調査（業務）サンプル]]` の wikilink にした / Sample 記述標準「リンクはファイルがある場合に記載」、imp-test-rulebook の「互いの結論を参照する」 / -","R5-3: R5 / 目的と適用範囲 / 影響調査（データ）の受入確認と影響調査（運用）の対応方針は移行テストを前提にしているが、本 sample は移行テストを対象範囲にも対象外にも挙げていない / 対象外のテスト範囲に「移行テスト（照合方法と合格条件は影響調査（データ）で決めるため）」を足した / `vp-dev-change-impact`、imp-test-rulebook の「対象外のテスト範囲とその理由」。迷った理由: 移行テストを本書の対象範囲に入れ、影響詳細一覧に 1 行足す案もあるが、移行の合格条件をデータ側が持っているため対象外とする案を選んだ / 要判断","R5-4: R5 / 対応方針 / 決定記録 `PJR-T5D1` の初出で PJR の正式名がなく、影響調査（業務）の「プロジェクト登録簿（PJR）の決定記録 `PJR-B4D1`」と書き方が食い違う / 初出を「プロジェクト登録簿（PJR）の決定記録 `PJR-T5D1`」にした / `vp-qe-kata-conformance`（kata 相互）、文章のチェック項目 W8 / -","R5-5: R5 / 相手側: imp-data-sample の目的と適用範囲 / imp-data-sample は変更要求を `PJR-C4A1` と書き、imp-test・imp-business・imp-interface・imp-operations の `cr-2026-004`（`based_on` を含む）と食い違う / - / `vp-qe-kata-conformance`（kata 相互）。相手側の案: imp-data-sample の本文の ID と `based_on` を `cr-2026-004` にそろえる。迷った理由: 用語集では変更要求が登録簿の分類（change-request）で、全件を PJR 形式にそろえる案もあるため / 要判断","R5-6: R5 / 相手側: imp-data-sample の受入確認、本 sample の影響詳細一覧 / imp-data-sample は結合テストで値引き理由とキャンペーン適用履歴を確かめる前提だが、本 sample の結合テスト 8 ケースの集計項目は売上合計と値引き合計だけで、値引き理由と適用履歴を確かめない / - / `vp-dev-change-impact`。案: 本 sample の結合テストの確認項目に値引き理由と適用履歴を加えるか、imp-data-sample の当該行の確かめ方をデータ検証へ移す。どちらが正かを決める根拠がないため直していない / 要判断","申し送り: grade の F001（`vp-pm-plan-feasibility`）は kata のレビューで使わない観点のため扱っていない。F002〜F005 は前の段までに解消していた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-test-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/imp-test-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

@@ -1,3 +1,5 @@
+import { registerGradeResultPaths } from "./register-grade-scope.js";
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
@@ -62,7 +64,7 @@ import {
   registerBookkeepingPaths,
   registerTransitionPaths,
 } from "./register-state.js";
-import { finalizeRegisterWorktreeRun } from "./register-worktree.js";
+import { finalizeRegisterWorktreeRun, runSingleRegisterItemWorktree } from "./register-worktree.js";
 import { appendResumeNotesToPlan, nextResumeNotes } from "./resume-notes.js";
 import {
   isWorktreeCleanupInProgress,
@@ -199,7 +201,34 @@ export async function resumeRegisterIntegration(params: {
 }): Promise<RegisterItemSummary> {
   const { item, worktree, target, worktreeResultPath, actor } = params;
 
-  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  // This entry point must also reject inconsistent persisted state before any lifecycle or Git
+  // mutation, including the cleanup path for a branch that was already merged.
+  if (
+    target.stage !== "integrate" ||
+    target.state.stages.executor.status !== "succeeded" ||
+    target.state.stages.reporter.status !== "succeeded" ||
+    target.state.run_id !== target.runId ||
+    target.state.task_id !== item.id ||
+    target.evidence.stage.status !== "succeeded" ||
+    target.evidence.completion_status === "incomplete" ||
+    target.evidence.run_id !== target.runId ||
+    target.evidence.task_id !== item.id
+  ) {
+    const reason = `integration requires succeeded executor/reporter stages and matching executor evidence for run ${target.runId}`;
+    process.stderr.write(`resume refused: ${item.id}: ${reason}\n`);
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "failure",
+      transition: "none",
+      commit: "off",
+      reason,
+    };
+  }
+
+  process.stdout.write(
+    `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+  );
   process.stdout.write(
     `  Resuming integration from run ${target.runId} (reporter result: ${params.stem}-result.md)\n` +
       `  CWD: ${worktree.path}\n  Actor: ${actor} (runner-owned integration)\n`,
@@ -305,22 +334,110 @@ export async function resumeSingleRegisterItemWorktree(
 
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
   const foundWorktree = findExecWorktree(repoRoot, worktreeTaskId);
-  if (!foundWorktree) {
-    return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
-  }
   // 前の統合の後の撤去がロックの外で進んでいる間は、同じ worktree を再開しない（PJR-NHT7）。
   if (isWorktreeCleanupInProgress(executionPath, worktreeTaskId)) {
     return refuse(worktreeCleanupInProgressReason(worktreeTaskId));
   }
   const lookup = findResumableRegisterRun({
     repoRoot,
-    worktreePath: foundWorktree.path,
+    worktreePath: foundWorktree?.path ?? repoRoot,
     executionPath,
     taskId: item.id,
     ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
   });
-  if (lookup.kind !== "resumable") return refuse(lookup.reason);
+  if (lookup.kind !== "resumable")
+    return refuse(
+      foundWorktree ? lookup.reason : `no exec worktree to resume for ${item.id}; ${lookup.reason}`,
+    );
   const target = lookup.target;
+  if (target.stage === "prepare") {
+    const artifacts = resolveRegisterResumeArtifacts({
+      repoRoot,
+      worktreePath: foundWorktree?.path ?? repoRoot,
+      executionPath,
+      taskId: item.id,
+      state: target.state,
+    });
+    if (
+      !artifacts ||
+      !existsSync(resolve(repoRoot, artifacts.planRef)) ||
+      !existsSync(resolve(repoRoot, artifacts.resultRef))
+    ) {
+      return refuse(
+        `preparation plan/result is missing for run ${target.runId}; restore the run records before resuming`,
+      );
+    }
+    const executor = resolveRegisterResumeExecutor(
+      context.roster,
+      opts,
+      context.execDefaults,
+      target.state.stages.executor.actor,
+    );
+    if (executor.kind === "error") return refuse(executor.message);
+    const reporter = resolveRegisterResumeReporter(
+      context.roster,
+      opts,
+      context.execDefaults,
+      target.state.stages.reporter.actor,
+    );
+    if (reporter.kind === "error") return refuse(reporter.message);
+    let overrides: ReturnType<typeof resumeIntegrationBranches>;
+    try {
+      overrides = resumeIntegrationBranches(
+        target.state.integration_branches,
+        opts.integrationBranch,
+      );
+    } catch (error) {
+      return refuse(error instanceof Error ? error.message : String(error));
+    }
+    // A preparation fix may have been committed on the integration branch after the wait.
+    // Missing product worktrees are created by preparation; sync only those already present.
+    if (foundWorktree) {
+      try {
+        const worktree = withProductWorktrees(
+          foundWorktree,
+          configuredProductRepos(schedulePath, overrides),
+          worktreeTaskId,
+        );
+        syncTaskWorktreesWithIntegrationTargets({
+          worktree: { ...worktree, repos: worktree.repos?.filter((repo) => existsSync(repo.path)) },
+          projectTarget: currentBranch(repoRoot),
+          message: `exec(register ${item.id}): merge integration target before preparation resume`,
+          ...registerResumeConflictPaths(
+            repoRoot,
+            [
+              resolve(repoRoot, artifacts.planRef),
+              resolve(repoRoot, artifacts.resultRef),
+              resolve(repoRoot, target.stateRef),
+              ...registerTransitionPaths(registerPaths, ticketPath),
+            ],
+            ticketPath ? repoRelativePath(repoRoot, ticketPath) : null,
+          ),
+        });
+      } catch (error) {
+        return refuse(
+          `cannot sync the worktree before preparation resume: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+    process.stdout.write(
+      `  Resuming preparation of run ${target.runId} before starting the executor\n`,
+    );
+    return runSingleRegisterItemWorktree(
+      context,
+      {
+        ...opts,
+        executorBy: executor.candidate.actor,
+        reporterBy: reporter.candidate.actor,
+        integrationBranch: [...overrides].map(([repo, branch]) => `${repo}=${branch}`),
+      },
+      pjrId,
+      lifecycleLock,
+      { state: target.state, artifacts },
+    );
+  }
+  if (!foundWorktree)
+    return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
 
   // PJR-XRAB: run 開始時の --integration-branch を checkpoint から引き継ぐ。再開時に別の統合先を
   // 指定することは認めない（run の途中で統合先が変わると、開始点と統合先が食い違う）。
@@ -359,10 +476,10 @@ export async function resumeSingleRegisterItemWorktree(
   // 本体から再開する場合は、register の遷移と agent の起動より前に、その記録を本体へ取り込む。
   const foreignWait = findForeignWaitRecords({ repoRoot, worktree, itemId: item.id });
   if (foreignWait) {
-    const adopt = (): string | null => {
+    const adopt = async (): Promise<string | null> => {
       try {
         const count = countForeignCommits(repoRoot, foreignWait);
-        adoptForeignWaitRecords({
+        await adoptForeignWaitRecords({
           repoRoot,
           schedulePath,
           itemId: item.id,
@@ -383,7 +500,7 @@ export async function resumeSingleRegisterItemWorktree(
         );
       }
     };
-    const adoptFailure = lifecycleLock ? await lifecycleLock.runExclusive(adopt) : adopt();
+    const adoptFailure = lifecycleLock ? await lifecycleLock.runExclusive(adopt) : await adopt();
     if (adoptFailure) return refuse(adoptFailure);
   }
 
@@ -419,6 +536,12 @@ export async function resumeSingleRegisterItemWorktree(
       planPath: resolve(repoRoot, artifacts.planRef),
       resultPath: resolve(repoRoot, artifacts.resultRef),
       ticketPath,
+      ownGradeResultPaths: registerGradeResultPaths({
+        repoRoot,
+        projectId,
+        catalogPath: context.catalogPath,
+        item,
+      }),
     });
 
   // waiting のまま再開しないよう、通常実行と同じく in-progress へ戻す。遷移は exec branch
@@ -582,7 +705,9 @@ export async function resumeSingleRegisterItemWorktree(
     );
     if (reporter.kind === "error") return refuse(reporter.message);
 
-    process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+    process.stdout.write(
+      `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+    );
     process.stdout.write(
       `  Resuming executor from run ${target.runId} in the existing run directory\n` +
         `  CWD: ${worktree.path}\n  Agent: ${executor.candidate.actor} (executor)\n`,
@@ -672,7 +797,9 @@ export async function resumeSingleRegisterItemWorktree(
   );
   if (reporter.kind === "error") return refuse(reporter.message);
 
-  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(
+    `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+  );
   process.stdout.write(
     `  Resuming reporter from run ${target.runId} (executor evidence: ${target.evidenceRef})\n` +
       `  CWD: ${worktree.path}\n  Agent: ${reporter.candidate.actor} (reporter)\n`,

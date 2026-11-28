@@ -1,0 +1,15 @@
+PJR-WF8Q の作業は終わりました。imp 系 rulebook 5 本の `based_on` の説明を小文字にそろえ、sample 4 本の `cr-2026-004` を直しました。`npm run lint:fm` と `npm run lint:md` は流していません。親 runner が実行するため、結果は未確認です。
+
+- **rulebook:** business・data・interface・test・operations の `based_on` の説明を、「変更要求の個票 ID（小文字の `pjr-xxxx`。本文では `PJR-XXXX` と書く）」に書き換えました。business と test の「変更要求 ID」「変更要求」の書き方も同じ表現にしました。転記先の登録項目 ID（`PJR-XXXX`）の記述は変えていません。
+- **sample:** business・interface・test・operations の `based_on` を `pjr-c4a1`、本文を `PJR-C4A1` に直しました。imp-data と同じ形です。
+- **変えていないもの:** schema と template は変えていません。
+- **個票:** `pjr-wf8q-kata-id-case-mismatch.md` の作業内容の 3 行を `done` にし、対応結果を記入しました。登録簿の行と個票のステータス項目は変えていません。
+
+確認できたこと:
+- `docs/ja/specdojo/samples/` に `cr-2026-004` が残っていないことを grep で確認しました。
+- 変更した rulebook と sample への `prettier --check` が通りました。
+- `npm run validate:history-links` が通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp 系 rulebook 5 本の based_on の説明を小文字 pjr-xxxx の形にそろえ、sample 4 本の cr-2026-004 を pjr-c4a1 / PJR-C4A1 に直した。個票の作業内容と対応結果も更新した。","handoff":["schema と template は変更していない。","npm run lint:fm と npm run lint:md は親 runner の検査で確認する。"],"validations":[{"command":"grep -rn cr-2026-004 docs/ja/specdojo/samples/","status":"passed","summary":"0 件"},{"command":"npx prettier --check docs/ja/specdojo/rulebooks/imp-*-rulebook.md docs/ja/specdojo/samples/imp-*-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"valid"}]}
+</specdojo_executor_evidence>

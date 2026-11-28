@@ -1,0 +1,27 @@
+ifx-api の sample で R1（目的の過不足）を済ませました。直したのは `docs/ja/specdojo/samples/ifx-api-sample.yaml` の 1 ファイルだけで、行を 2 つ削り、1 つ足しています。Prettier の整形チェックと YAML の構文チェックは通りました。lint などの定められた検査は、このあと親 runner が流します。
+
+**直した箇所（3 件）**
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R1-1 | R1 | 先頭のコメント（4 行目） | 「人間の PO（店主代表）が契約の承認・保留・差し戻しと ready への昇格を判断する」は、文書を承認する役割の割り当てと承認の進み具合にあたる。Sample 記述標準の「記述ガイド」と「禁止事項」が sample の本文に書くことを禁じている | この行を削った | `vp-qe-kata-conformance`（種別の責務） | - |
+| R1-2 | R1 | 先頭のコメント（2 行目） | 「構造は OpenAPI 3.0.3 に対応した検証器で確かめる」は rulebook「未決事項と検証」の手順をそのまま書き写しており、API の契約の中身ではない。検証の残りは `_UNDECIDED_` の検証器の項目で示せている | この行を削った | `vp-po-purpose-alignment`、`vp-qe-kata-conformance` | - |
+| R1-3 | R1 | `info.description` | rulebook の本文要件は `info.description` に未決事項を書くことを求めるが、未決事項は YAML のコメントにしかない。OpenAPI の表示ツールはコメントを読まないので、相手（本部）に伝わらない | 「未決事項: 結果不明のときの受付照会の操作と、税区分・合計・預かり金を本部へ送るかは本部と合意していない。」の 1 文を足した | `vp-po-purpose-alignment`（rulebook の本文要件の表、全体方針「最小十分」） | 要判断 |
+
+- **R1-3 で迷った理由:** 足した 1 文はコメントの `_UNDECIDED_` と内容が少し重なります。R3 の `vp-arc-conciseness` で重複と見られるおそれがあります。
+- **選ばなかった案:** 次の 2 つは採りませんでした。
+  - 未決事項を `info.description` にだけ書く案は、rulebook「未決事項と検証」がコメントに `_UNDECIDED_` を書くよう求めているため外しました。
+  - コメントだけに残す案は、本文要件の表に反するため外しました。
+- `info.description` には相手と合意に使う 2 件だけを書きました。コメントの残りの 2 件（通貨の仮定、検証器と接続の確認）は入れていません。
+
+**この段では扱わなかった grade の finding**
+
+- **F001**（`vp-pm-plan-feasibility`、担当と期限がない）：kata のレビューの段では使わない観点として外されています（kata ガイド「kata の観点の組」）。
+- **F002**（3 行目のコメントが `info.description` と重複）と **F006**（「開発担当」に Role code がない）：R3 で扱います。
+- **F003**（`details` の構造が決まっていない）：R4 で扱います。
+- **F004**（`_ASSUMPTION_` と `_UNDECIDED_` の扱いが矛盾）：R2 で扱います。
+- **F005**（`docs/ja/specdojo/samples/generated/ifx-api-sample.md` が古いまま）：sample 以外のファイルです。直すには yaml-pages で表示のページを作り直します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-api-sample.yaml の R1（目的の過不足）を済ませた。承認・昇格の役割を書いたコメントと、rulebook の検証手順を書き写したコメントを削り、info.description に未決事項の 1 文を足した。","handoff":["R1-1: R1 / 先頭のコメント（4 行目） / 「人間の PO（店主代表）が契約の承認・保留・差し戻しと ready への昇格を判断する」は、文書を承認する役割の割り当てと承認の進み具合にあたり、Sample 記述標準の「記述ガイド」と「禁止事項」が禁じる / この行を削った / `vp-qe-kata-conformance`（種別の責務） / -","R1-2: R1 / 先頭のコメント（2 行目） / 「構造は OpenAPI 3.0.3 に対応した検証器（例: Redocly CLI、Spectral）で確かめる」は rulebook「未決事項と検証」の手順の書き写しで、API の契約の中身ではない。検証の残りは `_UNDECIDED_` の検証器の項目で示せている / この行を削った / `vp-po-purpose-alignment`、`vp-qe-kata-conformance` / -","R1-3: R1 / `info.description` / rulebook の本文要件は `info.description` に未決事項を書くことを求めるが、未決事項は YAML のコメントにしかなく、OpenAPI の表示ツールで読む相手（本部）に伝わらない / 「未決事項: 結果不明のときの受付照会の操作と、税区分・合計・預かり金を本部へ送るかは本部と合意していない。」の 1 文を足した / `vp-po-purpose-alignment`（rulebook の本文要件の表、全体方針「最小十分」）。迷った理由: コメントの `_UNDECIDED_` と内容が少し重なり、R3 の `vp-arc-conciseness` で重複と見られるおそれがある。選ばなかった案: `info.description` にだけ書く案（rulebook「未決事項と検証」がコメントの `_UNDECIDED_` を求めるため外した）と、コメントだけに残す案（本文要件に反するため外した） / 要判断","扱わなかった grade の finding: F001（`vp-pm-plan-feasibility`）は kata ガイド「kata の観点の組」で kata の段のレビューでは使わない観点のため扱わない。F002・F006 は R3、F003 は R4、F004 は R2 で扱う。","F005: sample 以外のファイル `docs/ja/specdojo/samples/generated/ifx-api-sample.md` が古い版のままのため、yaml-pages で表示のページを作り直す必要がある（この段では sample 以外を変更しない）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-api-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象の schema がない","reason":"sample の先頭行が specdojo-schema: none reason=external-openapi で、SpecDojo の schema で検証しない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample の YAML だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

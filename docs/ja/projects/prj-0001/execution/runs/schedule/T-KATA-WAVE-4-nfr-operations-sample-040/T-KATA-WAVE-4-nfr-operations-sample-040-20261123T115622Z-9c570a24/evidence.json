@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-operations-sample-040",
+  "run_id": "T-KATA-WAVE-4-nfr-operations-sample-040-20261123T115622Z-9c570a24",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T11:57:10.433Z",
+    "completed_at": "2026-11-23T11:59:04.216Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../specdojo/rulebooks/nfr-operations-rulebook.md  | 167 ++++++++++-----------\n 1 file changed, 76 insertions(+), 91 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "passed",
+      "summary": "整形を適用した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/rulebooks 配下の rulebook だけで、plan・result・個票は変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-operations-rulebook\n  type: rulebook\n  deliverable_type: requirement\n  status: draft\n  recipe: undecided\n  sample: specdojo:nfr-operations-sample\n  template: undecided\n---\n\n# 非機能要件 / 運用 作成ルール\n\nNon-Functional Requirements Operations Documentation Rules\n\n本書は、非機能要件のうち運用（監視、バックアップ、手順、体制）を定義する `nfr-operations` の作成ルールを定める。`nfr-operations` は、平常時の監視と異常時の対応を続けられるかを判断し、運用方針・運用手順・受入判定の基準を揃え\n… output omitted …\n 「定期的に確認する。」（方法・時期・判定者がない）\n\n### 6.5. 関連ドキュメント導線\n\n- 「位置づけ」の文書を、種別・文書 ID・目的の表で紐づける。\n- 基準値を変えたときに見直す `sac-*` / `opd-*` / `opr-*` が分かるようにする。\n- 未作成の文書はバッククォートで仮置きする。\n\n判断基準: 各要件の判定先と、それを実現する方針・手順へ辿れること。\n\n- 良い例: 「運用手順 / `opr-backup` / バックアップの実行と失敗時の再実行」\n- 悪い例: 「関連資料を参照。」（文書と目的が特定できない）\n\n## 7. 禁止事項\n\n| 禁止事項 | 理由 |\n| - | - |\n| 手順書の全文を再掲する | 文書責務が混在するため |\n| 通知先や判定条件を曖昧にする | 運用不能になるため |\n| 監視指標を定義しない | 品質評価が継続できないため |\n| 基準を単位・集計期間なしで書く | 判定できないため |\n| 監視製品・通知ツールの選定を要件として書く | 手段の決定は `opd-*` の責務であるため |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6208 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6208 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-operations-sample-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1935}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  20:59:41\n   Duration  3.01s (transform 7.17s, setup 1.32s, import 10.21s, tests 6.66s, environment 2ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nbook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-operations-sample-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-operations-sample-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "nfr-operations-rulebook を書き直した。サンプル章を削除し、位置づけを関係表に、本文構成（標準テンプレ）を本文要件に改め、記述ガイドに判断基準と良い例・悪い例を加えた。grade の finding F001〜F022 のうち、sample の章構成の是正（F016）を除いて rulebook 側で対処した。",
+  "completion_status": "complete",
+  "handoff": [
+    "F016（major/vp-qe-kata-conformance）は未解消。sample（docs/ja/specdojo/samples/nfr-operations-sample.md）が rulebook の「本文要件」の 5 章（概要（対象・目的）／適用範囲・体制前提／運用要件一覧／測定・検証方法／関連ドキュメント導線）に揃っていない。この段は sample を変更しないため、sample の段で駄菓子屋の題材のまま 5 章構成へ直す必要がある（要件 ID は nfr-ops-001 からの連番、領域列で 4 領域を網羅、判定者は Role code、製品名を書かない）。",
+    "recipe・template の要否は rulebook の全体方針に _UNDECIDED_ として残した。sample の是正と、NFR 分冊で共通の template にできるかの判断が ready の前提条件。",
+    "維持した記述: ID 規則 nfr-ops-<連番>、配置先、既存の禁止事項 3 行。同系統の nfr-availability-rulebook・nfr-integrity-rulebook の簡潔化と構成を揃えた。役割の割り当てや承認の進み具合は成果物に求めていない（PJR-76N9）。オンコール体制と判定者は運用の中身として Role code で書く要件として残した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-operations-sample-040/T-KATA-WAVE-4-nfr-operations-sample-040-20261123T115622Z-9c570a24/executor.log",
+      "bytes": 5253,
+      "truncated": false
+    }
+  ]
+}

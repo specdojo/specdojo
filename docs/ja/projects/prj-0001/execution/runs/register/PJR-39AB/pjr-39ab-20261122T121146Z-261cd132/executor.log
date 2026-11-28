@@ -1,0 +1,21 @@
+PJR-39AB の照合を終え、結果を個票の「対応結果」に書きました。コード、設定、`sysd-cross-cutting-policy` 本文は変えていません。変更したのは個票だけです。
+
+照合の主な結果は次のとおりです。
+- **Q1（RET-002）**: retry の上限と待機、候補順の切り替え、上限到達時の block は実装済みです。criticality による policy の切り替えは未実装です。`on_non_critical` は互換用で実行時に無視されています。
+- **Q1 の食い違い**: `max_attempts: 3` では待機が 2 回しか走りません。設定コメントの 3 段目（540 秒と 480 秒）は実行されません。
+- **Q2（TIM-001）**: 親検証は 10 分で SIGTERM、10 秒後に SIGKILL です。command Job は `timeout_seconds` で SIGTERM、1 秒後に SIGKILL です。provider CLI の起動（`executeAgent`）には時間上限も子プロセスの停止処理もありません。Routine 固有の timeout は読み切れず「不明」にしました。
+- **Q4（CFG-003、全規則）**: agent 指定、統合先、rate limit 指定、ローカル設定の優先順は実装済みです。環境変数の優先順と反映時点は正本が見つからず「不明」です。全規則の判定表も個票に載せました。
+
+直す案は個票の対応結果に書き、起票の案は 6 件です。TIM-001 の provider CLI の timeout は最優先の issue として挙げました。「CHANGELOG に書く事項」は「なし」としています。
+
+検証は、このタスクで変えた個票に対して次を実行しました。
+- Prettier の整形を適用しました。
+- markdownlint は 0 件でした。
+- `npm run -s validate:history-links` を実行し、末尾の出力はすべて valid でした。
+- `npm run lint:md` などの親検証は runner が実行します。
+
+不明の規則（CFG-002・ERR-001・IDM-001・LOG-001・TRC-001・SEC-001）は、今回は読み切れませんでした。規則ごとの確認タスクを Schedule へ接続する案を個票に書いています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-39AB の照合結果（Q1・Q2・Q4 の判定、数値の境界の対比、直す案、起票の案、CHANGELOG 事項なし）を個票の対応結果に記録した。コード・設定・sysd 本文は変更していない。","handoff":["個票の判定で「不明」とした規則（CFG-002・ERR-001・IDM-001・LOG-001・TRC-001・SEC-001、Routine の timeout、環境変数の優先順と反映時点）は今回の範囲で読み切れていない。規則ごとの確認タスクを Schedule / PJR へ接続する必要がある。","executor の判断: 設計書の MUST の一部だけが実装されている場合に「一部」を 3 分類の補足として併記した。`on_exhausted` は型が `block` 固定で値が読まれないため実装済みと判定した。検索で見つからないテストや正本は「無い」と断定せず「不明」とした。","直す案の最優先は provider CLI（`executeAgent`）への timeout と SIGTERM→SIGKILL のプロセスグループ停止の追加（issue 案）。値は人間が決める。`on_non_critical` の扱いは change と decision で決める必要がある。","`backoff` の設定コメント（60→180→540、120→240→480）は `max_attempts: 3` では到達しない。`max_attempts` を 4 にするかコメントを直すかの判断が要る。保護設定である `.specdojo/exec-defaults.yaml` は変更していない。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-39ab-sysd-cross-cutting-policy-conformance.md","status":"passed","summary":"個票を整形した。"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-39ab-sysd-cross-cutting-policy-conformance.md","status":"passed","summary":"0 issues。"},{"command":"npm run -s validate:history-links","status":"passed","summary":"出力の末尾はすべて valid。"}]}
+</specdojo_executor_evidence>

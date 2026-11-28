@@ -1,0 +1,18 @@
+R5（整合）の段を終えました。`stc-sample.md` は 1 か所だけ直し、相手側（`sac-sample`）を直すべき点を 1 件、案として handoff に残しています。
+
+- **直した点:** `stc-index-sample` の共通合格基準は「商品検索の測定は `stc-cash-sale` が担当する」と定めています。しかし本書には商品検索を測るケースがありませんでした。そこで `st-cash-sale-commit-response-010` の観測点に「商品検索の応答時間」を加えました。トレースの TR-07 の備考には「商品検索の応答（`nfr-perf-004`）も同じ試行で値だけ記録する」と書きました。合否の基準を置かない扱いは `tsp-index-sample`、`sac-sample`、`nfr-performance-sample` と一致しています。
+- **相手側を直す案:** `sac-sample.md` 29 行目は、`SAC-PERF-01` と `SAC-PERF-02` の両方を `st-cash-sale-commit-response-010` が分解して測ると書いています。本書と `stc-index-sample` の分配表では、`SAC-PERF-02` は `st-cash-sale-commit-records-010` が受け持ちます。sac 側の記述を、2 つのケースがそれぞれを測る形に改める案です。
+- **grade の finding（F001〜F005）:** 前の段までに解消済みであることを確かめたので、重ねて直していません。
+  - F001: 境界の「実施」行はなくなっています。外部依存の行は共通方針への参照になっています。
+  - F002: 意図は 1 つの合否命題にまとまっています。
+  - F003: 対象外の重複は「例外」の行に置き換わっています。
+  - F004: `stc-index-sample` から記入例のケース表がなくなり、本書への参照に変わったため、食い違いは残っていません。
+  - F005: 観点名は「会計維持」になり、index の名前と一致しています。
+
+ほかの参照先（`bac-sample` の C-01・C-02、AC-01、`ifx-cmd-sample.yaml` の 30 秒タイムアウトと自動再試行しない扱い、共通サンプル文脈）とは食い違いがありませんでした。用語集にはプロダクトの用語しかないため、駄菓子屋の業務用語は照合していません。
+
+prettier で整形し、markdownlint-cli2 は 0 件でした。変更したのは `docs/ja/specdojo/samples/stc-sample.md` だけです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: stc-sample の commit-response ケースに商品検索の応答時間の記録を追加し、stc-index の担当割当と揃えた。F001〜F005 は前段で解消済みを確認。sac-sample 側の修正案を handoff に記載。","handoff":["No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/stc-sample.md の「トレース」TR-07 の備考と「観点: 会計確定応答」の `st-cash-sale-commit-response-010` の観測点 / 指摘: `stc-index-sample` の「共通合格基準」は「商品検索の測定は `stc-cash-sale` が担当する」と定めるが、本書には商品検索の応答を測るケースや観測点がなかった / 直した案: `st-cash-sale-commit-response-010` の観測点に「商品検索の応答時間」を加え、TR-07 の備考に「商品検索の応答（`nfr-perf-004`）も同じ試行で値だけ記録する」と書いた（sample 側を修正済み） / 根拠: `stc-index-sample` の「共通合格基準」、`tsp-index-sample` の総合テストの出口条件の補足（`nfr-perf-004` は値の記録のみ）、`sac-sample` の対象外（商品検索は合否を判定しない） / 印: なし","No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/sac-sample.md 29行目（下位の行） / 指摘: 「`st-cash-sale-commit-response-010` が `SAC-PERF-01`・`SAC-PERF-02` を分解して測る」とあるが、`stc-sample` と `stc-index-sample` の分配表では `SAC-PERF-02` を「会計記録保全」の `st-cash-sale-commit-records-010` が受け持つ / 直した案（相手側のため未変更）: 「`st-cash-sale-commit-response-010` が `SAC-PERF-01` を、同じ試行の記録を使う `st-cash-sale-commit-records-010` が `SAC-PERF-02` を測る」に改める / 根拠: `stc-sample` の TR-06・TR-07 と「観点: 会計記録保全」、`stc-index-sample` の「対象別への分配方針（共通）」の `会計記録保全` 行 / 印: なし","No: 3 / 段: R5 / 箇所: grade finding F001〜F005 / 指摘: plan に展開された finding を現行版と照合し、前の段までに解消済みであることを確かめた。F001 は境界の「実施」行がなくなり、外部依存の行が共通方針への参照になった。F002 は意図が1つの合否命題にまとまった。F003 は対象外の重複が「例外」の行に置き換わった。F004 は `stc-index-sample` から記入例の表がなくなり本書への参照に変わったため、食い違いが残っていない。F005 は観点名が「会計維持」になり、index の名前と一致した / 直した案: 追加の差分なし / 根拠: 現行の `stc-sample.md`・`stc-index-sample.md` / 印: なし","No: 4 / 段: R5 / 箇所: 用語集の照合 / 指摘: `docs/ja/product/010-business-specs/060-glossary/` には SpecDojo のプロダクト用語しかなく、駄菓子屋の業務用語（店番担当・取引番号・会計確定など）は収録されていないため照合していない。共通サンプル文脈と `bac-sample` の用語・数値（商品A 単価30円・在庫5個、C-01・C-02）とは一致を確かめた / 直した案: なし / 根拠: 用語集のディレクトリ構成、`sample-authoring-standard` の「共通サンプル文脈」 / 印: なし"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/stc-sample.md","status":"passed","summary":"stc-sample.md を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/stc-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは docs/ja/specdojo/samples/stc-sample.md だけで、plan・result・個票などの履歴ファイルを変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更が docs/ja/specdojo/samples/ にとどまり、docs/ja/projects/ に及ばないため"}]}
+</specdojo_executor_evidence>

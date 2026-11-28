@@ -1,0 +1,24 @@
+`prj-issues-and-approach-rulebook.md` だけを直し、4 件の指摘（F001〜F004）と PJR-76N9 の決まりを反映しました。sample・recipe・template は計画どおり触っていません。そのため、直した rulebook と template・sample の間には食い違いが残っています。この 2 つは次の段で揃える必要があります。
+
+**rulebook の変更点**
+
+- **F001（公開できない情報）**: 禁止事項に「個人や特定の組織を識別できる情報、非公開の観察事実」の行を足しました。
+- **F002（ToDo の進み具合）**: ToDo の表に「完了条件」と「期限 / 判断タイミング」の列を足し、記述ガイドに良い例と悪い例を置きました。
+- **F003（優先度の値）**: 優先度は `High` / `Medium` / `Low` の 3 値とし、それぞれの意味を記述ガイドに書きました。
+- **F004（見直しの記録）**: 「記録先と記録の責任は書かない」と言い切る形にしました。記録の扱いは共通の運用に従います。
+- **PJR-76N9**: 導入部の要件を「承認者と利用ロールごとの利用目的」から「どの利用場面で何を判断するための文書か」に改めました。
+- **良い例・悪い例**: 課題一覧と原因の記述ガイドに 1 行ずつ足しました。
+
+**維持した箇所**
+
+- ToDo の「責任ロール」の列は残しました。ToDo ごとに担当を決める中身であり、文書を作る・承認する役割の割り当てではないためです。
+- 章構成、位置づけ、命名、Frontmatter、ほかの禁止事項は、指摘も重複もないので変えていません。
+
+**検査**
+
+- prettier で整形し、markdownlint（`npx markdownlint-cli2`）は 0 件でした。
+- 公式の lint は、このあと親の runner が回します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-issues-and-approach-rulebook を更新した。F001 は禁止事項に公開できない情報の行を追加、F002 は ToDo 表に完了条件と期限 / 判断タイミングの列を追加、F003 は優先度を High / Medium / Low の 3 値と定義、F004 は見直しの記録先と記録の責任を書かないと明記した。PJR-76N9 に従い導入部を「どの利用場面で何を判断するための文書か」に改め、課題一覧・原因・ToDo の記述ガイドに良い例と悪い例を追加した。sample・recipe・template は変更していない。","handoff":["template の「次の検討事項（ToDo）」の表に「完了条件」と「期限 / 判断タイミング」の列を足し、rulebook（F002 の修正）と揃える。","template の「見直しと変更管理」から「記録先と責任ロールを添える」という指示を外し、rulebook（F004 の修正）と揃える。","template の導入部の _TODO_「承認者、および利用ロールごとの利用目的を記述する」を「どの利用場面で何を判断するための文書か」に改める（PJR-76N9）。","sample の導入部の承認者・利用ロールの記述、7 章末尾の「店主代表が確認し」という記録責任の文、6 章の ToDo の表に完了条件と期限の列がない点を、rulebook に合わせて直す。","recipe の「全体の作成手順」6 と「レビュー観点」の「関係者・利用場面」が承認者・利用ロールの記述を求めているので、PJR-76N9 に合わせて見直す。","直さなかった箇所と理由: ToDo の「責任ロール」の列は ToDo ごとの担当という中身であり、文書の役割の割り当てではないので残した。章構成・位置づけ・命名・Frontmatter・ほかの禁止事項は、指摘も重複もないので変えていない。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --write docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md","status":"passed","summary":"表を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票を変更しておらず、変更したのは rulebook だけ"}]}
+</specdojo_executor_evidence>

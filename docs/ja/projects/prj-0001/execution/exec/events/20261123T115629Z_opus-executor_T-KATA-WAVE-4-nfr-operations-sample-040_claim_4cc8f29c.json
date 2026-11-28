@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T11:56:29Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-4-nfr-operations-sample-040",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

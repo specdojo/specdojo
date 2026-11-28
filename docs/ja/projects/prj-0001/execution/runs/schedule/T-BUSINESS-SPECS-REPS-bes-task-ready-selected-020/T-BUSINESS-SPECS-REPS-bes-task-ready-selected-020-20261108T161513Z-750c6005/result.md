@@ -33,7 +33,7 @@ specdojo:
 - 対象を schedule 系のタスクに限るという `_ASSUMPTION_` を置いた。register 系・routine 系の選択も同じイベントにまとめるかは `bes-index` 作成時に決める。
 - 並列選択で「同じ要求で選ばれた」ことを示す情報を、実行記録の既存項目で表せるかは未確認。データモデルの磨き込みで照合する。
 - 参照先の `br-task-selection-strategy`・`bps-task-selection-preparation`・`bps-parallel-required` は未作成のため、wikilink ではなくインラインコードで仮置きした。
-- plan の approach は freeform だが、カタログが `specdojo:bes-rulebook` を指定しているので、その 5 項目構成に合わせた。根拠にした文書は `cdfd-overview`、`cdfd-uc-schedule`、`prj-0001:stsd-task-execution`、`dct-business-model-bes` / `bps` / `br` のカタログ、類似成果物 `bps-task-completion`、`prj-overview`。実装（`src/exec/schedule/ready.ts`、`src/exec/run/schedule-mode.ts`、`src/exec/commands.ts`）は、選択経路が単発・自動・並列の 3 つあることの確認にだけ使った。Web 検索は使っていない。対象ファイルは新規作成のため、破棄した既存記述はない。
+- plan の approach は freeform だが、カタログが `specdojo:bes-rulebook` を指定しているので、その 5 項目構成に合わせた。根拠にした文書は `cdfd-overview`、`cdfd-uc-schedule`、`stsd-task-execution`、`dct-business-model-bes` / `bps` / `br` のカタログ、類似成果物 `bps-task-completion`、`prj-overview`。実装（`src/exec/schedule/ready.ts`、`src/exec/run/schedule-mode.ts`、`src/exec/commands.ts`）は、選択経路が単発・自動・並列の 3 つあることの確認にだけ使った。Web 検索は使っていない。対象ファイルは新規作成のため、破棄した既存記述はない。
 - 依存先の `bes-index` が未作成のため参照できていない。作成時に `P-07` の起点イベント行から `bes-task-ready-selected` へリンクする必要がある（本文 `_TODO_`）。
 - 対象を schedule 系のタスクに限るという `_ASSUMPTION_` を置いた。register 系・routine 系の選択も同じイベントにまとめるかは `bes-index` 作成時に決める。
 - 適用外の検証: `npm run validate:history-links`（変更したのは docs/ja/product 配下の成果物だけで、pjr 個票や plan.md / result.md などの履歴ファイルは変更していない）

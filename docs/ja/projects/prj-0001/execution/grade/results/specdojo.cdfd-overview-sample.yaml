@@ -4,30 +4,30 @@ document: specdojo:cdfd-overview-sample
 path: docs/ja/specdojo/samples/cdfd-overview-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 74
-graded_at: "2026-10-10T21:19:37.779Z"
-graded_by: agy-expert-executor
-content_hash: 8800ec24df147719a638e562710e1c8a35a552adae92de1ee889943109a4ddbc
+verdict: pass
+score: 97
+graded_at: "2026-11-23T20:16:33.116Z"
+graded_by: sonnet-review-executor
+content_hash: d7100fd9b9827040dabec4864ad815632c17b574f9771e5eaf444c3a1365b50a
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
     score: 92
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 50
+    score: 92
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -54,17 +54,17 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
-  vp-dev-implementation-readiness:
-    level: 2
-    score: 50
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -72,23 +72,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,92 +100,23 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 6
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 31
-    anchor: "- **データストア**: 商品台帳、仕入記録、在庫記録、売場棚"
-    message: 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。
-    message_ja: 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。
+    rule: vp-arc-conciseness
+    line: 242
+    anchor: >-
+      - プロセスグループ別 CDFD は、グループに属する領域の内部プロセス、起点イベント、例外・復旧、データストアの読み書きを定める正本である。状態の定義と遷移は STSD を正本とし、プロセスグループ別 CDFD
+      は参照に留める。各領域はちょうど一つのプロセスグループ別 CDFD に属する。
+    message: プロセスグループ別 CDFD とユースケース別 CDFD の役割分担の2項目は rulebook の分担定義の再掲であり、参照を添えた短い要約に圧縮できる。
+    message_ja: プロセスグループ別 CDFD とユースケース別 CDFD の役割分担の2項目は rulebook の分担定義の再掲であり、参照を添えた短い要約に圧縮できる。
   - id: F002
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 74
-    anchor: ""
-    message: 仕入側の `P-02` が在庫記録へ入荷数量を直接反映する一方、`P-05` も販売と入荷を同じ在庫記録へ反映するとされ、実装担当が入荷更新の単一責務・呼出順・重複更新防止条件を確定できない。
-    message_ja: 仕入側の `P-02` が在庫記録へ入荷数量を直接反映する一方、`P-05` も販売と入荷を同じ在庫記録へ反映するとされ、実装担当が入荷更新の単一責務・呼出順・重複更新防止条件を確定できない。
-  - id: F003
-    severity: major
-    rule: vp-qe-verifiability
-    line: 74
-    anchor: ""
-    message: 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。
-    message_ja: 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 60
-    anchor: ""
-    message: "`P-03` の起点イベントを「顧客が商品を購入した」と完了後の表現にしているため、主要入力の「購入依頼と支払」のどの時点で店頭販売が開始したかを判定できるイベントへ修正する必要がある。"
-    message_ja: "`P-03` の起点イベントを「顧客が商品を購入した」と完了後の表現にしているため、主要入力の「購入依頼と支払」のどの時点で店頭販売が開始したかを判定できるイベントへ修正する必要がある。"
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 166
-    anchor: ""
-    message: 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。
-    message_ja: 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 128
-    anchor: classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-    message: 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータストア区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。
-    message_ja: 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータストア区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 74
-    anchor: ""
-    message: >-
-      下位の `cdfd-sample` は `P-02-03` が入荷数量を在庫記録へ直接反映する正本になっている一方、本書は `P-05` にも入荷反映を割り当てているため、概要とプロセスグループ別 CDFD
-      で更新責務を一方へ統一する必要がある。
-    message_ja: >-
-      下位の `cdfd-sample` は `P-02-03` が入荷数量を在庫記録へ直接反映する正本になっている一方、本書は `P-05` にも入荷反映を割り当てているため、概要とプロセスグループ別 CDFD
-      で更新責務を一方へ統一する必要がある。
-  - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 135
-    anchor: 在庫("📦 在庫<br>P-05〜P-06")
-    message: 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。
-    message_ja: 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 31
-    anchor: "- **データストア**: 商品台帳、仕入記録、在庫記録、売場棚"
-    message: 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。
-    message_ja: 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 275
-    anchor: ""
-    message: 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。
-    message_ja: 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。
-  - id: F011
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 5
-    anchor: "## 1. 目的"
-    message: >-
-      `status: ready` であるにもかかわらず、対象範囲と領域分割を PO が承認した登録簿の決定記録またはレビュー結果を特定できないため、rulebook の ready
-      昇格条件を満たしたか検証できる参照を示す必要がある。
-    message_ja: >-
-      `status: ready` であるにもかかわらず、対象範囲と領域分割を PO が承認した登録簿の決定記録またはレビュー結果を特定できないため、rulebook の ready
-      昇格条件を満たしたか検証できる参照を示す必要がある。
+    line: 236
+    anchor: 仕入・販売・在庫・顧客・締めの五つのグループが、商品と支払を受け渡し、台帳や記録を読み書きして店舗運営を支える関係を示す。
+    message: 店主代表など領域の担当から直接受け取る入力を図から省いているため、recipe と template が求める省略の注記を図の直後に1文で追加する必要がある。
+    message_ja: 店主代表など領域の担当から直接受け取る入力を図から省いているため、recipe と template が求める省略の注記を図の直後に1文で追加する必要がある。

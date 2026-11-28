@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cop-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-cop-sample-150-20261126T145451Z-cbcd99e3",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T14:55:42.515Z",
+    "completed_at": "2026-11-26T14:59:17.888Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cop-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cop-sample.md | 48 ++++++++++++++++------------------\n 1 file changed, 23 insertions(+), 25 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/cop-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴の文書は変更していない",
+      "reason": "変更したのは docs/ja/specdojo/samples/cop-sample.md だけで、plan・result・個票は変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML の変更なし",
+      "reason": "変更したファイルは *.md だけで、*.yaml / *.yml は変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cop-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:cop-rulebook\n---\n\n# カットオーバー計画: 切替日の取り込みと開店（駄菓子屋きぬや 販売管理システム）\n\n## 1. 概要（cutover-day）\n\n切替日の前日の閉店後から当日の正午の開店までに、最終棚卸・取り込み・照合・動作確認を終え、店頭タブレットでの並行記録を始める手順を定める（`cop-cutover-day`）。並行記録の運用と正本切替（`mip-index` の GO4）は対象外とし、`cop-index` から導く別の対象別計画と `otp-index` に委ねる。\n\n## 2. 当日タイムライン\n\n次の表は、前日の閉店（C）と当日の開店（T、正午）を基準にした作業の順序と、各時点の完了条件・判\n… output omitted …\nる | 切替日の前の週の来店時 | 午前休業と、つけ残高は切替の前後で変わらないこと。問い合わせは店頭で受けること | 常連客ノートの伝達済みの印 |\n| 仕入先 | 注文窓口へ配送日時を連絡 | 切替日の 1 週間前 | 切替日の午前は受け取れないため、配送を午後にすること | 仕入先への連絡記録 |\n\n- ロールバックしても正午に開店し、ノートで販売する。延期・ロールバックを決めた後の再周知は `cop-index` に従う。\n\n## 10. 関連ドキュメント\n\n- `cop-index`: カットオーバー計画の入口（共通の判断体系と、本書を含む対象別計画への導線）\n- `mip-index`: 移行計画（成功条件、GO/NO-GO の最低条件、臨時休業の前提）\n- `mtp-index`: 移行リハーサル計画（作業時間の測定と照合の合否）\n- `dmd-index`、`dmd-credit-data`: データ移行設計（取り込みの手順、`run_id`、照合の方法と所要時間）\n- `otp-index`: 運用切替計画（開店後の並行記録の運用と問い合わせ窓口）"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7848 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7848 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dura\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1574}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  00:00:29\n   Duration  2.71s (transform 6.27s, setup 826ms, import 8.89s, tests 6.52s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cop-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）として cop-sample.md を cop-index-sample・cop-rulebook・共通サンプル文脈に合わせた（締め切り時刻、重大度「高」の基準、連絡チャネル、再周知、未決事項）。全体の計画側を直す案は handoff に記載した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: 段 R5 / 箇所 2. 当日タイムライン・3. 作業手順チェックリスト・5. 実施条件（事前完了条件）・6. 切替判定ポイント（GO/NO-GO）・8. 障害時判断・エスカレーション / 指摘 再照合の締め切りと GO3 の時刻が cop-index-sample（再照合 T+2:10＝T-50m、GO3 T+2:30＝T-30m）と食い違い、本 sample は再照合 T-30m、動作確認 T-30m、GO3 T-10m だった / 直した案 取り込み直しの締め切り・手順 8・GO2 の失敗時・リハーサルの条件・障害時の行を T-50m にし、動作確認を T-50m、開店の判定（GO3）を T-30m に変えた / 根拠 vp-qe-kata-conformance、cop-rulebook の禁止事項（`cop-index` と矛盾させない）、cop-index-rulebook の禁止事項（判定条件を分冊と矛盾させない）。迷った理由: 本 sample は照合に時間がかかり（GO2 は T-75m、cop-index-sample は T+0:40）、取り込み直しに使える時間が 25 分しかない。cop-index-sample 側の締め切りを遅らせる案は選ばなかった / 印 要判断",
+    "R5-2: 段 R5 / 箇所 7. ロールバック手順・8. 障害時判断・エスカレーション / 指摘 重大度「高」の基準が「販売の記録が 10 分以上できない」で、見込みにかかわらずロールバックとしており、cop-index-sample の「15 分を超え、閉店までに直る見込みがない」と食い違う。開店前の遅れ（延期）を「中」としていたが、cop-index-sample では延期は「高」 / 直した案 基準を「15 分を超え、閉店までに直る見込みがない」に合わせ、開店前の遅れの行を「高」にした。章の冒頭に「重大度の区分は `cop-index` に従う」を足した / 根拠 vp-qe-kata-conformance、cop-rulebook の位置づけ（`cop-index` の共通判断を受ける） / 印 -",
+    "R5-3: 段 R5 / 箇所 4. 担当者/連絡系統・8. 障害時判断・エスカレーション / 指摘 チャネル名が「家族の連絡用グループチャット「きぬや移行当日」」「CoderDojo のメンター連絡チャネル」で、cop-index-sample の「店の連絡用グループチャット」（技術メンターも同じ）と食い違う / 直した案 「店の連絡用グループチャット」に統一し、エスカレーション経路の「（チャネル）」を「（グループチャット）」にした / 根拠 vp-qe-kata-conformance / 印 -",
+    "R5-4: 段 R5 / 箇所 9. 周知（ユーザ通知/停止告知） / 指摘 「ロールバックした場合も来店客への周知は変えない」が、cop-index-sample の再周知（延期・ロールバック時に貼り紙を差し替える）と矛盾する / 直した案 「ロールバックしても正午に開店し、ノートで販売する。延期・ロールバックを決めた後の再周知は `cop-index` に従う。」にした / 根拠 vp-qe-kata-conformance、cop-rulebook の禁止事項 / 印 -",
+    "R5-5: 段 R5 / 箇所 1. 概要（cutover-day） / 指摘 `_UNDECIDED_` で臨時休業の開始時刻を未決にしていたが、cop-index-sample は 9:00 開始・9 時〜12 時休業と決めている / 直した案 該当の `_UNDECIDED_` 段落を消した（T-180m＝9:00 はタイムラインの表に残る） / 根拠 vp-qe-kata-conformance、cop-index-rulebook の分冊との関係（全体前提は `cop-index` を正とする）。迷った理由: 開始時刻が本当に未決なら、cop-index-sample 側に `_UNDECIDED_` を移すべきで、こちらの案は選ばなかった / 印 要判断",
+    "R5-6: 段 R5 / 箇所 cop-index-sample の 10. 関連ドキュメント / 指摘 「分冊: （本書のみ）」とあるが、分冊の cop-sample（`cop-cutover-day`）があり、互いの導線が食い違う / 直した案 - / 根拠 vp-dev-change-impact。相手側の docs/ja/specdojo/samples/cop-index-sample.md を「分冊: `cop-cutover-day`（切替日の取り込みと開店）」に直す案 / 印 -",
+    "R5-7: 段 R5 / 箇所 cop-index-sample の 3. 作業手順チェックリスト・7. ロールバック手順 / 指摘 実施者が cop-sample と食い違う。最終棚卸は cop-index-sample が 店主代表・開発担当、cop-sample が 店主代表・家族利用者代表。タブレットを下げる手順は cop-index-sample が 開発担当、cop-sample が 家族利用者代表 / 直した案 - / 根拠 vp-qe-kata-conformance。相手側の cop-index-sample の実施者を、細かい手順の正である分冊（cop-sample）に合わせる案 / 印 要判断",
+    "R5-8: 段 R5 / 箇所 4. 担当者/連絡系統 / 指摘 grade の F001（判断者 `PO` と店主代表の対応）は、前の段ですでに「判断者の店主代表の Role code `PO`」と直っている。観点 vp-ux-language-consistency は R3 の観点のため、この段では扱わない / 直した案 - / 根拠 kata-guide の段と観点の組 / 印 -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cop-sample-150/T-KATA-REVIEW-ALL-cop-sample-150-20261126T145451Z-cbcd99e3/executor.log",
+      "bytes": 9963,
+      "truncated": false
+    }
+  ]
+}

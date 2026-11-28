@@ -1,0 +1,13 @@
+parent validation: lint-md-changed
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:md:changed
+> node tools/lint-changed.mjs md
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/pjr-86bn-kata-wave-3-itc-fix.md:48:48 error MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。']

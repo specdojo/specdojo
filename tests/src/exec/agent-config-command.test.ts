@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { load } from "js-yaml";
 import {
   hasMemberCommandSource,
   resolveMemberCommand,
   type ExecDefaultsConfig,
 } from "../../../src/exec/agent-config.js";
-import type { ProjectMember } from "../../../src/shared/specdojo-config.js";
+import { selectCandidates } from "../../../src/exec/run/shared.js";
+import type { MemberRoster, ProjectMember } from "../../../src/shared/specdojo-config.js";
 
 function buildMember(overrides: Partial<ProjectMember> = {}): ProjectMember {
   return {
@@ -76,29 +75,44 @@ describe("resolveMemberCommand", () => {
     );
   });
 
-  it.each(["edit", "review", "report"] as const)(
-    "refuses to build the 0.9.1 agy %s command from the shipped template",
-    (mode) => {
-      const config = load(
-        readFileSync("templates/init-exec-defaults.yaml", "utf8"),
-      ) as ExecDefaultsConfig;
+  it("refuses a disabled member selected by name before building a command", () => {
+    const member = buildMember({ nickname: "claude-disabled-agent", disabled: true });
 
-      expect(() =>
-        resolveMemberCommand(
-          config,
-          buildMember({ provider: "antigravity", mode, model: "fixture" }),
-        ),
-      ).toThrow(/do not launch Antigravity \(agy\).*https:\/\/antigravity\.google\/terms/);
-    },
-  );
+    expect(() => resolveMemberCommand(claudeTemplateConfig, member)).toThrow(
+      /Cannot launch member claude-disabled-agent: disabled in \.specdojo\/agent-members\.yaml/,
+    );
+  });
 
-  it("refuses an antigravity member even with an explicit command override", () => {
-    expect(() =>
-      resolveMemberCommand(
-        {},
-        buildMember({ nickname: "agy-custom", provider: "antigravity", command: "agy -p" }),
-      ),
-    ).toThrow(/Cannot launch member agy-custom: .*agent-members\.yaml/);
+  it("refuses a disabled member even when a command override (routing) is set", () => {
+    const member = buildMember({
+      nickname: "claude-disabled-agent",
+      disabled: true,
+      command: "custom-agent run",
+    });
+
+    expect(() => resolveMemberCommand({}, member)).toThrow(
+      /Cannot launch member claude-disabled-agent: disabled in \.specdojo\/agent-members\.yaml/,
+    );
+  });
+
+  it("skips a disabled member and moves on to the next candidate when choosing a fallback", () => {
+    const roster: MemberRoster = {
+      version: 1,
+      members: [
+        buildMember({ nickname: "disabled-first", disabled: true, priority: 1 }),
+        buildMember({ nickname: "enabled-second", priority: 2 }),
+      ],
+    };
+
+    const actual = selectCandidates(
+      { capabilities: [] },
+      roster,
+      "edit",
+      undefined,
+      claudeTemplateConfig,
+    );
+
+    expect(actual.map((m) => m.nickname)).toEqual(["enabled-second"]);
   });
 
   it("expands by_proficiency variables for the member's proficiency", () => {

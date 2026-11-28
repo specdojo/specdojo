@@ -261,6 +261,7 @@ export const kataMenuConfig: KataMenuConfig = {
     "pjr-note-template": "ノート",
     "pjr-question-template": "質問",
     "pjr-epic-template": "EPIC",
+    "pjr-handoff-template": "引き継ぎ",
   },
   children: {
     // 成果物カタログの物理分割テンプレートは、成果物カタログの索引（dct-index.yaml）の宣言順に並べる。
@@ -299,6 +300,7 @@ export const kataMenuConfig: KataMenuConfig = {
       "pjr-dependent-items-template",
       "pjr-derived-items-template",
       "pjr-epic-items-template",
+      "pjr-handoffs-template",
       {
         text: "登録項目",
         items: [
@@ -310,6 +312,7 @@ export const kataMenuConfig: KataMenuConfig = {
           "pjr-note-template",
           "pjr-question-template",
           "pjr-epic-template",
+          "pjr-handoff-template",
         ],
       },
     ],

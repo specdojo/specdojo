@@ -1,0 +1,34 @@
+R4（正しさ）は終わりました。`docs/ja/specdojo/samples/pm-quality-management-plan-sample.md` で条件 ID の誤り 4 か所と、目印の書き方 3 か所を直しました。編集したのはこのファイルだけで、status は `ready` のまま触っていません。
+
+**確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: project`・`status: ready`・`based_on` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`common-frontmatter.schema.yaml` | enum と型を読んだ | 一致 | `deliverableType` に `project` があり、`status` は `draft`/`ready`/`deprecated`、`based_on` は `idRefArray` |
+| 2 | `rulebook`・`based_on`・wikilink の参照先 id | 各 rulebook・sample の frontmatter | `grep "^  id:"` | 一致 | 4 件ともその id で存在する |
+| 3 | Role code（`PO`・`PM`・`BA`・`DEV`・`QE`） | `src/exec/core.ts`、`pm-roles.schema.yaml` | grep | 一致 | `KNOWN_OWNER_LABELS` と schema の enum に含まれる |
+| 4 | 初期受入の合格条件「SC-01・AC-01〜AC-04」 | 成功条件の sample の「判定対象と適用範囲」 | 読み取り | 不一致→直した | 正本は SC-01・SC-07・SC-09・AC-01〜AC-05 |
+| 5 | 短期利用の合格条件「SC-02・SC-03」 | 成功条件の SC-08 の行 | 読み取り | 不一致→直した | SC-08 も判定時期が運用開始後2週間なので SC-08 を加えた |
+| 6 | レビュー表の対象段階の必須条件 | No.4・No.5 と同じ | 読み取り | 不一致→直した | 初期受入に SC-07・SC-09・AC-05、試用終了時に SC-08 を加えた |
+| 7 | 「SC-04〜SC-06 は初期受入に含めない」と、後続観測への引き継ぎ対象 | 成功条件の「判定対象と適用範囲」 | 読み取り | 不一致→直した | SC-10（運用開始後6か月）が漏れていたので、両方の箇所に加えた |
+| 8 | 管理計画の M-03・M-04・M-06、U-01〜U-03 の決定時期、「運用前の準備」、期限付き例外を設けないこと | 管理計画の sample | grep | 一致 | 管理目標の表、記録先の表、4.3 節、エスカレーションの「免除の例外は設けない」と合う |
+| 9 | オフライン時・人気商品の未決（担当・決定時期・判断者） | 成功条件の「例外条件と未解決事項」 | 読み取り | 一致 | `PO` が運用開始前／ベースライン記録の開始前に決め、人気商品は `BA` が候補を整理する |
+| 10 | `_UNDECIDED_:` をインラインコードで書く | ドキュメントメタ情報標準、Sample 記述標準、template | grep | 不一致→直した | 標準と template は斜体の目印として書くので、バッククォートを外した（3 か所） |
+| 11 | `kinuya-` で始まる参照名と `execution/` 配下のパス | なし（架空の記録と本文で明記） | — | 確かめの対象外 | 共通サンプル文脈の仮定で、正本がない |
+
+**plan に展開された finding（F001〜F003）**
+
+前の段で、未決事項の表がすでに template と同じ 4 列（担当・決定時期・判断者を含む）になっていました。どれも解消済みです。なお F001 と F002 の観点（`vp-po-decision-readiness`・`vp-pm-plan-feasibility`）は、kata ガイドで kata の段のレビューでは使わないと決められています。
+
+**検証**
+
+Prettier で整形し、`npx markdownlint` で変更したファイルを検査して、エラーは出ませんでした。`lint:md` などの全体の検査は親 runner が実行します。
+
+**残っていること**
+
+- 管理計画の sample の「M-07 品質」と「初期リリース・店頭試用開始」のゲートにも、同じく古い条件 ID（SC-01・AC-01〜AC-04）が残っています。ほかの kata なので直していません。R5 で相手側を直す案として扱う必要があります。
+- 作業用の `tmp/fix.py` が残っています。消すのに承認が要ったので残しました。`tmp/` は commit の対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめを終えた。成功条件の sample を正本として、初期受入（SC-07・SC-09・AC-05 の追加）、短期利用（SC-08 の追加）、初期受入に含めない条件と後続観測への引き継ぎ対象（SC-10 の追加）の条件 ID の誤りと、`_UNDECIDED_` の目印の書き方を直した。F001〜F003 は前の段で解消済み。","handoff":["R4 の確かめの表: (1) frontmatter の `type`/`status`/`based_on` は `deliverable-frontmatter.schema.yaml`・`common-frontmatter.schema.yaml` と一致。(2) `rulebook`・`based_on`・wikilink の参照先 id は全件存在。(3) Role code の `PO`/`PM`/`BA`/`DEV`/`QE` は `src/exec/core.ts` の `KNOWN_OWNER_LABELS` と `pm-roles.schema.yaml` の enum と一致。(4) 初期受入の「SC-01・AC-01〜AC-04」は成功条件の正本（SC-01・SC-07・SC-09・AC-01〜AC-05）と不一致→直した。(5) 短期利用の「SC-02・SC-03」は、判定時期が運用開始後2週間の SC-08 が漏れていた→直した。(6) レビュー表の対象段階の必須条件も同じく不一致→直した。(7) 初期受入に含めない条件と後続観測への引き継ぎ対象から SC-10 が漏れていた→直した。(8) 管理計画の M-03・M-04・M-06、U-01〜U-03、「運用前の準備」、免除の例外を設けないことは一致。(9) オフライン時・人気商品の未決の担当・決定時期・判断者は成功条件の「例外条件と未解決事項」と一致。(10) `_UNDECIDED_:` をインラインコードで書いていたのは、ドキュメントメタ情報標準・Sample 記述標準・template（斜体の目印）と不一致→直した。(11) `kinuya-` で始まる参照名と `execution/` 配下のパスは本文で架空と明記した仮定のため確かめの対象外。","指摘: 初期受入・短期利用の条件 ID が、based_on の成功条件の sample（初期受入は SC-01・SC-07・SC-09・AC-01〜AC-05、運用開始後2週間に SC-08、6か月に SC-10）と食い違っていた。品質ゲートの表、レビューの表、ゲートの注記、後続観測への引き継ぎを直した。","指摘: 未決事項の表で `_UNDECIDED_:` がインラインコードで書かれていた。ドキュメントメタ情報標準・Sample 記述標準・template に合わせて、斜体の目印に直した（3 か所）。","次のアクション（R5・別の kata）: 管理計画の sample（`specdojo:pm-plan-sample`）の「M-07 品質」と、判断ゲートの「初期リリース・店頭試用開始」にも、古い条件 ID の SC-01・AC-01〜AC-04 が残っている。成功条件の sample に合わせて SC-07・SC-09・AC-05（試用継続は SC-08）を加える案を相手側に出す。","grade の finding F001〜F003 は、前の段で未決事項の表が template と同じ 4 列（担当・決定時期・判断者）になっていて解消済み。F001・F002 の観点は kata ガイドで kata の段のレビューでは使わない観点でもある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-quality-management-plan-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/pm-quality-management-plan-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

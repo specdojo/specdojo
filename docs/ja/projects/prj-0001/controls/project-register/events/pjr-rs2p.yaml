@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_93b0cd2a4cc54e4e828dc95780776fda
+  ts: "2026-11-21T08:24:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-76N9 の決まりを、すでにある製品の成果物にも当てるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 製品の成果物から、文書の役割の割り当てと承認の進み具合の記述を外す
+    - field: description
+      from: ""
+      to: PJR-76N9 の決まりに合わせ、製品の成果物（約 28 件）の本文から、文書を作る・確かめる・承認する役割の割り当てと承認の進み具合を外す。承認と留保は登録簿へ移す
+    - field: input
+      from: ""
+      to: '["PJR-76N9 の決定（2026-11-21、indie）と、orchestrator の調べ（2026-11-21）: 役割の割り当ての文は bes-index・bes-task-ready-selected・cdt-register-type・cdsd-execution・stsd-routine-run・ccd-project-planning・stsd-task-execution・sf-task-execution・cpd-specdojo-cli・bac-task-completion・sysd-critical-flows・sysd-cross-cutting-policy・ifx-index・ifx-file-agent-evidence などにある。cnd-specdojo は PJR-Q9DF で直す","文書の中身として役割が要る文書（pm-raci・pm-organization・pm-roles など）は対象外"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-76N9"]'
+- v: 1
+  id: reg_3a286a76ab974d01bb38e698041f25bf
+  ts: "2026-11-21T14:03:33Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_93b0cd2a4cc54e4e828dc95780776fda
+- v: 1
+  id: reg_7c2842babb6f48e99716dd9d592e80a6
+  ts: "2026-11-21T14:04:15Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_3a286a76ab974d01bb38e698041f25bf
+- v: 1
+  id: reg_6d17bef09a5c4040ac6c4c759644dc1e
+  ts: "2026-11-21T18:05:17Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7c2842babb6f48e99716dd9d592e80a6
+- v: 1
+  id: reg_300a49870ef4480a94f67a2dc2e7f246
+  ts: "2026-11-21T18:16:50Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_6d17bef09a5c4040ac6c4c759644dc1e
+- v: 1
+  id: reg_6add16185ce646d4b12f79dda445cdfb
+  ts: "2026-11-21T22:51:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_300a49870ef4480a94f67a2dc2e7f246
+- v: 1
+  id: reg_2c4d8220a9404822b9746bfc67d775f4
+  ts: "2026-11-21T22:56:10Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6add16185ce646d4b12f79dda445cdfb
+- v: 1
+  id: reg_3ff678710c724c81954677903e356d81
+  ts: "2026-11-22T00:03:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 2bdb5a00b）。対象と対象外の表、frontmatter と型の不変、5.4 の一覧を確かめた。追跡先のない 5 件の起票は利用者と決める
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: docs/ja/product の 27 ファイルから、文書の作成・確認・承認の役割の割り当てと承認の進み具合を外した。未完了の承認と留保は個票の 5.4 に一覧にした。
+  previous_event_id: reg_2c4d8220a9404822b9746bfc67d775f4

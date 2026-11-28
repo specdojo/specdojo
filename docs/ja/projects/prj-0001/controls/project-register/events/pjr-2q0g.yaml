@@ -66,3 +66,48 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_c9751b9af79e44389df00021bdfe2976
+- v: 1
+  id: reg_d48a6395ada741da8f4322eabd4cecc3
+  ts: "2026-11-25T13:11:09Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_782380c798e1490faeef2dcc42130761
+- v: 1
+  id: reg_a8ca8637eaff4a5c8d7210a76599de7b
+  ts: "2026-11-25T13:27:48Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d48a6395ada741da8f4322eabd4cecc3
+- v: 1
+  id: reg_2c6e52605535482081e24c5ebe234fdf
+  ts: "2026-11-26T12:16:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。実際の grade で size_metrics の記録と簡潔さの指摘を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: grade に機械で測る大きさの指標と冗長さの観点の見直しを足した
+  previous_event_id: reg_a8ca8637eaff4a5c8d7210a76599de7b

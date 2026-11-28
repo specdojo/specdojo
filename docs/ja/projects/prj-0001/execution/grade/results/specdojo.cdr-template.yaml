@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/cdr-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-17T03:24:01.432Z"
-graded_by: sol-review-executor
-content_hash: 8c5d485c24073da939e2147e37850bd955d9bc332c543f33756dd2249d299882
+score: 100
+graded_at: "2026-11-23T17:23:28.260Z"
+graded_by: sonnet-review-executor
+content_hash: e10e0bf7356a71389225e432dcd323e2ecf0393c935b9813fc33e31d7a4e7818
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,24 +101,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 25
-    anchor: "- エラーメッセージに含める文脈: _TODO_"
-    message: エラー処理章に、cdr-rulebook 第5節が必須とする「握りつぶしの禁止」の記入欄がないため、既存欄を埋めても必須事項が欠落し得る。「例外の握りつぶしの禁止」の記入欄を追加する。
-    message_ja: エラー処理章に、cdr-rulebook 第5節が必須とする「握りつぶしの禁止」の記入欄がないため、既存欄を埋めても必須事項が欠落し得る。「例外の握りつぶしの禁止」の記入欄を追加する。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 22
-    anchor: "## 4. エラー処理"
-    message: >-
-      エラー処理章の骨組みが、cdr-rulebook の必須要件および cdr-sample の握りつぶし禁止の記載に対応していないため、同要件を記入できる項目を追加して rulebook・sample・template
-      の対応を揃える。
-    message_ja: >-
-      エラー処理章の骨組みが、cdr-rulebook の必須要件および cdr-sample の握りつぶし禁止の記載に対応していないため、同要件を記入できる項目を追加して rulebook・sample・template
-      の対応を揃える。
+findings: []

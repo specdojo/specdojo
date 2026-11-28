@@ -1,0 +1,33 @@
+判定は **`complete-with-findings`** です。評価結果は最新で、完了条件 DC-001〜DC-006 はすべて満たしています。ただし grade の minor 指摘が sample に 2 件、rulebook に 2 件残っています。成果物と result には手を付けていません。
+
+**評価結果の鮮度**
+- `npx specdojo grade list --target kata --changed-only` を sample と rulebook それぞれで 2 回実行しました（review の最初と、判定を決める直前）。どれも出力なし・exit 0 で、評価後の変更はありません。
+- sample は `pass`・score 95、finding は blocker 0 / major 0 / minor 2 です。
+- rulebook は `pass`・score 97、finding は blocker 0 / major 0 / minor 2 です。
+- 作業ツリーで記録にない変更は `pipeline-state.json` だけで、成果物の変更はありません。
+
+**完了条件の照合**
+- **DC-001（章立てと必須の表）:** 必須 5 章と、推奨・任意の 3 章（自動化・回帰方針、不具合管理方針、メモ / 将来課題）が rulebook の順に並んでいます。テストレベル一覧と品質ゲートの表は必須列がそろっています。任意の「品質メトリクス」章はありませんが、rulebook が「合意が必要な場合に限り」としているので欠落ではありません。
+- **DC-002（Sample 記述標準と共通サンプル文脈）:** 題材は駄菓子屋きぬや、単一店舗・タブレット 1 台で統一されています。frontmatter には `rulebook` と `based_on` があります。
+- **DC-003（禁止事項）:** 画面操作の逐語列挙や個別テストケースの大量列挙はありません。数値には前提があり、出口条件にはすべて判定者がいます。
+- **DC-004（値で埋めた実例）:** 5 レベル・スコープ・体制・環境・データを具体的な値で書いています（例: 商品A 単価30円・在庫5個、`kinuya-ci-unit`）。
+- **DC-005（pass / fail 判定）:** 出口条件は失敗件数、合格率 100%、重大度ごとの上限（例: 内部結合は Major 2 件以下）、応答 95% が 2 秒以内（仮置き）で判定できます。
+- **DC-006（完成例の正本）:** rulebook に完成例の章はなく、記述ガイドは frontmatter の `sample` を参照する形です。
+
+**フェーズの確認**
+- 直前の編集タスク（080、condense）が削除した段落「隣接レベルとの分担として…」は sample に残っていません（grep 0 件）。
+- その変更は commit 034f77f66 で取り込まれています。080 の result には commit 範囲の保護による停止が記録されていますが、変更は後から取り込まれています。
+- その後の register PJR-R05D の commit（a6a1f6ce3）も含めて、grade は再評価済みです。
+- 宣言されていない対象への変更は見当たりません。
+
+**finding が完了を妨げない理由**
+4 件とも minor で、必須要素の欠落や禁止事項への抵触ではありません。完了条件の判定には影響しないため、修正は次の手直しに回せます。
+
+**確認できなかった範囲**
+- `utc-index-sample` は宣言された文書ではないため読んでいません。sample F001・F002 が根拠にしている utc-index-sample とのずれは、grade の判定をそのまま事実として使いました。
+- 080 の `evidence.json` と各ログは読んでいないので、080 の検査が成功したかはこの review で確かめていません。
+- lint などの検査はこの後 runner が実行するので、こちらでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。鮮度確認（`npx specdojo grade list --target kata --path <対象> --changed-only` を sample と rulebook で review の最初と判定直前の 2 回）は、どれも出力なし・exit 0 で最新。grade は sample が pass/95（minor 2）、rulebook が pass/97（minor 2）。DC-001〜DC-006 を照合した。必須 5 章と推奨・任意の 3 章が rulebook の順に並び、品質メトリクス章は任意なので無くてもよい。駄菓子屋の文脈で統一され、禁止事項に当たる記述はない。値で埋めた実例になっている。出口条件は件数・合格率・重大度の上限・判定者で pass / fail を判定できる。rulebook に完成例の章はない。直前の編集タスク 080（condense）が削除した段落は sample に残っておらず（commit 034f77f66）、その後の PJR-R05D の commit（a6a1f6ce3）の後に再評価済み。宣言外の対象への変更はない。finding 4 件はどれも minor で完了条件の判定に影響しないため、完了を妨げない。確認できなかった範囲: `utc-index-sample` は宣言外のため読んでおらず、sample F001・F002 は grade の判定を事実として使った。080 の `evidence.json` と各ログは読んでおらず、080 の検査が成功したかは確かめていない。lint などの検査は runner が実行する。","handoff":["改善指示（sample F001）: tsp-index-sample の外部結合テストの範囲から `PATH-04`・`PATH-07` を内部結合テストへ移すか、外部結合テストで続けて確認する理由を書く。","改善指示（sample F002）: 開発環境の印刷スタブと、utc-index-sample の単体テストで使う `receipt-print` のモック検証を書き分け、rulebook の既定から外れる理由を書く。","改善指示（rulebook F001）: tsp-index-rulebook の記述ガイド「メモ / 将来課題」の良い例（日次売上1,000取引）を、sample の仮置き基準（放課後ピーク1時間60取引、会計確定の応答 95% が2秒以内）に合わせる。","改善指示（rulebook F002）: 既知不具合の引き継ぎ先の名称を「登録簿」に統一する（rulebook の良い例の「課題管理簿」、sample の「課題ログ」）。あわせて rulebook の判定軸の「Pass/Fail基準」を「pass / fail」に揃える。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --changed-only","status":"passed","summary":"review の最初と判定直前の 2 回とも出力なし・exit 0（最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --changed-only","status":"passed","summary":"review の最初と判定直前の 2 回とも出力なし・exit 0（最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価パイプラインは完了済み）"}]}
+</specdojo_executor_evidence>

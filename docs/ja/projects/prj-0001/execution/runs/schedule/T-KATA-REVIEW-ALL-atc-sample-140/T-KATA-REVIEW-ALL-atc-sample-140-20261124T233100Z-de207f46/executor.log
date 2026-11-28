@@ -1,0 +1,27 @@
+R4（正しさ）の確認を終えました。誤りは見つからなかったため、`docs/ja/specdojo/samples/atc-sample.md` は変更していません。
+
+grade の finding F001（概要で引用している分割基準から「金額の提示」が抜けている）は、今の sample では直っています。概要の文は `atc-index-sample` 62 行目どおり「商品の登録→金額の提示→会計確定→レシートの受け渡し」です。
+
+主張ごとの確かめの表を、1 主張 1 項目で `handoff` に渡しました。
+
+| No | 確かめた主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| C1 | 概要の分割基準 | `atc-index-sample` | 一致 |
+| C2 | 必須の章・ケース表とトレース表の列・`case_id`・`perspective_key`・優先度・実施形態 | `atc-rulebook` | 一致 |
+| C3 | `type`・`rulebook`・`based_on`・`relations.verifies` | `atc-rulebook`、schema | 一致 |
+| C4 | 60円・在庫5個→3個（BAC-01 の C-01） | `bac-sample` | 一致 |
+| C5 | SC-01・AC-01・AC-03・AC-04 の内容 | `prj-success-criteria-and-acceptance-criteria-sample` | 一致 |
+| C6 | 在庫0個の境界ケース `st-cash-sale-flow-success-020` | `stc-sample` | 一致 |
+| C7 | テストデータ・P1 の合格基準・判定保留の扱い | `atc-index-sample` | 一致 |
+| C8 | 取消の期待結果と、レシートへの取引番号の印字 | 正本なし | 確かめられない |
+
+- **C3 の補足：** schema は `verifies` のキーがあることだけを確かめました。`lint:fm` による検査は、後で runner が実行します。
+- **C8 の補足：** どちらも sample の中で前提（`_ASSUMPTION_`）と明記されており、次の手も書いてあります。
+
+R5（整合）で扱う点が 1 つあります。観点名が sample では「主要操作の自力完了」、`atc-index-sample` 113 行目では「主要操作の自力完了の成立」で、表記がずれています。この段では直していません。
+
+検証は、lint などを runner が後で実行するため、私は何も実行していません。履歴リンクの検査は、履歴ファイルを変えていないので対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確認を終えた。atc-sample の事実の主張は正本とすべて一致し、誤りがないため sample は変更していない。F001（分割基準に「金額の提示」がない）は今の版の概要で直っている。","handoff":["C1: 概要の分割基準「商品の登録→金額の提示→会計確定→レシートの受け渡し」。正本 docs/ja/specdojo/samples/atc-index-sample.md 62行目を grep で読んだ。結果は一致。F001 は今の版で直っており、追加の修正はしていない。","C2: 必須の章（概要（`<term>`）〜受入観点とケース）、トレース表の列（`trace_key`・仕様ID・要点・備考）、条件・ケース表の10列の順、`case_id` の形式 `at-<term>-<perspective_key>-<nnn>`（10刻み）、`perspective_key` の kebab-case、優先度 P0/P1、実施形態 `manual`。正本 docs/ja/specdojo/rulebooks/atc-rulebook.md の本文要件の章（81-118行）。結果は一致。","C3: frontmatter の `type: test`、`rulebook: specdojo:atc-rulebook`、`based_on`（tsp-index-sample・atc-index-sample）、`relations.verifies`。正本 atc-rulebook の推奨 Frontmatter 項目の章と docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml（52行目 `verifies`）。結果は一致。lint:fm による schema 検査は runner が実行する。","C4: TR-01「商品A 2個・60円で販売記録が1件残り、在庫が5個から3個」。正本 docs/ja/specdojo/samples/bac-sample.md 55行目（C-01）と36行目（単価30円・在庫5個）。結果は一致。","C5: TR-02 AC-01、TR-03 SC-01・AC-03（自力で回復できない事象が0件）、TR-04 AC-04（条件 ID・確認日・確認者）。正本 docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md 34・51・53・54行目。結果は一致。","C6: 対象外の在庫0個の境界ケースを ST の `st-cash-sale-flow-success-020` で確かめること。正本 docs/ja/specdojo/samples/stc-sample.md 81行目（5個・150円で在庫が0個になる）。結果は一致。","C7: データ `kinuya-at`・`kinuya-test-data`（商品A 単価30円・在庫5個）、P1 の合格基準、確定前の取消を P1 に置くこと、外部依存の店舗プリンタ（実機）、印刷失敗を ST へ送ること。正本 atc-index-sample の40・62・73・98・123行目。結果は一致。","C8: 確定前の取消の期待結果と、レシートへの取引番号の印字。業務受入条件にも画面・帳票の設計にも正本がなく、確かめられない。sample は `_ASSUMPTION_` と次の手で明記しており、取消条件の PJR 登録と画面・帳票の設計での確認が要る。","R5 への申し送り: 観点名が atc-sample では「主要操作の自力完了」、atc-index-sample 113行目では「主要操作の自力完了の成立」になっている。R4 の範囲外なので直していない。"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票などの履歴ファイルを変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML ファイルの変更がない","reason":"変更した *.yaml / *.yml ファイルがないため"}]}
+</specdojo_executor_evidence>

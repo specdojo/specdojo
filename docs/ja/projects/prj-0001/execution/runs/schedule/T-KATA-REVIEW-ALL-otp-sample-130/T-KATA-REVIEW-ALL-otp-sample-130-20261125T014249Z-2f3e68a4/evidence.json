@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-otp-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-otp-sample-130-20261125T014249Z-2f3e68a4",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T01:43:33.545Z",
+    "completed_at": "2026-11-25T01:46:57.722Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/otp-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/otp-sample.md | 26 +++++++++++++-------------\n 1 file changed, 13 insertions(+), 13 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/otp-sample.md",
+      "status": "passed",
+      "summary": "prettier --write で表の列幅を整えた後、All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "変更した履歴ファイルがない",
+      "reason": "変更は docs/ja/specdojo/samples/otp-sample.md だけで、plan・result・個票を変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "変更した YAML がない",
+      "reason": "変更したファイルは *.md だけで、*.yaml・*.yml を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:otp-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:otp-rulebook\n  based_on:\n    - specdojo:otp-index-sample\n    - specdojo:mip-index-sample\n---\n\n# 運用切替計画: ハイパーケアの当番と問合せ記録（駄菓子屋きぬや 販売管理システム）\n\n## 1. 概要（hypercare）\n\n本書は、ハイパーケアの期間（`otp-index` に従う）の日ごとの当番表と問合せ記録の付け方を定める（`otp-hypercare`）。目的は、店主代表が店にいない時間も、家族利用者代表が販売・在庫・つけを記録し続けられるようにすることである。対象は単一店舗の店頭タブレット 1 台を使う店番・日次締め・問合せ対応\n… output omitted …\n1 名で店番した営業日が 2 日以上あり、その日の P1・P2 が 0 件 | 当番表と、同じ日の問合せ記録を突き合わせる |\n\nクローズ判断者は `otp-index` に従い店主代表とする。最終報告物は `otp-index` のハイパーケア終了報告とし、本書からは問合せの件数（優先度別）、当番表の実績（家族利用者代表が 1 名で店番した日数）、未解決の問合せと引継ぎ先を渡す。\n\n## 11. 関連ドキュメント\n\n- `otp-index`：運用切替計画（期間・SLA・優先度分類・クローズ条件の共通方針）\n- `mip-index`：移行計画（正本切替 GO4 とハイパーケア方針）\n- `cop-cutover-day`：カットオーバー計画（切替日の取り込みと開店の手順）\n- `dmd-index`：データ移行設計（旧ノートの保管期間）\n- `opr-support`：運用手順（クローズ後の問合せ一次対応）\n- `opr-shift-handover`：運用手順（店番の引継ぎ）\n- `opr-backup-restore`：運用手順（バックアップ確認・リストア）"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6966 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6966 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-otp-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/dct-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/dct-schema.test.ts (5 tests) 6ms\n[parent-validation:test-fil\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1458}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  10:51:33\n   Duration  2.59s (transform 7.00s, setup 1.89s, import 8.37s, tests 5.86s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-otp-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-otp-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として docs/ja/specdojo/samples/otp-sample.md の 13 行を直した（主語・目的語の補い、長い文の分割、指示語・修飾の係り・述語のねじれの直し、表記の統一）。要判断 1 件と直さなかった指摘 1 件は handoff に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 1. 概要（hypercare） / 冒頭の文に主語がなく、目的と定める対象が 1 文にまとまって長い / 「本書は、…当番表と問合せ記録の付け方を定める」と「目的は、…記録し続けられるようにすることである」の 2 文に分け、最後の文を「本書には…だけを書く」にした / W1, W3 / -",
+    "R3-2: R3 / 1. 概要（hypercare）の _ASSUMPTION_ / 「平日の日中は店番だけで受け」の目的語（何を受けるか）がない / 「平日の日中の問合せは店番だけで受け」にした / W1 / -",
+    "R3-3: R3 / 3. バックアップ/リストア / 「本書はこれに」の「これ」が指す先が一つに決まらない / 「本書は、日次バックアップの対象に当番表と問合せ記録の写しを足す」にした / W4 / -",
+    "R3-4: R3 / 3. バックアップ/リストア / 「開発担当が戻し」の目的語がない / 「開発担当がデータを戻し」にした / W1 / -",
+    "R3-5: R3 / 3. バックアップ/リストア / リストアの完了基準の文が長く、otp-index の基準と本書が足す基準が 1 文にまとまっている / 「otp-index の件数・残高の一致を前提とする。加えて、…一致したら完了とする」の 2 文に分けた / W3 / -",
+    "R3-6: R3 / 4. 権限/アカウント移行 / 移行タイミングの「切り替える」は、何が切り替わるかと行う主体が読めない / 「記録先と権限が切り替わる」にした / W1 / -",
+    "R3-7: R3 / 4. 権限/アカウント移行 / 検証方法の「1 つでも失敗すれば開店前に開発担当へ連絡する」の主語がない / - / W1。要判断: 店主代表と、失敗した店番のどちらが連絡するかが本文から決まらない。事実を足すことになるため直していない。案は「店主代表が連絡する」と「失敗した店番が連絡する」の 2 つ / 要判断",
+    "R3-8: R3 / 6. 問合せ窓口/一次対応 / エスカレーション条件の「一次対応で止めずに次のとおり渡す」の主語がない / 「店番は、次の場合は一次対応で止めずに渡す」にした / W1 / -",
+    "R3-9: R3 / 7. 障害対応フロー / 「報告は、…時点で終える」で主語と述語がねじれている / 「…時点で終わる」にした / W2 / -",
+    "R3-10: R3 / 8. 初期増員体制（期間・当番・SLA） / 表の前の 1 文「本書で当番の組み方と SLA の差分を書いた期間ごとの体制」で、修飾の係りが読めない / 「次の表は、期間ごとの当番の組み方と、otp-index の SLA からの差分を示す」にした / W5、Sample 記述標準の表の前の 1 文 / -",
+    "R3-11: R3 / 9. 旧システムの停止/参照方針 / 「ハイパーケアのクローズ判定までに決める」の主語と目的語がなく、裁断の文に目的語がない / 「店主代表は、この保管期間をハイパーケアのクローズ判定までに決める」「店主代表が原本を裁断して廃棄する」にした / W1 / -",
+    "R3-12: R3 / 10. 移行完了後のクローズ条件 / ファイル内で「引き継ぎ先」と「引継ぎ」（店番の交代時の引継ぎ、関連ドキュメント）が混ざっている / 系列の sample（otp-index-sample、opr-index-sample）の表記にそろえ、「引継ぎ先」にした / Rulebook 記述標準の用語の統一, vp-ux-language-consistency / -",
+    "R3-13: R3 / 10. 移行完了後のクローズ条件 / 最終報告物の文が長め（渡すもの 3 つを 1 文で並べている） / - / W3。長さは目安で合否にせず、意味が一つに読めるため直していない / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-otp-sample-130/T-KATA-REVIEW-ALL-otp-sample-130-20261125T014249Z-2f3e68a4/executor.log",
+      "bytes": 6176,
+      "truncated": false
+    }
+  ]
+}

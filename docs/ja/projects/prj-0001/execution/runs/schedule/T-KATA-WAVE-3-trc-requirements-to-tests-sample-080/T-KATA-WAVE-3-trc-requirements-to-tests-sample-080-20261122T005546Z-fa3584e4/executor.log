@@ -1,0 +1,19 @@
+`docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md` から重複していた 2 か所を削りました。ほかの文書は変更していません。
+
+**削った箇所**
+
+1. **目的と適用範囲:** テスト漏れが受入に与える影響を説明していた段落を削除しました。同じ影響（在庫・情報不足の購入を確定すると販売記録と在庫が食い違い、気づけない）は、充足状況サマリで BAC-02・BAC-03 を優先する理由として残っています。そちらは rulebook で必須の記述です。
+2. **充足状況サマリ:** 「合計 8 件は母集団の件数と一致する。」を削除しました。件数は表の合計行と前提の「要求の母集団（8 件）」で読み取れ、照合のやり方は前提の確認の手順にあります。
+
+**残した箇所**
+
+- 「本書を直さずに再生成する」は、前提の確認の手順と更新ルールの 2 か所に出てきます。差分が見つかったときと、要求やテストが変わったときという別々の場面の手順なので、両方残しました。
+- 表の後の「`trace_key` はすべて参照されている」という一文は、検証ケース未記載が原因の `一部充足` がないことの根拠なので残しました。
+- 備考列はギャップ列と同じ `draft` の情報を繰り返していますが、rulebook の標準 6 列で必須の列なので残しました。
+- 担当と期限を登録簿で追跡するという段落は、ギャップ表に担当・期限の列がない理由を説明しているので残しました。
+
+prettier の整形チェックと markdownlint は通っています。markdownlint は `npx markdownlint-cli2` で直接実行しました。plan の sample チェックリストにある `npm run docs:build` は実行していません。`npm run lint:md` などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"trc-requirements-to-tests-sample の冗長箇所を 2 件削除し（目的と適用範囲の背景段落、サマリの合計一致の文）、4 件を理由付きで保持した。意味・必須情報は維持。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"0 issues"}],"condense_records":[{"location":"目的と適用範囲 第2段落（テスト漏れを残したまま受入すると…）","category":"repetition","action":"delete","reason":"在庫不足等の購入を確定して販売記録と在庫が食い違い気づけないという主張は、充足状況サマリの優先理由 1（rulebook 必須の優先する要求項目と理由）に同じ内容で残るため","cause":{"type":"document"}},{"location":"充足状況サマリ 表直後の文（合計 8 件は母集団の件数と一致する。）","category":"table-prose","action":"delete","reason":"合計行の 8 と前提の母集団（8 件）で一致が読み取れ、照合手順はトレース対象の前提の確認の手順に残るため","cause":{"type":"document"}},{"location":"トレース対象の前提 確認の手順（本書を直さずに再生成する）と 変更履歴と更新ルール 冒頭文","category":"repetition","action":"retain","reason":"照合で差分が出た場合と生成元が変わった場合という異なる場面の手順であり、どちらも判断に要るため","cause":{"type":"document"}},{"location":"トレースマトリクス 表直後の文（trace_key はすべて参照されており…）","category":"table-prose","action":"retain","reason":"表からは読めない検証ケース未記載が無いという判定根拠であり、充足状況の説明に要るため","cause":{"type":"document"}},{"location":"トレースマトリクス 備考列（ギャップ列の draft と重複）","category":"table-prose","action":"retain","reason":"rulebook の標準 6 列で必須の列であり、判定に使った status を示すため","cause":{"type":"kata","kind":"rulebook","location":"5.2. トレースマトリクスの標準列 備考"}},{"location":"ギャップと対応方針 表直後の段落（担当と期限は PM が…）","category":"canonical-restatement","action":"retain","reason":"ギャップ表に担当・期限列を持たない理由と追跡先を示す、本 sample の判断に要る制約であるため","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

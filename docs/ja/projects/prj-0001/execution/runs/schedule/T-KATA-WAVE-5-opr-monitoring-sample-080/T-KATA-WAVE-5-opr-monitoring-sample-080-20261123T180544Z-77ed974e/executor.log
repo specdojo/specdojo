@@ -1,0 +1,13 @@
+`docs/ja/specdojo/samples/opr-monitoring-sample.md` の「アラート対応手順」にある誤検知の箇条書き 2 つを整理しました。`npm run lint:md` などの検査は実行していません。それらは親 runner が実行します。
+
+- **クローズ条件の箇条書き:** 同じ条件が上の表の「誤検知」の段階の完了条件にあったため、表への参照に置き換えました。
+- **閾値の調整の箇条書き:** 「月 3 件以上で変更案を登録する」は「日次・週次・月次点検手順」の表の月次の行と重複していたため、月次点検への参照に置き換えました。`opd-index` を先に改訂する順序と、翌月に 3 件未満を確かめる条件は残しています。
+
+以下は変更せず残しました。
+- **「手順適用範囲・前提」の模擬確認の文:** 手順の改訂時に確かめる完了条件で、ほかの箇所と重複していません。
+- **「運用変更作業」の末尾の文:** 変更の適用日に本書を見直すという固有の指示です。
+- **「関連ドキュメント導線」の末尾の文:** 運用方針の変更に本書を追従させるための文です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"運用手順（アラート対応）の誤検知の箇条書き 2 件を、表と月次点検への参照に置き換えた。意味と必須情報は維持した。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"親 runner が実行する検査として設定されているため、executor では実行しない"}],"condense_records":[{"location":"5. アラート対応手順 / 誤検知の扱い「クローズ条件」","category":"table-prose","action":"reference","reason":"同じ条件が直上の表の誤検知の段階の完了条件にあり、表への参照に置き換えても意味は変わらない","cause":{"type":"document"}},{"location":"5. アラート対応手順 / 誤検知の扱い「閾値の調整」","category":"repetition","action":"reference","reason":"月 3 件以上で変更案を登録する条件が「日次・週次・月次点検手順」の月次の行と重複するため参照に置き換えた。opd-index を先に改訂する順序と翌月の確認条件は残した","cause":{"type":"document"}},{"location":"2. 手順適用範囲・前提 / 模擬確認の段落","category":"unneeded-background","action":"retain","reason":"手順の改訂時に行う完了条件であり、ほかの箇所と重複しない","cause":{"type":"document"}},{"location":"8. 運用変更作業 / 末尾の見直しの段落","category":"repetition","action":"retain","reason":"変更の適用日に本書を見直すという固有の指示で、表の内容と重複しない","cause":{"type":"document"}},{"location":"12. 関連ドキュメント導線 / 末尾の段落","category":"repetition","action":"retain","reason":"運用方針の変更に本書を追従させるための文で、判断に要る","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

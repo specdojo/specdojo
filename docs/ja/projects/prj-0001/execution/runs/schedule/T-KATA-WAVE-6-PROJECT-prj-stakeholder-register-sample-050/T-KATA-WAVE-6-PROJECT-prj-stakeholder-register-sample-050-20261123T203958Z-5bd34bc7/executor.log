@@ -1,0 +1,24 @@
+ステークホルダー登録簿の sample（`docs/ja/specdojo/samples/prj-stakeholder-register-sample.md`）を書き直し、F001〜F032 の指摘 32 件はすべて本文で対応しました。変更したのはこの 1 ファイルだけで、rulebook・recipe・template は変えていません。検査は Prettier での整形と markdownlint（0 issues）だけを実行しました。残りの検査は親 runner が実行します。
+
+主な変更点：
+
+- **常連顧客を追加（F001・F006・F008・F014・F020）**: 子どもと近所の大人を `STH-REGULAR-CUSTOMER`（関与区分は影響受容者）として全章に足しました。期待・懸念・必要な合意に加え、店頭での告知と「氏名・残高を共有文書に載せない」扱いを書いています。店主代表の期待にもつけ残高の記録・確認を入れました。
+- **家族利用者の試行を一つの時点に統一（F002・F004・F007・F012・F015・F025・F031）**: 試行は初期公開の判断前に行います。中身は販売記録・在庫確認・つけ残高確認の代表シナリオです。合格条件は「操作説明なしで完遂し、重大な行き詰まりが 0 件」で、その結果を店主代表（`PO`）の初期公開判断の前提にしました。
+- **期限を判断の節目に変更（F003・F009・F023）**: 「週次」「イテレーション末」「タスク単位」をやめ、「初期公開の判断前」「設計方針の確定まで」などにしました。初期公開の日付自体は `_UNDECIDED_` のまま残しています。会議の頻度はコミュニケーション計画に任せ、「計画への反映」列は判断依頼・報告事項・告知事項などの中身に統一しました（F005）。
+- **目標を判定できる形に（F011・F013）**: 開発担当と店主代表の目標を、完了状態と判定時点が読める文にしました。店主代表は「記録のある営業日が 90% 以上、運用開始後 2 週間で判定」です。
+- **見直し条件を拡充（F010・F016・F017・F021・F022・F027・F028・F032）**:
+  - 体制、公開・利用方針、利用者への影響、初期公開の範囲・時期、判断の節目の行を足しました。
+  - 承認者の「-」を `PO` に、未採用の `BA` を `DEV` に、「利害団体」「利用者群体」を本文と同じ用語に直しました。
+  - 変更を同じ ID の各章とコミュニケーション計画にもそろえる方針を表の前に書き、定期見直しの周期は `_TODO_` で残しました。
+- **言葉の修正**: 冒頭の対象説明（F019・F024）、店主代表の現状を概要と同じ「ノートと記憶」に（F018）、家族利用者の懸念を具体的な困りごとに（F026）、「デザイン方針」を「設計方針」に（F029）、技術メンターの所属を「外部（CoderDojo）」に（F030）直しました。
+
+本文に、文書の作成・確認・承認の役割分担や承認の進み具合は書いていません。frontmatter の `status: ready` は元のままで、変更していません。rulebook を変える必要はありませんでした。
+
+確認が必要な点：
+
+- **決めていただく値**: 初期公開の日付と、運用開始後の定期見直しの周期です。
+- **新しい関係者 ID**: 常連顧客の `STH-REGULAR-CUSTOMER` はこの sample で初めて使います。`prj-charter-sample` など同じ関係者 ID を使うほかの sample にも足すかどうかは、まだ確認していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-stakeholder-register-sample を書き直し、F001〜F032 の指摘 32 件すべてに本文で対応した。常連顧客の追加、家族利用者の試行時点の統一、期限を判断の節目へ変更、見直し条件の拡充など。変更は sample 1 ファイルのみで、rulebook・recipe・template は変えていない。Prettier で整形し、markdownlint は 0 issues。","handoff":["利用者が決める値: 初期公開の日付（本文では `_UNDECIDED_`: 初期公開の計画で決定）と、運用開始後の定期見直しの周期（本文では `_TODO_`: 短期指標の判定時に決める）。","新しい関係者 ID `STH-REGULAR-CUSTOMER`（常連顧客）を追加した。`prj-charter-sample` など同じ `STH-*` を使うほかの sample に足すかどうかは未確認。","rulebook・recipe の変更は不要と判断した。PJR-76N9 に従い、文書の役割の割り当てと承認の進み具合は本文に書いていない。frontmatter の `status: ready` は元のままで、変更していない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-stakeholder-register-sample.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-stakeholder-register-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票などの履歴ファイルは変更していないため"}]}
+</specdojo_executor_evidence>

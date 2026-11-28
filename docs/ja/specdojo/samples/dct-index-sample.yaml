@@ -2,22 +2,20 @@
 # dct-index-sample.yaml
 # 駄菓子屋きぬや 販売管理システム構築の成果物カタログ索引。
 # 背景・対象範囲は [[specdojo:sample-authoring-standard|Sample 記述標準]] の共通サンプル文脈に従う。
-# 単一店舗・タブレット1台で、店頭販売、在庫、つけの記録と確認を支援する。
-# EC、本格会計、仕入れ先とのシステム連携は対象外。本部 API を使う CLI 固有の拡張例は含めない。
 # 構造・値の制約は先頭の schema、分類は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] を正本とする。
 #
 # _ASSUMPTION_: 以下は、宣言した全ドメインのカタログを整備した学習用プロジェクトの完成時点を表す。
-# 同梱の [[specdojo:dct-sample|成果物カタログ（ドメイン別）]] は project-definition の記述例に対応する。
+# 同梱の [[specdojo:dct-sample|成果物カタログ（プロジェクト定義）]] は project-definition の記述例に対応する。
 # 他ドメインのカタログ一式は未同梱であり、samples ディレクトリ全体を実在カタログの集合とはみなさない。
-# `project_id` は dct-sample と同じ例示値で、SpecDojo 本体の prj-0001 のドメイン集合を表さない。
 id: specdojo:dct-index-sample
 type: project
 status: ready
 title: 成果物カタログ
 rulebook: specdojo:dct-index-rulebook
+# `project_id` は dct-sample と同じ例示値で、SpecDojo 本体の prj-0001 のドメイン集合を表さない。
 project_id: prj-0001
 # 店主代表と開発担当が最小限の成果物セットで導入するため small とする。
-# 品質確認や障害時対応のドメインを含めても、scaffold の規模を拡大する判断はしていない。
+# 品質確認や障害時対応のドメインを含めても、scaffold の規模は small のまま据え置く。
 size: small
 groups:
   # 店主代表と導入の目的・合意・現状をまとめて確認するため、プロジェクト側は1つの探索単位とする。
@@ -32,8 +30,8 @@ groups:
       - domain: current-state
         name: 現状
         overview: ノートと暗算に頼る現行の販売・在庫・つけ管理の把握に必要な成果物を管理する。
-  # プロダクト側は、業務の確認、設計、受入・検証、稼働後の対応で参照する目的が分かれる。
-  # 以後の配列順はその探索順であり、開発担当の着手順は Schedule で管理する。
+  # プロダクト側は、参照する目的（業務の確認、設計、受入・検証、稼働後の対応）ごとにグループを分ける。
+  # プロダクト側のグループの配列順は探索順であり、開発担当の着手順は Schedule で管理する。
   - name: プロダクト成果物
     groups:
       - name: 業務仕様群
@@ -42,7 +40,7 @@ groups:
           # 両ファイルの `domain` は business-model のため、索引では1件にまとめる（分割ファイルは未同梱）。
           - domain: business-model
             name: 業務モデル
-            overview: 店頭販売、つけ払い、仕入れの業務ルールと流れを管理する。
+            overview: 店頭販売、つけ管理、仕入れの業務ルールと流れを管理する。
           - domain: data-flow
             name: データフロー
             overview: 販売、在庫、つけ管理を横断するデータの流れを管理する。
@@ -51,7 +49,7 @@ groups:
             overview: 商品、販売明細、在庫、顧客、つけ残高の関係と状態を表す成果物を管理する。
           - domain: user-interface-model
             name: ユーザーインターフェースモデル
-            overview: 店主と家族が同じ手順で記録・確認できるタブレットの画面と操作を管理する。
+            overview: 店主と家族が同じ手順で記録・確認できるよう、タブレットの画面と操作を管理する。
           - domain: system-functions
             name: システム化機能
             overview: 店頭販売、在庫確認、つけ残高の記録・照会を支援するシステム機能を管理する。

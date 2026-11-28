@@ -1,0 +1,13 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 typecheck
+> tsc -b --noEmit
+
+tests/src/exec/task-repos.integration.test.ts(1353,27): error TS2322: Type 'number' is not assignable to type 'void | Promise<void>'.
+
+
+--- stderr ---

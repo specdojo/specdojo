@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  encloseBareHttpUrls,
+  escapeMarkdownInline,
   escapeMarkdownTableCell,
   escapeRegExp,
   redactSensitiveText,
+  trimCodeSpanPadding,
+  unescapeBackticksWhenUniform,
+  unescapeMarkdownCell,
 } from "../../../src/shared/text.js";
 import { sensitiveTextCases } from "../../fixtures/sensitive-text.js";
 
@@ -86,5 +91,76 @@ describe("redactSensitiveText", () => {
     "password=[REDACTED] api_key=[REDACTED]",
   ])("keeps non-secrets and already redacted text: %s", (input) => {
     expect(redactSensitiveText(input)).toBe(input);
+  });
+});
+
+describe("unescapeBackticksWhenUniform", () => {
+  it("restores backticks when every backtick is escaped", () => {
+    const actual = unescapeBackticksWhenUniform("\\`npm test\\` を実行した");
+
+    expect(actual).toBe("`npm test` を実行した");
+  });
+
+  it("keeps text unchanged when a bare backtick is mixed in", () => {
+    const text = "`a\\` と \\`b\\`";
+
+    expect(unescapeBackticksWhenUniform(text)).toBe(text);
+  });
+
+  it("keeps text without escaped backticks unchanged", () => {
+    expect(unescapeBackticksWhenUniform("`code` のまま")).toBe("`code` のまま");
+  });
+});
+
+describe("unescapeMarkdownCell", () => {
+  it("restores underscores, asterisks and pipes escaped for a table cell", () => {
+    const actual = unescapeMarkdownCell("frontend\\_test\\_note.md と a\\*b と c\\|d");
+
+    expect(actual).toBe("frontend_test_note.md と a*b と c|d");
+  });
+
+  it("keeps a title without escapes unchanged", () => {
+    expect(unescapeMarkdownCell("docs/test_note.md")).toBe("docs/test_note.md");
+  });
+});
+
+describe("encloseBareHttpUrls", () => {
+  it("wraps a bare URL in an autolink and leaves the trailing punctuation outside", () => {
+    expect(encloseBareHttpUrls("出典は https://docs.fly.io/docs/apps/ を見た。")).toBe(
+      "出典は <https://docs.fly.io/docs/apps/> を見た。",
+    );
+    expect(encloseBareHttpUrls("see https://example.com/a.")).toBe("see <https://example.com/a>.");
+  });
+
+  it("keeps URLs already in an autolink, a code span, or a Markdown link", () => {
+    const text = "<https://a.example/> と `https://b.example/` と [c](https://c.example/)";
+
+    expect(encloseBareHttpUrls(text)).toBe(text);
+  });
+
+  it("returns the same text when applied twice", () => {
+    const once = encloseBareHttpUrls("https://example.com/x");
+
+    expect(encloseBareHttpUrls(once)).toBe(once);
+  });
+});
+
+describe("trimCodeSpanPadding", () => {
+  it("removes spaces at the start and end of a code span", () => {
+    expect(trimCodeSpanPadding("区切りを `, ` と ` a ` にした。")).toBe(
+      "区切りを `,` と `a` にした。",
+    );
+  });
+
+  it("keeps a code span that contains only spaces", () => {
+    expect(trimCodeSpanPadding("空白 `  ` を使う")).toBe("空白 `  ` を使う");
+  });
+});
+
+describe("escapeMarkdownInline with autolinks", () => {
+  it("does not wrap an autolink that contains an underscore in a code span", () => {
+    expect(escapeMarkdownInline("<https://example.com/a_b> と a_b")).toBe(
+      "<https://example.com/a_b> と `a_b`",
+    );
   });
 });

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cpd-sample.md --changed-only` を実行し、以下の結果を確認しました。\n\n- `docs/ja/specdojo/samples/cpd-sample.md`: `pass` (score 100, finding 0)\n- `docs/ja/specdojo/rulebooks/cpd-rulebook.md`: `pass` (score 94, finding 4)\n- `docs/ja/specdojo/recipes/cpd-recipe.md`: `pass` (score 90, finding 7)\n- `docs/ja/specdojo/templates/cpd-template.md`: `pass` (score 94, finding 3)",
+  "rationale": [
+    "評価結果の鮮度を確認しました。`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cpd-sample.md --changed-only` の実行により、`docs/ja/specdojo/samples/cpd-sample.md` の `content_hash` が最新の評価結果と一致することを確認しました。他の 3 つの型（`rulebook`, `recipe`, `template`）についても同様に最新であることを確認しています。",
+    "対象成果物 `docs/ja/specdojo/samples/cpd-sample.md` は、`docs/ja/specdojo/rulebooks/cpd-rulebook.md` の章立てと必須の表を含み [[DC-001]]、共通の駄菓子屋のプロジェクト文脈に沿っています [[DC-002]]。また、`cpd-mermaid-rulebook.md` の記法および前提に沿った Mermaid コードが記述されており [[DC-003]]、`cpd-rulebook.md` の禁止事項にも抵触していません [[DC-004]]。"
+  ],
+  "improvements": [
+    "型（rulebook/recipe/template）に関する以下の `minor` な finding を改善してください：",
+    "- `docs/ja/specdojo/rulebooks/cpd-rulebook.md`：概要に公開範囲を追加する（`F001`）、良い例・悪い例を `recipe` へ寄せる（`F002`）、検証手順に具体的な `lint` コマンドと期待結果を示す（`F003`）、判定条件を客観的な確認項目へ改める（`F004`）",
+    "- `docs/ja/specdojo/recipes/cpd-recipe.md`：上位文書への参照を補う（`F001`）、作業単位の規模・時間に関する基準を追加する（`F002`）、転記先と担当 Role code を明記する（`F003`）、期待価値・成功基準の項目を足す（`F004`）、検証観点の 4 項目を明示する（`F005`）、pass / fail の判定条件を明確化する（`F006`）、変更時の影響確認の章を明示する（`F007`）",
+    "- `docs/ja/specdojo/templates/cpd-template.md`：変更の影響（change-cascade）のプレースホルダーを追加する（`F001`）、5章の表の列構成を `cpd-sample.md` の 6 列に合わせて整備する（`F002`, `F003`）",
+    "確認できなかった範囲：描画後の SVG の目視確認、先行する edit タスクの result の参照。"
+  ],
+  "approach": "### approach に応じた確認\n\n`node tools/lint-mermaid.mjs docs/ja/specdojo/samples/cpd-sample.md` による構文チェックを実行し、`passed` であることを確認しました。",
+  "verdict": "complete-with-findings"
+}

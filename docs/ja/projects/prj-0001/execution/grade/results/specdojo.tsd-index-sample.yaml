@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/tsd-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-27T20:23:59.146Z"
-graded_by: flash-high-executor
-content_hash: 1c8158ec99127cc4ca4302b9f0467c7f9214d9f7ac954c7bc69e02f3a876fffb
+score: 99
+graded_at: "2026-11-23T15:55:30.258Z"
+graded_by: sonnet-review-executor
+content_hash: 140b582c0a9b4494b4dde56ee704a5586e281085e4cb962dff905030d0d6341e
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -101,6 +101,19 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 48
+    anchor: >-
+      - ホスティングの詳細: _TODO_: `tsd-hosting.md` を作成する。作成までは Fly.io と Docker の構成は `fly.toml` と `Dockerfile`
+      を正本とし、一覧からの参照先を確定しない。
+    message: >-
+      ホスティングと CI/CD の未作成詳細は、一覧の備考列、参照先の表、「未作成の詳細文書」の三か所に同じ `_TODO_` を書いている。暫定正本を参照先の表の参照場面か一覧の備考に一本化し、2.3
+      を縮めても判断情報は失われない。
+    message_ja: >-
+      ホスティングと CI/CD の未作成詳細は、一覧の備考列、参照先の表、「未作成の詳細文書」の三か所に同じ `_TODO_` を書いている。暫定正本を参照先の表の参照場面か一覧の備考に一本化し、2.3
+      を縮めても判断情報は失われない。

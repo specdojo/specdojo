@@ -1,0 +1,24 @@
+作業は未完了です。`docs:dev` の起動時間の測定と `npm run docs:build` が残っています。ツリーのコピー段は速くなりましたが、ほかの段は測れていません。
+
+実装は次の 3 点です。
+- **実行記録の除外:** `execution/` 配下の log・json・plan・result は閲覧用ツリーに複製しません。plan・result 以外の `.md` と画像は今までどおり複製します。
+- **差分コピー:** `kata-staging.ts` で、起動のたびの全削除・全コピーをやめました。大きさと更新時刻が同じファイルはコピーし直さず、期待する一覧にないファイルは削除します。重ねる型が 0 件のときの負荷も、この差分コピーで減らしています。
+- **dist での生成:** `bin/specdojo-docs-site.js` に `generate` コマンドを足しました。`dist/specdojo.js` が `src` より新しければ `dist` で流し、古ければ `tsx` に戻します。`--skip-if-fresh` を付けると、`.specdojo/doc-index.json` が `docs/` より新しいときは生成を飛ばします。
+
+コピー段の時間は、変更前 1289 ms、変更後は初回 370 ms、2 回目 158 ms です。`tsx` から `stageBundledKata` を直接呼んで測りました。新実装の 2 回は並行して流しており、共有フォルダ上の主リポジトリではないため、参考値です。
+
+`docs:generate`・VitePress の起動・最初のページが開けるまでは、sandbox から起動できず測っていません。
+
+検証は次のとおりです。
+- `kata-staging` の単体テストは 5 件とも通りました。実行記録の除外と差分コピーのテストを 2 件足しています。
+- `npm run typecheck` はエラーなし、`npm run lint:ts` はエラー 0 件で警告のみです。
+- 新しい `generate` コマンドは、構文チェックのみで実行は確かめていません。
+- 親 runner の検証は実行していません。
+
+個票の作業内容は、No.1 と No.6 を `open` のまま、理由をメモに書いています。5.1 に CHANGELOG の文案を入れています。
+
+補足です。測定用に作った `packages/docs-site/.vitepress/kata-staging-old.ts` を削除できず、中身を `export {};` にしました。不要なので削除してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新は完了。docs:dev 全体の段ごとの時間測定と docs:build は sandbox で実行できず未実施。","handoff":["`packages/docs-site/.vitepress/kata-staging-old.ts` は測定用の一時ファイルで、削除が拒否されたため中身を `export {};` にした。削除すること。","`docs:generate`・VitePress の起動・最初のページが開けるまでの時間は未測定。変更前後を同じ手順で測り、個票の対応結果へ追記すること。","`npm run docs:build` が通ることは未確認。execution/ の plan・result を複製から外したことで dead link が出ないか確かめること。","`bin generate` コマンドは構文チェックのみで、実行は未確認。","保護された設定の案: `package.json` の `docs:generate` を `specdojo-docs-site generate --skip-if-fresh` 経由にする案と、`.devcontainer/devcontainer.json` でツリーと `.vitepress/cache` を named volume に置く案。反映は利用者の承認のもと feature ブランチで行う。","CHANGELOG の文案は個票の 5.1 に記載済み。"],"validations":[{"command":"npx vitest run tests/packages/docs-site/kata-staging.test.ts","status":"passed","summary":"5 件通過"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0 件、警告 40 件（既存）"},{"command":"npm run docs:build","status":"not_run","summary":"sandbox で実行しなかった"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,22 @@
+`fallback_reporter_by` の reporter で 1 回やり直す処理と、検査前の機械的な整形を実装しました。確認できたのは、新規テスト 8 件の通過、既存の `reporter.test.ts` と `result-markdownlint.test.ts` の通過、`lint:ts` のエラー 0 件です。`npm run typecheck` は、この会話の中では完走を確認できていません。
+
+- **代わりの reporter:** 形式のやり直し（既定 3 回）が尽きたら、設定した reporter で 1 回だけやり直します。新しい設定名は作らず、既存の `fallback_reporter_by` を共用しました。`.specdojo/exec-defaults.yaml` の `routing` ではどれも `sonnet-reporter` です。未設定なら従来どおり止まります。rate limit や終了コードの失敗には使いません。この経路は `src/exec/run/agent-pipeline.ts` にだけ配線しました。`in-place.ts` と `schedule-task.ts` など、他の呼び出し元は未対応です。
+- **機械的な整形:** JSON Schema を通った出力の自由記述を、検査の前に `src/exec/reporter-repair.ts` で直します。直すのは、コードの書式内側の前後の空白（MD038）、見出し末尾の句読点（MD026）、コードブロックの囲みの行（中身は残す）です。`path`・`verdict`・`mode` の値は変えません。`verdict` の欠けのような構造の違反は直さず、代わりの reporter に回します。
+- **個票の対応結果:** 設定名と既定値、直してよい範囲と理由、CHANGELOG に書く事項（区分 Fixed と文案）を `pjr-q723-reporter-format-failures.md` に書きました。`CHANGELOG.md` は変えていません。
+- **テスト:** 新規の `tests/src/exec/reporter-repair.test.ts` で、直せる違反は 1 回で通ること、`verdict` の欠けは代わりの reporter に回ること、代わりも不正なら失敗することを確かめました。個票の `npx prettier --check` も通っています。
+- **全件テストと typecheck:** `npm run test:unit` の全件は、この会話の中では完走を確認できていません。親の `test-integration` を含め、runner の検証に任せます。個票にも同じ旨を書いています。
+- **fixture:** 9 件の実出力そのものは fixture にしていません。違反の種類を再現した小さな入力で代えています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"fallback_reporter_by による形式失敗時の 1 回のやり直しと、MD038・MD026・コードブロックの機械的修正を実装した。単体テストと個票の対応結果を追加した。npm run typecheck と npm run test:unit の全件はこの会話内で完走を確認できておらず、runner の検証に任せる。","handoff":["代わりの reporter の設定名は既存の fallback_reporter_by を共用し、既定値は routing の sonnet-reporter。新しい設定名は作っていない。","配線は src/exec/run/agent-pipeline.ts のみ。in-place.ts・schedule-task.ts など他の呼び出し元は未対応。","個票の対応結果に CHANGELOG に書く事項（Fixed と文案）を記載した。CHANGELOG.md は変更していない。","grade の起動は executor が実行できないため行っていない。"],"validations":[{"command":"npx vitest run tests/src/exec/reporter-repair.test.ts tests/src/exec/reporter.test.ts tests/src/exec/result-markdownlint.test.ts","status":"passed","summary":"新規 8 件を含む対象テストが通った"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-q723-reporter-format-failures.md","status":"passed","summary":"個票は整形済み"}]}
+</specdojo_executor_evidence>
+
+バックグラウンドで走らせていた `tests/src/exec` 配下の全件が通りました。121 ファイル・2102 件がすべて成功し、終了コードは 0 です。
+
+ただし、このテストは `reporter-repair.test.ts` の最後の修正（08:02）より前の 08:00 に始まっています。この回にはまだ失敗していたテストが含まれていた可能性があります。修正後の通過は、`reporter-repair.test.ts` の 8 件を単独で再実行して確認済みです。
+
+`npm run typecheck` の完走は、この会話の中では確認できていません。上の報告のとおり、`npm run test:unit` 全体と親の `test-integration` は runner の検証に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"fallback_reporter_by による形式失敗時の 1 回のやり直しと、MD038・MD026・コードブロックの機械的修正を実装した。単体テストと個票の対応結果を追加した。tests/src/exec 配下 121 ファイル・2102 件が通った（ただし最後のテスト修正より前の開始）。修正後の reporter-repair.test.ts は単独で 8 件通過。npm run typecheck の完走は未確認で、runner の検証に任せる。","handoff":["代わりの reporter の設定名は既存の fallback_reporter_by を共用し、既定値は routing の sonnet-reporter。新しい設定名は作っていない。","配線は src/exec/run/agent-pipeline.ts のみ。in-place.ts・schedule-task.ts など他の呼び出し元は未対応。","個票の対応結果に CHANGELOG に書く事項（Fixed と文案）を記載した。CHANGELOG.md は変更していない。","grade の起動は executor が実行できないため行っていない。"],"validations":[{"command":"npx vitest run tests/src/exec","status":"passed","summary":"121 ファイル・2102 件が通過。reporter-repair.test.ts の最後の修正より前に開始した実行"},{"command":"npx vitest run tests/src/exec/reporter-repair.test.ts","status":"passed","summary":"修正後の新規 8 件が通過"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-q723-reporter-format-failures.md","status":"passed","summary":"個票は整形済み"}]}
+</specdojo_executor_evidence>

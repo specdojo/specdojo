@@ -4,88 +4,88 @@ document: specdojo:nfr-integrity-sample
 path: docs/ja/specdojo/samples/nfr-integrity-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 55
-graded_at: "2026-10-12T21:42:24.404Z"
-graded_by: agy-expert-executor
-content_hash: 7bd245fc26107c2afc77c8770687ca6d848d7cbe55a15cc78b6e05a39ada27c1
+verdict: pass
+score: 94
+graded_at: "2026-11-23T15:12:25.241Z"
+graded_by: sonnet-review-executor
+content_hash: 5d801107f84fcc751a3f6fd6ed1da47af269b24812e4c78c9e668b0cf9c9d38f
 categories:
   purpose:
-    score: 50
+    score: 100
   operations:
-    score: 81
+    score: 94
   planning:
-    score: 58
+    score: 100
   business:
-    score: 58
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 33
+    score: 92
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
-  vp-dev-testability:
-    level: 2
-    score: 50
-  vp-qe-verifiability:
-    level: 2
-    score: 50
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -102,173 +102,33 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 13
-  minor: 7
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、データ正確性と改ざん防止を定義するための最小サンプルである。
-    message: >-
-      The sample only provides abstract meta-descriptions and fails to articulate specific integrity definitions or
-      scope boundaries aligned with the business purpose of the confectionery store management system.
-    message_ja: サンプルは抽象的なメタ記述のみを提供しており、菓子店管理システムのビジネス目的に沿った具体的な整合性の定義やスコープの境界を明確にできていません。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: "_ASSUMPTION_: 保持期間の根拠は、個人事業の帳簿書類の保存期間（青色申告で 7 年）とする。根拠とする規程文書は未作成のため、`based_on` は空にしている。"
+    message: 保持期間 7 年の根拠が `based_on` で未設定のため、rulebook の「保持期間と根拠」の要求を満たし切っていない。根拠文書を作成して `based_on` に設定するか、決定記録への導線を追加する。
+    message_ja: 保持期間 7 年の根拠が `based_on` で未設定のため、rulebook の「保持期間と根拠」の要求を満たし切っていない。根拠文書を作成して `based_on` に設定するか、決定記録への導線を追加する。
   - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 駄菓子屋きぬや 販売管理システム 非機能要件 / 完全性"
     message: >-
-      Unresolved issues lack decision-maker, impact scope, and concrete options necessary for the PO to make an informed
-      approval decision.
-    message_ja: 未解決の課題には、POが十分な情報に基づいた承認決定を行うために必要な意思決定者、影響範囲、および具体的な選択肢が不足しています。
+      rulebook の `_UNDECIDED_`（sample が 5 章に揃っていないという記述）が、5 章に揃った現在の sample と食い違っている。rulebook の記述を更新し、recipe と template
+      の要否を判断する必要がある。
+    message_ja: >-
+      rulebook の `_UNDECIDED_`（sample が 5 章に揃っていないという記述）が、5 章に揃った現在の sample と食い違っている。rulebook の記述を更新し、recipe と template
+      の要否を判断する必要がある。
   - id: F003
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 5
-    anchor: 本書は、データ正確性と改ざん防止を定義するための最小サンプルである。
-    message: The sample does not explicitly identify human PO approval responsibility or release governance.
-    message_ja: サンプルでは、人間のPOによる承認責任やリリースガバナンスが明示的に特定されていません。
-  - id: F004
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      The document lacks actionable work units, completion conditions, and assigned Role codes required for task
-      breakdown and progress tracking.
-    message_ja: ドキュメントには、タスクの分解と進捗管理に必要な、実行可能な作業単位、完了条件、および割り当てられたRoleコードが不足しています。
-  - id: F005
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      Dependencies on downstream test/acceptance deliverables and schedule risks associated with deferring requirements
-      are not identified.
-    message_ja: 下流のテスト/受け入れ成果物への依存関係や、要件の延期に関連するスケジュールリスクが特定されていません。
-  - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: Unresolved issues lack assigned Role codes and distinct transfer destinations such as PJR or decision logs.
-    message_ja: 未解決の課題には、割り当てられたRoleコードや、PJRまたは決定ログといった明確な転送先が欠けています。
-  - id: F007
-    severity: major
-    rule: vp-ba-business-value
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: >-
-      The document does not describe the specific business problems, stakeholder value, or business impact of data
-      integrity failures for the confectionery store operations.
-    message_ja: ドキュメントには、菓子店運営におけるデータ整合性の失敗による具体的なビジネス上の問題、ステークホルダーの価値、またはビジネスへの影響が記載されていません。
-  - id: F008
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      Requirements, acceptance criteria, and in-scope/out-of-scope boundaries are entirely omitted and replaced with
-      high-level topical placeholders.
-    message_ja: 要件、受け入れ基準、およびインスコープ/アウトオブスコープの境界が完全に省略されており、ハイレベルなトピックのプレースホルダーに置き換えられています。
-  - id: F009
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: Stakeholders, operational users, and agreeing parties for data integrity constraints are not identified.
-    message_ja: データ整合性の制約に関するステークホルダー、オペレーショナルユーザー、および合意当事者が特定されていません。
-  - id: F010
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      Technical constraints, transaction boundaries, and audit logging specifications are only listed as keywords
-      without concrete technical details.
-    message_ja: 技術的な制約、トランザクション境界、および監査ログの仕様が、具体的な技術詳細のないキーワードとしてのみリストされています。
-  - id: F011
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The table in Section 4 unnecessarily duplicates the statements from Section 1 and Section 3 without providing
-      distinct requirement information.
-    message_ja: セクション4の表は、独自の要件情報を提供することなく、セクション1とセクション3の記述を不必要に重複させています。
-  - id: F012
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      The document provides no implementation inputs, data schema constraints, or completion conditions for developers
-      to implement integrity controls.
-    message_ja: ドキュメントには、開発者が整合性コントロールを実装するための実装インプット、データスキーマの制約、または完了条件が提供されていません。
-  - id: F013
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: Impact on existing database schemas, transactions, and operational workflows is not identified.
-    message_ja: 既存のデータベーススキーマ、トランザクション、およびオペレーショナルワークフローへの影響が特定されていません。
-  - id: F014
-    severity: major
-    rule: vp-dev-testability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: No verification methods, test commands, or expected test outcomes are specified for verifying data integrity.
-    message_ja: データ整合性を検証するための検証方法、テストコマンド、または期待されるテスト結果が指定されていません。
-  - id: F015
-    severity: major
-    rule: vp-qe-verifiability
-    line: 58
-    anchor: ""
-    message: 完全性要件の具体的内容、指標、判定基準が記述されておらず、検証不能である。
-    message_ja: 完全性要件の具体的内容、指標、判定基準が記述されておらず、検証不能である。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: 本書は、データ正確性と改ざん防止を定義するための最小サンプルである。
-    message: Frontmatter に必須項目である `title` が定義されていない。
-    message_ja: Frontmatter に必須項目である `title` が定義されていない。
-  - id: F017
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 36
-    anchor: ""
-    message: rulebook Section 5 で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）が全て欠落している。
-    message_ja: rulebook Section 5 で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）が全て欠落している。
-  - id: F018
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: ""
-    message: "rulebook 指定の必須見出し構成（## 1. 概要（対象・目的）〜 ## 5. 関連ドキュメント導線）を完全に無視した構成となっている。"
-    message_ja: "rulebook 指定の必須見出し構成（## 1. 概要（対象・目的）〜 ## 5. 関連ドキュメント導線）を完全に無視した構成となっている。"
-  - id: F019
-    severity: major
-    rule: vp-ux-readability
-    line: 36
-    anchor: ""
-    message: ルールブックの標準構成と乖離した独自構成となっており, 正解例としての案内機能に欠けている。
-    message_ja: ルールブックの標準構成と乖離した独自構成となっており, 正解例としての案内機能に欠けている。
-  - id: F020
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: Conditions and criteria required to promote the document from draft to ready status are not defined.
-    message_ja: ドキュメントをドラフトからreadyの状態に昇格させるために必要な条件と基準が定義されていません。
-  - id: F021
-    severity: minor
-    rule: vp-ops-operability
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: Maintenance ownership and change management guidance for updating this sample are not described.
-    message_ja: このサンプルを更新するための保守の所有権と変更管理のガイダンスが記載されていません。
+    line: 45
+    anchor: "_UNDECIDED_: 通信や端末の障害で店頭のタブレットが使えない間に紙へ記録した販売を、復旧後にどう入力し、どの時点から整合性境界の対象とするかは未決定である。オフライン時の運用方針と合わせて決める。"
+    message: ready 化に必要な条件（オフライン時の入力方針と整合性チェックの実行方式の決定、保持期間の根拠の確定）が明示されていない。
+    message_ja: ready 化に必要な条件（オフライン時の入力方針と整合性チェックの実行方式の決定、保持期間の根拠の確定）が明示されていない。

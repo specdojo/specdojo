@@ -1,0 +1,14 @@
+`disabled` の member を断るテスト 3 件を `tests/src/exec/agent-config-command.test.ts` に追加しました。このファイルの 25 件は通り、Prettier のチェックも通っています。
+
+- **追加したテスト**
+  - 名前で指定した場合に断られること。
+  - command を上書きした場合（routing 相当）でも断られること。
+  - 代わりの選択（`selectCandidates`）が無効な member を外して次の候補へ進むこと。
+- **実装を外した確認**: `src/exec/agent-config.ts` の `resolveMemberCommand` の `disabled` 確認を一時的に外すと、名前の指定と routing の 2 件が落ちました。確認を戻すと 25 件すべてが通ります。
+- **代わりの選択のテスト**: `selectCandidates` の既存の除外を固定するものなので、今回の実装を外しても通ります。回帰防止として入れています。
+- **個票**: 5.2「確認結果」を、追加したテスト名と確かめ方で書き直しました。回避策 afbebe967 は変えていません。戻してよいかの判断は個票 5.4 と `handoff` に書いてあります。
+- **親の検証**: `lint:ts`・`typecheck`・`test:unit` などは親 runner が実行するので、ここでは走らせていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"resolveMemberCommand の disabled 確認に対する単体テスト 3 件（名前の指定・command 上書き・代わりの選択）を実際にテストファイルへ追加した。実装を一時的に無効化すると名前の指定と command 上書きの 2 件が落ち、戻すと 25 件すべてが通ることを確認した。個票の確認結果を実際のテスト名と確かめ方で更新した。","handoff":["antigravity の command_template を外した回避策（afbebe967）は protected 設定のため変更していない。resolveMemberCommand が disabled の member を断るようになったため、agy の member を disabled にしたうえで command_template を戻してよい。判断は人間が行う。","代わりの選択のテストは selectCandidates の既存の disabled 除外を固定する回帰テストで、今回の実装を外しても通る。落ちるのは名前の指定と command 上書きの 2 件。","CHANGELOG.md は変更していない。区分 Fixed と文案は個票 5.5 に記載済み。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-77jb-exec-run-named-disabled-member.md tests/src/exec/agent-config-command.test.ts src/exec/agent-config.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx vitest run tests/src/exec/agent-config-command.test.ts","status":"passed","summary":"25 件通過。実装を外すと追加テスト 2 件が落ちることも確認"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,14 @@
+「人の対応が要るもの」の表に、「項目」の次へ「内容」の列を足しました。dashboard の単体テスト、`npm run typecheck`、`npm run lint:ts` は通りました。`npm run lint:ts` は警告のみで、エラーは 0 件です。`npm run test:unit` と `npm run lint:md` は、このサンドボックスでは流していません。
+
+- **登録簿の項目:** `review`・`decision`・`question`・`waiting` の行は、個票のタイトルを出します。タイトルがなければ `-` です。
+- **schedule の task:** `human`・`blocked` の行は、成果物カタログから引ける成果物の名前、なければ ready の task 名、どちらもなければ `-` の順に出します。カタログの対応表にはパスしかなく名前を持たないため、成果物の名前にはファイル名（拡張子なし）を使いました。
+- **セルの扱い:** 「内容」のセルは `sanitizeDashboardCell` を通します。長いタイトルは切りません。切ると項目を見分ける情報が欠けるためです。
+- **変えていないもの:** 「種別」「項目」「次にすること」の列、行の並び、dashboard のほかの章、`CHANGELOG.md`、保護された設定は変えていません。
+- **テスト:** `tests/src/dashboard/dashboard.test.ts` で、登録簿の項目と schedule の task の両方の行に「内容」が出ることを確かめています。
+- **説明の更新:** `docs/ja/specdojo/references/command-reference.md` の dashboard の説明を、表の列に合わせて更新しました。
+
+個票の作業内容の表は 2 行とも `done` にしました。対応結果には、上の判断の理由と「CHANGELOG に書く事項」の小節（区分は Changed、行の文案つき）を書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dashboard の「人の対応が要るもの」の表に「内容」列を追加し、単体テストと説明を更新した。個票の対応結果に判断の理由と CHANGELOG 事項を記載した。","handoff":["「内容」の決め方: 登録簿の項目は個票タイトル。schedule の task は成果物カタログの成果物ファイル名（拡張子なし）、ready の task 名、`-` の順。カタログの対応表は名前を持たずパスだけのため、ファイル名を名前として使った。","長いタイトルは切らない。切ると項目の見分けに要る情報が欠けるため。","CHANGELOG に書く事項: 区分 Changed。dashboard の「人の対応が要るもの」の表に、項目の内容を示す「内容」の列を追加した。"],"validations":[{"command":"npx vitest run tests/src/dashboard","status":"passed","summary":"4 ファイル 79 テストが通過"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0 件、警告 43 件（既存分）"}]}
+</specdojo_executor_evidence>

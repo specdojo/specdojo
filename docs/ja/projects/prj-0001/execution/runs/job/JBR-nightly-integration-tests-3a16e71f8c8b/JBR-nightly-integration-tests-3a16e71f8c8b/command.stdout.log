@@ -1,0 +1,1 @@
+{"steps":[{"id":"integration-tests","status":"succeeded","reason":"command exited 0","started_at":"2026-11-23T04:27:51.093Z","completed_at":"2026-11-23T04:30:28.943Z","exit_code":0,"evidence_ref":"docs/ja/projects/prj-0001/execution/runs/job/JBR-nightly-integration-tests-3a16e71f8c8b/JBR-nightly-integration-tests-3a16e71f8c8b-attempt-1-step-integration-tests/evidence.json"}]}

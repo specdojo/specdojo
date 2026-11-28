@@ -1,0 +1,124 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f5905608c07b44999b37c6a3a2098689
+  ts: "2026-11-24T23:14:53Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 登録簿の専用ブランチへの push を受け持つ register branch-push を足す
+    - field: description
+      from: ""
+      to: 登録簿の同期（`register_sync`）では、`register ... --commit` と `exec run` が専用ブランチへ自動で push する。一方、初回の専用ブランチの作成と push、同期に失敗したときの復旧は、ガイドで素の `git branch`・`git pull --rebase`・`git push` を手で打つ手順になっている。素の `git push` はどのブランチへも push できるため、オーケストレーターには許していない。push を、設定の remote と branch だけに絞った専用のコマンドで受け持ち、オーケストレーターが素の `git push` を打たずに同期を始め・直せるようにする。
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-25）: 起票を専用ブランチへ push する運用を、prj-0001 と prj-0002 の間で始めたい","利用者の提案と判断（2026-11-25）: register の git の push は specdojo の専用コマンドを作った方がよい。コマンドを作ってから同期を始める（案 B）。全件レビュー（PJR-0BGE）は止めずに並行して進める","同期の設定（2 つの project の specdojo.config.json・CLAUDE.md・オーケストレーターの本文・check-register-push.yml・lefthook.yml）の差分は、オーケストレーターが ../worktrees/feature-prj-0001-register-sync と ../worktrees/feature-prj-0002-register-sync に用意してある（未 commit）。この項目では変えない","担当と期限は利用者の確認待ち"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_384fbbe57fdb4137a4f76dacd0ccd7eb
+  ts: "2026-11-24T23:18:07Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f5905608c07b44999b37c6a3a2098689
+- v: 1
+  id: reg_0e7a5916f50143f3aad5d8da49b714aa
+  ts: "2026-11-24T23:31:27Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_384fbbe57fdb4137a4f76dacd0ccd7eb
+- v: 1
+  id: reg_05e0f1836ca347a6a651dfa292e9daa9
+  ts: "2026-11-24T23:33:26Z"
+  action: update
+  actor: SpecDojo
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_0e7a5916f50143f3aad5d8da49b714aa
+- v: 1
+  id: reg_a10a1c07bd1b4fcb9e674475bdb6891e
+  ts: "2026-11-24T23:34:06Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_05e0f1836ca347a6a651dfa292e9daa9
+- v: 1
+  id: reg_0535ba8789514be0ba0dabcb907b21e2
+  ts: "2026-11-24T23:42:18Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a10a1c07bd1b4fcb9e674475bdb6891e
+- v: 1
+  id: reg_0516d4af6f1944de95b8ee2e9eb8fc3b
+  ts: "2026-11-25T22:08:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが裸のリモートを持つ一時のリポジトリで初回の dry-run・初回の作成と push・同期の記帳・復旧・範囲外のファイルでの停止を確かめ、indie の承認（2026-11-26）を得て close。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: register branch-push を足し、初回の作成（リモートの統合のブランチの先端から）・復旧・検査の違反での停止を受け持つようにした。
+  previous_event_id: reg_0535ba8789514be0ba0dabcb907b21e2

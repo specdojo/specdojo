@@ -3,4 +3,4 @@
 This page is the language selector for the SpecDojo documentation site. Choose a language to continue.
 
 - [日本語](./ja/) — 完全なドキュメント
-- [English](./en/) — English landing page only; documentation is under construction
+- [English](./en/) — Quick Start and five starter kata; more pages are being translated

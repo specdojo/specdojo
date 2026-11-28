@@ -1,0 +1,29 @@
+保守性 sample を、駄菓子屋きぬやの完成例として書き直しました。変更したファイルは `docs/ja/specdojo/samples/nfr-maintainability-sample.md` だけで、rulebook と result は触っていません。prettier と markdownlint は対象ファイルで指摘 0 件でした。リンクが解決するかは、後で親 runner が流す lint の結果で確かめる必要があります。
+
+**変えた内容**
+
+- **章立て**: rulebook が順序固定で決めている 5 章（概要（対象・目的）／適用範囲・前提条件／保守性要件一覧／測定・検証方法／関連ドキュメント導線）に組み替えました。旧版の「最小記述例」と「未解決事項」の章は削除しています（F013、F018、F020、F021）。
+- **frontmatter**: `part_of` に `specdojo:nfr-index-sample`、`based_on` に `specdojo:opd-index-sample` を入れました（F019）。
+- **要件**: `nfr-mnt-001`〜`005` を、基準に集計方法と集計期間を付けて書きました（F004、F010、F014、F017）。
+  - 一次切り分け時間は「各 P1 障害で最大 30 分以内」です。運用方針 sample で紙の販売控えへの切替を判断する時刻（P1 から 30 分）に揃えました。
+  - 切り戻しは「翌営業日の 10:00 までに記録を再開」です。運用方針 sample の営業時間と、閉店後に変更する運用から決めました。
+  - 障害記録の必須 4 項目（検知・切り分け完了・再開の時刻と原因の範囲）がそろう割合は 100% としました。
+- **測定・検証方法**: 要件ごとに測定方法・判定のタイミング・判定する役割（`OPS` か `PO`）を書きました（F016、F024）。未達・未決・閾値を変えたときの記録先と、閾値を見直す契機も書いています（F007、F008、F015、F023）。
+- **概要**: 「店主不在の日も家族が店番を続ける」目的と、切り分けが長引いたときに紙へ書いて後で転記する手間を結び付けました（F002、F009）。MTTR は用語集に合わせ、旧版の「平均修復時間」という表記はなくしました（F022）。
+
+**未決にした値**
+
+P1 障害の MTTR の上限（`nfr-mnt-003`）と、商品マスタ・価格変更のリードタイム（`nfr-mnt-004`）は店主代表の業務判断が要るため、推測で埋めずに `_UNDECIDED_` にしました。概要の表に判断者（`PO`）、決まるまでの扱い、影響先を書いています（F003）。
+
+**sample に足さなかった指摘**
+
+- F005（承認と公開の責任）、F006（作業項目・役割・日程）、F011（確認担当と合意の対象）は、PJR-76N9 で sample の本文に書かない事柄なので対応していません。保守作業を担う役割は、文書の中身として適用範囲に書いています。
+- F012 は、ホスティング環境・死活監視・手書きの記録という前提で対応しました。
+
+**判断が要る点**
+
+`specdojo:dec-sample` は `deprecated` で、非推奨の文書は参照先にできないため、判断の記録先は「登録簿の decision」と書きました。ところが rulebook はまだ `dec-*` を判断の記録先としています。この食い違いは rulebook の変更案として申し送りに入れました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-maintainability-sample を rulebook の本文要件 5 章（概要（対象・目的）／適用範囲・前提条件／保守性要件一覧／測定・検証方法／関連ドキュメント導線）で書き直し、駄菓子屋きぬやの値で埋めた完成例にした。frontmatter に part_of（specdojo:nfr-index-sample）と based_on（specdojo:opd-index-sample）を追加した。nfr-mnt-001〜005 に集計方法・集計期間付きの基準と、測定方法・判定タイミング・判定者（Role code）を置いた。値は opd-index-sample の営業時間 10:00〜18:00、P1 から 30 分で紙の販売控えへ切替を判断する運用、閉店後に変更を適用する運用に揃えた。MTTR の上限と商品マスタ・価格変更のリードタイムは利用者の判断が要るため `_UNDECIDED_` にした。非推奨の dec-sample へのリンクは登録簿の decision に置き換えた。対象ファイルは prettier と markdownlint-cli2 で指摘 0 件。","handoff":["`_UNDECIDED_` のまま残した値（PO の判断が要る）: (1) P1 障害の MTTR の上限（nfr-mnt-003。可用性の RTO を超えない値で決める）、(2) 商品マスタ・価格変更の変更リードタイムの上限（nfr-mnt-004）。決まるまでは測った値の報告だけ行い、pass / fail を判定しない。","rulebook の変更案: 本書の位置づけ、測定・検証方法の記述ガイド、関連ドキュメント導線は、閾値の判断の記録先を `dec-*` としている。しかし specdojo:dec-sample は deprecated で、登録簿の decision へ移っている。sample では「登録簿の decision」と書いたので、rulebook の `dec-*` 参照も登録簿の decision に置き換える必要がある。","rulebook の変更案: `based_on` に監視・ログ・Runbook の水準の根拠となる文書を書くよう求めているが、opd-monitoring-sample・opr-incident-sample・opr-change-sample はまだ薄い最小サンプルで具体値を持たない。今回は値を持つ opd-index-sample だけを `based_on` にした。opr-* の sample を厚くするときは、nfr-mnt-001（一次切り分け 30 分）と nfr-mnt-002（翌営業日 10:00 までの切り戻し）に所要時間・訓練の基準を揃える必要がある。","sample の本文に足さなかった grade の指摘: F005（承認・公開の責任）、F006（作業項目・役割の割り当て・スケジュール）、F011（確認担当者と合意対象）は、文書の役割の割り当てと承認の進み具合を sample の本文に書かないという PJR-76N9 の決まりに当たるため対応しなかった。再評価で同じ指摘が出る場合は、viewpoint 側で sample を対象外にするよう見直すことを提案する。保守作業を担う役割（OPS・DEV・PO・店番担当）は、文書の中身として適用範囲・前提条件に書いた。","兄弟の nfr-*-sample（availability、performance、index など）は旧形式の 38 行の最小サンプルのままで、RTO/RPO なども持たない。nfr-availability-sample を厚くするときは、RTO を nfr-mnt-001・002・003 と矛盾しない値にする必要がある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"対象の sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-maintainability-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更ファイルに *.yaml / *.yml がない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更は docs/ja/specdojo/samples/ のみで docs/ja/projects/ に及ばない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8e5eb3092c754f15bc109bcd93c6157a
+  ts: "2026-11-23T00:22:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register のブランチへ移る手順を書いて試す
+    - field: description
+      from: ""
+      to: prj-0001 と external\_projects で起票している別のプロジェクトで、register のブランチへ移る手順を試し、既定に切り替える判断の条件を決める
+    - field: input
+      from: ""
+      to: '["PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2TX0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-4VD6","PJR-1JF6","PJR-FBP0"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: register
+- v: 1
+  id: reg_63819038b9b343598e6ec13c442cef7b
+  ts: "2026-11-23T00:22:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8e5eb3092c754f15bc109bcd93c6157a
+- v: 1
+  id: reg_624015cb46364a0b91f5a20c3514edc9
+  ts: "2026-11-23T22:29:41Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が v0.10.0 に入れると決めた（2026-11-24）
+  changes:
+    - field: input
+      from: '["PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）"]'
+      to: '["PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）","v0.10.0 に入れる（利用者の指定、2026-11-24）"]'
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_63819038b9b343598e6ec13c442cef7b
+- v: 1
+  id: reg_56e33cc5d63742049fdac9414afc533a
+  ts: "2026-11-24T03:42:30Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_624015cb46364a0b91f5a20c3514edc9
+- v: 1
+  id: reg_3856e0dd98f74b55adfc7269924e735b
+  ts: "2026-11-24T03:44:33Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_56e33cc5d63742049fdac9414afc533a
+- v: 1
+  id: reg_b4d137a6906b4737b2827c0519168060
+  ts: "2026-11-28T05:35:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_3856e0dd98f74b55adfc7269924e735b
+- v: 1
+  id: reg_18a1ee0bf3b047adb3981853cbe54667
+  ts: "2026-11-28T10:57:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 別のプロジェクトからの試しの結果を記録する
+  changes:
+    - field: section
+      from: ""
+      to: prj-0001 での試し（オーケストレーター、2026-11-28）
+  previous_event_id: reg_b4d137a6906b4737b2827c0519168060
+- v: 1
+  id: reg_037fb03dbab34a0ca5f181a0b0096db8
+  ts: "2026-11-28T11:09:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: prj-0001 での試し（記帳・exec run・branch-merge）に加え、prj-0002 の設定を sync に移して note PJR-MYGE を起票し、sync/register への commit・push、branch-check、branch-merge を確かめた（2026-11-28）。v0.10.0 に含めることは indie の指示
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: register の同期のブランチへ移る手順を書き、prj-0001 と別のプロジェクト（prj-0002）で試した。prj-0002 から prj-0001 への起票が新しい sync/register に届くことを確かめた
+  previous_event_id: reg_18a1ee0bf3b047adb3981853cbe54667

@@ -1,0 +1,26 @@
+`docs/ja/specdojo/samples/opr-support-sample.md` を、駄菓子屋きぬやを題材にした問い合わせ一次対応の運用手順の完成例として書き直しました。sample の手直しは終わっています。Prettier による整形と markdownlint は通りました。lint・schema などの検査はこのあと親 runner が実行するため、まだ結果は出ていません。
+
+**主な変更**
+- **Frontmatter**: `rulebook` を `specdojo:opd-rulebook` から `specdojo:opr-rulebook` に直しました。`based_on` は `specdojo:opd-index-sample` と `specdojo:opr-sample` の 2 つにしました。
+- **章構成**: rulebook が必須とする 12 章をすべて置き、見出しは `opr-sample` と同じにしました。問い合わせに関係しない第 3〜9 章は省略せず、「`opr-index` 参照」か「本書の範囲外」と理由を書きました。
+- **問い合わせ一次対応の章**（指摘のあった `## 10` の位置）:
+  - 分類ごとに、判定の条件・例・応答の目標・引き継ぎ先（開発 / 業務 / 運用）を表にしました。
+  - 一次対応の 5 段（受付→再現条件→影響→暫定回避→引き継ぎ要否）、回答の文例、完了条件、月次の見直しを書きました。
+  - 既存の 4 分類は運用方針の分類に揃えて残しました（仕様確認は操作の質問、データ修正要否は記録の訂正の依頼、障害疑いは障害にあたるもの）。依頼（権限・設定）は運用方針にない分類なので、受け付けた後に権限・変更の申請へ回す行として残しました。
+  - 「P判定」は P1〜P3 の判定条件に置き換えました。表記は「引き継ぎ」に統一しました。
+- **概要・前提**: 目的と、支える KPI を概要に書き、未決の値が手順に与える影響を表にしました。対象・対象外・問い合わせる人・一次対応者・時間帯・権限・使う道具を前提の表にまとめ、手順を確かめる 4 つの模擬ケースも加えました。
+- **証跡と関連文書**: 証跡の章に、保存先・保管期間・参照権限・`ticket_id` などの識別子を書きました。関連文書の章には `opd-index-sample` と `opr-sample` へのリンクを置きました。
+- 既存の「参照: `../rulebooks/opr-rulebook.md`」の行は削除しました。rulebook への対応は Frontmatter で示されており、本文のこの行は必須要素にも完了の狙いにも寄与しないためです。
+- 文書を誰が作り・確かめ・承認するかや、承認の進み具合は書いていません。そのため grade の指摘 F002（PO の承認待ち事項）と F023（ready に進める基準）は、本文には足していません。
+
+**値を決めてもらう必要のある点**
+次の 3 つは推測で埋めず `_UNDECIDED_` のまま残しました。決まるまでの扱いは概要の表に書いてあります。
+- 権限・設定の依頼に何日以内に応えるかの目標
+- 営業時間外の緊急連絡手段
+- 問い合わせ記録の保管期間
+
+rulebook は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`opr-support-sample` を駄菓子屋きぬやの問い合わせ一次対応の完成例として書き直した。rulebook の必須 12 章を置き、`rulebook` を `specdojo:opr-rulebook` に修正。分類表・一次対応の流れ・完了条件・証跡・関連文書導線を値で埋めた。","handoff":["利用者が決める値として `_UNDECIDED_` のまま残した点: 権限・設定の依頼の応答の目標、営業時間外の緊急連絡手段、問い合わせ記録の保管期間。いずれも `opd-index-sample` の問い合わせ運用方針・未決事項で決めることになる。","既存記述の扱い: 4 分類は運用方針の分類に対応付けた（仕様確認→操作の質問、データ修正要否→記録の訂正の依頼、障害疑い→障害にあたるもの）。依頼（権限・設定）は `opd-index-sample` にない分類のため、受け付けた後に権限・変更の申請へ移す行として残した。「P判定」は P1〜P3 の判定条件に置き換え、「引継ぎ」は「引き継ぎ」に統一した。","削除した記述: 本文冒頭の「参照: `../rulebooks/opr-rulebook.md`」。rulebook への対応は Frontmatter の `rulebook` で宣言されており、必須要素にも `done_criteria` にも寄与しないため。","`based_on` を `opd-index` から `specdojo:opd-index-sample` と `specdojo:opr-sample` に変更した。sample 群の id に揃え、分冊として `opr-index` の共通規約を判断に使うため。","PJR-76N9 に従い本文に入れなかった grade 指摘: F002（PO の承認待ち事項）と F023（ready 化の基準・保留タスク）。どちらも文書の承認の進み具合にあたるため、登録簿の個票で追う。rulebook や viewpoint 側で、sample にはこれらを求めないと明記する変更案を検討してほしい。","rulebook の変更案: 6.10 の問い合わせ一次対応に、分類ごとの判定の条件と応答の目標を表で示すことを記述ガイドとして足すと、grade の F013 の判定基準と揃う。","plan の指示に従い template は読み込んでいない。見出し名は `depends_on` の `opr-sample` に揃えた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-support-sample.md","status":"passed","summary":"整形を適用した"},{"command":"npx markdownlint docs/ja/specdojo/samples/opr-support-sample.md","status":"passed","summary":"エラー 0 件"}]}
+</specdojo_executor_evidence>

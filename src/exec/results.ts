@@ -15,6 +15,7 @@ import {
   type ReporterOutput,
   type ReviewReporterOutput,
 } from "./reporter.js";
+import { REPORTER_FINDING_KEYS, type ReporterFinding } from "./reporter-output.js";
 import {
   isRunRecordPath,
   listRunRecords,
@@ -25,7 +26,10 @@ import {
   taskRecordPaths,
 } from "./run-records.js";
 import {
+  encloseBareHttpUrls,
   escapeMarkdownInline,
+  trimCodeSpanPadding,
+  unescapeBackticksWhenUniform,
   expandTemplate,
   inlineCodeFrontmatterAnglePlaceholders,
   stripTerminalControlSequences,
@@ -279,7 +283,7 @@ export async function scaffoldResult(opts: {
   startedAt: string;
   execution?: "agent" | "human";
   approach?: Approach;
-  // 登録簿項目は "register"、Job Runは "job"。省略時はschedule由来として扱う。
+  // 登録簿項目は "register"、job runは "job"。省略時はschedule由来として扱う。
   origin?: TaskOrigin;
   jobId?: string;
   runId?: string;
@@ -494,20 +498,29 @@ export function readResultFrontmatterSnapshot(resultPath: string): Record<string
   return parseSpecdojoDocument(readFileSync(resultPath, "utf8")).data;
 }
 
+// 山括弧は HTML と解釈されないよう文字参照にする。HTTP(S) の autolink（`<https://...>`）は
+// MD034 に合う URL の書き方なので、山括弧を残す。
 function reporterInlineText(value: string): string {
   return value
     .replace(/[\r\n]+/g, " ")
     .replace(/\s+/g, " ")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+    .replace(/<(?!https?:\/\/[^<>\s]+>)|(?<!<https?:\/\/[^<>\s]+)>/g, (bracket) =>
+      bracket === "<" ? "&lt;" : "&gt;",
+    )
     .trim();
 }
 
 // reporter / executor 由来の自由記述は result の Markdown 本文へ直接入る。改行や山括弧を
 // 正規化したうえで、強調と解釈される `_` / `*` 入りの ASCII トークンを code span にする。
 // escapeMarkdownInline は既存の code span を保持するため、agent が意図して付けた書式は二重化しない。
+// executor の申し送りなど reporter の修復を通らない文も描くため、素の URL の autolink 化（MD034）と
+// コードスパンの前後の空白の除去（MD038）もここで行う（PJR-5C3M）。
 function reporterFreeText(value: string): string {
-  return escapeMarkdownInline(reporterInlineText(value));
+  return escapeMarkdownInline(
+    trimCodeSpanPadding(
+      encloseBareHttpUrls(unescapeBackticksWhenUniform(reporterInlineText(value))),
+    ),
+  );
 }
 
 // reporter や runner の文を `- ` の箇条書きに描くとき、文が自前のリスト記号（`1.`・`1)`・
@@ -529,6 +542,51 @@ function reporterBulletList(values: string[], empty: string): string {
     .map((value) => reporterFreeText(stripLeadingListMarker(reporterInlineText(value))))
     .map((text) => `- ${text || empty}`)
     .join("\n");
+}
+
+const FINDING_TABLE_HEADER = ["No", "段", "箇所", "指摘", "直した案", "根拠", "印"] as const;
+
+// 表のセルは 1 行で、区切りの `|` を含められない。reporter の文の改行は空白にし、
+// `|` は既にエスケープ済みのものも含めて `\|` 1 つにそろえる（二重のエスケープで列がずれないように）。
+export function reporterTableCell(value: string): string {
+  return reporterFreeText(value).replace(/\\?\|/g, "\\|") || "-";
+}
+
+// 指摘は reporter が構造（findings）で渡し、runner が表を描く。reporter の文は改行を
+// 空白へ変えて描くため、文の中に表を書かせても 1 行に詰まる（PJR-ANF0）。
+export function renderFindingsTable(findings: readonly ReporterFinding[]): string {
+  return [
+    `| ${FINDING_TABLE_HEADER.join(" | ")} |`,
+    `| ${FINDING_TABLE_HEADER.map(() => "---").join(" | ")} |`,
+    ...findings.map(
+      (finding) =>
+        `| ${REPORTER_FINDING_KEYS.map((key) => reporterTableCell(finding[key])).join(" | ")} |`,
+    ),
+  ].join("\n");
+}
+
+// kata-guide の指摘書式（No: 段 / 箇所 / 指摘 / 直した案 / 根拠 / 印）で
+// findings へ移した項目だけを除く。No への言及だけで要判断の理由などを消さない。
+// 本文の言い換えには依存せず No と段で照合し、元の evidence は変更しない。
+function handoffWithoutFindings(
+  handoff: readonly string[],
+  findings: readonly ReporterFinding[] = [],
+): string[] {
+  const identityText = (value: string): string =>
+    reporterInlineText(value).replace(/[`*]/g, "").trim();
+  const identities = new Set(
+    findings.map((finding) =>
+      JSON.stringify([identityText(finding.no), identityText(finding.stage)]),
+    ),
+  );
+  return handoff.filter((note) => {
+    const columns = stripLeadingListMarker(reporterInlineText(note)).split(/\s+\/\s+/u);
+    // 欄内のパスなどにも / が入りうるため、列数の上限は設けない。
+    if (columns.length < 6 || columns.some((column) => column.trim() === "")) return true;
+    const identity = identityText(columns[0]!).match(/^(.+?)\s*[:：]\s*(.+)$/u);
+    if (!identity) return true;
+    return !identities.has(JSON.stringify([identity[1]!.trim(), identity[2]!.trim()]));
+  });
 }
 
 function findGitRoot(startDir: string): string | null {
@@ -832,6 +890,9 @@ export function renderEditReporterBody(
     "## 1. 実施内容",
     "",
     reporterBulletList(output.summary, "実施内容なし"),
+    ...(output.findings !== undefined && output.findings.length > 0
+      ? ["", renderFindingsTable(output.findings)]
+      : []),
     "",
     "## 2. 変更ファイル",
     "",
@@ -841,7 +902,9 @@ export function renderEditReporterBody(
     "",
     reporterBulletList(
       [
-        ...new Set([...output.handoff, ...(evidence.handoff ?? [])]),
+        ...new Set(
+          handoffWithoutFindings([...output.handoff, ...(evidence.handoff ?? [])], output.findings),
+        ),
         ...unchangedTargetNotes,
         ...notApplicableValidationNotes,
         ...runnerOwnedValidationNotes,
@@ -917,6 +980,25 @@ export async function renderReporterResult(
   evidence: ExecEvidence,
   options?: RenderEditReporterOptions,
 ): Promise<void> {
+  writeFileSync(
+    resultPath,
+    renderReporterResultContent(resultPath, output, evidence, options),
+    "utf8",
+  );
+  await formatMarkdownFile(resultPath);
+}
+
+/**
+ * Builds the result Markdown that renderReporterResult writes, without touching the file.
+ * The runner lints this content before writing so reporter prose that breaks the commit
+ * check is sent back to the reporter instead of blocking integration.
+ */
+export function renderReporterResultContent(
+  resultPath: string,
+  output: ReporterOutput,
+  evidence: ExecEvidence,
+  options?: RenderEditReporterOptions,
+): string {
   if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
   const content = readFileSync(resultPath, "utf8");
   const parsed = parseSpecdojoDocument(content);
@@ -957,8 +1039,7 @@ export async function renderReporterResult(
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence, resolvedOptions)
       : renderReviewReporterBody(output, evidence);
-  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body + recordsBody), "utf8");
-  await formatMarkdownFile(resultPath);
+  return frontmatterWithBody(frontmatter, body + recordsBody);
 }
 
 export async function updateResultStatus(

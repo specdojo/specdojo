@@ -1,0 +1,11 @@
+ifx-api と ifx-msg の rulebook・sample を直し、個票の対応結果まで書き終えました。Prettier の整形チェックは通っています。`validate:schema`・`lint:md`・`lint:fm` は親 runner が実行するため、ここでは流していません。
+
+- **`ifx-api-sample`**: 決済 API から本部売上登録 API（`createSale`、`POST /v1/sales`）に差し替えました。`info.version: 1.0.0` を足し、`info.description` で `ifx-index-sample` の「本部への売上登録」の詳細仕様であることを示しています。取引 ID が重複した場合の `409` も定義しました。
+- **`ifx-msg-sample`**: `info.version: 1.0.0` を足しました。
+- **`ifx-api-rulebook`**: 必須構造に `info.version` と各操作の `responses` を足し、例の決済題材（`ifx-api-payment`・`createPayment`）を売上登録に置き換えました。
+- **`ifx-msg-rulebook`**: `info` に `version` を既に要求していたため、変更していません。
+- **個票**: 作業内容の表と対応結果を更新し、「CHANGELOG に書く事項」の小節を作りました。grade の再実行の行は、executor が実行しないため状態を `open` のままにしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-api-sample を本部売上登録 API に差し替え、両 sample に info.version を追加。ifx-api-rulebook の必須構造に info.version と responses を追加。個票の作業内容・対応結果・CHANGELOG 事項を更新した。","handoff":["決めた点: info.version は 1.0.0 とした。ifx-msg-rulebook は info.version を既に要求しており、sample と整合するため変更していない。ifx-msg-rulebook 冒頭の「決済」は外部システムの一般例のため残した。","ifx-index-sample の変更案: なし。spec_ref は TBD で、ifx-api-kinuya-sales.yaml を想定する記述と整合する。","CHANGELOG に書く事項: 区分 Changed。ifx-api の rulebook で info.version と各操作の responses を必須構造に追加し、ifx-api-sample を本部売上登録 API へ、ifx-api・ifx-msg の sample に info.version を追加した。","型の grade は統合後に orchestrator が実行する（個票の作業内容 No.4 は open）。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-aeke-ifx-api-msg-spec-content.md docs/ja/specdojo/rulebooks/ifx-api-rulebook.md docs/ja/specdojo/samples/ifx-api-sample.yaml docs/ja/specdojo/samples/ifx-msg-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_run","summary":"個票を変更したため適用対象だが実行していない。個票には Markdown リンクを書いておらず、wikilink も使っていない。"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T16:25:28Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-cdt-sample-120",
+  "by": "opus-executor",
+  "msg": "reporter exited with failure",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdt-sample-120/T-KATA-REVIEW-ALL-cdt-sample-120-20261125T161934Z-c2d2af1c/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdt-sample-120/T-KATA-REVIEW-ALL-cdt-sample-120-20261125T161934Z-c2d2af1c/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-cdt-sample-120-20261125T161934Z-c2d2af1c"
+  }
+}

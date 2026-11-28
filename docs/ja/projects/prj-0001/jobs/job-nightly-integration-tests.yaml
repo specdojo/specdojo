@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-nightly-integration-tests
+name: 統合テストの全件実行
+description: プロジェクト実行ロックを待って統合テストの全件（npm run test:integration）を流し、結果を朝報告に残す。
+task:
+  mode: command
+  owner: DEV
+  # 実行中の run が枠を使っているときは最大 3 時間待ち、時間切れは偽の失敗ではなく延期として記録する。
+  lock_wait_seconds: 10800
+  steps:
+    - id: integration-tests
+      command: >-
+        {{specdojo}} orchestrator integration-tests --project "{{project_id}}"
+        --scheduled-at "{{scheduled_at}}"
+      timeout_seconds: 7200
+run:
+  idempotency_key: "{{job_id}}:{{scheduled_at}}"

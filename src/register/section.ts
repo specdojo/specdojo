@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import type { Heading, Root, RootContent } from "mdast";
@@ -18,14 +19,20 @@ function isHeadingNode(node: RootContent): node is HeadingNode {
   );
 }
 
-function hasHeadingNode(node: Root | RootContent): boolean {
+/** 章の本文に含められる小節の見出しの深さ（章は `##` なので、1 段深い `###`）。 */
+const ALLOWED_SUBSECTION_DEPTH = 3;
+
+function findDisallowedHeading(node: Root | RootContent): Heading | undefined {
   if (node.type === "heading") {
-    return true;
+    return node.depth !== ALLOWED_SUBSECTION_DEPTH ? node : undefined;
   }
   if ("children" in node && Array.isArray(node.children)) {
-    return (node.children as RootContent[]).some(hasHeadingNode);
+    for (const child of node.children as RootContent[]) {
+      const found = findDisallowedHeading(child);
+      if (found) return found;
+    }
   }
-  return false;
+  return undefined;
 }
 
 function headingTitle(body: string, node: HeadingNode): string {
@@ -45,22 +52,36 @@ export function stripSectionNumber(headingText: string): string {
 
 /**
  * 差し替え用ファイルを検証し、その本文を返す。
- * ファイルが存在しない・読めない場合や、中身に Markdown 見出しが含まれる場合はエラーを投げる。
+ * ファイルが存在しない・読めない場合や、中身に章の見出し（`##` 以浅）または `###` 以外の見出しが含まれる場合はエラーを投げる。
+ * 章より 1 段深い `###` の小節見出しは本文に含められる。
  */
-export function validateSectionFile(filePath: string): string {
-  if (!existsSync(filePath)) {
-    throw new Error(`Cannot read section file: ${filePath}`);
+export function validateSectionFile(
+  filePath: string,
+  baseDirectory: string = process.cwd(),
+): string {
+  // 同期の専用ブランチや別 project の worktree へ移る前の呼び出し元の cwd を baseDirectory で受け、
+  // 相対パスを記帳の場所ではなく呼び出し元から解決する（PJR-MWKE）。
+  const resolvedPath = resolve(baseDirectory, filePath);
+  const label = resolvedPath === filePath ? filePath : `${filePath} (resolved to ${resolvedPath})`;
+  if (!existsSync(resolvedPath)) {
+    throw new Error(`Cannot read section file: ${label}`);
   }
   let fileContent: string;
   try {
-    fileContent = readFileSync(filePath, "utf8");
+    fileContent = readFileSync(resolvedPath, "utf8");
   } catch (error) {
-    throw new Error(`Cannot read section file: ${filePath}`, { cause: error });
+    throw new Error(`Cannot read section file: ${label}`, { cause: error });
   }
 
   const tree = unified().use(remarkParse).parse(fileContent);
-  if (hasHeadingNode(tree)) {
-    throw new Error(`Section file must not contain markdown headings: ${filePath}`);
+  const disallowed = findDisallowedHeading(tree);
+  if (disallowed) {
+    const line = disallowed.position?.start.line;
+    const text = fileContent.split(/\r?\n/)[(line ?? 1) - 1] ?? "";
+    throw new Error(
+      `Section file must not contain markdown headings other than "###" subsection headings` +
+        ` (only "###" is allowed in a section body): ${filePath}:${line ?? "?"}: ${text.trim()}`,
+    );
   }
 
   return fileContent;
@@ -148,4 +169,40 @@ export function replaceTicketSection(
     changed,
     beforeBody,
   };
+}
+
+/**
+ * `register add` の繰り返し指定 `--section` / `--section-file` を指定順に組にする。
+ * 数が合わない場合や空の値はエラーにする。
+ */
+export function pairSectionOptions(
+  names: readonly string[] | undefined,
+  files: readonly string[] | undefined,
+): { name: string; file: string }[] {
+  const sectionNames = names ?? [];
+  const sectionFiles = files ?? [];
+  if (sectionNames.length !== sectionFiles.length) {
+    throw new Error(
+      `--section and --section-file must be specified in pairs (got ${sectionNames.length} --section and ${sectionFiles.length} --section-file)`,
+    );
+  }
+  return sectionNames.map((rawName, index) => {
+    const name = rawName.trim();
+    const file = (sectionFiles[index] ?? "").trim();
+    if (name === "") throw new Error("Section name must not be empty");
+    if (file === "") throw new Error("Section file path must not be empty");
+    return { name, file };
+  });
+}
+
+/** 起票する個票の本文で、指定された章を順に差し替える。 */
+export function applyTicketSections(
+  content: string,
+  sections: readonly { name: string; content: string }[],
+): string {
+  let updated = content;
+  for (const section of sections) {
+    updated = replaceTicketSection(updated, section.name, section.content).content;
+  }
+  return updated;
 }

@@ -1,0 +1,23 @@
+`docs/ja/specdojo/rulebooks/utc-rulebook.md` を書き直し、grade の finding F001〜F007 に対応しました（29 行追加、88 行削除）。sample は計画どおり変えていないので、sample 本体が直る F004・F006 は後続の段で完了します。prettier と markdownlint は通っています。それ以外の検査は、後で runner が実行します。
+
+**finding ごとの対応**
+- **F001（`case_id` の定義が重複）:** `case_id` の形式、`perspective_key`、`nnn` の定義を削り、`utc-index` の「ケース表の共通カラム」を参照する形にしました。`perspective_key` を変えない規定のように、対象別に固有の内容だけ残しています。
+- **F002（H5 見出し）:** H5 だった「意図」「条件・ケース表」をなくし、`#### 6.6.1. 観点` と `#### 6.6.2. 条件・ケース表` にまとめました。見出しはすべて H4 以内です。
+- **F003（H1 例のプレースホルダ）:** H1 の記載例を `単体テストカタログ: <対象名>` とインラインコードにしました。
+- **F005（区切り記号の混在）:** 観点の見出し形式を `観点: <観点>` に決め、文書内の全角「：」を半角「: 」にそろえました。
+- **F007（改訂時の追従先がない）:** 全体方針に「改訂時の追従」を追加しました。改訂時に見直すものと担当は次のとおりです。
+  - テストコードと CI 証跡の参照: DEV
+  - `utc-index` の分配方針とトレース先仕様: QE
+  - 廃止した `case_id` は欠番として残す
+- **F004・F006（sample 未整合、`recipe`・`template` が未判断）:** `utc-index-rulebook` と同じく、全体方針に `_UNDECIDED_` を置いて記録しました。
+
+**finding 以外の変更**
+- 計画の「完成例の章を置かない」に従い、「8. サンプル（最小）」の章を削除しました。
+- 5 章の見出しを執筆標準に合わせて「本文要件」にしました。
+- 記述ガイドで概要・責務・ケース表に良い例・悪い例を加え、依存とトレースの記述を圧縮しました。
+
+**判断が必要な点:** 執筆標準には「既存 rulebook のサンプル章を個別の改訂で先に削除しない」とあり、今回の削除は計画の指示を優先した結果です。この判断を確認してもらうよう、`handoff` に残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"utc-rulebook を簡潔に整え、F001〜F003・F005・F007 に対応した（H5 見出しの解消、case_id 定義を utc-index の参照に置換、プレースホルダのコード化、区切り記号の統一、改訂時の追従先と担当を追加、サンプル章を削除）。F004・F006 は _UNDECIDED_ として記録し、後続の sample の段に引き継ぐ。sample・frontmatter は変更していない。","handoff":["F004・F006: sample `specdojo:utc-sample` は rulebook の「本文要件」に未整合で、後続の sample-maintenance で揃える必要がある。`recipe`・`template` は未判断のまま（template は PJR-WYTX）。rulebook の全体方針に `_UNDECIDED_` として記録した。","rulebook-authoring-standard は既存 rulebook のサンプル章を個別の改訂で先に削除しないとしているが、plan の「rulebook に完成例の章を置かず」に従って「サンプル（最小）」章を削除した。完成例は sample に移す必要がある。","5 章の見出しを「本文構成（標準テンプレ）」から執筆標準に合わせて「本文要件」に変えた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/utc-rulebook.md","status":"passed","summary":"prettier --write で整形した後、指摘なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/utc-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は rulebook だけで、plan・result・個票を変更していない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects 配下を変更していない","reason":"変更は docs/ja/specdojo/rulebooks 配下だけで、docs/ja/projects/ の成果物に及ばない"}]}
+</specdojo_executor_evidence>

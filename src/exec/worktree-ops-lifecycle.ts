@@ -1,3 +1,4 @@
+import { gitResultAsync } from "../shared/git.js";
 import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { withPlanConventionsFiles } from "../shared/plan-conventions.js";
 import { resolve } from "node:path";
@@ -15,6 +16,7 @@ import {
   appendGitFailureLog,
   appendGitResultFailureLog,
   ensureExecWorktree,
+  installWorktreeDependencies,
   execBranchExists,
   findExecWorktree,
   formatGitResultFailure,
@@ -270,7 +272,7 @@ export function assertCheckpointInspection(
 // `repos[].path` (`../<repo>` beside `project/`) exists. The product worktrees are therefore
 // created before the project build (and before the checkpoint commit, whose hooks may load the
 // config as well).
-export function checkpointAndEnsureWorktree(params: {
+export async function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
   base: string;
@@ -278,22 +280,27 @@ export function checkpointAndEnsureWorktree(params: {
   commitMessage: string;
   products?: readonly ProductRepo[];
   failureLogPath?: string;
-}): ExecWorktree {
+  resumeCheckpoint?: boolean;
+}): Promise<ExecWorktree> {
   const products = params.products ?? [];
   let repos: ProductWorktree[] = [];
-  const worktree = checkpointAndEnsureProjectWorktree(params, projectRepoDirName(products), () => {
-    if (products.length === 0) return;
-    repos = ensureProductWorktrees({
-      products,
-      worktreeBase: params.base,
-      taskId: params.worktreeTaskId,
-    });
-  });
+  const worktree = await checkpointAndEnsureProjectWorktree(
+    params,
+    projectRepoDirName(products),
+    async () => {
+      if (products.length === 0) return;
+      repos = await ensureProductWorktrees({
+        products,
+        worktreeBase: params.base,
+        taskId: params.worktreeTaskId,
+      });
+    },
+  );
   if (products.length === 0) return worktree;
   return { ...worktree, repos };
 }
 
-function checkpointAndEnsureProjectWorktree(
+async function checkpointAndEnsureProjectWorktree(
   params: {
     context: WorktreeOpsContext;
     worktreeTaskId: string;
@@ -301,23 +308,24 @@ function checkpointAndEnsureProjectWorktree(
     checkpointPaths: string[];
     commitMessage: string;
     failureLogPath?: string;
+    resumeCheckpoint?: boolean;
   },
   repoDirName: string | undefined,
-  ensureSiblingWorktrees: () => void,
-): ExecWorktree {
+  ensureSiblingWorktrees: () => Promise<void>,
+): Promise<ExecWorktree> {
   const { context, worktreeTaskId, base } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
   // The project build runs only after the sibling product worktrees exist (see above).
-  const ensureProjectWorktree = (): ExecWorktree => {
-    const worktree = ensureExecWorktree({
+  const ensureProjectWorktree = async (): Promise<ExecWorktree> => {
+    const worktree = await ensureExecWorktree({
       repoRoot: context.repoRoot,
       worktreeBase: base,
       taskId: worktreeTaskId,
       repoDirName,
       generateArtifacts: () => undefined,
     });
-    ensureSiblingWorktrees();
-    generateWorktreeArtifacts(worktree.path);
+    await ensureSiblingWorktrees();
+    await generateWorktreeArtifacts(worktree.path);
     return worktree;
   };
 
@@ -326,8 +334,19 @@ function checkpointAndEnsureProjectWorktree(
     // 依存と違い、生成物は前回実行時のまま古くなる。生成段階を持たない版が作成した
     // worktree では存在すらしない。再利用時も作り直し、生成物起因の検証失敗を避ける。
     // 前回の準備がプロダクト worktree の作成前に失敗した場合に備え、先にそれらを揃える。
-    ensureSiblingWorktrees();
-    generateWorktreeArtifacts(existing.path);
+    if (params.resumeCheckpoint) await installWorktreeDependencies(existing.path);
+    await ensureSiblingWorktrees();
+    await generateWorktreeArtifacts(existing.path);
+    if (params.resumeCheckpoint) {
+      await commitCheckpointPaths(
+        context.repoRoot,
+        existing.path,
+        withPlanConventionsFiles(params.checkpointPaths).map((path) =>
+          repoRelative(context.repoRoot, path),
+        ),
+        params,
+      );
+    }
     return existing;
   }
 
@@ -359,8 +378,8 @@ function checkpointAndEnsureProjectWorktree(
       );
     }
 
-    const worktree = ensureProjectWorktree();
-    commitCheckpointPaths(context.repoRoot, worktree.path, paths, params);
+    const worktree = await ensureProjectWorktree();
+    await commitCheckpointPaths(context.repoRoot, worktree.path, paths, params);
     return worktree;
   }
 
@@ -368,12 +387,12 @@ function checkpointAndEnsureProjectWorktree(
 }
 
 // Copy root-side checkpoint files into the worktree and commit them on the exec branch.
-function commitCheckpointPaths(
+async function commitCheckpointPaths(
   repoRoot: string,
   worktreePath: string,
   paths: readonly string[],
   params: { commitMessage: string; failureLogPath?: string },
-): void {
+): Promise<void> {
   for (const path of paths) copyCheckpointPath(repoRoot, worktreePath, path);
   try {
     stageCommitTargets(worktreePath, [...paths]);
@@ -381,7 +400,7 @@ function commitCheckpointPaths(
     const checkpoint = gitResult(worktreePath, checkpointArgs);
     assertCheckpointInspection(checkpointArgs, checkpoint, params.failureLogPath);
     if (checkpoint.status !== 1) return;
-    const committed = gitResult(worktreePath, [
+    const committed = await gitResultAsync(worktreePath, [
       "commit",
       "-m",
       params.commitMessage,
@@ -424,13 +443,13 @@ function commitCheckpointPaths(
  * commit. Only files that exist at the root and differ from the worktree are copied. Returns the
  * repo-relative paths that were refreshed.
  */
-export function refreshWorktreeCheckpoint(params: {
+export async function refreshWorktreeCheckpoint(params: {
   repoRoot: string;
   worktreePath: string;
   paths: readonly string[];
   commitMessage: string;
   failureLogPath?: string;
-}): string[] {
+}): Promise<string[]> {
   const changed = [
     ...new Set(params.paths.map((path) => repoRelative(params.repoRoot, path))),
   ].filter((path) => {
@@ -441,6 +460,6 @@ export function refreshWorktreeCheckpoint(params: {
   });
   changed.sort();
   if (changed.length === 0) return [];
-  commitCheckpointPaths(params.repoRoot, params.worktreePath, changed, params);
+  await commitCheckpointPaths(params.repoRoot, params.worktreePath, changed, params);
   return changed;
 }

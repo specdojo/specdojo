@@ -1,0 +1,27 @@
+R2（構成）のレビューを終えましたが、`etc-sample` に直す構成上の問題はなく、ファイルは変更していません。
+
+**構成の確認結果**
+- **章の順と名前:** rulebook の「本文要件」が決めた 1〜7 章（概要・責務・対象外・境界/依存/環境・トレース・テスト観点とケース・実行運用メモ）と同じ順・同じ名前です。
+- **観点の配下:** 4 つの観点とも `観点: <観点>` の見出し、`perspective_key` の宣言、`意図`、`条件・ケース表` の順です。
+- **ケース表の列:** etc-index の「ケース表の共通カラム」と同じ順です。
+- **境界表の行:** rulebook の「境界/依存/環境」の記述ガイドの項目と同じ順です。
+- **前提から結論への流れ:** 範囲と前提（責務・対象外・境界・トレース）を先に置き、それを使うケース表を後に置いているので、前提から結論の順に読めます。
+- template はまだなく（rulebook で `template: undecided`）、rulebook の本文構成だけを正として照合しました。
+
+**指摘（handoff に 1 件ずつ記載）**
+- **R2-1（要判断）:** 実行運用メモの「変更時の見直し」は、実行上の注意ではなく文書を直すきっかけです。rulebook は、この章にケース表に書けない実行上の注意だけを置くとしています。ほかに置く章がなく、見直しのきっかけを消すと内容が減るため、直していません。
+- **R2-2:** 観点「印刷障害の店番への通知」の `et-receipt-print-operator-notice-020` は、印刷障害の場面ではありません。ただ、別の観点にすると条件が 1 件だけになり、rulebook の粒度の基準に外れるため、置き場所はそのままにしました。対象外と意図に同じことを書いている点は R3 に回しました。
+- **R2-3（rulebook への提案）:** rulebook「全体方針」の `_UNDECIDED_` には「sample は見出し構成・`trace_key`・条件・ケース表へ未整合」とありますが、今の sample は揃っています。指示どおり rulebook は変えていません。直す案は、この記述を消して `recipe`・`template` の要否の未決だけを残すことです。
+- **R2-4:** R2 の観点に当たる grade の指摘は F005 だけで、R1 が足した `et-receipt-print-contract-050`（終了コード `2`）ですでに解消しています。
+
+**後の段へ回したもの**
+- F003・F004 は R4（正しさ）へ回しました。
+- F007 は R3（読みやすさ）へ回しました。
+- F006 は R5（整合）へ回しました。
+- F001 は R1 で要判断のまま残っています。
+
+検査は、変更したファイルがないため、Prettier・markdownlint・履歴ファイルのリンク検査をどれも実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: etc-sample の章立て・観点の配下・ケース表の列順・境界表の行順は、etc-rulebook の「本文要件」「記述ガイド」と etc-index の「ケース表の共通カラム」に合っている。章を移す・分ける・まとめる必要はなく、sample は変更していない。指摘 4 件と rulebook を直す案を handoff に書いた。","handoff":["R2-1: R2 / 7. 実行運用メモ「変更時の見直し」 / 「`receipt-print` のメジャー版の更新や終了コードの追加があれば、トレース表とケースを更新する」は、実行上の注意ではなく文書を直すきっかけである。etc-rulebook『実行運用メモ』は、この章にケース表に書けない実行上の注意だけを置くとしている / - / vp-arc-document-structure。迷った理由: ほかに置く章がなく、項目を消すと見直しのきっかけが失われて内容が減る（内容の増減は R1 の範囲）。選ばなかった案は、この項目を消して改訂の扱いを rulebook『全体方針』が指すドキュメントメタ情報標準に任せること / 要判断","R2-2: R2 / 6.4. 観点: 印刷障害の店番への通知 / `et-receipt-print-operator-notice-020`（保管失敗の通知を表示しているときも印刷が動く）は印刷障害の場面ではなく、観点の名前と合っていない / - / vp-arc-document-structure、etc-rulebook『観点』の「条件が複数ぶら下がる粒度にまとめる」。別の観点にすると条件が 1 件だけになり粒度の基準に外れるため、置き場所はそのままにした。対象外の 2 項目めと意図に同じ内容を書いている点は、冗長さとして R3 に回す / -","R2-3: R2 / etc-rulebook『全体方針』の `_UNDECIDED_`（sample 以外のため直していない） / 「sample は『本文要件』の見出し構成・`trace_key`・条件・ケース表へ未整合」とあるが、今の etc-sample は見出し構成・`perspective_key` の宣言・`trace_key`・条件の形・列順のどれも揃っており、記述が古い / 直す案: rulebook の `_UNDECIDED_` から sample の未整合の文を消し、`recipe`・`template` の要否の未決だけを残す / vp-qe-omissions-consistency、etc-rulebook『本文要件』 / -","R2-4: R2 / 6.1. 観点: 印刷結果の判別 / grade の指摘のうち R2 の観点（`vp-qe-omissions-consistency`）に当たるのは F005（終了コード `2` のケースがない）だけで、R1 が足した `et-receipt-print-contract-050` で、関連I/F・境界表とケース表の範囲が揃ったことを確かめた / - / vp-qe-omissions-consistency / -","申し送り: F003・F004（`vp-qe-verifiability`、`vp-dev-testability`）は R4（正しさ）、F007（`vp-ux-language-consistency`）は R3（読みやすさ）、F006（ifx-cmd-sample との値の食い違い）は R5（整合）の段で扱う。F001 は R1 で要判断のまま残っている。R2 では R1 の指摘を繰り返していない。grade result のサイドカーは編集していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/etc-sample.md","status":"not_applicable","summary":"変更したファイルがないため実行していない","reason":"executor が変更した *.md・*.ts・*.js・*.json・*.yaml・*.yml のファイルがない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"変更した履歴ファイルがないため実行していない","reason":"executor が変更した plan・result・個票のファイルがない"}]}
+</specdojo_executor_evidence>

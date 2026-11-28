@@ -7,7 +7,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 
 function pathSegment(value: string): string {
@@ -115,13 +115,78 @@ export function listRunRecords(executionPath: string, kind: RecordKind): string[
   return filesBelow(join(executionPath, "runs")).filter((path) => basename(path) === `${kind}.md`);
 }
 
-/** Find the latest run for an item, or a run with the requested stem. */
+/**
+ * One-shot snapshot of the run record tree. Build one per generation and discard it;
+ * it never refreshes, so it must not outlive the run that created it.
+ */
+export class RunRecordIndex {
+  private readonly files: string[];
+  private readonly namespaces = new Map<string, Record<string, unknown> | undefined>();
+  private readonly times = new Map<string, number>();
 
+  constructor(private readonly executionPath: string) {
+    this.files = filesBelow(join(executionPath, "runs"));
+  }
+
+  find(kind: RecordKind, taskOrStem: string): string | undefined {
+    const identity = recordIdentity(taskOrStem);
+    const itemDirectory = runItemDirectory(this.executionPath, identity.origin, identity.itemId);
+    const itemPrefix = `${itemDirectory}${sep}`;
+    const itemFiles = this.files.filter((path) => path.startsWith(itemPrefix));
+    const scope = itemFiles.length > 0 || existsSync(itemDirectory) ? itemFiles : this.files;
+    const matches = scope
+      .filter((path) => basename(path) === `${kind}.md`)
+      .filter(
+        (path) => recordStem(path) === taskOrStem || this.namespace(path)?.task_id === taskOrStem,
+      );
+    return matches
+      .sort((a, b) => this.time(kind, a) - this.time(kind, b) || a.localeCompare(b))
+      .at(-1);
+  }
+
+  private namespace(path: string): Record<string, unknown> | undefined {
+    if (!this.namespaces.has(path)) {
+      try {
+        this.namespaces.set(path, readSpecdojoNamespace(readFileSync(path, "utf8")));
+      } catch {
+        this.namespaces.set(path, undefined);
+      }
+    }
+    return this.namespaces.get(path);
+  }
+
+  private time(kind: RecordKind, path: string): number {
+    const cached = this.times.get(path);
+    if (cached !== undefined) return cached;
+    let value: number | undefined;
+    if (kind === "result") {
+      const started = this.namespace(path)?.started_at;
+      const timestamp = startedAtMillis(started);
+      if (Number.isFinite(timestamp)) value = timestamp;
+    }
+    if (value === undefined) {
+      const stat = statSync(path);
+      value = stat.birthtimeMs || stat.mtimeMs;
+    }
+    this.times.set(path, value);
+    return value;
+  }
+}
+
+/** Read started_at as milliseconds whether YAML parsed it as a Date or kept it as a string. */
+function startedAtMillis(value: unknown): number {
+  if (value instanceof Date) return value.getTime();
+  return typeof value === "string" ? Date.parse(value) : NaN;
+}
+
+/** Find the latest run for an item, or a run with the requested stem. */
 export function findRunRecord(
   executionPath: string,
   kind: RecordKind,
   taskOrStem: string,
+  index?: RunRecordIndex,
 ): string | undefined {
+  if (index) return index.find(kind, taskOrStem);
   const identity = recordIdentity(taskOrStem);
   const itemDirectory = runItemDirectory(executionPath, identity.origin, identity.itemId);
   const newFiles = filesBelow(
@@ -142,7 +207,7 @@ export function findRunRecord(
           if (kind === "result") {
             try {
               const started = readSpecdojoNamespace(readFileSync(path, "utf8")).started_at;
-              const timestamp = typeof started === "string" ? Date.parse(started) : NaN;
+              const timestamp = startedAtMillis(started);
               if (Number.isFinite(timestamp)) return timestamp;
             } catch {
               /* Fall back to the file timestamp for malformed historical records. */

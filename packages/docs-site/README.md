@@ -41,6 +41,13 @@ kata からリンクされる guide / reference）のうち、利用リポジト
 `specdojo` package からはステージングしません。参照元の package は `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から辿った
 `node_modules/specdojo` です。
 
+`.specdojo/specdojo.config.json` の project が `repos` でプロダクトのリポジトリを宣言している場合は、
+宣言したリポジトリの `docs/ja/product/` も `.vitepress/kata-staging/docs/ja/product/<リポジトリ名>/` へ複製し、
+`/ja/product/<リポジトリ名>/` で配信します。`.specdojo/specdojo.local.config.json` の差し替えも反映し、
+見つからないリポジトリは警告して飛ばします。取り込んだ文書の id はビルド時に frontmatter から読み、
+`[[id]]` と `[[<リポジトリ名>:<id>]]` で引けます。private のリポジトリを取り込むと公開のサイトに出ます。
+詳細は SpecDojo の設定リファレンスの「文書サイトへの取り込み」を参照してください。
+
 利用リポジトリに `docs/index.md` が無いときは、サイトのトップ（`/<base>/`）として SpecDojo の文書と
 `.specdojo/specdojo.config.json` の project ごとのトップへのリンクを置いたページを、ステージングに用意します。
 `docs/` 配下にある project のトップ（`/ja/projects/<project-id>/`）に `index.md` が無いときも、

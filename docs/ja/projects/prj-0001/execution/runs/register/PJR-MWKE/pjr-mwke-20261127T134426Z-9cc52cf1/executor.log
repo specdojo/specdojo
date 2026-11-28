@@ -1,0 +1,24 @@
+PJR-MWKE を直しました。登録簿の同期（`register_sync`）を有効にした project でも、`register add` / `register update` の `--section-file` に相対パスを渡すと、呼び出し元の cwd から読むようになりました。
+
+**原因:** 同期が有効で `--commit` を付けると、`runRegisterMutationInCurrentWorktree` が専用ブランチの worktree へ `process.chdir` してから記帳します。`validateSectionFile` は相対パスをそのまま読んでいたため、移った先の worktree から解決していました。
+
+**変更内容**
+- `src/register/section.ts`: `validateSectionFile` が基点のディレクトリを受け取り、相対パスをそこから絶対パスへ直して読むようにしました。既定の基点はその時点の cwd です。ファイルが無いときのエラーは `Cannot read section file: <渡したパス> (resolved to <絶対パス>)` で、両方のパスが出ます。
+- `src/register/create-commands.ts`: add と update は、記帳の場所へ移る前に呼び出し元の cwd を控え、その cwd を基点に `--section-file` を読みます。
+- 同期を有効にしていない project は cwd を移さないので、動きは変わりません。
+
+**検証**
+- 単体テスト2件と統合テスト1件を足しました。統合テストでは、同期ありの project で相対パスの `--section-file` を add と update に `--commit` で渡し、専用ブランチへ記帳されることを確かめています。
+- 両テストファイルを `vitest` で個別に流し、通りました（25件、20件）。
+- 修正を外した状態で新しい統合テストが落ちることは確かめていません。その確認のコマンドが承認待ちで止まったためです。
+- `typecheck`・`lint:ts`・`test:unit`・`test:integration` は親の runner に任せ、ここでは流していません。
+
+**個票**
+- 原因・影響範囲・対応結果・関連ドキュメントを埋めました。
+- 対応結果には、対象オプションの一覧と「CHANGELOG に書く事項」の文案を入れています。一覧のうち `--target-path`・`--target`・`--source` は手元のファイルを読まないので対象外とし、ほかの register コマンドに該当するオプションはありません。
+- 別 project の worktree へ移って記帳する場合も、同じく呼び出し元から読むようになります。これは handoff にも書きました。
+- `CHANGELOG.md` と保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"同期を有効にした project でも、register add/update の --section-file の相対パスを、記帳の場所へ移る前の呼び出し元の cwd から解決するようにした。ファイルが無いときのエラーには渡したパスと解決した絶対パスを出す。単体テストと統合テストを足し、個票の対応結果（対象オプションの一覧と CHANGELOG の文案を含む）を埋めた。","handoff":["CHANGELOG.md は変えていない。個票の対応結果の「CHANGELOG に書く事項」に区分「修正」と文案を書いたので、リリースの準備で反映する。","別 project の worktree へ移って記帳する場合（`inCrossProjectWorktree`）も、--section-file の相対パスは呼び出し元の cwd から解決するようになった。同期を有効にしていない project で cwd を移さない通常の記帳は、従来と同じ解決結果になる。","修正を外した状態で新しい統合テストが落ちることは、sandbox の承認制限で確かめていない。"],"validations":[{"command":"npx vitest run tests/src/register/section.test.ts","status":"passed","summary":"25 tests passed"},{"command":"npx vitest run -c vitest.integration.config.ts tests/src/register/register-branch.integration.test.ts","status":"passed","summary":"20 tests passed (新しい相対パスの --section-file --commit のケースを含む)"},{"command":"npx prettier --check (changed files)","status":"passed","summary":"--write で section.ts と個票を整形し、ほかの変更ファイルは整形済みだった"},{"command":"npm run validate:history-links","status":"passed","summary":"invalid の行は無い（変更した個票を含む）"}]}
+</specdojo_executor_evidence>

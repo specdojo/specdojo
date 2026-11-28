@@ -1,0 +1,11 @@
+R2（構成）のレビューを終え、`docs/ja/specdojo/samples/ifd-sample.md` を直しました。章の順と各章の表・本文の並びは rulebook の本文構成と template に沿っていたので、章の移動・分割・統合はしていません。文を正しい章へ移す修正を 2 件入れ、1 件は直さずに判断待ちとして残しました。Prettier の check と markdownlint-cli2 は、この sample では通っています。
+
+指摘は次の 3 件です。
+
+- **R2-1（概要）:** ロール対応の文（技術メンター＝ARC など）が、ロール名を出す第 1 段落ではなく、上位方針と対象外を述べる第 2 段落にありました。第 1 段落の末尾へ移しています。
+- **R2-2（通信経路と情報の境界 → 技術前提・制約）:** 結果が端末に届かないときの扱いが、経路を定義する章の表の後にありました。経路の定義ではなく制約なので、「技術前提・制約」の箇条へ移しています。
+- **R2-3（概要、要判断）:** template の概要にある「改訂・廃止したときに追従する先と影響」が sample にありません。rulebook の概要の条件には含まれないため、sample は直していません。sample に 1 文足すか、template をこの条件から外して rulebook とそろえるかを決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifd-sample の R2（構成）レビューを行った。章の順・表と本文の配置は rulebook の本文構成と template に沿っていた。ロール対応の文を概要の第 1 段落へ、結果が届かないときの扱いを「技術前提・制約」へ移した。template の概要にある改訂時の追従先の欄は、要判断として指摘だけ残した。","handoff":["R2-1: R2 / 1. 概要 / ロール対応の文（技術メンター＝ARC など）が、ロール名を出す第 1 段落ではなく、上位方針と対象外を述べる第 2 段落にあり、前提から結論への流れが途切れている / ロール対応の文を第 1 段落の末尾へ移し、第 2 段落から消した / `vp-arc-document-structure` / -","R2-2: R2 / 4. 通信経路と情報の境界 → 5.1. 技術前提・制約 / 表の後の「端末へ結果が届かない場合は未保存と断定しない…」は経路の定義ではなく、障害時の扱いの制約で、rulebook の本文要件では「技術前提・制約と検証観点」が持つ内容である / この段落を「技術前提・制約」の箇条へ移した（「検証対象」の `PATH-02` の行と同じ章にまとまる） / `vp-arc-document-structure`、`ifd-mermaid-rulebook` の「本文要件」 / -","R2-3: R2 / 1. 概要 / template の概要には「改訂・廃止で境界や経路が変わる場合の追従先（ARC・QE・OPS・PO）と影響」の欄があるが、sample にない / - / `vp-qe-omissions-consistency`。rulebook の概要の条件（対象環境、判断すること、上位入力、対象外）は満たしており、追従先の運用は文書メタ情報標準が持つため、sample には足さなかった。選ばなかった案は sample の概要に 1 文足すこと。相手側を直す案: `specdojo:ifd-template` の概要の 2 つめの `_TODO_` を消すか、rulebook の概要の条件に足してそろえる / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifd-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/ifd-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票などの履歴ファイルを変更しておらず、変更したのは sample だけ"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したのは Markdown の sample だけで、*.yaml / *.yml の変更はない"}]}
+</specdojo_executor_evidence>

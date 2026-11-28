@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opr-batch-sample-050",
+  "run_id": "T-KATA-WAVE-5-opr-batch-sample-050-20261123T180329Z-b5aca654",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T21:39:23.193Z",
+    "completed_at": "2026-11-23T21:40:10.326Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opr-batch-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                      |  23 ++-\n docs/ja/specdojo/samples/opr-batch-sample.md       | 155 +++++++++++++++++++--\n 2 files changed, 163 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run test:docs",
+      "status": "failed",
+      "summary": "親 runner の前回の実行で grade.test.ts の 1 件が失敗した（opd-rulebook.md の参照を期待している。原因は古いテストの期待値）。親 runner が再び実行する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6436 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6436 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/rulebook-schem\n… output omitted …\nbatch-sample-050/docs/ja/specdojo/templates/opr-template.md\",\n  ]\n\n ❯ tests/src/grade/grade.test.ts:1305:24\n    1303|   it(\"resolves declared and reverse-linked Kata references\", () => {\n    1304|     const references = resolveGradeReferencePaths(\"docs/ja/specdojo/sa…\n    1305|     expect(references).toEqual(\n       |                        ^\n    1306|       expect.arrayContaining([\n    1307|         expect.stringContaining(\"/rulebooks/opd-rulebook.md\"),\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-batch-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "specdojo:opr-batch-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/opr-batch-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "opr-batch-sample の本文は前回の試行で plan の `done_criteria` を満たしている（Frontmatter の `rulebook` は opr-rulebook、opr-rulebook の 12 章構成、再実行のコマンド・入力・前提の確認・完了の条件）。ただし `tests/src/grade/grade.test.ts` が直す前の誤った `rulebook: specdojo:opd-rulebook` を前提に opd-rulebook.md の参照を期待しているため `test-docs` が失敗する。テストは対象外なので変更せず、修正を申し送る。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "`tests/src/grade/grade.test.ts` の「resolves declared and reverse-linked Kata references」は `docs/ja/specdojo/samples/opr-batch-sample.md` の参照先に `/rulebooks/opd-rulebook.md` が含まれることを期待している。これは直す前の誤った Frontmatter（`rulebook: specdojo:opd-rulebook`、grade の F015/F017）を前提にした期待値である。`done_criteria` に従い `rulebook: specdojo:opr-rulebook` に直したため失敗する。期待値から opd-rulebook の行を外すか、Frontmatter の rulebook と逆向きのリンクの両方を持つ別の fixture に差し替える修正を、対象外のタスク（tests の変更）として起票する必要がある。",
+    "sample に残した `_UNDECIDED_`（利用者が決める値）: RTO/RPO とバックアップの保管期間、夜間バックアップの開始時刻と所要時間、営業時間外の緊急連絡手段、障害記録・点検記録の保管期間。",
+    "sample に残した `_ASSUMPTION_`: バックアップの取得中も店頭の記録を続けられる。ホスティング環境が手動取得のコマンド（例 `backup run --target sales-db --date <closing_date>`）を持つ。",
+    "PJR-76N9 に従い、grade の F008（Ops Lead 以外の責任の定義）と F002（PO の承認に必要な情報）が求める、文書の役割の割り当てや承認の進み具合は本文に足していない。手順の実施者・判断者は手順の中身として書いてある。"
+  ],
+  "block_reason": "executor reported incomplete: opr-batch-sample の本文は前回の試行で plan の `done_criteria` を満たしている（Frontmatter の `rulebook` は opr-rulebook、opr-rulebook の 12 章構成、再実行のコマンド・入力・前提の確認・完了の条件）。ただし `tests/src/grade/grade.test.ts` が直す前の誤った `rulebook: specdojo:opd-rulebook` を前提に opd-rulebook.md の参照を期待しているため `test-docs` が失敗する。テストは対象外なので変更せず、修正を申し送る。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-batch-sample-050/T-KATA-WAVE-5-opr-batch-sample-050-20261123T180329Z-b5aca654/executor.attempt-2.log",
+      "bytes": 4363,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-batch-sample-050/T-KATA-WAVE-5-opr-batch-sample-050-20261123T180329Z-b5aca654/parent-validation-attempt-1-test-docs.attempt-2.log",
+      "bytes": 13740,
+      "truncated": false
+    }
+  ]
+}

@@ -12,10 +12,11 @@ import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { scheduleTrackNames } from "../schedule/gantt-chart-scope.js";
 import { readReadySnapshot } from "../schedule/ready.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView } from "../types.js";
+import { type ReadyTaskView, type ScheduleIndex } from "../types.js";
 import { type CurrentState } from "../types.js";
 import { extractLocalId, extractPhaseSuffix } from "../../schedule/phase-sets.js";
 import { resolveWorktreeBase } from "../worktree.js";
+import { isUnstartedScopeReservation } from "./change-scope-state.js";
 import {
   buildPhaseModeIndex,
   resolveAgentPipeline,
@@ -31,6 +32,7 @@ import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
   parseParallel,
+  pinnedExecutor,
   resolveExecDefaultsPath,
   runCompletionDrivenWorkerPool,
   type RunOpts,
@@ -45,6 +47,7 @@ import {
 import { spawnIndexBuild, spawnRefresh, spawnScheduleBuild } from "./mode-shared.js";
 import {
   ChangeScopeGate,
+  ChangeScopeBlockedError,
   inferChangeScope,
   parseUnknownScopePolicy,
   scopePlanMetadata,
@@ -52,6 +55,18 @@ import {
 } from "./change-scope.js";
 import { targetDocIdsForScheduledTask } from "../plans.js";
 import { findRunRecord } from "../run-records.js";
+import {
+  EXEC_QUEUE_ID_ENV,
+  EXEC_STOP_EXIT_CODE,
+  acknowledgeStopRequest,
+  describeStopTarget,
+  discardStaleStopRequests,
+  findApplicableStopRequest,
+  finishStopRequest,
+  registerAutoRun,
+  type AutoRunMarker,
+  type StopRequest,
+} from "../stop-request.js";
 
 export type CycleScheduleRebuildResult = {
   status: "not-needed" | "success" | "failure";
@@ -145,21 +160,46 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   const maxRounds = opts.maxRounds ? Math.max(1, parseInt(opts.maxRounds, 10) || 1) : null;
   const dryRun = !!opts.dryRun;
   const strategy = opts.strategy ?? "critical-first";
-  const scopeGate = new ChangeScopeGate(executionPath, parseUnknownScopePolicy(opts.unknownScope));
+  const scopeGate = new ChangeScopeGate(
+    executionPath,
+    parseUnknownScopePolicy(opts.unknownScope),
+    {},
+    undefined,
+    (item) => isUnstartedScopeReservation({ item, projectId, repoRoot, schedulePath }),
+  );
   const scopeLeases = new Map<string, ChangeScopeLease>();
+  // Keep preparation failures as barriers within this run, then release them when it drains.
+  const failedPreparationLeases = new Set<ChangeScopeLease>();
   const attempted = new Set<string>();
   // A non-loop run still launches at most --parallel tasks, but defers overlapping preparation
   // until a prior task integrates instead of forking both worktrees from the same HEAD.
   let batchBudget = parallel;
+  // A dry run claims nothing and has nothing to drain.
+  const stopWatch = dryRun
+    ? undefined
+    : new AutoRunStopWatch(executionPath, {
+        version: 1,
+        pid: process.pid,
+        command: opts.cycleRebuildStaleTracks ? "cycle" : "run",
+        // The process start, so a request made during the validate / refresh steps before this
+        // point still applies instead of being discarded as stale.
+        started_at: new Date(Date.now() - process.uptime() * 1000).toISOString(),
+        loop,
+        ...(track !== undefined ? { track } : {}),
+        ...(process.env[EXEC_QUEUE_ID_ENV] ? { queue_id: process.env[EXEC_QUEUE_ID_ENV] } : {}),
+      });
 
   const prepareReadyTasks = async (
     capacity: ReturnType<typeof createProviderCapacityTracker>,
     limit: number,
-  ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number }> => {
+  ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number; humanWaiting: number }> => {
+    const deferred = new Map<string, number>();
+    const recordDeferred = (reason: string) =>
+      deferred.set(reason, (deferred.get(reason) ?? 0) + 1);
     if (!existsSync(readyJsonPath)) {
       process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec refresh\n`);
       process.exitCode = 1;
-      return { preparedTasks: [], readyCount: 0 };
+      return { preparedTasks: [], readyCount: 0, humanWaiting: 0 };
     }
 
     const readySnapshot = readReadySnapshot(readyJsonPath);
@@ -180,14 +220,30 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
             const file = basename(task.schedule_file);
             return file === `sch-track-${track}.yaml` || file === `sch-track-${track}.yml`;
           });
-    if (orderedIds.length === 0) return { preparedTasks: [], readyCount: 0 };
+    if (orderedIds.length === 0) {
+      if (loop) process.stdout.write("  [run] deferred this round: none (0)\n");
+      return { preparedTasks: [], readyCount: 0, humanWaiting: 0 };
+    }
 
     const preparedTasks: PreparedTask[] = [];
+    let humanWaiting = 0;
 
     for (const taskId of orderedIds) {
       if (preparedTasks.length >= limit || (!loop && batchBudget <= 0)) break;
+      // A stop request that arrives while this round prepares tasks stops further claims too.
+      if (stopWatch?.isStopRequested()) break;
       const task = taskMap.get(taskId);
       if (!task || attempted.has(taskId) || scopeLeases.has(taskId)) continue;
+      // Automatic selection leaves human tasks alone unless an explicit per-task agent is given;
+      // --edit-by / --review-by are mode-wide and do not count.
+      if (
+        (task.execution ?? "agent") === "human" &&
+        !(opts.by || opts.executorBy || pinnedExecutor(task))
+      ) {
+        process.stdout.write(`  [run] skipped: ${taskId} — execution: human\n`);
+        humanWaiting++;
+        continue;
+      }
 
       let lease: ChangeScopeLease | undefined;
       try {
@@ -210,7 +266,10 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
             schedulePath,
           });
           const acquired = await scopeGate.tryAcquire(taskId, scope);
-          if (!acquired) continue;
+          if (!acquired) {
+            recordDeferred("change scope busy");
+            continue;
+          }
           lease = acquired;
         }
         const prepared = await prepareSingleTask(
@@ -237,7 +296,8 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
         );
         // "deferred": every candidate provider is at its cap; try it again after a slot frees.
         if (prepared === "deferred") {
-          await lease?.finish(true);
+          recordDeferred("provider capacity");
+          await lease?.cancelPreparation();
           continue;
         }
         attempted.add(taskId);
@@ -251,29 +311,39 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
           capacity.reserve(prepared.agentCandidates[0]?.provider);
           batchBudget--;
         } else {
-          await lease?.finish(prepared === "success");
+          if (prepared === "success") await lease?.finish(true);
+          else if (lease) failedPreparationLeases.add(lease);
           if (prepared === "failure") process.exitCode = 1;
         }
       } catch (error) {
+        if (lease) failedPreparationLeases.add(lease);
+        if (loop && error instanceof ChangeScopeBlockedError) {
+          recordDeferred("change scope blocked");
+          process.stdout.write(`  [run] deferred: ${taskId} — ${error.message}\n`);
+          continue;
+        }
         attempted.add(taskId);
-        await lease?.finish(false);
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`[run] setup error for ${task.id}: ${message}\n`);
         process.exitCode = 1;
       }
     }
 
-    return { preparedTasks, readyCount: orderedIds.length };
+    if (loop) {
+      const details = [...deferred].map(([reason, count]) => `${reason}: ${count}`).join(", ");
+      process.stdout.write(`  [run] deferred this round: ${details || "none (0)"}\n`);
+    }
+
+    // Skipped human tasks are waiting for a person, not unexecutable, so they do not count as ready.
+    return { preparedTasks, readyCount: orderedIds.length - humanWaiting, humanWaiting };
   };
 
   if (dryRun) {
     const capacity = createProviderCapacityTracker(execDefaults);
-    const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, parallel);
+    const { preparedTasks, readyCount, humanWaiting } = await prepareReadyTasks(capacity, parallel);
 
     if (preparedTasks.length === 0) {
-      process.stdout.write(
-        readyCount === 0 ? "[run] no ready tasks — exit\n" : "[run] no executable tasks — exit\n",
-      );
+      process.stdout.write(noTaskMessage(readyCount, humanWaiting));
       if (readyCount > 0 || process.exitCode) process.exitCode = 1;
       return;
     }
@@ -303,12 +373,21 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
 
   const lifecycleLock = new SerialAsyncLock();
   const capacity = createProviderCapacityTracker(execDefaults);
+  if (!stopWatch) throw new Error("internal error: no stop watch for a non-dry auto run");
+  const watch = stopWatch;
+  const runningTaskIds = new Set<string>();
+  const drainedTaskIds = new Set<string>();
   let schedulingPass = 0;
   let stopNewTasks = false;
   let lastReadyCount = 0;
+  let lastHumanWaiting = 0;
 
   const scheduleAvailable = async (openSlots: number): Promise<PreparedTask[]> => {
     if (stopNewTasks || openSlots <= 0) return [];
+    if (watch.check(runningTaskIds)) {
+      for (const taskId of runningTaskIds) drainedTaskIds.add(taskId);
+      return [];
+    }
     if (!loop && batchBudget <= 0) return [];
     if (loop && maxRounds !== null && schedulingPass >= maxRounds) {
       process.stdout.write(`[run] reached max-rounds ${maxRounds} — drain running tasks\n`);
@@ -349,47 +428,70 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
       }
     }
 
-    const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, openSlots);
+    const { preparedTasks, readyCount, humanWaiting } = await prepareReadyTasks(
+      capacity,
+      openSlots,
+    );
     lastReadyCount = readyCount;
+    lastHumanWaiting = humanWaiting;
     return preparedTasks;
   };
 
-  const poolResult = await runCompletionDrivenWorkerPool<PreparedTask, PreparedTaskOutcome>({
-    maxParallel: parallel,
-    fillSlots: (openSlots) => lifecycleLock.runExclusive(() => scheduleAvailable(openSlots)),
-    runItem: (prepared) =>
-      runPreparedTaskSafely(
-        prepared,
-        projectId,
-        repoRoot,
-        schedulePath,
-        executionPath,
-        catalogPath,
-        execDefaults,
-        dryRun,
-        lifecycleLock,
-      ),
-    onSettled: async (prepared, outcome) => {
-      await scopeLeases.get(prepared.task.id)?.finish(outcome.result === "success");
-      scopeLeases.delete(prepared.task.id);
-      capacity.release(prepared.agentCandidates[0]?.provider);
+  let poolResult: Awaited<ReturnType<typeof runCompletionDrivenWorkerPool>>;
+  try {
+    poolResult = await runCompletionDrivenWorkerPool<PreparedTask, PreparedTaskOutcome>({
+      maxParallel: parallel,
+      fillSlots: (openSlots) => lifecycleLock.runExclusive(() => scheduleAvailable(openSlots)),
+      runItem: (prepared) => {
+        runningTaskIds.add(prepared.task.id);
+        return runPreparedTaskSafely(
+          prepared,
+          projectId,
+          repoRoot,
+          schedulePath,
+          executionPath,
+          catalogPath,
+          execDefaults,
+          dryRun,
+          lifecycleLock,
+        );
+      },
+      onSettled: async (prepared, outcome) => {
+        runningTaskIds.delete(prepared.task.id);
+        await scopeLeases.get(prepared.task.id)?.finish(outcome.result === "success");
+        scopeLeases.delete(prepared.task.id);
+        capacity.release(prepared.agentCandidates[0]?.provider);
 
-      if (outcome.result === "failure") process.exitCode = 1;
+        if (outcome.result === "failure") process.exitCode = 1;
 
-      const critical = (prepared.task.cpm?.slack ?? 1) === 0;
-      if (critical && outcome.result === "failure") {
-        process.stdout.write(`[run] stopping: failure on critical task.\n`);
-        process.exitCode = 1;
-        stopNewTasks = true;
-        return { stop: true };
-      }
-    },
-  });
+        const critical = (prepared.task.cpm?.slack ?? 1) === 0;
+        if (critical && outcome.result === "failure") {
+          process.stdout.write(`[run] stopping: failure on critical task.\n`);
+          process.exitCode = 1;
+          stopNewTasks = true;
+          return { stop: true };
+        }
+      },
+    }).finally(async () => {
+      for (const lease of failedPreparationLeases) await lease.cancelPreparation();
+    });
+  } finally {
+    watch.unregister();
+  }
+
+  // A request that arrived after the last scheduling point still ends this run as "stopped".
+  if (watch.check(runningTaskIds)) {
+    watch.finish([...drainedTaskIds]);
+    if (poolResult.launched > 0) {
+      process.stdout.write(
+        `[run] all ${poolResult.completed} of ${poolResult.launched} launched instance(s) completed\n`,
+      );
+    }
+    return;
+  }
 
   if (poolResult.launched === 0) {
-    process.stdout.write(
-      lastReadyCount > 0 ? "[run] no executable tasks — exit\n" : "[run] no ready tasks — exit\n",
-    );
+    process.stdout.write(noTaskMessage(lastReadyCount, lastHumanWaiting));
     if (lastReadyCount > 0 || process.exitCode) process.exitCode = 1;
     return;
   }
@@ -397,6 +499,85 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   process.stdout.write(
     `[run] all ${poolResult.completed} of ${poolResult.launched} launched instance(s) completed\n`,
   );
+}
+
+// Watches `exec stop` requests for one auto run (PJR-32PN). The request is re-read at every
+// scheduling point, so withdrawing it before the run exits lets the run claim tasks again.
+export class AutoRunStopWatch {
+  private readonly removeMarker: () => void;
+  private current: StopRequest | undefined;
+
+  constructor(
+    private readonly executionPath: string,
+    private readonly marker: AutoRunMarker,
+    private readonly write: (line: string) => void = (line) => process.stdout.write(line),
+  ) {
+    for (const stale of discardStaleStopRequests(executionPath, marker)) {
+      this.write(
+        `[run] WARN: discarded a stop request for ${describeStopTarget(stale.target)} ` +
+          `left from an earlier run (requested at ${stale.requested_at})\n`,
+      );
+    }
+    this.removeMarker = registerAutoRun(executionPath, marker);
+  }
+
+  /** Re-read the request without side effects. */
+  isStopRequested(): boolean {
+    return findApplicableStopRequest(this.executionPath, this.marker) !== undefined;
+  }
+
+  /** Re-read the request, report a change, and note the tasks the run still waits for. */
+  check(running: ReadonlySet<string>): boolean {
+    const request = findApplicableStopRequest(this.executionPath, this.marker);
+    if (!request) {
+      if (this.current) {
+        this.write(
+          `[run] stop request for ${describeStopTarget(this.current.target)} withdrawn — continuing\n`,
+        );
+      }
+      this.current = undefined;
+      return false;
+    }
+    if (!this.current) {
+      this.write(
+        `[run] stop requested for ${describeStopTarget(request.target)}: ${request.message} — ` +
+          `claiming no new tasks; waiting for ${running.size} running task(s)\n`,
+      );
+    }
+    this.current = acknowledgeStopRequest(this.executionPath, request, this.marker.pid, [
+      ...running,
+    ]);
+    return true;
+  }
+
+  unregister(): void {
+    this.removeMarker();
+  }
+
+  /** Record the stop; queue requests are finished by the queue runner, which owns them. */
+  finish(drainedTasks: readonly string[]): void {
+    const request = this.current;
+    if (!request) return;
+    if (request.target.kind !== "queue") {
+      const path = finishStopRequest(this.executionPath, request, {
+        stopped_by: "auto-run",
+        drained_tasks: [...drainedTasks],
+      });
+      this.write(`[run] stop recorded: ${path}\n`);
+    }
+    this.write(
+      `[run] stopped by exec stop (${describeStopTarget(request.target)}): ${request.message}\n`,
+    );
+    process.exitCode = EXEC_STOP_EXIT_CODE;
+  }
+}
+
+export function noTaskMessage(readyCount: number, humanWaiting: number): string {
+  if (readyCount > 0) return "[run] no executable tasks — exit\n";
+  if (humanWaiting > 0) {
+    return `[run] no executable tasks — ${humanWaiting} task(s) waiting for human completion — exit\n`;
+  }
+  return "[run] no ready tasks — exit\n";
 }
 
 // For a task already in "doing" state, resume with the actor who claimed it so a re-run does not
@@ -412,6 +593,27 @@ export function resolveClaimingActor(
   if (!actor) return { actor: undefined, resumed: false };
   process.stdout.write(`  Resuming with claiming actor: ${actor}\n`);
   return { actor, resumed: true };
+}
+
+// Explains why a task outside ready.json cannot be run with --task. Returns undefined when the
+// task may proceed (doing/blocked resumes, or unknown to the schedule so existing handling applies).
+export function explainUnrunnableTask(
+  taskId: string,
+  tasks: Record<string, CurrentState> | undefined,
+  schedule: ScheduleIndex,
+): string | undefined {
+  const state = tasks?.[taskId]?.state;
+  if (state === "done") return `Task ${taskId} is already done; nothing to run.`;
+  if (state === "cancelled") return `Task ${taskId} is cancelled; it cannot be run.`;
+  if (state === "doing" || state === "blocked") return undefined;
+  const node = schedule.nodes.get(taskId);
+  if (!node) return undefined;
+  const unfinished = node.depends_on.filter((dep) => {
+    const depState = tasks?.[dep]?.state;
+    return depState !== "done" && depState !== "cancelled";
+  });
+  if (unfinished.length === 0) return undefined;
+  return `Task ${taskId} is not ready: unfinished dependencies: ${unfinished.join(", ")}.`;
 }
 
 export async function runManualMode(opts: RunOpts): Promise<void> {
@@ -440,11 +642,15 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
   const phaseModeIndex = buildPhaseModeIndex(schedulePath);
 
   const readyJsonPath = join(executionPath, "generated", "ready.json");
+  let inReadySnapshot = false;
   let task: ReadyTaskView = { id: taskId, schedule_file: "", fifo_rank: 0, critical_first_rank: 0 };
   if (existsSync(readyJsonPath)) {
     const snap = readReadySnapshot(readyJsonPath);
     const found = snap.tasks.find((t) => t.id === taskId);
-    if (found) task = found;
+    if (found) {
+      task = found;
+      inReadySnapshot = true;
+    }
   }
   // If task not in ready.json (e.g. already "doing"), derive local_id from task id pattern.
   if (!task.local_id) {
@@ -452,11 +658,17 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
     const localId = extractLocalId(taskId);
     if (localId && parts[0] === "T" && parts[1]) {
       const track = parts[1];
+      let definedFile: string | undefined;
+      try {
+        definedFile = buildScheduleIndex(schedulePath).nodes.get(taskId)?.schedule_file;
+      } catch {
+        definedFile = undefined;
+      }
       task = {
         ...task,
         local_id: localId,
         phase_suffix: extractPhaseSuffix(taskId),
-        schedule_file: `sch-track-${track.toLowerCase()}.yaml`,
+        schedule_file: definedFile ?? `sch-track-${track.toLowerCase()}.yaml`,
       };
     }
   }
@@ -517,18 +729,26 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
   // Read from events directly (not state.json cache) to reflect recent scheduler claims.
   let actorOverride = opts.by;
   let alreadyClaimed = false;
-  if (!actorOverride) {
-    try {
-      const sch = buildScheduleIndex(schedulePath);
-      const evts = readAllEventFiles(schedulePath);
-      const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
-      const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
+  try {
+    const sch = buildScheduleIndex(schedulePath);
+    const evts = readAllEventFiles(schedulePath);
+    const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
+    const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
+    if (!inReadySnapshot) {
+      const reason = explainUnrunnableTask(taskId, snap.tasks, sch);
+      if (reason) {
+        process.stdout.write(`  ${reason}\n`);
+        process.exitCode = 1;
+        return;
+      }
+    }
+    if (!actorOverride) {
       const resolved = resolveClaimingActor(snap.tasks?.[taskId], undefined);
       actorOverride = resolved.actor;
       alreadyClaimed = resolved.resumed;
-    } catch {
-      // ignore errors reading state; fall through to normal agent selection
     }
+  } catch {
+    // ignore errors reading state; fall through to normal agent selection
   }
 
   const prepared = await prepareSingleTask(

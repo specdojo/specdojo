@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dcde7ecc96ac4f78a3b99e3c4f36f107
+  ts: "2026-11-22T13:16:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade run の --kata と --kind を一緒に指定すると、--kind が無視される
+    - field: description
+      from: ""
+      to: grade run --target kata --kata prj-charter --kind recipe は、recipe ではなく rulebook と sample を評価した。--kind で型の種類を選べず、recipe と template を --kata で評価できない。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の grade（run id prj-charter-recipe-20261122、opus-review-executor）で、ログに rulebook（pass 90）と sample（needs-work 83）だけが出て、recipe の結果のファイルは更新されなかった。","--kata のヘルプは「Grade rulebook and sample for this kata name」で、--kind は rulebook・recipe・sample・template・all を受け付ける。","利用者の承認（2026-11-22、indie）で起票した。担当と期限は未定。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-7M9J"]'
+- v: 1
+  id: reg_1125c17cd7074e86839fa56f3fc95bd6
+  ts: "2026-11-22T13:20:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_dcde7ecc96ac4f78a3b99e3c4f36f107
+- v: 1
+  id: reg_2d831d473fdc4bd8af44acaa8839b11a
+  ts: "2026-11-22T13:20:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_1125c17cd7074e86839fa56f3fc95bd6
+- v: 1
+  id: reg_cad70ccc6dcf4ecab289d2c927ec8330
+  ts: "2026-11-22T13:22:22Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2d831d473fdc4bd8af44acaa8839b11a
+- v: 1
+  id: reg_da925ea633b549dba595a5f09da00677
+  ts: "2026-11-22T13:28:01Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cad70ccc6dcf4ecab289d2c927ec8330
+- v: 1
+  id: reg_aa968d44ace94c00bbc1978d75566f71
+  ts: "2026-11-22T13:56:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と単体テストを確かめ、実際の CLI の dry-run で prj-charter の recipe・template・省略時の選び方を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: grade run の --kata で --kind が効くようにした。recipe・template・all を選べ、--kind を省くと今までどおり rulebook と sample を評価する
+  previous_event_id: reg_da925ea633b549dba595a5f09da00677

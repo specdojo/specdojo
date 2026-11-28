@@ -1,0 +1,41 @@
+I added `specdojo register branch-push --project <project-id> [--dry-run]`. It covers first-time setup and recovery, so the orchestrator no longer needs to type `git branch`, `git pull --rebase` or `git push`. The new tests (3 unit, 10 integration) and the existing register tests (58) pass. The trial-repository check after integration hasn't been done; it belongs to the orchestrator.
+
+**What the command does**
+- **Push target:** it only pushes to the `remote` and `branch` set in `register_sync`. It takes no ref or branch argument, and anything extra (`--branch`, a positional ref) is rejected.
+- **Sync not enabled:** it prints why and stops with exit code 1.
+- **First time, branch exists nowhere:** it creates the branch from the integration branch (`integration_branch`, default `project/<project-id>/develop`), creates the dedicated worktree in the same place the sync uses, and pushes.
+- **Branch only on the remote:** it creates the local branch and worktree and pushes nothing.
+- **Branch only local:** it checks it and pushes it as a new remote branch. The ticket didn't cover this case; I chose this behaviour.
+- **Recovery:** it continues a stopped rebase, then runs `pull --rebase` and push.
+  - If conflicts remain, it lists the files and how to fix them, and stops with exit code 1.
+  - It keeps recorded files and local commits.
+- **Checks:** before pushing it runs the same checks as `register branch-check`, and pushes nothing if they fail.
+- **Locking:** it runs inside the same lock as the sync.
+- **`--dry-run`:** it shows the branch it would create, the commits it would push and the check results, and changes nothing.
+
+**Behaviour I decided on (also written in the ticket)**
+- `--dry-run` takes no lock and doesn't fetch; it reads the remote tip with `git ls-remote`. It exits 1 if the real run would stop.
+- If the worktree has uncommitted changes outside a rebase, it lists them and stops instead of committing them. This avoids publishing, for example, a duplicate claim that the user hasn't decided to keep.
+- On the first push, if the integration branch isn't on the remote yet, its commits fail the check. The error message tells you to push the integration branch first.
+
+**Two changes outside the new command**
+- **Failure message:** I changed the message shown when a normal sync fails so it points to `register branch-push` instead of manual git commands. The wording the existing tests check is kept, and the sync itself behaves as before. `branch-merge`, `branch-guard` and `branch-check` are untouched.
+- **Bug fix:** while a rebase is stopped, the dedicated worktree couldn't be found by branch name, because HEAD is detached. I fixed this in the new command's lookup.
+
+**Validation:** I ran prettier, eslint, `tsc -b`, the two new test files and the whole register test directory, markdownlint on the changed Markdown, and `npm run validate:history-links`. All passed. The parent runner's allowlisted checks were not run here; they run after this stage.
+
+The ticket now has the work table, results, related documents and a "CHANGELOG に書く事項" section with draft Added and Changed lines; `CHANGELOG.md` itself is unchanged.
+
+**Still open**
+- The orchestrator still needs to try first-time setup, recovery and `--dry-run` in a temporary repository with a bare remote (work table row 5, left `open`).
+- The uncommitted sync-settings changes in `../worktrees/feature-prj-0001-register-sync` and `../worktrees/feature-prj-0002-register-sync` may also describe manual git steps. If so, they should be switched to `register branch-push` there; this task didn't touch them.
+
+Files changed:
+- New: `src/register/branch-push.ts`, `tests/src/register/branch-push.test.ts`, `tests/src/register/register-branch-push.integration.test.ts`
+- Modified: `src/register/branch-commands.ts`, `src/shared/register-branch.ts`
+- Docs: `docs/ja/specdojo/guides/register-operation-guide.md`, `docs/ja/specdojo/references/command-reference.md`, `docs/ja/specdojo/references/specdojo-config-reference.md`
+- Ticket: `docs/ja/projects/prj-0001/controls/project-register/pjr-m120-register-branch-push.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Added `specdojo register branch-push --project <project-id> [--dry-run]`: it pushes only to the `register_sync` remote and branch, handles first-time setup (create from the integration branch, or only create the local branch when it exists only on the remote), recovers a stopped sync (continue rebase, then `pull --rebase` and push; stops on conflicts with file list and fix), runs the `branch-check` checks before pushing, and runs inside the same lock as the sync. Added unit and integration tests and updated the register operation guide, config reference and command reference. Filled in the ticket's work table, results and CHANGELOG draft.","handoff":["After integration, the orchestrator must try first-time setup, recovery and `--dry-run` in a temporary repository with a bare remote before close (ticket work table No 5, left `open`).","Decision: `--dry-run` takes no lock and does not fetch (reads the remote tip with `git ls-remote`). It exits 1 when the real run would stop (check violations, conflicts, uncommitted changes).","Decision: if the dedicated worktree has uncommitted changes outside a rebase, recovery does not commit them; it lists them and stops with exit code 1, so that a claim the user has not adopted is never published automatically.","Decision: a branch that exists only locally (not covered by the completion conditions) is checked and pushed as a new remote branch. The integration branch must exist locally; if it is not on the remote yet, its commits fail the scope check and the message says to push the integration branch first.","Changed the sync failure message (`recoveryError` in `src/shared/register-branch.ts`) to point to `specdojo register branch-push` instead of manual `git pull --rebase` / `git push`; the phrases the existing tests assert are kept. Also fixed the worktree lookup so a worktree with a stopped rebase (detached HEAD) is found through the rebase `head-name`.","CHANGELOG draft is in the ticket section 5.3 (Added: `register branch-push`; Changed: sync failure guidance now points to it). `CHANGELOG.md` was not changed.","The uncommitted sync-settings changes in `../worktrees/feature-prj-0001-register-sync` and `../worktrees/feature-prj-0002-register-sync` (CLAUDE.md, orchestrator text) may still describe manual git steps; if so, switch them to `register branch-push` on that side. Not changed in this item."],"validations":[{"command":"npx vitest run --config vitest.integration.config.ts tests/src/register/","status":"passed","summary":"6 files, 58 tests passed (includes new register-branch-push integration test, 10 tests, and existing register sync tests)"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/register/branch-push.test.ts","status":"passed","summary":"3 tests passed (rejects other refs, stops on disabled project)"},{"command":"npx tsc -b","status":"passed","summary":"no type errors"},{"command":"npx eslint src/register src/shared/register-branch.ts tests/src/register","status":"passed","summary":"0 errors; 5 pre-existing max-lines-per-function warnings in untouched files"},{"command":"npx prettier --check (changed ts/md files)","status":"passed","summary":"all changed files use Prettier style"},{"command":"npx markdownlint-cli2 (changed md files)","status":"passed","summary":"0 issues in the guide, both references and the ticket"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; the changed ticket is valid"}]}
+</specdojo_executor_evidence>

@@ -5,29 +5,29 @@ path: docs/ja/specdojo/samples/tsd-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-27T20:26:15.564Z"
-graded_by: flash-high-executor
-content_hash: 82f65890dc06f75a666b165caefb0de7a36700b550e25dd1e524caf36352ed84
+score: 92
+graded_at: "2026-11-23T17:32:49.571Z"
+graded_by: sonnet-review-executor
+content_hash: 0d0f7e6b3de86fcbf4067addc60afdeccebe7ae63675e56b6343d9cda8b019cc
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -42,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -60,14 +60,14 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -104,6 +104,59 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 6
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 30
+    anchor: >-
+      - `tsd-hosting.md`: _TODO_: 未作成。本書は、Fly.io のプライベートネットワーク（6PN）でアプリから `kinuya-db`
+      へ接続できることと、`kinuya-app`・`kinuya-db`・`kinuya-db-backup` の 3 アプリの構成を前提とする。作成までは各アプリの `fly.toml`
+      を正本とし、本書の「全体構成と接続経路」を変える前に `fly.toml` と照合する。
+    message: "`tsd-hosting.md` と `tsd-ci.md` は `_TODO_` と依存内容が示されているが、作成担当と作成時期・課題 ID が無く、後続文書への依存の解消を追跡できない。"
+    message_ja: "`tsd-hosting.md` と `tsd-ci.md` は `_TODO_` と依存内容が示されているが、作成担当と作成時期・課題 ID が無く、後続文書への依存の解消を追跡できない。"
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 91
+    anchor: "- 店頭タブレットは DB 環境へ直接接続しない。"
+    message: 3 章の「店頭タブレットは DB 環境へ直接接続しない」は図の矢印をなぞるだけで、判断情報を足していない。内部ホスト名とポート転送の補足だけを残せる。
+    message_ja: 3 章の「店頭タブレットは DB 環境へ直接接続しない」は図の矢印をなぞるだけで、判断情報を足していない。内部ホスト名とポート転送の補足だけを残せる。
+  - id: F003
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 134
+    anchor: "## 5. 導入と初期設定"
+    message: 5 章は開発端末の構築だけで、本番 DB 環境（`kinuya-db`）とバックアップ環境（`backup.sh`・crontab・ボリューム）の作成手順または参照先が無い。確認表の「作成後に確認する」の前提を再現できない。
+    message_ja: 5 章は開発端末の構築だけで、本番 DB 環境（`kinuya-db`）とバックアップ環境（`backup.sh`・crontab・ボリューム）の作成手順または参照先が無い。確認表の「作成後に確認する」の前提を再現できない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 184
+    anchor: >-
+      | 7. バックアップの取得     | 作業端末: `fly ssh console --app kinuya-db-backup -C "ls -l /backups"`                         |
+      前日の日付のダンプがあり、サイズが前回から大きく減っていない         | `fly logs --app kinuya-db-backup` の `pg_dump` の終了コード      |
+    message: 動作確認 7 の「サイズが前回から大きく減っていない」は閾値が無く pass/fail を判定できない。例として「前回比 80% 以上」のように比率か下限値を示す必要がある。
+    message_ja: 動作確認 7 の「サイズが前回から大きく減っていない」は閾値が無く pass/fail を判定できない。例として「前回比 80% 以上」のように比率か下限値を示す必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 184
+    anchor: >-
+      | 7. バックアップの取得     | 作業端末: `fly ssh console --app kinuya-db-backup -C "ls -l /backups"`                         |
+      前日の日付のダンプがあり、サイズが前回から大きく減っていない         | `fly logs --app kinuya-db-backup` の `pg_dump` の終了コード      |
+    message: >-
+      動作確認 7 は「前日の日付のダンプ」を確認するとしているが、`backup.sh` は 03:00 JST の当日日付でファイル名を付けるため、開店時には当日の日付になる。7.2 の検知記述と 7.3 の手順 5
+      も含めて日付の基準をそろえる必要がある。
+    message_ja: >-
+      動作確認 7 は「前日の日付のダンプ」を確認するとしているが、`backup.sh` は 03:00 JST の当日日付でファイル名を付けるため、開店時には当日の日付になる。7.2 の検知記述と 7.3 の手順 5
+      も含めて日付の基準をそろえる必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 228
+    anchor: "1. **現状のダンプを取る**: 復元を取り消すときの戻り先にする。`fly proxy 15432:5432 --app kinuya-db` を起動した別の端末で実行する。"
+    message: 7.3 は現状のダンプ（手順 1）をアプリ停止（手順 2）より前に取るため、その間の書き込みが切り戻し用ダンプに含まれない。アプリ停止を先にするか、この欠落を明記する必要がある。
+    message_ja: 7.3 は現状のダンプ（手順 1）をアプリ停止（手順 2）より前に取るため、その間の書き込みが切り戻し用ダンプに含まれない。アプリ停止を先にするか、この欠落を明記する必要がある。

@@ -1,0 +1,15 @@
+`docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md` だけを直しました。F001・F002・F005 は rulebook 側で解消し、F003・F004 はこの段で触れない sample・recipe・template 側を直す必要があるので申し送りにしました。prettier と markdownlint は通っています。
+
+**直したこと（変更は 10 行）**
+- **F005**: 時点で意味が変わる「今の方式」という名前を「プロセスグループ方式」に改めました。方式の表、既定方式の宣言、分割条件、詳細 CDFD 一覧の受入条件の 5 か所です。
+- **F001**: 「本文要件」の冒頭に、要件を変えるときは template・recipe・sample・取り込む記法ルール（Mermaid・D2）の該当箇所を同じ変更で突き合わせる、という一文を足しました。
+- **F002**: 「完成判定」の前提に、`npm run lint:fm` と、採用記法に応じた `npm run lint:mermaid` または `npm run lint:d2` が終了コード 0 で終わることを加えました。3 つとも `package.json` にあることを確認済みです。
+- **F003（rulebook 側）**: 未決事項の表は 2 列のまま残し、「決定者・決定時期・解消の進み具合は登録簿の個票で追い、表に列を足さない」と明記しました。決定者や状態は承認の進み具合にあたり、PJR-76N9 の決まりでは個票で追うものだからです。rulebook を正とし、5 列のまま残っている template と sample を直す側に回しました。
+
+**直さなかった箇所と理由**
+- **F004**: rulebook の規則自体はそのままです。sample は凡例の章で、物理保管がどの区分にも属さず便宜上同じ色を使うと説明しているので、規則が認める「凡例で説明」を満たしていると判断しました。recipe に物理保管の問いがないのは、この段では recipe を変えられないため申し送りにしました。
+- そのほかの記述は grade の指摘も冗長な箇所もないため変えていません。frontmatter の `status: ready` は元のままで、取り込む記法ルール 2 つには指摘も「今の方式」の記述もないので変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-overview-rulebook を編集した。F005 は方式名を「プロセスグループ方式」へ改名、F001 は本文要件に同期対象（template・recipe・sample・記法ルール）を追記、F002 は完成判定の前提に lint:fm と lint:mermaid / lint:d2 の終了コード 0 を追加。F003 は PJR-76N9 に沿い rulebook の 2 列を正として個票で追う旨を明記し、template・sample の 5 列は後段へ申し送り。F004 は sample が凡例で併記の説明を満たしているため rulebook は維持し、recipe への反映を申し送り。","handoff":["F003: template（`cdfd-overview-template` の未決事項の章）と sample（未決事項の章）の表を「論点」「影響」の 2 列に揃える。「決定者」「決定時期」「状態」の 3 列は登録簿の個票で追い、表から外す（PJR-76N9、rulebook の「未決事項」の記述ガイドが正）。","F004: recipe の「データストア」章に、物理保管をトランザクションデータ表の末尾へ併記すること、および章冒頭か凡例で併記と同色の使用が分類への所属を意味しないと説明することの問いとコツを加える。sample は凡例（7 章）の説明で条件を満たしているため変更は不要。","F005 の追従: template（35・76・78・135・147 行付近）、sample（97 行）、recipe（31・110 行）に残る「今の方式」を「プロセスグループ方式」に改める。","この段で直さなかった箇所: 上記以外の rulebook の記述は grade の指摘も冗長な箇所もないため維持した。includes の `cdfd-mermaid-rulebook` と `cdfd-d2-rulebook` は指摘も「今の方式」の記述もないため変更していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md","status":"passed","summary":"prettier --write で表の列幅を整えたあと、差分なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

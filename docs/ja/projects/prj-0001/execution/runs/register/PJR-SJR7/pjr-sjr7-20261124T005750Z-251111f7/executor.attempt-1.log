@@ -1,0 +1,14 @@
+変更要求ログ・課題ログ・リスク登録簿の 3 型は非推奨にしましたが、第 6 波の track はまだ直せていません。lint や `npm run test:unit` などの検査は、親の runner が実行します。
+
+- **非推奨化:** この 3 型の rulebook と sample（計 6 ファイル）で、frontmatter の `status` を `deprecated` に変えました。見出しも「（非推奨）」にし、正本が登録簿の項目であることと移る先を冒頭の 1 段落で書いています。
+- **`pm-decision-log`:** この型には rulebook も sample もありません。文書の変更はありません。
+- **新しく選ばれない対応:** `dct-kata.yaml` から 3 つの sample の項目を削除しました。`pm-communication-plan-sample` の `depends_on` からも外しています。第 6 波の strategy（`sch-strategy-kata-wave-6-project.yaml`）でも、`scope`・`approach_rules`・`owner_rules` から外しました。
+- **残した枠:** `pm-*-template.md` と `dct-project-management.yaml` の生成物の項目は変えていません。
+- **`register build` の差分:** 前後の `generated/` の差分は取っていません。template とその生成処理を変えていないので、出力は変わらない想定です。
+- **個票と CHANGELOG:** 個票 `pjr-sjr7-deprecate-pm-log-kata-apply.md` の作業内容と対応結果を埋めました。CHANGELOG に書く事項は、区分 Deprecated と文案を対応結果の小節に書いています。`CHANGELOG.md` 自体は変えていません。
+
+track の再生成（作業内容の行 4）は `open` のままで、手順が未確認です。`schedule strategy generate` が track まで直すかは確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。","handoff":["sch-track-kata-wave-6-project.yaml に pm-change-request-log・pm-issue-log・pm-risk-register の sample の段（040〜080）が残っている。track は直接編集禁止のため、strategy からの再生成で外す。未実行の 060・080・090 は流さないこと。strategy からの再生成の手順は未確認。","pm-decision-log には rulebook も sample もないため、非推奨化の対象となる文書はなかった。","CHANGELOG に書く事項は個票の対応結果 5.2 に記載済み（区分 Deprecated）。CHANGELOG.md は未変更。","`register build` の generated/ 差分は、template と views.ts を変えていないため未取得。親の検査に任せた。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため executor では実行しない"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner が実行する検査のため executor では実行しない"}]}
+</specdojo_executor_evidence>

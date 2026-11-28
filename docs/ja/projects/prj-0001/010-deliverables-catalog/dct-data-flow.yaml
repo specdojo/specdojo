@@ -195,18 +195,18 @@ groups:
             purpose: exec コマンド入口から到達するresume・状態再計算・autoを単一ロック内で順次実行するcycle制御
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Definition検証・Job Run生成・checkpoint更新
+            purpose: Job Definition検証・job run生成・checkpoint更新
         depends_on:
           - cdfd-register-lifecycle
           - cdfd-task-execution
         done_criteria:
-          - text: routine定義の選択・due判定・register/schedule実行への委譲、resumeから状態再計算・autoへ進むexec-cycleに加え、Job Run生成を伴う反復作業との境界・実行結果更新の流れが表と図で確認できること
+          - text: routine定義の選択・due判定・register/schedule実行への委譲、resumeから状態再計算・autoへ進むexec-cycleに加え、job run生成を伴う反復作業との境界・実行結果更新の流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: rtn-*.yamlのaction kind・filter・interval・limit、個票Frontmatterを正本とするregister対象選択、exec-cycleのstrategy・parallel・loop、Job連携時のcron・timezone・missed/overlap policyと、委譲先へ渡す入力および返却される結果が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: projectがbusyの場合、対象なし・利用制限・cycleのstep別失敗・再開時刻待ち・重複Job Run・取りこぼしの場合に、last_run・last_resultと次回判定がどのように記録されるか確認できること
+          - text: projectがbusyの場合、対象なし・利用制限・cycleのstep別失敗・再開時刻待ち・重複job run・取りこぼしの場合に、last_run・last_resultと次回判定がどのように記録されるか確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
       - local_id: cdfd-multi-project
@@ -402,7 +402,7 @@ groups:
             purpose: 定期実行定義の検証と due 判定
           - kind: implementation
             path: src/job/job.ts
-            purpose: ジョブ定義の検証と Job Run の生成
+            purpose: ジョブ定義の検証と job run の生成
         depends_on:
           - cdfd-overview
         note: 5 領域を含むため、概念データフローは領域ごとに分ける。定期実行の起動は Orchestrator の責務であり本書では扱わない。旧 cdfd-register-lifecycle・cdfd-catalog-planning・cdfd-routine は参照しない
@@ -614,7 +614,7 @@ groups:
             purpose: routine の due 判定・委譲・実行結果更新
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Definition 検証・Job Run 生成・checkpoint 更新
+            purpose: Job Definition 検証・job run 生成・checkpoint 更新
           - kind: implementation
             path: src/exec/exec.ts
             purpose: exec コマンド入口から到達する cycle 制御・auto 実行
@@ -622,10 +622,10 @@ groups:
           - cdfd-overview
         note: 全体概要の routine 系の流れをプロセス領域の単位で詳細化する。Orchestrator のサイクル到来を起点イベントとする（PJR-SJQC）
         done_criteria:
-          - text: Orchestrator のサイクル到来イベントから routine 定義判定、Job Run 生成、register/schedule への委譲、自動実行、状態記録までの routine 系の流れが、プロセス領域の単位で表と図で確認できること
+          - text: Orchestrator のサイクル到来イベントから routine 定義判定、job run 生成、register/schedule への委譲、自動実行、状態記録までの routine 系の流れが、プロセス領域の単位で表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
-          - text: 各プロセス領域とデータストア（定期実行定義、ジョブ定義、Job Run、実行記録、稼働構成など）の読み書き、および委譲先（register/schedule）との境界が識別できること
+          - text: 各プロセス領域とデータストア（定期実行定義、ジョブ定義、job run、実行記録、稼働構成など）の読み書き、および委譲先（register/schedule）との境界が識別できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
           - text: busy 時のスキップ、利用制限、重複実行防止、取りこぼし検知などの分岐と次回判定の記録が確認できること

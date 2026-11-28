@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dcc84d80b4c74a018aec08a20d23fbc7
+  ts: "2026-11-21T14:02:40Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result のバッククォートがエスケープされて書かれ、統合の前の検査で止まる
+    - field: description
+      from: ""
+      to: reporter などが result の本文にバックスラッシュでエスケープしたバッククォートを書き、統合の前の Markdown の検査（MD038）で止まる。原因を確かめ、書かせないか runner が直す
+    - field: input
+      from: ""
+      to: "[\"2026-11-21、T-KATA-WAVE-3-utc-sample-050 の統合が、result.md のバッククォートが \\\\` とエスケープされていたため MD038（Spaces inside code span elements）で止まった。成果物と親の検証は通っていた。オーケストレーターがエスケープを戻して exec resume --task で統合した\",\"オーケストレーターの観察: 同じ形の止まり方は以前にもあった（回数は未集計）\",\"利用者の決定（2026-11-21、indie）: 夜の間に流す。直し方は executor が決めて理由を記録する\"]"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_1611da214b79455786d3f1fd79ef0d62
+  ts: "2026-11-21T14:10:11Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_dcc84d80b4c74a018aec08a20d23fbc7
+- v: 1
+  id: reg_0f049c215a3946b4accbb4b0cb3cdaac
+  ts: "2026-11-21T14:10:45Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_1611da214b79455786d3f1fd79ef0d62
+- v: 1
+  id: reg_06004c244b09402cbd55338b06d47cc9
+  ts: "2026-11-21T16:31:10Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0f049c215a3946b4accbb4b0cb3cdaac
+- v: 1
+  id: reg_9b14ac81e03f4fa3a0590eaf814b6cf4
+  ts: "2026-11-21T16:36:44Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
+  previous_event_id: reg_06004c244b09402cbd55338b06d47cc9
+- v: 1
+  id: reg_53d54d2abc13415dad218c989dafbeb1
+  ts: "2026-11-21T22:46:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
+      to: "-"
+  previous_event_id: reg_9b14ac81e03f4fa3a0590eaf814b6cf4
+- v: 1
+  id: reg_b8ebcfbf8ac24aba8d92f627832c3060
+  ts: "2026-11-21T22:50:59Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_53d54d2abc13415dad218c989dafbeb1
+- v: 1
+  id: reg_f6e721db13d945ae91eeb12156872141
+  ts: "2026-11-22T00:02:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施し、result の 1 か所を手で直して統合から再開した。完了条件・単体テスト 3 件・CHANGELOG 不変を確かめ、統合後の run（QTZ7 ほか）が result の検査で止まらないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: runner が reporter の一律にエスケープされたバッククォートを戻してから result に書くようにし、統合の前の MD038 で止まらなくした。
+  previous_event_id: reg_b8ebcfbf8ac24aba8d92f627832c3060

@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cdt-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-cdt-sample-140-20261126T124912Z-496ae239",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T12:50:04.399Z",
+    "completed_at": "2026-11-26T12:51:35.911Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cdt-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cdt-sample.md | 12 ++++++------\n 1 file changed, 6 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/cdt-sample.md",
+      "status": "passed",
+      "summary": "表の列幅を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/cdt-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cdt-sample\n  type: data\n  status: ready\n  rulebook: specdojo:cdt-rulebook\n  supersedes:\n    - specdojo:cld-sample\n---\n\n# 商品区分\n\n駄菓子屋の店主代表と家族利用者代表が、商品の棚割り・仕入れ方針・棚札を同じ基準で選ぶための分類を定義する。\n\n## 1. 概要\n\n- 業務目的: 商品の種類と仕入れ方針を分け、季節商品を定番商品と同じ基準で補充する誤りや、棚札の表記ゆれを防ぐ。\n- 対象エンティティ: 商品（`product`）。商品の管理単位と識別は \\[\\[specdojo:bdd-sample|業務データ辞書（駄菓子屋の販売管理）]] に合わせる。\n- 適用範囲: 店舗の商品台帳と棚札で使う「商品区分」「取扱区分」「棚札タグ」。商品区分と取\n… output omitted …\n| 商品（`product`）と発注点（`reorder_point`）を参照する。本書の分類属性やタグの管理構造は同辞書に未定義。システム化する際は辞書へ構造を定義し、許容値を実装・スキーマに持たせる場合は本書の正本参照方式を切り替える |\n| \\[\\[specdojo:gl-sample\\|用語集（駄菓子屋きぬやの販売・在庫・つけ管理）]] | 「定番商品」と「発注点」の語義を参照する。定番の成立条件を変える場合は、通年で棚に置く方針および発注点の利用対象と矛盾しないか確認する |\n| \\[\\[specdojo:br-sample\\|在庫不足判定]] | 定番商品で発注点に基づく不足判定を行う際に参照する。計算式と入力不備の扱いは同ルールに委ねる。季節・試験商品の追加仕入れは店主代表が取扱方針に沿って判断する |\n| \\[\\[specdojo:uis-sample\\|販売登録画面 画面仕様]] | 販売する商品の識別と会計操作を参照する。本書は商品分類の編集画面や税率の算出を定義しない。分類の変更を会計へ反映する場合は、商品ごとの税区分との関係を別途確認する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7790 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7790 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdt-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 18ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dur\n… output omitted …\nter-plan-escape.test.ts\",\"duration_ms\":1640}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  21:53:49\n   Duration  3.21s (transform 10.88s, setup 952ms, import 14.15s, tests 6.97s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdt-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdt-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4 正しさ: cdt-sample の事実の主張 13 件を正本と突き合わせ、不一致 1 件（gl-sample への wikilink の表示名）を直した。残る 12 件は一致した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4-1: R4 / 4. 関連仕様との関係 / gl-sample への wikilink の表示名「用語集 在庫・調達」が、参照先の title「用語集（駄菓子屋きぬやの販売・在庫・つけ管理）」と食い違う / 表示名を参照先の title に合わせた / `vp-qe-verifiability`（正本 docs/ja/specdojo/samples/gl-sample.yaml 5 行目の `title`） / -",
+    "R4-2: R4 / 2.3. 棚札タグ / rulebook の「分類定義」は動的分類の正本参照に業務データ辞書のエンティティを参照する例を挙げているが、本 sample は紙の商品台帳を管理元とし、業務データ辞書に未定義であることを明記している。事実の誤りではなく rulebook への準拠の問題のため、R4 では直さない / - / `vp-qe-kata-conformance`（R5 で扱う）。docs/ja/specdojo/rulebooks/cdt-rulebook.md の「分類定義」の参照方式の表 / 要判断（「良い例」は推奨であり、BDD が未定義の段階で紙台帳を管理元とする現行の書き方を維持する案と、BDD に管理元のエンティティを足す案がある）",
+    "F001（`vp-ops-operability`、75 行目）: kata の段のレビューでは使わない観点（kata-guide の「kata の観点の組」）であり、R4 の対象外。現行の本文 87 行目には、適用日までに棚札を新しい取扱区分の表示名へ貼り替える担当がすでに書かれており、指摘は解消済みと判断した",
+    "確かめの表（No / 主張 / 正本 / 確かめ方 / 結果 / 根拠）: (1) 対象エンティティ `product` / bdd-sample.yaml / grep / 一致 / 11 行目 `physical_name: product`。(2) 発注点 `reorder_point` を参照 / bdd-sample.yaml / grep / 一致 / 43 行目。(3) 分類属性（`product_type`・`handling_type`・`shelf_tags`）は辞書に未定義 / bdd-sample.yaml / grep / 一致 / 該当なし。(4) bdd-sample の表示名「業務データ辞書（駄菓子屋の販売管理）」 / bdd-sample.yaml / 読み取り / 一致 / 4 行目の `title`。(5) gl-sample の表示名 / gl-sample.yaml / 読み取り / 不一致→修正 / 5 行目の `title`。(6) 用語集に「定番商品」「発注点」がある / gl-sample.yaml / grep / 一致 / 13・24 行目。(7) 発注点は定番商品だけに設定する（`staple` の成立条件） / gl-sample.yaml / 読み取り / 一致 / 18 行目の notes。(8) 在庫不足判定は定番商品と発注点で判定する / br-sample.md / grep / 一致 / 11・18 行目。(9) 発注点の未設定をゼロと読み替えない / br-sample.md / grep / 一致 / 29 行目「0 も有効な値で、未設定の代用にしない」。(10) uis-sample は販売登録画面の画面仕様 / uis-sample.md / 読み取り / 一致 / 11 行目の H1。(11) 種別の値（業務分類・動的分類） / cdt-rulebook.md / 読み取り / 一致 / 「分類定義の要件」の表。(12) 分類定義の 5 項目と、スタンドアロン定義の値・分類名・表示名・説明の列 / cdt-rulebook.md / 読み取り / 一致 / 「分類定義の要件」「スタンドアロン定義」。(13) frontmatter の `rulebook: specdojo:cdt-rulebook`、`supersedes: specdojo:cld-sample` / cdt-rulebook.md の `sample`、docs/ja/specdojo/samples/cld-sample.md / ls・grep / 一致 / rulebook 8 行目 `sample: specdojo:cdt-sample`、cld-sample.md は実在する"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdt-sample-140/T-KATA-REVIEW-ALL-cdt-sample-140-20261126T124912Z-496ae239/executor.log",
+      "bytes": 6057,
+      "truncated": false
+    }
+  ]
+}

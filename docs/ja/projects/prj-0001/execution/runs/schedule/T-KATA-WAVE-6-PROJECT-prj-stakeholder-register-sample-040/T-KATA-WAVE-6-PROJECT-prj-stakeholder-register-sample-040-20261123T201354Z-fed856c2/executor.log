@@ -1,0 +1,18 @@
+rulebook `docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md` を直し、grade の指摘 F001〜F005 をすべて反映しました。sample・recipe・template は変えていません。変更範囲で prettier と markdownlint を実行し、どちらもエラーはありません。frontmatter の `status`（`ready`）はそのままです。
+
+| 指摘 | 直したこと |
+| --- | --- |
+| F001 | 「必要な合意は全関係者で空欄にしない。High の関係者はエンゲージメント方針にも行を置き、関与方針を空欄にしない」に改めました。禁止事項・recipe と条件がそろいます。 |
+| F002 | 関係者一覧の欄名を template に合わせて「備考（利用場面など）」にしました。 |
+| F003 | 関与区分は6つの区分語のどれかを必ず含める決まりにしました。「意思決定者」のような語尾付きの形、「スポンサー」などの補足語、`/` での併記は認めます。これで今の sample の書き方も規則に合います。全体方針の「評価」も「外部協力」に直しました。 |
+| F004 | 関係者 ID の形式（`STH-<KEY>`）は「ドキュメントID」の節へ、「役割名を個人名より優先する」は記述ガイドの関係者一覧へ移しました。 |
+| F005 | 禁止事項の「ステークホルダー ID」を「関係者 ID」に統一しました。章の名前は template に合わせて「エンゲージメント方針」のまま残し、「関与方針」はその章の各行を指すと定義しました。 |
+
+あとで判断が要る点が2つあります。
+
+- **見直し条件の「見直し責任者・承認者」**: この列は登録簿そのものの承認役割にあたり、PJR-76N9 の「成果物の本文に役割の割り当てを求めない」に触れるおそれがあります。template の骨組みに関わるため、この段では変えていません。
+- **章ごとの良い例・悪い例**: plan は記述ガイドに書くよう求めていますが、recipe の「良い例 / 悪い例」の表と重なるため（`vp-arc-conciseness`）、rulebook には足していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"rulebook prj-stakeholder-register-rulebook.md を F001〜F005 に沿って改訂した（関与方針と必要な合意の条件をそろえ、備考欄名を template に合わせ、関与区分は区分語を必須とし併記も許す形で定め、関係者 ID 規則をドキュメントIDの節へ移し、「関係者 ID」に統一し、関与方針を定義）。sample・recipe・template は変更していない。","handoff":["見直し条件の「見直し責任者・承認者」列は登録簿そのものの承認役割の割り当てにあたり、PJR-76N9 に触れるおそれがある。template の骨組みに関わるため本段では変えず、template・rulebook を合わせて見直すか判断が要る。","plan は記述ガイドへ章ごとの良い例・悪い例を書くよう求めるが、recipe の「良い例 / 悪い例」表と重なるため（`vp-arc-conciseness`）rulebook には足していない。","維持した記述: 全体方針・位置づけ・Frontmatter・本文要件（備考の欄名以外）・影響度/関心度の評価表・コミュニケーション要件・見直し条件の記述ガイドは、grade の指摘がなく冗長でもないため変えていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md","status":"passed","summary":"--write で表の列幅を整えた後は差分なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

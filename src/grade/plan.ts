@@ -29,6 +29,11 @@ import {
 } from "./targets.js";
 import { viewpointAppliesToDocument } from "../review/plan.js";
 import type { ReviewViewpointsDoc } from "../review/types.js";
+import {
+  SIZE_METRICS_VIEWPOINT,
+  documentSizeMetrics,
+  isSizeMetricMessage,
+} from "./size-metrics.js";
 
 export function deterministicResults(
   document: MarkdownDocument,
@@ -60,13 +65,18 @@ export function deterministicResults(
       }
     }
     if (viewpoint.id === "vp-qe-config-validity") {
+      // kata の sample は、sample-authoring-standard が未確定事項を _ASSUMPTION_ / _UNDECIDED_ で明示するよう求めるため、_TODO_ だけを未解決とする。
+      const isKata = target === "kata";
+      const placeholderPattern = isKata ? /_TODO_/ : /(?:_TODO_|_ASSUMPTION_)/;
       const placeholderLine = document.body
         .split("\n")
-        .findIndex((line) => /(?:_TODO_|_ASSUMPTION_)/.test(line));
+        .findIndex((line) => placeholderPattern.test(line));
       if (placeholderLine >= 0) {
         findings.push({
           severity: "major",
-          message: "未解決の _TODO_ / _ASSUMPTION_ が残っています。",
+          message: isKata
+            ? "未解決の _TODO_ が残っています。"
+            : "未解決の _TODO_ / _ASSUMPTION_ が残っています。",
           line: placeholderLine + 1,
         });
       }
@@ -75,6 +85,61 @@ export function deterministicResults(
     results.push({ id: viewpoint.id, level: cap, findings });
   }
   return results;
+}
+
+// 小節番号は done_criteria の小節の有無で決まるため、見出しは組み立て時に置き換える。
+const SIZE_METRICS_HEADING_PLACEHOLDER = "__SPECDOJO_GRADE_SIZE_METRICS_HEADING__";
+
+function sizeMetricsPlanLines(size: ReturnType<typeof documentSizeMetrics>): string[] {
+  if (!size) return [];
+  const { metrics, findings } = size;
+  const facts = [
+    `- 本文の文字数（空白・表の区切り行を除く）: ${metrics.characters.toLocaleString("en-US")} 字`,
+    ...(metrics.sample_ratio !== undefined
+      ? [
+          `- 宣言された sample（${metrics.sample}）との比: ${metrics.sample_ratio} 倍（sample は ${(metrics.sample_characters ?? 0).toLocaleString("en-US")} 字）`,
+        ]
+      : []),
+    ...(metrics.growth_ratio !== undefined
+      ? [
+          `- 前回の grade の時点からの増え方: ${metrics.growth_ratio} 倍（前回は ${(metrics.previous_characters ?? 0).toLocaleString("en-US")} 字）`,
+        ]
+      : []),
+    ...(metrics.operations_ratio !== undefined
+      ? [
+          `- 文書の運用・検証の章の割合: ${Math.round(metrics.operations_ratio * 100)}%（${(metrics.operations_characters ?? 0).toLocaleString("en-US")} 字）`,
+        ]
+      : []),
+  ];
+  return [
+    SIZE_METRICS_HEADING_PLACEHOLDER,
+    "",
+    `CLI が LLM を使わずに測った値である。\`${SIZE_METRICS_VIEWPOINT}\` の判定にだけ使い、ほかの viewpoint の判定に使わない。`,
+    "",
+    ...facts,
+    "",
+    ...(findings.length > 0
+      ? [
+          `上限を超えた指標: ${findings.map((finding) => finding.severity).join("・")}。\`${SIZE_METRICS_VIEWPOINT}\` では、共通の正本にある運用の記述の再掲と、同じ判断の複数の章での言い直しを重点的に探し、削る・まとめる・参照に置き換えられる箇所を行番号つきの finding で示す。指標の finding は \`grade apply\` が付けるため、agent は指標そのものを finding にしない。削れる箇所を minor 以上の finding で示した場合だけ、指標の重大度で減点される。上限を超えた分が判断に要る背景・制約・例外・完了条件で、削れる箇所がない場合は finding を付けず、根拠にその旨を書く。`,
+        ]
+      : ["上限を超えた指標はない。長さを理由に判定を変えない。"]),
+    "",
+  ];
+}
+
+const OBSOLETE_KATA_PLACEHOLDER_MESSAGE = "未解決の _TODO_ / _ASSUMPTION_ が残っています。";
+
+// 旧い機械的な検査は kata でも _ASSUMPTION_ を major にした。その指摘を前回の指摘として渡すと
+// agent が同じ文言で再掲し続けるため、kata では渡さない。_TODO_ は現在の検査が改めて指摘する。
+function withoutObsoletePlaceholderFindings<
+  T extends { message: string; message_ja?: string | undefined },
+>(findings: readonly T[], target: string): T[] {
+  if (target !== "kata") return [...findings];
+  return findings.filter(
+    (finding) =>
+      finding.message !== OBSOLETE_KATA_PLACEHOLDER_MESSAGE &&
+      finding.message_ja !== OBSOLETE_KATA_PLACEHOLDER_MESSAGE,
+  );
 }
 
 function doneCriteriaPlanLines(
@@ -236,14 +301,28 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
   const metadata = document.data.specdojo as Record<string, unknown>;
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
-  const priorFindings =
-    readGradeResult(
-      gradeResultPathForDocument({
-        documentPath: absolute,
-        project: opts.projectId,
-        resultsDirectory: opts.resultsDirectory,
-      }),
-    )?.findings ?? [];
+  const previousResult = readGradeResult(
+    gradeResultPathForDocument({
+      documentPath: absolute,
+      project: opts.projectId,
+      resultsDirectory: opts.resultsDirectory,
+    }),
+  );
+  // 大きさの指標の finding は grade apply が測り直して付けるため、前回の指摘として再掲させない。
+  const priorFindings = withoutObsoletePlaceholderFindings(
+    previousResult?.findings ?? [],
+    opts.target,
+  ).filter((finding) => !isSizeMetricMessage(finding.message));
+  const sizeLines = viewpoints.some((viewpoint) => viewpoint.id === SIZE_METRICS_VIEWPOINT)
+    ? sizeMetricsPlanLines(
+        documentSizeMetrics({
+          document,
+          target: opts.target,
+          limits: rubric.size_limits,
+          previous: previousResult,
+        }),
+      )
+    : [];
   const taskHash = createHash("sha256").update(rel).digest("hex").slice(0, 12).toUpperCase();
   const taskId = `GRADE-${opts.target.toUpperCase()}-${taskHash}`;
   const references = (opts.references ?? []).map((reference) =>
@@ -406,6 +485,11 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     ),
     "",
     ...(doneCriteria.length > 0 ? doneCriteriaPlanLines(doneCriteria, opts.viewpoints) : []),
+    ...sizeLines.map((line) =>
+      line === SIZE_METRICS_HEADING_PLACEHOLDER
+        ? `### 3.${doneCriteria.length > 0 ? 5 : 4}. 大きさの指標`
+        : line,
+    ),
     "## 4. 完了手順",
     "",
     "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",

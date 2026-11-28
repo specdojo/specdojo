@@ -1,0 +1,47 @@
+**判定: `complete-with-findings`。** sample と rulebook の評価結果はどちらも最新で `pass` です。完了条件 DC-001〜DC-006 はすべて満たしており、残っている finding は minor だけなので完了を妨げません。
+
+**評価結果の鮮度**
+
+`specdojo grade list --target kata --path <評価対象> --changed-only` と `--incomplete` を、sample と rulebook それぞれに実行しました。どれも何も出力せず、終了コードは 0 でした。判定の直前に `--changed-only` を両方もう一度実行し、結果は同じでした。review 中に成果物は変わっていません（`git status` で増えていたのは runner の `pipeline-state.json` だけです）。
+
+| 評価対象 | `verdict` | `score` | finding |
+| --- | --- | --- | --- |
+| `docs/ja/specdojo/samples/imp-test-sample.md` | `pass` | 95 | blocker 0 / major 0 / minor 4 |
+| `docs/ja/specdojo/rulebooks/imp-test-rulebook.md` | `pass` | 93 | blocker 0 / major 0 / minor 4 |
+
+型の整備を含む schedule の追加条件（すべての型に最新の `--target kata` の `pass` があること）も満たしています。
+
+**完了条件の照合**
+
+- **DC-001:** 本文は rulebook の本文要件どおり 6 章で、順番も同じです。4 つの表の必須列は、名前も rulebook と一致しています。
+- **DC-002:** 題材は駄菓子屋の販売管理システムの変更要求 `cr-2026-004` に揃っています。
+- **DC-003:** 担当はすべて Role code（`QE` / `BA` / `DEV` / `PO` / `PM`）で書かれ、個人名や連絡先はありません。
+- **DC-004:** 対象期間は 2026-05-07〜2026-05-28 です。成功条件は 3 つあり、それぞれ確認対象と判定方法（28 件合格、全項目合格、欠陥 0 件）を持っています。
+- **DC-005:** 3 つの評価観点ごとに高・中・低の境界を表で示し、集約規則は「最大値を採用」です。
+- **DC-006:** 影響詳細一覧の 4 行すべてで、観点ごとの事実と「最大値規則により〜」を書いています。
+
+grade の判定もこれと矛盾しません（sample の `vp-qe-omissions-consistency` と `vp-qe-kata-conformance` は 100、`vp-qe-verifiability` は 75 で F003 あり）。
+
+**実行記録**
+
+直前の edit タスク（080、approach は condense）の result は `status: complete` でした。sample への変更は、対応方針の章の受入確認の 1 行を書き換えた 2 行の差分だけで、対象外の変更は混ざっていません。
+
+**finding が完了を妨げない理由**
+
+sample の F001〜F004 は、計画の妥当性、反映先の明記、つけ残高の条件の検証手段、営業日数の明記についての指摘です。rulebook の必須要素が欠けているわけでも、禁止事項に当たるわけでもありません。
+
+**改善指示（次の手直しで対応）**
+
+- sample の F001〜F004 を解消してください。
+- rulebook については次の 3 点です。
+  - F001 / F004: `recipe` / `template` が `undecided` のままなので、作るか `not-needed` かを決めて記録し、`target_format` を宣言してください。ready にするのはそのあとです。
+  - F002: decision の転記先の章を明確にし、転記条件に当たらない行の値（「なし」など）を決めてください。
+  - F003: 変更要求の識別子の形式を決めるか、sample の `cr-2026-004` を PJR の ID に揃えてください。
+
+**確認できなかった範囲**
+
+サイドカーは `verdict` / `score` / `content_hash` の行を読んだだけで、finding の全文は plan に転記されたものを使いました。プロジェクトコンテキスト（`prj-overview.md`）、`based_on` の `cr-2026-004`、xp / xrp の共通規約の詳細は読んでいません。lint などの検査は親 runner が行うため、自分では実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict は complete-with-findings。sample（docs/ja/specdojo/samples/imp-test-sample.md）と rulebook（docs/ja/specdojo/rulebooks/imp-test-rulebook.md）の --target kata の評価結果はどちらも最新（--changed-only と --incomplete は出力なし、判定直前の再確認でも出力なし）。sample は pass・95・minor 4、rulebook は pass・93・minor 4。完了条件 DC-001〜DC-006 は本文で確かめて満たしている（6 章と必須の列、駄菓子屋の題材、担当は Role code、対象期間と判定できる成功条件 3 つ、観点ごとの尺度と最大値の集約規則、各行で規則を当てはめた判断根拠）。直前の edit run 080（condense）の result は status complete で、sample の変更は受入確認の 1 行だけで対象外の変更はない。finding はすべて minor で、rulebook の必須要素の欠落や禁止事項への抵触ではないため完了を妨げない。確認できなかった範囲: サイドカーの finding の全文（plan の転記を使用）、prj-overview.md・cr-2026-004・xp/xrp 共通規約の詳細は読んでいない。lint などの検査は親 runner に委ねた。","handoff":["sample の改善指示: F001（重点回帰で欠陥が出たときの残り100ケースの実行工数か受入判定日の見直し条件）、F002（追加ケースを反映するテストカタログやテスト戦略・方針）、F003（つけ残高の誤りの条件をどのケースで確かめるか、または条件から外す）、F004（「2 営業日前」のように営業日数を書く）を次の手直しで解消する","rulebook の改善指示: F001/F004 は recipe・template を作るか not-needed かを決めて記録し、target_format を宣言してから ready を判断する。F002 は decision の転記先の章と、転記条件に当たらない行の値を決める。F003 は変更要求の識別子の形式を決めるか、sample の cr-2026-004 を PJR の ID に揃える"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-test-sample.md --changed-only","status":"passed","summary":"出力なし・exit 0（最新）。判定直前の再確認も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-test-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価パイプラインは完了）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-test-rulebook.md --changed-only","status":"passed","summary":"出力なし・exit 0（最新）。判定直前の再確認も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-test-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価パイプラインは完了）"}]}
+</specdojo_executor_evidence>

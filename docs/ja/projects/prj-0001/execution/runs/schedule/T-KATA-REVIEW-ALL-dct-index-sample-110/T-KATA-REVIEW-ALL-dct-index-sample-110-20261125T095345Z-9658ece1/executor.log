@@ -1,0 +1,22 @@
+R1 のレビューで、sample `docs/ja/specdojo/samples/dct-index-sample.yaml` を 1 か所だけ直しました。先頭コメントの 2 行（5〜6 行目）を削除しています。直したあと、schema 検査と Prettier のどちらも通りました。
+
+**指摘 1：先頭コメントの 2 行（要判断）**
+- **箇所:** 先頭コメントの 5〜6 行目
+- **指摘:** 「単一店舗・タブレット1台で…」と「EC、本格会計、仕入れ先とのシステム連携は対象外…」の 2 行は、共通サンプル文脈の前提条件をそのまま繰り返しています。索引の目的（分類・表示順・表示名・概要・`size`）の判断にも使われていません。さらに「本部 API を使う CLI 固有の拡張例は含めない」は、この sample の主題に関係がありません。
+- **直した案:** 2 行を削除しました。共通サンプル文脈を指す 4 行目のコメントは残してあります。
+- **根拠:** rulebook の「全体方針」では、索引に載せるドメインは実在する `dct-*.yaml` と一致させることになっており、対象範囲から選ぶものではありません。Sample 記述標準の「サンプル群の目的」は、記述を対象文書の説明に要る範囲に限るよう求めています。冗長さの判定は `vp-arc-conciseness`（正本の再掲）です。
+- **要判断の理由:** この 2 行は以前の段（`T-KATA-WAVE-1-dct-index-050`）でわざと加えられたものです。対象外のドメインがない理由を残したい場合は、元に戻してください。
+
+**変えずに残した記述**
+次の記述は、rulebook の判断や `done_criteria` を示す例として要るので、そのままにしました。
+- `size` の判断理由のコメント
+- 業務モデルを分割ファイルでも 1 ドメインにまとめる `_ASSUMPTION_`
+- 配列順は Schedule とは関係ないというコメント
+- どちらの分類にも当てはまりそうなドメインの所属理由
+- 同梱されていない他ドメインのカタログについての `_ASSUMPTION_`
+
+必須キー（`id` / `type` / `status` / `rulebook` / `title` / `size` / `groups`、各ドメインの `domain` → `name` → `overview` の順）はそろっています。足すべき内容は見つかりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確かめ、dct-index-sample.yaml の先頭コメントで共通サンプル文脈を繰り返していた 2 行を削除した。足すべき内容はなかった。schema 検査と Prettier は通った。","handoff":["No: 1 / 段: R1 目的の過不足 / 箇所: docs/ja/specdojo/samples/dct-index-sample.yaml の先頭コメント 5〜6 行目（「単一店舗・タブレット1台で…」「EC、本格会計、仕入れ先とのシステム連携は対象外。本部 API を使う CLI 固有の拡張例は含めない。」） / 指摘: 共通サンプル文脈の前提条件をそのまま繰り返している。索引の目的（分類・表示順・表示名・概要・`size`）の判断にも使われていない。本部 API の一文はこの sample の主題に関係がない / 直した案: 2 行を削除し、共通サンプル文脈を指す 4 行目のコメントは残した / 根拠: [[specdojo:dct-index-rulebook]] の「全体方針」で、索引のドメインは実在する `dct-*.yaml` と一致させるもので、対象範囲から選ばない。[[specdojo:sample-authoring-standard]] の「サンプル群の目的」は記述を対象文書の説明に要る範囲に限るよう求める。`vp-arc-conciseness`（正本の再掲） / 印: 要判断（`T-KATA-WAVE-1-dct-index-050` でわざと加えられた行のため。対象外のドメインがない理由を残したい場合は元に戻す）","No: 2 / 段: R1 目的の過不足 / 箇所: sample 全体 / 指摘: 足すべき内容はない。必須キー（`id`・`type`・`status`・`rulebook`・`title`・`size`・`groups`、ドメインの `domain`→`name`→`overview` の順）はそろっている。`size` の判断理由、分割ファイルを 1 ドメインにまとめる `_ASSUMPTION_`、配列順は Schedule と関係ないことの注記、どちらの分類にも当てはまりそうなドメインの所属理由、同梱されていない他カタログの `_ASSUMPTION_` は rulebook の判断の例として要るので残した / 直した案: 変更なし / 根拠: [[specdojo:dct-index-rulebook]] の「本文要件」「記述ガイド」、dct-kata.yaml の `done_criteria` / 印: なし"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-index-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

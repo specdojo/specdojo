@@ -1,0 +1,50 @@
+R3 の文章修正を sample に反映しました。整形と差分検査は成功しています。指摘7件を reporter 向けに引き継ぎます。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "cxd-sample の読みやすさを7件改善。意味・制約・章構成・図を維持し、整形と差分検査に成功した。",
+  "handoff": [
+    "R3-1: R3 / 箇所: 第1章、第3.3節、第4.1節 / 指摘: CLI・API・USB の初出に正式名の補足がない / 直した案: 本文の初出にコマンドラインインターフェース、Application Programming Interface、Universal Serial Bus を添えた / 根拠: W8 / 印: -",
+    "R3-2: R3 / 箇所: 第3.3節 External Software System（外部システム） / 指摘: 「これは」で受けた一文に、学習用の仮定と初期範囲外の制約が重なっている / 直した案: 「この外部 API」と対象を明示し、仮定と複数店舗管理・本格会計連携を加えない制約を別の文にした / 根拠: W3、W4 / 印: -",
+    "R3-3: R3 / 箇所: 第3.3節のレシート印刷基盤の行 / 指摘: 「会計を維持し、控えと紙面を確認して再印刷を判断する」では、システムと人の行為の主体が分かれない / 直した案: 会計を維持する主体を CLI、控えと紙面を確認して再印刷を判断する主体を店番担当と明示した / 根拠: W1。clis-sample の操作主体と ifx-cmd-sample の店頭利用者による手動再印刷の記述を確認した / 印: -",
+    "R3-4: R3 / 箇所: 第4.1節の会計確定通知の前提 / 指摘: 「確認してから行うという学習用の前提を置く」が間接的で、通知主体も省略されている / 直した案: 「学習用の前提として、CLI は…確認してから会計確定を通知する」とした / 根拠: W1、W3 / 印: -",
+    "R3-5: R3 / 箇所: 第4.1節の認証管理の箇条書き / 指摘: 本部 API の認証と USB 直結機器の権限管理という異なる境界の論点が一項目にまとまっている / 直した案: 本部 API の認証管理と印刷基盤の権限管理を二つの項目に分けた / 根拠: vp-ux-readability。specdojo-philosophy 第3.6節の一項目一論点に従った / 印: -",
+    "R3-6: R3 / 箇所: 第4.2節の正常会計と引き継ぎの行 / 指摘: 「両者」の参照先を、関係 ID から別の表へたどる必要がある / 直した案: 「店主代表・家族利用者代表のそれぞれの操作」と明記した / 根拠: W4 / 印: -",
+    "R3-7: R3 / 箇所: 第5章の架空の本部 API 契約の行 / 指摘: 期待結果の確認まで受入を保留する条件と、結果不明取引の自動再送禁止が一文につながっている / 直した案: 受入保留の条件と自動再送禁止を別々の文にした / 根拠: W3 / 印: -",
+    "reporter 向け記録: 変更ファイルは docs/ja/specdojo/samples/cxd-sample.md のみ。上記7件を result の実施内容に指定の Markdown 表として1回だけ記載し、申し送りには表を重ねないこと。result 自体は executor では編集していない。",
+    "進め方と実践の型の適用への記録: kata-guide 第6章の W1〜W10、specdojo-philosophy 第3.6節、Rulebook 記述標準の用語統一規約、Sample 記述標準、cxd-rulebook、cxd-recipe、cxd-template、共通レビュー観点、用語集、grade sidecar、R1・R2 result、操作・印字連携の関連 sample を確認した。R2 の仮定の配置を維持し、今回の変更は文章表現と箇条書きの論点分離に限定した。前提・例外・制約・解消条件、章順、表の列、図、参照先、frontmatter は維持した。W2・W5・W6・W7・W9・W10 に追加修正を要する問題は認めず、判断情報を失わず削除できる冗長記述も認めなかった。根拠不足による見送りや要判断の指摘はない。",
+    "F001 の扱い: grade sidecar と実文書を照合し、sample の Person 表の列名が cxd-rulebook 第6.3.2節と一致することを確認した。template 側の列名不一致は前段から R5 へ申し送り済みであり、R3 の観点外のため再指摘・編集していない。未解消事項として従来の R5 への申し送りを継続する。指定された親検証は runner に委ねる。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "passed",
+      "summary": "対象 sample の整形に成功した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式のエラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "YAML・YML ファイルを変更していない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "変更は samples 配下のみで、docs/ja/projects/ 配下の成果物を変更していない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "履歴ファイル・plan・result を変更していない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

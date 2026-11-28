@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-mip-index-sample-040",
+  "run_id": "T-KATA-WAVE-5-mip-index-sample-040-20261123T055125Z-1ce60d51",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T05:52:07.452Z",
+    "completed_at": "2026-11-23T05:55:16.850Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/mip-index-rulebook.md | 230 +++++------------------\n 1 file changed, 45 insertions(+), 185 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "passed",
+      "summary": "整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:mip-index-rulebook\n  type: rulebook\n  deliverable_type: project\n  status: draft\n  recipe: undecided\n  sample: specdojo:mip-index-sample\n  template: undecided\n---\n\n# 移行計画 作成ルール\n\nMigration Plan (MIP) Documentation Rules\n\n移行計画（`mip-index`）は、移行の範囲・方式・成功条件・切替判断を固定し、移行の合意と GO/NO-GO の判断に使う文書です。本書はその作成基準を定めます。\n\n## 1. 全体方針\n\n- 判断に必要な情報（停止許容時間、許容誤差、GO/NO-GO 基準）を必ず含める。\n- カットオーバーは骨格（マイルストーン・判定点・ロ\n… output omitted …\n件と失敗時の扱い（ロールバック・延期・代替手順のいずれか）があり、成功条件の表と矛盾しないこと。\n- **良い例**: 「T-60分 ／ 新DB投入・照合 ／ 成功条件の件数・金額基準に合格 ／ GO3 ／ 投入データを移行実行ID単位で無効化し旧系で継続」。\n- **悪い例**: 分単位の作業チェックリストを並べ、判定点と失敗時の扱いがない。\n\n## 7. 禁止事項\n\n| 禁止事項 | 理由 |\n| - | - |\n| スコープ（対象/非対象）を曖昧に書く | 合意形成と実行判断が不能になるため |\n| 成功条件・受入基準や GO 判断主体を記載しない | GO判断の基準点と責任がなくなるため |\n| カットオーバー概要（判定点/ロールバック方針）を省略する | 当日判断と失敗時対応が不明確になるため |\n| テーブル/項目レベルのマッピングや変換ロジックを本書に詳細記載する | 下位ドキュメントと二重管理になり、更新不整合を起こすため |\n| 分単位の作業チェックリストや手順書を本書に全面記載する | Runbookの責務を侵食し、運用時に参照先が割れるため |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6064 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6064 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-mip-index-sample-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 7ms\n[par\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1981}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  14:57:12\n   Duration  2.98s (transform 6.52s, setup 1.01s, import 9.70s, tests 6.64s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-mip-index-sample-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-mip-index-sample-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "mip-index-rulebook を簡潔にした。完成例の章を削除し、良い例・悪い例は記述ガイドへ移した。本文要件を表にまとめた。F001（`based_on` の上流の例）と F002（下流 `dmd-*`/`mtp-*`/`cop-*`/`otp-*` の追従と担当 Role code）に対応した。sample・recipe・template は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "result の『進め方と実践の型の適用』に書く内容: F001 は、推奨 Frontmatter 項目に `based_on` の上流の例（`prj-scope`・`nfr-*`・`bac-*`/`sac-*`・`opd-index`）を挙げて解消した。F002 は、位置づけの表に下流ごとの追従の担当（ARC・DEV／QE／OPS）と改訂時の追従の規則（PM が個票で追う）を足して解消した。根拠は document-metadata-standard の『文書の改訂・廃止とライフサイクル変更管理』、rulebook-authoring-standard、先例の cop-index-rulebook と stc-index-rulebook。",
+    "削除・統合した箇所と理由: サンプル（最小）の章は plan と先例の rulebook に合わせて削除し、良い例・悪い例は記述ガイドへ移した。記述ガイドの章ごとの箇条書きは本文要件の表と重なるためまとめた（`vp-arc-conciseness`）。禁止事項のうち必須の章を省略しないという行は、本文要件の『すべて必須』と重なるため統合・削除した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-mip-index-sample-040/T-KATA-WAVE-5-mip-index-sample-040-20261123T055125Z-1ce60d51/executor.log",
+      "bytes": 4314,
+      "truncated": false
+    }
+  ]
+}

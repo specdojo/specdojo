@@ -8,14 +8,15 @@ import { registerExecCommands } from "./exec/exec.js";
 import { registerCatalogCommands } from "./catalog/catalog.js";
 import { registerDeliverableCommands } from "./deliverable/deliverable.js";
 import { registerScheduleCommands } from "./schedule/schedule.js";
-import { registerTimelineCommands } from "./dashboard/timeline.js";
 import { registerIndexCommands } from "./docs/index-command.js";
 import { registerRegisterCommands } from "./register/register.js";
 import { registerRoutineCommands } from "./routine/routine.js";
 import { registerJobCommands } from "./job/job.js";
 import { registerWatchCommand } from "./commands/watch.js";
 import { registerBuildCommand } from "./commands/build.js";
+import { registerPlaybookCommands } from "./project/playbook.js";
 import { registerWhereCommand } from "./commands/where.js";
+import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerYamlPagesCommands } from "./docs/yaml-pages-command.js";
 import { registerDashboardCommands } from "./dashboard/dashboard.js";
 import { registerGradeCommand } from "./grade/grade.js";
@@ -26,6 +27,9 @@ import { registerDevcontainerCommands } from "./devcontainer/command.js";
 import { registerInitCommand } from "./commands/init.js";
 import { registerOrchestratorCommands } from "./commands/orchestrator.js";
 import { registerGitCommand } from "./commands/git.js";
+import { registerGuardedPushCommand } from "./commands/guarded-push.js";
+import { registerUpdateCommand } from "./commands/update.js";
+import { registerProjectMoveCommand } from "./project/command.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると
@@ -55,12 +59,11 @@ async function main(): Promise<void> {
 
   registerInitCommand(program);
   registerConfigCommands(program);
-  registerProjectCommands(program);
+  registerProjectMoveCommand(registerProjectCommands(program));
   registerExecCommands(program);
   registerCatalogCommands(program);
   registerDeliverableCommands(program);
   registerScheduleCommands(program);
-  registerTimelineCommands(program);
   registerIndexCommands(program);
   registerRegisterCommands(program);
   registerRoutineCommands(program);
@@ -68,6 +71,8 @@ async function main(): Promise<void> {
   registerWatchCommand(program);
   registerBuildCommand(program);
   registerWhereCommand(program);
+  registerDoctorCommand(program);
+  registerPlaybookCommands(program);
   registerYamlPagesCommands(program);
   registerDashboardCommands(program);
   registerGradeCommand(program, {
@@ -79,6 +84,8 @@ async function main(): Promise<void> {
   registerDevcontainerCommands(program);
   registerOrchestratorCommands(program);
   registerGitCommand(program);
+  registerGuardedPushCommand(program);
+  registerUpdateCommand(program);
 
   await program.parseAsync(process.argv);
 }

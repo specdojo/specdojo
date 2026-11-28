@@ -1,5 +1,6 @@
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { spawn } from "node:child_process";
+import { AGENT_ROLE_ENV } from "../../shared/agent-role.js";
 import { existsSync, readFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
 import { extractLocalId } from "../../schedule/phase-sets.js";
@@ -11,9 +12,12 @@ import {
 } from "../../shared/specdojo-config.js";
 import {
   loadExecDefaultsConfig,
+  resolveAgentTimeout,
   resolveMemberCommand,
+  type AgentTimeout,
   type ExecDefaultsConfig,
 } from "../agent-config.js";
+import { agentTimeoutReason, usesAgentProcessGroup, waitForAgentExit } from "./agent-timeout.js";
 import {
   agentGitStateViolation,
   captureAgentGitStateSnapshot,
@@ -104,6 +108,7 @@ import {
   type RateLimitRecoveryEvent,
   type RunOpts,
 } from "./shared.js";
+import { resultMarkdownlintValidator } from "../result-markdownlint.js";
 
 // Resolve the agent command and the actor for an in-place run, ignoring task state. Unlike the
 // worktree flow, this never requires the task to be claimable. The actor is derived the same way
@@ -220,7 +225,8 @@ export async function spawnAgentInPlace(
   executionPath: string,
   resultPath?: string,
   provider?: AgentProvider,
-): Promise<number> {
+  timeout?: AgentTimeout,
+): Promise<{ exitCode: number; blockReason?: string }> {
   const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
   const gitStateBefore = captureAgentGitStateSnapshot(cwd);
   const products = configuredProductCheckouts(schedulePath);
@@ -238,20 +244,22 @@ export async function spawnAgentInPlace(
         SPECDOJO_SCHEDULE_PATH: schedulePath,
         SPECDOJO_EXECUTION_PATH: executionPath,
         ...productRepoEnvironment(cwd, products),
+        [AGENT_ROLE_ENV]: "executor",
       },
       shell: true,
       stdio: ["pipe", "inherit", "inherit"],
+      detached: usesAgentProcessGroup(timeout),
     },
   );
   // executeAgent と同じ理由で、stdin を読まないコマンドの EPIPE は無視する。
   const stopTracking = trackExecutor(child.pid, cwd);
   child.stdin.on("error", () => undefined);
   child.stdin.end(prompt);
-  const exitCode = await new Promise<number>((resolveExit) => {
-    child.once("error", () => resolveExit(1));
-    child.once("close", (code) => resolveExit(code ?? 1));
-  });
+  const exit = await waitForAgentExit(child, timeout);
   stopTracking();
+  const exitCode = exit.timedOut || exit.spawnError ? 1 : (exit.exitCode ?? 1);
+  // 保護の検査は時間切れでも飛ばさない。どちらも無ければ時間切れを止まった理由にする。
+  const timeoutReason = exit.timedOut && timeout ? agentTimeoutReason(timeout) : undefined;
   const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
     const reason = agentProtectedConfigViolation(protectedConfigChanges);
@@ -265,7 +273,7 @@ export async function spawnAgentInPlace(
       }),
       resultPath,
     );
-    return 1;
+    return { exitCode: 1 };
   }
   const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
   if (gitStateChanges.length > 0) {
@@ -281,9 +289,13 @@ export async function spawnAgentInPlace(
       }),
       resultPath,
     );
-    return 1;
+    return { exitCode: 1 };
   }
-  return exitCode;
+  if (timeoutReason) {
+    process.stderr.write(`blocked: ${timeoutReason}\n`);
+    return { exitCode, blockReason: timeoutReason };
+  }
+  return { exitCode };
 }
 
 // Default run path: generate the plan on demand and run the agent in the current
@@ -644,6 +656,11 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         plan: planPrompt,
         evidence: reporterEvidence,
         mode: task.mode ?? "edit",
+        validateOutput: resultMarkdownlintValidator({
+          repoRoot,
+          resultPath,
+          evidence: reporterEvidence,
+        }),
         invoke: async (reporterPrompt) => {
           const reporterOutcome = await runWithRetry(
             reporterCandidates ?? [],
@@ -748,7 +765,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       exitCode = outcome.exitCode && outcome.exitCode !== 0 ? outcome.exitCode : 1;
     }
   } else {
-    exitCode = await spawnAgentInPlace(
+    const spawned = await spawnAgentInPlace(
       command,
       prompt,
       repoRoot,
@@ -756,7 +773,10 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       executionPath,
       resultPath,
       provider,
+      resolveAgentTimeout(execDefaults, provider),
     );
+    exitCode = spawned.exitCode;
+    pipelineBlockReason = spawned.blockReason;
   }
 
   // Some agents (notably `claude -p`) exit 0 even when they conclude they are blocked: a

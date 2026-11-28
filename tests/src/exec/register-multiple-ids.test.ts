@@ -6,8 +6,33 @@ import {
   registerRunExitCode,
   selectRegisterCommitPaths,
   selectRegisterRunArtifactResidue,
+  selectRunCommitId,
   type RegisterItemSummary,
 } from "../../../src/exec/register.js";
+
+describe("selectRunCommitId", () => {
+  const integrationCommit = "1111111111111111111111111111111111111111";
+
+  it("run が commit を作っていなければ HEAD ではなく統合の commit を返す", () => {
+    const actual = selectRunCommitId({
+      headBefore: "aaaaaaaaaaaaaaaa",
+      headAfter: "aaaaaaaaaaaaaaaa",
+      integrationCommit,
+    });
+
+    expect(actual).toBe("111111111111");
+  });
+
+  it("run が commit を作って HEAD が動いたときはその HEAD を返す", () => {
+    const actual = selectRunCommitId({
+      headBefore: "aaaaaaaaaaaaaaaa",
+      headAfter: "bbbbbbbbbbbbbbbbbbbb",
+      integrationCommit,
+    });
+
+    expect(actual).toBe("bbbbbbbbbbbb");
+  });
+});
 
 describe("parseRegisterIds", () => {
   it("単一の文字列を1件のリストへ正規化する", () => {

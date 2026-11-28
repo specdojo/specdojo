@@ -1,0 +1,33 @@
+`docs/ja/specdojo/samples/otp-sample.md` を全面的に書き直し、`otp-hypercare`（ハイパーケアの当番表と問合せの記録方法）の完成例にしました。題材は駄菓子屋きぬや（単一店舗・タブレット 1 台）です。変更したのはこの 1 ファイルだけで、rulebook と result は触っていません。prettier と markdownlint は 0 件でした。
+
+**主な変更点**
+- **他業種の題材を除去（F001・F024）:** API 5xx・#ops・Ops2+Biz1 といった一般企業向けの内容を消し、当番表・問合せ記録・店番メモを見張る内容に書き換えました。
+- **概要（F007・F008・F026）:** 守るべき価値として「店主代表がいない時間も記録を続ける」を書き、対象範囲・関わる役割・対象外（`cop-cutover-day`、`otp-index`）を明記しました。
+- **共通方針と重ねない:** rulebook に従い、`otp-index` が決めていることは値を書かずに「`otp-index` に従う」とし、本書固有の追加と差分だけを書きました。上書きは初期増員体制の「正本切替から 3 営業日は P3 も当日中に回答」の 1 件で、理由も添えています。
+- **章ごとの補完:**
+  - 監視/アラートの初動に、一次応答の期限とエスカレーション条件を入れました。
+  - リストアに完了基準と RTO/RPO（仮置き）を書きました。
+  - 権限は正本切替の前後でどう変わるかと、検証方法を書きました。
+  - 問合せ記録の書き方の表と、一次対応で止めずに渡す条件を加えました。
+  - 障害時は、重大度・影響範囲・復旧見込みごとに誰へ上げて何を決めるかを表にしました。
+  - 当番表の記入例、旧ノートの停止と参照の扱い、クローズ条件ごとの判定値・測定方法・判断者・最終報告物を書きました。
+- **細かな直し:**
+  - 「問合せ」に表記をそろえました（F027）。
+  - 第 11 章の見出しを「関連ドキュメント」に直しました（F022）。
+  - frontmatter に `based_on` を宣言しました（F005）。
+  - 参照先の仮置きは `opr-support` などのバッククォート ID にしました（F014）。
+
+**findings で対応を変えた点**
+- **F002・F003・F021:** クローズを判断する店主代表は業務の中身として書きました。文書の承認者は PJR-76N9 に従って書いていません。
+- **F004:** 旧ノートの参照期間は推測で埋めず、`_UNDECIDED_` のまま残しました。
+
+**決めていただく値と、合わせて直すべき点**
+- 旧ノートの参照・保管期間（`dmd-index` で店主代表が決める値）。
+- 開発担当が店に来られる時間帯（平日 16 時以降を仮定）。
+- RTO/RPO の値（「前日の日次締め時点に戻し、翌営業日の開店前に再開」を仮定）。
+- 役割の書き方は、共通サンプル文脈に合わせて本文を役割名でそろえました。rulebook の良い例は「OPS 2 名」と Role code で書いているので、どちらで書くかを rulebook 側で整理するよう提案します。
+- `otp-index-sample` の見出しが「関連ドキュメント（必須）」のままで、rulebook と食い違っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/otp-sample.md` を `otp-hypercare`（ハイパーケアの当番表と問合せ記録）の完成例として全面的に書き直した。題材を駄菓子屋きぬやに統一し、`otp-index` の共通方針は「従う」と書いて差分だけを記述、rulebook の 11 章の必須項目を埋め、grade の finding F001〜F029 に対応した。rulebook と result は変更していない。","handoff":["決める必要のある値: 旧ノートと当番表・問合せ記録の参照・保管期間（`_UNDECIDED_`。`dmd-index` で店主代表が決め、ハイパーケアのクローズ判定までに確定する）。","仮置きの値（`_ASSUMPTION_`）: 開発担当が店に来られるのは平日 16 時以降と休日。RTO/RPO は前日の日次締め時点に戻し、翌営業日の開店前に再開する。","F002・F003・F021（承認者・最終承認責任者）: クローズの判断者（店主代表）は業務の中身として書いた。文書の承認者・承認の進み具合は PJR-76N9 に従って書いていない。","F011・F025・F027（役割の書き方）: 本文の役割表記は、`sample-authoring-standard` の共通登場人物の役割名にそろえた。rulebook の記述ガイド「当番と窓口の書き方」の良い例は「OPS 2 名 + 業務 1 名」と Role code で書いており、本文は役割名・責務の項目は Role code とする sample 標準と食い違うため、rulebook の例を役割名に直すか Role code を使う範囲を明記する変更案とする。","rulebook の記述ガイド「監視と障害時の判断」の良い例（API 5xx・#ops・運用責任者）は共通サンプル文脈と業種が違うため、駄菓子屋の文脈の例へ直す変更案とする。","`otp-index-sample` の第 11 章の見出しが「関連ドキュメント（必須）」のままで、rulebook の「関連ドキュメント」と食い違う（本タスクの対象外のため変更していない）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"整形済み（表の列幅をそろえた）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は `docs/ja/specdojo/samples/otp-sample.md` だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "queue_id": "day-b-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T00:03:08.987Z",
+  "updated_at": "2026-11-23T00:48:12.720Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-SV9G",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:03:12.738Z",
+      "completed_at": "2026-11-23T00:10:52.151Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-QHES",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:10:52.154Z",
+      "completed_at": "2026-11-23T00:37:27.359Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-30PT",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T00:37:27.373Z",
+      "completed_at": "2026-11-23T00:48:12.715Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

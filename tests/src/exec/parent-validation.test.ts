@@ -19,6 +19,7 @@ import {
   resolveParentValidationDefinitions,
   runParentValidationBatch,
   runParentValidations,
+  validationExitTiming,
   type ParentValidationInvoker,
 } from "../../../src/exec/parent-validation.js";
 import {
@@ -161,7 +162,7 @@ describe("parent validation allowlist", () => {
 
   it("lists the allowed IDs when rejecting an unknown ID", () => {
     expect(() => resolveParentValidationDefinitions(["lint"])).toThrow(
-      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, build, format-check/,
+      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, lint-fm-changed, lint-md-changed, test-docs, lint-mermaid, lint-d2, build, format-check/,
     );
   });
 
@@ -264,6 +265,39 @@ describe("parent validation allowlist", () => {
       expect(firstLog).toContain("FAILED tail-case; Tests 1 failed");
       expect(firstLog).not.toContain("raw-secret-value");
       expect(JSON.parse(await readFile(evidencePath, "utf8"))).toEqual(second);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("names the elapsed time and the npm script stage of a timed-out validation", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "specdojo-parent-validation-timeout-"));
+    try {
+      const evidenceDir = path.join(root, "execution", "exec", "evidence", "task", "run");
+      await mkdir(evidenceDir, { recursive: true });
+      const batch = await runParentValidationBatch(["validate-schema"], root, async () => ({
+        exitCode: null,
+        stdout: "> specdojo@0.9.2 validate:schema:glossary",
+        stderr: "",
+        timedOut: true,
+        durationMs: 648_895,
+        stage: "validate:schema:glossary",
+      }));
+
+      expect(batch.validations[0].summary).toMatch(
+        /^timed out after 649s \(stage: validate:schema:glossary\): /u,
+      );
+      expect(failedParentValidationReason(batch.validations)).toBe(
+        "parent validation failed: validate-schema (timed out after 649s (stage: validate:schema:glossary))",
+      );
+      const recorded = recordParentValidationFailureOutput({
+        worktreePath: root,
+        evidencePath: path.join(evidenceDir, "evidence.json"),
+        evidence: { ...evidenceWithRunnerStatus("failed"), validations: batch.validations },
+        failureOutputs: batch.failureOutputs,
+      });
+      const log = await readFile(path.join(root, recorded.log_refs.at(-1)?.path ?? ""), "utf8");
+      expect(log).toContain("timed out: yes\nelapsed: 649s\nstage: validate:schema:glossary\n");
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -388,7 +422,7 @@ describe("parent validation repository assignment", () => {
 
   it("rejects malformed entries, unknown IDs and duplicate (id, repo) pairs", () => {
     expect(() => resolveParentValidationAssignments([{ id: "test-unit" }])).toThrow(
-      /pipeline\.parent_validations\[0\] in exec-defaults must set repo or paths/,
+      /pipeline\.parent_validations\[0\] in exec-defaults must set repo, paths, parallel or related/,
     );
     expect(() => resolveParentValidationAssignments([{ id: "test-unit", repo: "App1" }])).toThrow(
       /\.repo must match/,
@@ -706,5 +740,101 @@ describe("parent validation selection by change type", () => {
     expect(() => resolveParentValidationAssignments([{ id: "test-unit", paths: [] }])).toThrow(
       /\.paths must be a non-empty array/,
     );
+  });
+});
+
+describe("parent validation for documentation-only changes (PJR-50RQ)", () => {
+  const entries = [
+    { id: "lint-md-changed", parallel: true },
+    { id: "lint-fm-changed", parallel: true },
+    { id: "lint-md", paths: ["packages/docs-lint/**"], parallel: true },
+    { id: "test-docs", paths: ["docs/ja/specdojo/**", "docs/specdojo/**"] },
+    { id: "test-unit", paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*"] },
+    { id: "test-integration", paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*"] },
+  ];
+  const statusesFor = async (changedPaths: string[]) => {
+    const invoker: ParentValidationInvoker = async () => ({ exitCode: 0, stdout: "", stderr: "" });
+    const validations = await runParentValidations(entries, "/repo", invoker, { changedPaths });
+    return Object.fromEntries(validations.map(({ id, status }) => [id, status]));
+  };
+
+  it("runs test-docs and not the full tests for a documentation change", async () => {
+    expect(await statusesFor(["docs/ja/specdojo/guides/a.md"])).toEqual({
+      "lint-md-changed": "passed",
+      "lint-fm-changed": "passed",
+      "lint-md": "not_applicable",
+      "test-docs": "passed",
+      "test-unit": "not_applicable",
+      "test-integration": "not_applicable",
+    });
+  });
+
+  it("runs the full tests for a src change and skips test-docs", async () => {
+    expect(await statusesFor(["src/exec/a.ts"])).toMatchObject({
+      "test-docs": "not_applicable",
+      "test-unit": "passed",
+      "test-integration": "passed",
+    });
+  });
+
+  it("runs adjacent parallel validations concurrently and keeps list order", async () => {
+    let running = 0;
+    let peak = 0;
+    const invoker: ParentValidationInvoker = async () => {
+      running++;
+      peak = Math.max(peak, running);
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      running--;
+      return { exitCode: 0, stdout: "", stderr: "" };
+    };
+    const validations = await runParentValidations(entries, "/repo", invoker);
+
+    expect(peak).toBe(3);
+    expect(validations.map(({ id }) => id)).toEqual(entries.map(({ id }) => id));
+  });
+
+  it("rejects a non-boolean parallel", () => {
+    expect(() => resolveParentValidationAssignments([{ id: "lint-md", parallel: "yes" }])).toThrow(
+      /\.parallel must be a boolean/,
+    );
+  });
+});
+
+describe("validationExitTiming (PJR-P8SX)", () => {
+  it("splits the gate-holding time into the child's last output and the runner's detection lag", () => {
+    const timing = validationExitTiming({
+      spawnedAt: 1_000_000,
+      settledAt: 1_190_000,
+      lastWriteAt: 1_005_000,
+      eventLoopDelayMaxMs: 160_000.4,
+    });
+
+    expect(timing).toEqual({
+      duration_ms: 190_000,
+      last_output_ms: 5_000,
+      detection_lag_ms: 185_000,
+      event_loop_delay_max_ms: 160_000,
+    });
+  });
+
+  it("omits the split when the child wrote no output", () => {
+    const timing = validationExitTiming({
+      spawnedAt: 1_000,
+      settledAt: 3_000,
+      eventLoopDelayMaxMs: 0,
+    });
+
+    expect(timing).toEqual({ duration_ms: 2_000, event_loop_delay_max_ms: 0 });
+  });
+
+  it("clamps a last write outside the run window to the run itself", () => {
+    const timing = validationExitTiming({
+      spawnedAt: 1_000,
+      settledAt: 3_000,
+      lastWriteAt: 3_500,
+      eventLoopDelayMaxMs: 0,
+    });
+
+    expect(timing).toMatchObject({ last_output_ms: 2_000, detection_lag_ms: 0 });
   });
 });

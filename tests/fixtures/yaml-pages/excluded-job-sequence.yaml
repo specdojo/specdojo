@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/job.schema.yaml
+id: job-sequence
+name: 再開から検査までの順次実行
+inputs:
+  resume_task:
+    type: string
+    required: true
+  track:
+    type: string
+    required: true
+  track_end_task:
+    type: string
+    required: true
+  schedule_state:
+    type: string
+    required: true
+  register_item:
+    type: string
+    required: true
+  register_ticket:
+    type: string
+    required: true
+  grade_path:
+    type: string
+    required: true
+task:
+  mode: command
+  lock_wait_seconds: 3600
+  steps:
+    - id: resume
+      command: |
+        {{specdojo}} exec resume --project "{{project_id}}" --task "{{inputs.resume_task}}" --if-busy wait
+        {{specdojo}} exec refresh --project "{{project_id}}"
+      completion:
+        path: "{{inputs.schedule_state}}"
+        field: "tasks.{{inputs.resume_task}}.state"
+        succeeded: [done]
+        deferred: [todo, doing, blocked]
+    - id: auto-track
+      command: |
+        {{specdojo}} exec run --project "{{project_id}}" --auto --track "{{inputs.track}}" --loop --max-rounds 20 --if-busy wait
+        {{specdojo}} exec refresh --project "{{project_id}}"
+      completion:
+        path: "{{inputs.schedule_state}}"
+        field: "tasks.{{inputs.track_end_task}}.state"
+        succeeded: [done]
+        deferred: [todo, doing, blocked]
+    - id: register
+      command: >-
+        {{specdojo}} exec run --project "{{project_id}}"
+        --register "{{inputs.register_item}}" --worktree --if-busy wait
+      completion:
+        path: "{{inputs.register_ticket}}"
+        field: specdojo.item_status
+        succeeded: [review, closed]
+        deferred: [in-progress, waiting]
+    - id: grade
+      command: >-
+        {{specdojo}} grade run --project "{{project_id}}" --target deliverable
+        --path "{{inputs.grade_path}}" --run-id "{{job_run_id}}-grade" --if-busy wait
+      timeout_seconds: 7200
+      on_failure: continue
+    - id: docs-build
+      command: npm run docs:build
+run:
+  idempotency_key: >-
+    {{job_id}}:{{scheduled_at}}:{{inputs.resume_task}}:{{inputs.track}}:{{inputs.track_end_task}}:{{inputs.schedule_state}}:{{inputs.register_item}}:{{inputs.register_ticket}}:{{inputs.grade_path}}

@@ -1,0 +1,26 @@
+`bac-sample` の R5（整合）を終えました。`docs/ja/specdojo/samples/bac-sample.md` を 2 行直し、食い違い 1 件は直しました。残りの 2 件は判断が要るので、本文は変えずに指摘として残しています。
+
+確かめた範囲は、`based_on` の参照先（成功基準と受入条件の sample、業務イベント `bes-sample`）、共通サンプル文脈と共通登場人物、用語集、BAC の ID を引いている 10 件ほどの sample です。BAC の ID とケースの値（C-01〜C-04、在庫 5→3・5→0、希望数 6 個）は、引いている側と一致していました。用語集には BAC に関わる語がありませんでした。
+
+grade の指摘 F001（上流の根拠と `based_on` がつながっていない）は、前の段ですでに直っていました。名指しされていた架空の参照名 `kinuya-bps-cash-sale` は本文になく、`based_on` も 2 件の sample につながっています。残っている販売プロセス `bps-sales-order-flow` の未接続は、「メモ / 将来課題」の `_TODO_` の行で追われています。
+
+- **R5-1（直した）**
+  - 指摘: BAC-01 の確定の操作で釣銭を確かめていませんでした。業務イベントの「発生条件」3 と「事実データ」は、釣銭の確認と釣銭なしの区別を求めています。
+  - 直した内容: BAC-01 の操作を「受領額と釣銭がないことを確認して」に、根拠の行を「釣銭金額」を含む形に変えました。
+- **R5-2（要判断・未変更）**
+  - 指摘: BAC-01 は成功基準の AC-01 を具体化したものです。ところが判定の確認者は、AC-01 では両代表（店主代表と家族利用者代表）なのに、BAC-01 では同行レビュー担当になっています。
+  - 迷った理由: 操作する人と確かめる人を分けるのは、詳しく書くための正当な分け方とも読めます。
+  - 直す案: 次の 2 つのどちらかを選んでいただく必要があります。
+    - BAC-01 の確認者を両代表に変える。
+    - 成功基準の sample に「詳細化で確認者を分けてよい」と注記する。
+- **R5-3（要判断・未変更、相手側の案）**
+  - 指摘: テスト戦略の sample `tsp-index-sample` の 55 行目は、「確定前の取消」を BAC-01〜BAC-03 の範囲に含めています。しかし BAC には該当するシナリオがなく、あるのは BAC-02 の在庫不足のときの購入中止だけです。
+  - 直す案: 次の 2 つのどちらかです。
+    - 相手側の 55 行目から「確定前の取消」を外す。
+    - BAC に確定前の取消のシナリオを足す。追跡表の sample `trc-requirements-to-tests-sample` も、すでに後者を課題として挙げています。
+
+検査は Prettier の整形確認だけを実行し、通りました。lint などほかの検査は後の runner が実行します。frontmatter の `status`（`ready`）は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: bac-sample の BAC-01 を業務イベントの発生条件・事実データに合わせ、釣銭の確認を足した。F001 は前の段で解消済み（based_on 接続済み、kinuya-bps-cash-sale の記述なし）。相手側・要判断の食い違い 2 件を handoff に残した。","handoff":["R5-1: R5 / 2.1. BAC-01 現金販売を確定して記録を照合する（根拠、2.1.2. 操作） / 操作と根拠が釣銭の確認を含まず、[[specdojo:bes-sample]] の「発生条件」3（受領と釣銭の確認）と「事実データ」の釣銭金額（釣銭なしも識別する）と食い違っていた / 操作を「受領額と釣銭がないことを確認して販売を確定する」に、根拠を「商品明細・請求金額・受領金額・釣銭金額」に直した / `vp-qe-kata-conformance`（参照先の bes-sample と整合） / -","R5-2: R5 / 2.1.4. 判定方法（BAC-01） / BAC-01 は AC-01 を具体化したものだが、[[specdojo:prj-success-criteria-and-acceptance-criteria-sample]] の AC-01 の確認者は「両代表」、BAC-01 の C-01・C-02 の確認者は「同行レビュー担当」で、確認者が食い違う / - / `vp-qe-kata-conformance`。迷った理由: 操作者（店番担当＝両代表）と確認者を分けるのは詳細化として妥当とも読める。案A: BAC-01 の確認者を両代表に変える。案B: prj-success-criteria-and-acceptance-criteria-sample に、詳細化した受入条件では確認者を分けてよいと注記する。どちらも採らず本文は変えなかった / 要判断","R5-3: R5 / 1. 概要（対象範囲）と 2.2. BAC-02 / [[specdojo:tsp-index-sample]] の 55 行目は「確定前の取消」を BAC-01〜BAC-03 に含めるが、bac-sample に確定前の取消のシナリオはない（近いのは BAC-02 の在庫不足のときの購入中止だけ）。atc-index-sample の 40 行目も BAC-02・BAC-03 と並べて確定前の取消を挙げている / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。相手側の案: tsp-index-sample の 55 行目から「確定前の取消」を外し、BAC の対象外か別の受入条件へ委ねる。もう一つの案は、trc-requirements-to-tests-sample の 99 行目が挙げるとおり bac-sample に確定前の取消の受入条件を足すことで、店主代表の業務判断が要る / 要判断","F001（grade、`vp-qe-kata-conformance`）: 前の段で解消済み。anchor の文（`kinuya-bps-cash-sale`）は本文になく、`based_on` は prj-success-criteria-and-acceptance-criteria-sample と bes-sample に接続済み。残っている `bps-sales-order-flow` の未接続は「メモ / 将来課題」の `_TODO_` の行で追っており、この段では変えていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bac-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history file not changed","reason":"履歴蓄積ファイル（pjr 個票・plan・result）を変更していないため"}]}
+</specdojo_executor_evidence>

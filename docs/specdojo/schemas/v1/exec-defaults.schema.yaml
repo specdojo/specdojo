@@ -48,6 +48,13 @@ properties:
       difficulty. Explicit CLI stage and recovery options override the matching route. Missing
       difficulty entries preserve the existing priority-based automatic selection.
 
+  watch:
+    $ref: "#/$defs/WatchRemedies"
+    description: >
+      Remedies that orchestrator watch-scan launches for the stall categories it classified
+      (PJR-3M4M). Every remedy defaults to none, so omitting this block keeps the watch
+      record-only. Stalls that need a decision are never remedied.
+
   providers:
     type: object
     description: >
@@ -59,7 +66,7 @@ properties:
       signals (e.g. opencode load wait / timeout, claude overloaded, copilot quota) from
       leaking across providers.
     propertyNames:
-      enum: ["opencode", "claude", "codex", "copilot", "antigravity", "custom"]
+      enum: ["opencode", "claude", "codex", "copilot", "custom"]
     additionalProperties:
       $ref: "#/$defs/ProviderOverride"
 
@@ -67,6 +74,83 @@ $defs:
   AgentNickname:
     type: string
     pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+
+  WatchDuration:
+    type: string
+    pattern: "^[1-9][0-9]*[mhd]$"
+
+  WatchRemedies:
+    type: object
+    additionalProperties: false
+    properties:
+      diagnosis:
+        type: object
+        additionalProperties: false
+        description: Read-only diagnosis proposals for needs_decision stalls; disabled when by is absent.
+        properties:
+          by:
+            $ref: "#/$defs/AgentNickname"
+            description: Dedicated review-mode member selected through command_template or member command.
+          max_per_night:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 3
+          timeout_seconds:
+            type: integer
+            minimum: 1
+            maximum: 3600
+            default: 300
+      remedies:
+        type: object
+        additionalProperties: false
+        properties:
+          usage_limit:
+            type: object
+            additionalProperties: false
+            properties:
+              action:
+                enum: [none, wait, fallback]
+                default: none
+                description: >
+                  wait resumes with the same agent once the limit resume time has passed;
+                  fallback reruns with the fallback agents at once.
+              fallback_executor_by:
+                $ref: "#/$defs/AgentNickname"
+              fallback_reporter_by:
+                $ref: "#/$defs/AgentNickname"
+              switch_after:
+                $ref: "#/$defs/WatchDuration"
+                default: 12h
+                description: >
+                  With wait, release the claim and rerun with the fallback agents when the resume
+                  time is further away than this.
+              unknown_resume_wait:
+                $ref: "#/$defs/WatchDuration"
+                default: 1h
+                description: Wait this long after the stall when the resume time cannot be read.
+          load_timeout:
+            type: object
+            additionalProperties: false
+            properties:
+              action:
+                enum: [none, rerun]
+                default: none
+          needs_target_sync:
+            type: object
+            additionalProperties: false
+            properties:
+              action:
+                enum: [none, sync]
+                default: none
+      max_attempts:
+        type: integer
+        minimum: 1
+        default: 3
+        description: Remedies per target within attempt_window before the watch stops remedying it.
+      attempt_window:
+        $ref: "#/$defs/WatchDuration"
+        default: 24h
 
   DifficultyRouting:
     type: object
@@ -108,6 +192,9 @@ $defs:
         lint-ts,
         lint-fm,
         lint-md,
+        lint-fm-changed,
+        lint-md-changed,
+        test-docs,
         lint-mermaid,
         lint-d2,
         build,
@@ -160,6 +247,27 @@ $defs:
                     one of them, and records `not_applicable` otherwise. Without `paths`, or when
                     the change set is unknown or truncated, or when the integration targets were
                     merged into the worktree, the validation always runs.
+                parallel:
+                  type: boolean
+                  description: >
+                    When true, the validation runs concurrently with the directly adjacent
+                    entries that also set `parallel: true`. Other entries run one at a time in
+                    list order. Results are recorded in list order. Use it for light lint only.
+                related:
+                  type: boolean
+                  description: >
+                    Only for `test-unit` and `test-integration`. When true, the runner follows the
+                    relative imports (and the files a test launches, such as `src/specdojo.ts`)
+                    of each test file under `tests/` and passes only the test files that depend on
+                    a changed file to the fixed npm script after `--`. It runs the full suite when
+                    the change set is unknown or truncated, when no related test is found, when a
+                    change touches the test infrastructure or settings (`vitest.*`,
+                    `tests/helpers/**`, `tests/setup/**`, `tests/fixtures/**`, `package.json`,
+                    `package-lock.json`, `tsconfig*.json`, `lefthook.yml`, `.specdojo/**`,
+                    `docs/specdojo/**`), or when a non-code file changes under `src/`, `tests/`,
+                    `tools/`, `packages/` or `scripts/`. The selected and omitted test files and
+                    the reason are recorded in the validation's `test_selection`. Without
+                    `related`, the full suite runs.
       post_integration:
         type: array
         uniqueItems: true
@@ -283,6 +391,19 @@ $defs:
         description: >
           Extra template variables resolved by member attributes. Resolution precedence is
           by_nickname, then by_proficiency, then by_mode.
+      allow_commands:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: >
+          claude and opencode only. Extra permission rules for edit-mode launch commands.
+          claude appends them as --allowedTools (deny rules in settings.edit.json still take
+          precedence); opencode adds them as bash allow rules to the launched agent's permission.bash through
+          the OPENCODE_CONFIG_CONTENT environment variable, after the agent definition's
+          "*": deny. Either way they survive `config scaffold --force`.
+        items:
+          type: string
+          pattern: "^Bash\\([^'\\\\\\r\\n]+\\)$"
       rate_limit_detection:
         $ref: "#/$defs/AgentErrorDetection"
         description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."
@@ -303,6 +424,15 @@ $defs:
           local single-model Ollama host) without lowering the global --parallel for other
           providers. When a round would exceed this, the extra tasks are deferred to a later
           round. Absent means no per-provider limit.
+      agent_timeout_seconds:
+        type: integer
+        minimum: 1
+        maximum: 2147483
+        description: >
+          Seconds one launch of this provider's agent CLI may run. When the limit is reached
+          the runner stops the CLI's process group with SIGTERM, then SIGKILL after 10
+          seconds, and blocks the run with a reason that names this key. Absent means no
+          limit: the runner waits until the CLI exits.
 
   CommandParams:
     type: object

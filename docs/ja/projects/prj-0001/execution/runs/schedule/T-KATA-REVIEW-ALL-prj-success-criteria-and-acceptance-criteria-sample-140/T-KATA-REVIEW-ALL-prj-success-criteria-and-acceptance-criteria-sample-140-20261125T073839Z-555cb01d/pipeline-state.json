@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140-20261125T073839Z-555cb01d",
+  "updated_at": "2026-11-25T07:54:24.802Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T07:39:25.814Z",
+      "completed_at": "2026-11-25T07:43:27.019Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140-20261125T073839Z-555cb01d/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-25T07:52:22.263Z",
+      "completed_at": "2026-11-25T07:53:11.026Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140-20261125T073839Z-555cb01d/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T07:53:26.722Z",
+      "completed_at": "2026-11-25T07:54:24.802Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140-20261125T073839Z-555cb01d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140-20261125T073839Z-555cb01d/result.md"
+  }
+}

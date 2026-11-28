@@ -1,0 +1,36 @@
+R4 の確かめで誤りが 1 件見つかったので、`docs/ja/specdojo/samples/tsd-sample.md` の動作確認一覧の 1 行目を直しました。
+
+**直した箇所:** 動作確認 1（DB の起動）の期待結果は「状態が `running`、再起動回数が増えていない」となっていましたが、正本と合いませんでした。
+- `fly status` の Machine 一覧では、`STATE` 列の値は `started` / `stopped` です。`running` は出ません。
+- 再起動回数は `fly status` にも `docker compose ps` にも出ないため、この基準では合否を決められません。
+- 確認方法を開発端末は `docker compose ps postgres --format '{{.State}}'` に変え、期待結果を「開発端末は `running`、DB 環境は `STATE` 列が `started`」にしました。
+
+Prettier で表を整えたので差分は 18 行（9 行追加・9 行削除）に出ますが、内容を変えたのはこの 1 行だけです。
+
+**確かめた主張(手元の Prettier 以外の検査は親 runner に任せています):**
+
+| No | 主張 | 確かめ方 | 結果 |
+| --- | --- | --- | --- |
+| 1 | `fly postgres config update` の `--max-connections` / `--shared-buffers` / `--log-min-duration-statement`（単位 ms）、`-a, --app` | Fly.io 公式のフラグ一覧を読んだ | 一致 |
+| 2 | 動作確認 1 の期待結果 `running` と再起動回数 | Fly.io の `fly status` の説明と出力例を確かめた | 不一致 → 直した |
+| 3 | `SHOW log_min_duration_statement;` が `1s`、`shared_buffers` 256MB（RAM の 25%）、再起動・再読み込みの区別 | PostgreSQL の仕様の知識と照合（ドキュメントは読み直していない） | 一致と判断 |
+| 4 | PostgreSQL 16 の保守期限が 2028 年 11 月 | PostgreSQL の版の方針の知識と照合 | 一致と判断 |
+| 5 | Prisma の `connection_limit`、`migrate status` の出力文、P1001 / P3009、`migrate resolve --rolled-back` / `--applied` | Prisma 5 の仕様の知識と照合 | 一致と判断 |
+| 6 | `pg_read_all_data`、`pg_dump -F c`、`pg_restore --clean --if-exists --no-owner` | PostgreSQL の仕様の知識と照合 | 一致と判断 |
+| 7 | cron `0 18 * * *`（UTC）が JST の 03:00、6PN が WireGuard で暗号化、`.internal` の名前解決 | 時差の計算と Fly.io の仕様の知識で照合 | 一致と判断 |
+| 8 | `fly ssh console -C "nc -zv ..."` | 確かめられない | `kinuya-app` のイメージに `nc` が入っているかは、本番イメージで確かめる必要がある |
+| 9 | `npm run test:unit -- tests/db/connection.test.ts` | 対象外 | 正本のない駄菓子屋プロジェクトの仮定 |
+
+**届いていた grade の finding:**
+- F003（本番の初期設定手順がない）、F004（バックアップの閾値）、F005（ダンプの日付の基準）、F006（切り戻し用ダンプの順序）は、前の段の修正で解消済みでした。
+- F001（`vp-pm-dependency-risk`）は kata レビューで使わない観点のため扱っていません。
+- F002（冗長さ）は R3 の観点なので、この段では扱っていません。
+
+Sources:
+- [fly postgres config update](https://docs.fly.io/flyctl/postgres-config-update)
+- [Check your app's status](https://www.fly.io/docs/hands-on/view-app/)
+- [Monitor a Postgres App](https://fly.io/docs/postgres/managing/monitoring/)
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: tsd-sample の事実を正本と突き合わせ、動作確認 1 の期待結果の誤り（fly status の STATE は started、再起動回数は表示されない）を直した。ほかの主張は一致と判断し、`nc` の有無は確かめられないとして残した。F003〜F006 は前の段で解消済み、F001・F002 は R4 の観点外。","handoff":["R4 確かめの表 No1: `fly postgres config update` の `--max-connections`/`--shared-buffers`/`--log-min-duration-statement`（ms）、`-a, --app` | 正本: https://docs.fly.io/flyctl/postgres-config-update | 確かめ方: 公式のフラグ一覧を読んだ | 結果: 一致","R4 確かめの表 No2: 動作確認 1 の期待結果「状態が `running`、再起動回数が増えていない」 | 正本: https://www.fly.io/docs/hands-on/view-app/ | 確かめ方: `fly status` の Machine 一覧の出力例を読んだ | 結果: 不一致。STATE 列は `started`/`stopped` で、再起動回数は出ない → 確認方法を `docker compose ps postgres --format '{{.State}}'` と `fly status --app kinuya-db` にし、期待結果を「開発端末は `running`、DB 環境は `STATE` 列が `started`」に直した","R4 確かめの表 No3: `SHOW log_min_duration_statement;` が `1s`、`shared_buffers` 256MB（RAM の 25%）、`max_connections`/`shared_buffers` は再起動、`log_min_duration_statement` は再読み込み | 正本: PostgreSQL 16 の仕様 | 確かめ方: 知識で照合（ドキュメントは読み直していない） | 結果: 一致と判断","R4 確かめの表 No4: PostgreSQL 16 の保守期限 2028 年 11 月 | 正本: PostgreSQL の版の方針 | 確かめ方: 知識で照合 | 結果: 一致と判断","R4 確かめの表 No5: Prisma の `connection_limit`、`migrate status` の出力 `Database schema is up to date!`、P1001/P3009、`migrate resolve --rolled-back/--applied`、`prisma -v` | 正本: Prisma 5 の仕様 | 確かめ方: 知識で照合 | 結果: 一致と判断","R4 確かめの表 No6: `pg_read_all_data`（PG14 以降）、`pg_dump -F c`、`pg_restore --clean --if-exists --no-owner`、`fly ssh sftp get`、`fly scale count`、`fly machine restart` | 正本: PostgreSQL と flyctl の仕様 | 確かめ方: 知識で照合 | 結果: 一致と判断","R4 確かめの表 No7: cron `0 18 * * *`（UTC）= JST 03:00、6PN は WireGuard で暗号化、`.internal` の名前解決 | 正本: Fly.io のネットワークの仕様 | 確かめ方: 時差の計算と知識で照合 | 結果: 一致と判断","R4 確かめの表 No8: `fly ssh console --app kinuya-app -C \"nc -zv kinuya-db.internal 5432\"` | 正本: `kinuya-app` のイメージ | 結果: 確かめられない。イメージに `nc` が入っているかは本番イメージで確かめる必要がある","R4 確かめの表 No9: `npm run test:unit -- tests/db/connection.test.ts` | 結果: 対象外（正本のない駄菓子屋プロジェクトの仮定）","grade の finding: F003〜F006 は前の段の修正で解消済み。F001（`vp-pm-dependency-risk`）は kata の段のレビューで使わない観点、F002（`vp-arc-conciseness`）は R3 の観点のため、この段では扱わない"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/tsd-sample.md","status":"passed","summary":"表の列幅を整形した"}]}
+</specdojo_executor_evidence>

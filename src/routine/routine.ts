@@ -1,4 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -437,7 +436,7 @@ function findJobRunId(
         return run.run_id;
       }
     } catch {
-      // Job Run の検証は job 側の責務。履歴追記では壊れた別 Run を無視する。
+      // job run の検証は job 側の責務。履歴追記では壊れた別 Run を無視する。
     }
   }
   return undefined;
@@ -531,8 +530,6 @@ export function registerRoutineCommands(program: Command): void {
   const routine = program
     .command("routine")
     .description("Periodic task execution from rtn-*.yaml definitions");
-
-  registerDeprecatedWhereAlias(routine, printRoutinePaths);
 
   // --- validate ---
   const validateCmd = routine.command("validate").description("Validate rtn-*.yaml definitions");

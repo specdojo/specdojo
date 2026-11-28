@@ -1,0 +1,12 @@
+`nfr-performance-sample.md` の冗長な箇所を 1 か所直しました。「未決事項」表の先頭 3 行は、「性能要件一覧」の基準欄にある暫定判定を言い換えていました。この 3 行の「当面の扱い」を「『性能要件一覧』の暫定の判定に従う」へ置き換えています。
+
+直した後に Prettier と markdownlint-cli2 を実行しました。markdownlint は指摘 0 件です。Prettier は整形のために 1 回走らせました。親 runner の検査はこの環境では実行していません。
+
+保持した箇所は次のとおりです。
+- 「未決事項」表の後半 3 行（商品数・販売記録の件数、処理件数、ホスティング環境）は、要件一覧にない固有の内容なので残しました。
+- 「測定・検証方法」の末尾の判定段落は、測定結果の pass / fail の規則なので残しました。
+- 冒頭の「概要」の業務影響は、基準値の厳しさの根拠なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"未決事項表の先頭3行の「当面の扱い」を、性能要件一覧の暫定判定への参照に置き換えた。ほかの箇所は判断に要る内容として保持した。","handoff":[],"condense_records":[{"location":"6. 未決事項 の表の先頭3行（会計確定の応答時間、商品検索・つけ残高表示、日次締め）の「当面の扱い」","category":"canonical-restatement","action":"reference","reason":"性能要件一覧の基準欄にある暫定判定を再掲していたため、一覧への参照に置き換えた。判定内容は一覧に残るので意味は変わらない。","cause":{"type":"document"}},{"location":"6. 未決事項 の表の後半3行、4. 測定・検証方法 の末尾の判定段落、1. 概要 の業務影響","category":"repetition","action":"retain","reason":"ほかの章にない固有の扱い・判定規則・基準値の根拠なので、判断に要る内容として残した。","cause":{"type":"document"}}],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-performance-sample.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-performance-sample.md","status":"passed","summary":"整形を適用した"}]}
+</specdojo_executor_evidence>

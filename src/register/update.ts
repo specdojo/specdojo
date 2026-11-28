@@ -8,6 +8,7 @@ import { buildRegisterEvent, type RegisterEventAction } from "./events.js";
 import { parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
 import {
   applyRegisterItemFields,
+  assertStatusAllowedForType,
   formatRegisterItemFields,
   PJR_ID_RE,
   registerItemFieldsFromItem,
@@ -54,17 +55,15 @@ export function loadItemForUpdate(
 
 type TerminalRegisterCommand = "close" | "reject" | "defer";
 
-// note は未対応項目ではなく、open のまま更新し続ける記録である。終端操作による書き込みを
-// 始める前に共通ガードを通し、対応・回答・判断が必要な場合は別項目の起票へ誘導する。
+// 使い終わった note は close で done にする。reject / defer は書き込み前に拒否する。
 export function assertTerminalOperationAllowed(
   item: PjrItem,
   command: TerminalRegisterCommand,
 ): void {
-  if (item.type !== "note") return;
+  if (item.type !== "note" || command === "close") return;
   throw new Error(
-    `Cannot ${command} ${item.id}: item type "note" is non-terminal and must remain open. ` +
-      `Create a todo, question, decision, or another appropriate item type when action, ` +
-      `an answer, or a decision is required.`,
+    `Cannot ${command} ${item.id}: item type "note" does not use rejected or deferred. ` +
+      `Use "register close" to mark a no-longer-needed note as "done".`,
   );
 }
 
@@ -90,6 +89,8 @@ export function applyItemUpdate(opts: {
   if (!ticketPath) {
     throw new Error(`Item ${opts.view.id} has no ticket file to update`);
   }
+
+  assertStatusAllowedForType(opts.updated.type, opts.updated.status, opts.updated.id);
 
   const label = opts.action ?? `→ ${opts.updated.status}`;
   const updates: RegisterItemFieldUpdates = {

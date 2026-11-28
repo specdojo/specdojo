@@ -4,12 +4,11 @@ document: specdojo:cdfd-overview-recipe
 path: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 97
-graded_at: "2026-11-19T20:19:24.741Z"
-graded_by: flash-high-executor
-content_hash: 358de2876da829a853f19c99b1a62687722efb6c9d1e81fdad990cff2c8105aa
+score: 91
+graded_at: "2026-11-23T20:17:33.810Z"
+graded_by: sonnet-review-executor
+content_hash: 1584437544c24ad3b47db2af7fbfb55609745f3972a54e2dd47277f7c9c90f0f
 categories:
   purpose:
     score: 100
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 75
   consistency:
     score: 75
 viewpoints:
@@ -70,17 +69,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -102,13 +101,42 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
+    rule: vp-dev-testability
+    line: 173
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックに、rulebook の完成判定が前提とする `npm run lint:fm` と採用記法に応じた `lint:mermaid`／`lint:d2` の実行を示す項目がなく、機械検証の手順が分からない。
+    message_ja: 仕上げチェックに、rulebook の完成判定が前提とする `npm run lint:fm` と採用記法に応じた `lint:mermaid`／`lint:d2` の実行を示す項目がなく、機械検証の手順が分からない。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 173
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックに rulebook の数値条件（グループ・区分 8 以下、1 図の代表ノード・ストア・物理保管の合計 16 以内）がなく、合否を判定できない。
+    message_ja: 仕上げチェックに rulebook の数値条件（グループ・区分 8 以下、1 図の代表ノード・ストア・物理保管の合計 16 以内）がなく、合否を判定できない。
+  - id: F003
+    severity: minor
     rule: vp-qe-omissions-consistency
     line: 173
     anchor: "## 8. 仕上げチェック"
-    message: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
-    message_ja: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
+    message: >-
+      「仕上げチェック」に、rulebook の完成判定で求められる lint 実行（`lint:fm`・`lint:mermaid`／`lint:d2`）、グループ・区分 8 以下、16
+      ノード以内の分割、物理保管の併記と区別の確認項目が漏れている。
+    message_ja: >-
+      「仕上げチェック」に、rulebook の完成判定で求められる lint 実行（`lint:fm`・`lint:mermaid`／`lint:d2`）、グループ・区分 8 以下、16
+      ノード以内の分割、物理保管の併記と区別の確認項目が漏れている。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 76
+    anchor: "### 4.4. データストア"
+    message: >-
+      データストアの書き方（recipe 4.4）に、rulebook と template が定める物理保管の例外併記（トランザクションデータ表末尾への併記と、分類に属さないことの注記）への問い・コツがなく、sample
+      の売場棚の扱いを導けない。
+    message_ja: >-
+      データストアの書き方（recipe 4.4）に、rulebook と template が定める物理保管の例外併記（トランザクションデータ表末尾への併記と、分類に属さないことの注記）への問い・コツがなく、sample
+      の売場棚の扱いを導けない。

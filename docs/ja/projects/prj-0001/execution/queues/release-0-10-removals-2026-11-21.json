@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "queue_id": "release-0-10-removals-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T11:32:56.723Z",
+  "updated_at": "2026-11-21T11:57:39.857Z",
+  "state": "stopped",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-GV43",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T11:33:23.345Z",
+      "completed_at": "2026-11-21T11:57:39.841Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-N6FQ",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ],
+  "stopped_step": 1,
+  "reason": "step 1 failed: exit code 1"
+}

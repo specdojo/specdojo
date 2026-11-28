@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "queue_id": "resume2-n4d0-2026-11-23",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-23T02:51:34.355Z",
+  "updated_at": "2026-11-23T02:59:45.445Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-N4D0",
+        "--resume",
+        "--reporter-by",
+        "sonnet-reporter",
+        "--worktree",
+        "--join",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-23T02:51:34.617Z",
+      "completed_at": "2026-11-23T02:59:45.443Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

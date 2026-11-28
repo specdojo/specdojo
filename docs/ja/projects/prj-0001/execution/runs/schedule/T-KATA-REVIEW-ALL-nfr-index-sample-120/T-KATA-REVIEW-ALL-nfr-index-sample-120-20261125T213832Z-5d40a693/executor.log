@@ -1,0 +1,12 @@
+R2（構成）の段では、sample `docs/ja/specdojo/samples/nfr-index-sample.md` を変えずに終えました。章の移動・分割・統合が要る箇所がなかったためです。この段の executor では検査を実行していません。
+
+照らし合わせた材料は、rulebook `specdojo:nfr-index-rulebook` の本文要件と記述ガイド、kata-guide の「kata を agent でレビューする」です。rulebook の `template` は `undecided` で template がないため、rulebook の本文構成だけを基準にしました。
+
+- **章の順:** sample の章 1〜5 は、本文要件の 5 つの見出しと順序・文言がそろっています。
+- **表と本文の置き方:** どの章も「表の前に 1 文 → 表 → 表で表せない補足」の順で、前提から結論の順に読めます。
+- **F001:** 指摘先の `_UNDECIDED_`（営業時間外の緊急連絡手段）は、R1（`-110`）が直した版には残っていません。指摘の観点 `vp-po-decision-readiness` も、kata のレビューでは使わない観点です。
+- **F002:** 備考に書かれていた「1 年」の目標値は、R1 の版ですでに消えています。今は「監査ログの保管期間は `opd-index` と揃える」だけです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）の段では sample を変えなかった。章 1〜5 の順序と見出しは rulebook の本文要件とそろい、表と本文の置き方も前提から結論の順になっている。template は `undecided` で存在しない。grade の finding F001・F002 は、R1 が直した版にはもう当てはまらなかった。","handoff":["R2-1: R2 / 全体（1〜5 章） / 章の順序と見出しは rulebook「本文要件」の 5 見出しとそろっている。どの章も表の前の 1 文、表、補足の順で、前提から結論の順に読める / - / `vp-arc-document-structure`、rulebook「本文要件」「記述ガイド」（template は `undecided` のため本文要件だけで照合した） / -","R2-2: R2 / 3. 分冊ドキュメント一覧（ID/参照先） / grade の F001 が指す備考の `_UNDECIDED_`（営業時間外の緊急連絡手段）は、R1 が直した版には残っていない。指摘の観点 `vp-po-decision-readiness` も kata のレビューでは外す観点（kata-guide「kata の観点の組」）なので、構成の直しは要らない / - / F001、kata-guide「kata の観点の組」 / -","R2-3: R2 / 3. 分冊ドキュメント一覧（ID/参照先） / grade の F002 が指す備考の目標値「監査ログの保管期間 1 年」は、R1 が直した版では「監査ログの保管期間は `opd-index` と揃える」になり、値の再掲はもうない。冗長さは R3 の観点なので、この段では繰り返さない / - / F002、`vp-arc-conciseness`（R3） / -","R2-4: R2 / 3. 分冊ドキュメント一覧（ID/参照先） / 表の後の文「目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、発生の記録だけを残す」と、性能の備考「決まるまで総合テストは仮置き基準で測る」は、仮置きの基準で合否を決めるのかが読み分けにくい / - / `vp-qe-omissions-consistency`。迷った理由: 「仮置き基準で測る」は合否を決めずに測った値を残すとも読め、矛盾とは言い切れない。選ばなかった案: 性能の備考を「決まるまで総合テストは仮置き基準で測った値だけを記録する」に直す。文の直しなので R3 または R5 に任せた / 要判断","R2-5: R2 / （rulebook） / rulebook の `template: undecided` と全体方針の `_UNDECIDED_` が残っているため、構成を照らし合わせる先が本文要件だけになっている / - / rulebook `specdojo:nfr-index-rulebook` の全体方針。相手側を直す案: 本文要件にそろった sample を元に、NFR 分冊と共通の template にするかを決め、その結果で `template` を埋める / -"],"validations":[]}
+</specdojo_executor_evidence>

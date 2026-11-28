@@ -5,17 +5,17 @@ path: docs/ja/specdojo/templates/opr-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 92
-graded_at: "2026-11-15T22:12:20.104Z"
-graded_by: sol-review-executor
-content_hash: 3f8a64b5e632ec499e4a1a455fba760790b140b12d4084a7845d341732d9ac1e
+score: 100
+graded_at: "2026-11-23T18:20:30.641Z"
+graded_by: sonnet-review-executor
+content_hash: 2d9f418e9a6207f3600592702176d99835f162a98f698d81fec2bb91af005f86
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
     score: 100
   architecture:
@@ -23,27 +23,27 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,93 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "| 優先度 | 初動目標 | 切り分け | 一次対応 | 復旧   | エスカレーション |"
-    message: >-
-      Add instructions or fields for escalation conditions and decision-makers, and for suspension or rollback criteria
-      and approvers when applicable; the current incident table can be completed with escalation destinations alone,
-      leaving the decisions required by rulebook section 6.4 unspecified.
-    message_ja: エスカレーション条件と意思決定者、および該当する場合は停止またはロールバックの基準と承認者に関する指示または項目を追加してください。現在のインシデントテーブルはエスカレーション先のみで完成できてしまい、ルールブックのセクション6.4で要求されている決定事項が未指定のままになっています。
-  - id: F002
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 38
-    anchor: "_TODO_: バックアップ確認、リストア、演習の順に、実施条件、完了条件、証跡を記述する。RTO / RPO がある場合は達成可否の判定方法を含める。"
-    message: >-
-      Explicitly request the restore-exercise frequency required by rulebook section 6.6; execution conditions alone do
-      not establish a recurring schedule, so authors can complete this section without making recovery exercises
-      schedulable.
-    message_ja: ルールブックのセクション6.6で要求されているリストア演習の頻度を明示的に要求してください。実行条件だけでは定期的なスケジュールは確立されないため、作成者はリカバリ演習をスケジュール可能なものにすることなく、このセクションを完成させることができます。
-  - id: F003
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 46
-    anchor: "| 変更種別 | 承認者 | 実施条件 | 完了条件 | ロールバック条件 | 証跡   |"
-    message: >-
-      Add a prompt to record whether advance notification is required for major changes and the notification method, as
-      required by rulebook section 6.8; the existing approval and execution-condition fields do not explicitly capture
-      this coordination dependency.
-    message_ja: ルールブックのセクション6.8の要求に従い、重大な変更に事前通知が必要かどうか、およびその通知方法を記録するためのプロンプトを追加してください。既存の承認および実行条件のフィールドでは、この調整の依存関係を明示的に捉えることができません。
-  - id: F004
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 46
-    anchor: "| 変更種別 | 承認者 | 実施条件 | 完了条件 | ロールバック条件 | 証跡   |"
-    message: >-
-      Add an execution-procedure field or an explicit reference to maintained change instructions in section 8; change
-      type, approval, execution conditions, completion criteria, rollback conditions, and evidence can all be filled
-      without specifying how to perform the change, undermining the rulebook's reproducibility objective.
-    message_ja: 実行手順のフィールドを追加するか、セクション8で維持されている変更指示への明示的な参照を追加してください。変更の種類、承認、実行条件、完了基準、ロールバック条件、およびエビデンスはすべて、変更の実行方法を指定することなく記入できてしまい、ルールブックの再現性の目的を損なっています。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 68
-    anchor: "| _TODO_ | _TODO_          | _TODO_ | _TODO_ |"
-    message: >-
-      In Section 12, rulebook section 6.12 explicitly requires a mandatory link to `opd-index` to prevent discrepancies
-      with operation policy, but the template table only provides generic `_TODO_` placeholders without instructing
-      authors to include `opd-index`.
-    message_ja: >-
-      セクション12において、ルールブックのセクション6.12では、運用ポリシーとの不一致を防ぐために `opd-index` への必須リンクが明示的に要求されていますが、テンプレートのテーブルには、作成者に `opd-index`
-      を含めるよう指示することなく、一般的な `_TODO_` のプレースホルダーのみが提供されています。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 66
-    anchor: "| 種別   | ドキュメント ID | 目的   | 備考   |"
-    message: >-
-      Add an instruction to state `（本書のみ）` or `（なし）` when no separate volumes exist, as required by rulebook section
-      6.12; the generic related-document table does not distinguish an intentionally absent volume from an omitted
-      reference.
-    message_ja: >-
-      ルールブックのセクション6.12の要求に従い、別の巻が存在しない場合は `（本書のみ）` または `（なし）`
-      と記載する指示を追加してください。一般的な関連文書のテーブルでは、意図的に巻が存在しない場合と、参照が漏れている場合を区別できません。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: >-
-      _TODO_: `_DELIVERABLE_OVERVIEW_` を基に、対象となる運用作業と、この手順によって再現可能にする結果を記述する。`opr-<term>` の場合は `opr-index`
-      のどの共通規約を参照し、何を具体化する文書かを明示する。
-    message: >-
-      Section 1 does not instruct authors creating `opr-＜term＞` deliverables to retain all mandatory sections and mark
-      non-applicable ones with `なし`, `opr-index 参照`, or `本書の範囲外` alongside a reason, as required by rulebook section 5.
-    message_ja: >-
-      セクション1では、`opr-＜term＞` の成果物を作成する作成者に対し、ルールブックのセクション5の要求に従って、すべての必須セクションを保持し、該当しないものには理由と共に `なし`、`opr-index 参照`、または
-      `本書の範囲外` と記載するように指示していません。
-  - id: F008
-    severity: minor
-    rule: vp-ops-operability
-    line: 32
-    anchor: "| 段階   | 手順   | 完了条件 | 証跡   |"
-    message: >-
-      Add an explicit prompt or row for false-positive handling, including closure criteria and threshold adjustment or
-      suppression, as required by rulebook section 6.5; the generic stage table can be completed with only confirmation,
-      temporary response, and permanent response, leaving false-positive operations undefined.
-    message_ja: ルールブックのセクション6.5の要求に従い、クローズ基準やしきい値の調整または抑制を含む、誤検知（false-positive）の取り扱いに関する明示的なプロンプトまたは行を追加してください。一般的なステージテーブルは、確認、一時的な対応、および恒久的な対応だけで完成できてしまい、誤検知の操作が定義されないままになっています。
+findings: []

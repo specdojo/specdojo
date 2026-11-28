@@ -1,0 +1,22 @@
+PJR-EEWP の修正は完了しました。親 runner の `test-integration` で落ちていた既存の統合テストは、要約の選ぶ順を決め直して解消しました。
+
+親の検証のうち、`npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run test:integration` の全件、lint 系は実行していません。実行して確かめたのは次の 2 件です。
+
+- `tests/src/exec/worktree.test.ts`: 47 件が通りました。
+- `tests/src/exec/worktree-ops.integration.test.ts`: 76 件が通りました。
+
+`summarizeGitHookFailure`（`src/shared/git.ts`）が最初の原因として選ぶ行は、次の順にしました。
+
+1. 型検査の診断（`error TS1234`）を含む行。
+2. FAIL の行。`unknown option '--reserve'` のような、テストの通常の出力は先頭に出なくなります。
+3. error を含む行。それも無ければ section の先頭行。
+
+1 を FAIL より前にしたのは、再開指示で落ちた git merge のテストが、typecheck の失敗の行を期待していたためです。
+
+FAIL を先頭にしたことで、step の見出しが無い出力では FAIL の行が要約から消えました。これは checkpoint の hook 失敗のテスト 2 件が落ちて分かりました。末尾の追加分は、要約の先頭に含まれる行だけを除くようにして直しました。
+
+決めた規則と理由は、個票の対応結果に書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"要約の選ぶ順を、型検査の診断、FAIL の行、error を含む行の順に決め、統合テストの期待とそろえた。関連する単体テストと統合テストは通った。","handoff":["個票の対応結果に、決めた選ぶ順と理由、checkpoint の hook 失敗で FAIL の行が要約から消える問題の修正を記録した。","npm run typecheck、npm run lint:ts、npm run test:unit、npm run test:integration の全件は親 runner の検証に任せた。"],"validations":[{"command":"npx vitest run tests/src/exec/worktree.test.ts","status":"passed","summary":"47 件が通った"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/worktree-ops.integration.test.ts","status":"passed","summary":"76 件が通った"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-eewp-block-reason-noise.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-eewp-block-reason-noise.md"},{"target":"src/shared/git.ts","status":"changed","path":"src/shared/git.ts"},{"target":"tests/src/exec/worktree.test.ts","status":"changed","path":"tests/src/exec/worktree.test.ts"}]}
+</specdojo_executor_evidence>

@@ -4,11 +4,11 @@ document: specdojo:etc-rulebook
 path: docs/ja/specdojo/rulebooks/etc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-10-31T20:40:38.986Z"
-graded_by: flash-high-executor
-content_hash: 61c2d0e9a4fd7275b32da8e38e23e82de767e9b1d7aae1039bdf0048837f01c0
+verdict: pass
+score: 96
+graded_at: "2026-11-23T01:45:24.421Z"
+graded_by: opus-review-executor
+content_hash: 0c270a4bca8440284cc3f99b2dbde1957eba74fa337ed496c568b4faa341a3e8
 categories:
   purpose:
     score: 100
@@ -23,11 +23,11 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,32 +103,40 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 1
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 60
-    anchor: "| ---------- | -------------------------------------------------------------------------------- | ---- |"
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 41
+    anchor: "- ファイル名は `etc-010-外部結合テストカタログ-<term>.md` 等（例: `etc-010-外部結合テストカタログ-決済ゲートウェイ.md`）。"
     message: >-
-      Frontmatter 必須項目へ `rulebook: specdojo:etc-rulebook` を追加し、`title` を除外したうえで、最小例を `specdojo:`
-      名前空間で包まなければ参照スキーマを満たせない。
+      ファイル名の規則が「`etc-010-外部結合テストカタログ-＜term＞.md` 等」と例示だけで、番号部 `010`
+      の意味（並び順か連番か）と採番規則、「等」で許す変形の範囲が定義されていないため、ファイル名を一意に決められる規則を明記する必要がある。
     message_ja: >-
-      Frontmatter 必須項目へ `rulebook: specdojo:etc-rulebook` を追加し、`title` を除外したうえで、最小例を `specdojo:`
-      名前空間で包まなければ参照スキーマを満たせない。
+      ファイル名の規則が「`etc-010-外部結合テストカタログ-＜term＞.md` 等」と例示だけで、番号部 `010`
+      の意味（並び順か連番か）と採番規則、「等」で許す変形の範囲が定義されていないため、ファイル名を一意に決められる規則を明記する必要がある。
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 外部結合テストカタログ 対象別 作成ルール"
-    message: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
-    message_ja: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
+    line: 14
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
+      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
+    message: >-
+      対応 sample は本書の見出し構成・`trace_key`・条件・ケース表へ整合済みで前回の major は解消したが、`_UNDECIDED_` に「sample は未整合であり、後続の sample
+      の見直しで揃える」と残っており rulebook と sample の関係の記述が実態と矛盾するため、sample の記述を削除して未決事項を `recipe`・`template`
+      の要否だけに更新する必要がある（矛盾が記述の更新漏れに限られるため severity を minor に下げる）。
+    message_ja: >-
+      対応 sample は本書の見出し構成・`trace_key`・条件・ケース表へ整合済みで前回の major は解消したが、`_UNDECIDED_` に「sample は未整合であり、後続の sample
+      の見直しで揃える」と残っており rulebook と sample の関係の記述が実態と矛盾するため、sample の記述を削除して未決事項を `recipe`・`template`
+      の要否だけに更新する必要がある（矛盾が記述の更新漏れに限られるため severity を minor に下げる）。
   - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 290
-    anchor: ""
-    message: 標準見出しの `観点:＜観点＞` と最小例の `観点：再送と冪等性` でコロン表記が異なるため、生成物で採用する表記へ統一する必要がある。
-    message_ja: 標準見出しの `観点:＜観点＞` と最小例の `観点：再送と冪等性` でコロン表記が異なるため、生成物で採用する表記へ統一する必要がある。
+    line: 55
+    anchor: "- `based_on` は原則 `[tsp-index, etc-index]` を最低限とし、対象固有の根拠（`br-*` / `bac-*` / `spec-*` / `nfr-*` 等）は本文「トレース」に集約します。"
+    message: 本文の大半は「〜する」の常体だが、「推奨ルール」（「集約します」「所属させます」）と「本文要件」（「配置します」）だけ敬体で文体が混在しているため、常体に統一する必要がある。
+    message_ja: 本文の大半は「〜する」の常体だが、「推奨ルール」（「集約します」「所属させます」）と「本文要件」（「配置します」）だけ敬体で文体が混在しているため、常体に統一する必要がある。

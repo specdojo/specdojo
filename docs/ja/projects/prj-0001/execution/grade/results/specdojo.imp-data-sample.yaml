@@ -4,11 +4,11 @@ document: specdojo:imp-data-sample
 path: docs/ja/specdojo/samples/imp-data-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 85
-graded_at: "2026-10-12T21:06:00.803Z"
-graded_by: agy-expert-executor
-content_hash: a0afee676c959042dac6be1ecb9542100bbb675af3bc914ec1e3e5621fb14679
+verdict: pass
+score: 95
+graded_at: "2026-11-23T15:33:49.695Z"
+graded_by: sonnet-review-executor
+content_hash: 361251632d95757b6c73552c818e8d32adad865b988e05885629abc7d4fa402c
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,28 +103,21 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-verifiability
-    line: 24
-    anchor: "## 4. 影響詳細一覧"
-    message: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
-    message_ja: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
-  - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 24
-    anchor: "## 4. 影響詳細一覧"
-    message: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
-    message_ja: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
-  - id: F003
-    severity: major
+    line: 1
+    anchor: "# 影響調査（データ）サンプル"
+    message: Frontmatter の `based_on` にある `cr-2026-004` が rulebook の求める個票 ID（`PJR-XXXX`）形式でないため、個票 ID に揃えるべきである。
+    message_ja: Frontmatter の `based_on` にある `cr-2026-004` が rulebook の求める個票 ID（`PJR-XXXX`）形式でないため、個票 ID に揃えるべきである。
+  - id: F002
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 28
-    anchor: "| 商品マスタ           | 要       | 高     | 実施     | 商品コード未登録のままではバーコード会計時に照合失敗が発生し、会計停止が起こるため。 | 上位 30 品目を先行整備する。 |"
-    message: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
-    message_ja: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
+    line: 1
+    anchor: "# 影響調査（データ）サンプル"
+    message: "`based_on` の `cr-2026-004` が rulebook の `PJR-XXXX` 規定と異なり、手本として誤用されるため修正すべきである。"
+    message_ja: "`based_on` の `cr-2026-004` が rulebook の `PJR-XXXX` 規定と異なり、手本として誤用されるため修正すべきである。"

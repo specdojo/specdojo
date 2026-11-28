@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140-20261126T063724Z-d2c19051",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T06:38:12.877Z",
+    "completed_at": "2026-11-26T06:39:50.948Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルは変更していない",
+      "reason": "変更したのは sample だけで、plan・result・個票などの履歴ファイルは変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:sysd-cross-cutting-policy-sample\n  type: architecture\n  status: ready\n  rulebook: specdojo:sysd-cross-cutting-policy-rulebook\n---\n\n# 駄菓子屋きぬや 販売処理の横断ルール\n\n## 1. 概要（適用範囲・優先順位）\n\n店主代表と家族利用者代表が、通信や印字の失敗後も会計の確定状態を取り違えず店番を引き継げるよう、販売処理に共通する制約を定める。\\[\\[specdojo:prj-overview-sample|プロジェクト概要]] の「まず記録する」方針に対し、二重登録の防止と保存記録からの回復で寄与する。欠品削減や仕入れ判断の規則は本書では定めない。\n\n対象は単一店舗・現金販売の CLI、ローカル取引保存、本部の商品照会・売上登録、外\n… output omitted …\n・引継ぎを実演。PO が運用負荷と留保範囲を判断 |\n| Q-K3: 正本・検証 script と互換性 | DEV が整備、QE が確認 | 正本・script は K1 着手前、全検証は運用開始判断前 | *TODO*: 未同梱の正本・script を整備して全規則の実装適合を確認する。実機停止・紙面と旧控えの互換性も未検証 | PM が issue と作業を登録。DEV が設計索引・テスト計画と実コマンドを接続。QE が K1→K2→K3 の証跡を確認し、PM が実 ID と完了証跡を接続 |\n\n### 6.2. 公開・昇格の判断条件\n\n本書の規則を実装の根拠にする前に、次を満たしていることを確かめる。\n\n- 全規則を実装・契約へ照合し、未確認を解消するか、対象外の理由付きで明示している。\n- K1〜K3 で、失敗時の保持、秘密非記録、取引と印字の照合、次の店番への引継ぎの証跡がそろっている。\n- 判断待ちの論点が、登録簿と `kinuya-sales-schedule` の実 ID に結び付いている。\n- 外部へ公開する記録に秘密値・顧客情報を含めていない。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7662 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7662 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1784}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  15:41:35\n   Duration  2.69s (transform 6.78s, setup 2.27s, import 7.94s, tests 6.32s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4 正しさ: sample の事実を ifx-cmd-sample.yaml・ifx-cmd.schema.yaml・clis-sample.md・prj-overview-sample.md・rulebook と突き合わせ、参照の誤り2件（scp-TRC-001 の「引継ぎ操作」、scp-RET-001 の error_handling.retry の内容）を直した。F001 は前の段で解消済み。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4-1 [minor/vp-arc-technical-constraints] sysd-cross-cutting-policy-sample の 3.6 `scp-TRC-001` References が、存在しない「販売管理 CLI 仕様の引継ぎ操作」を参照していた。clis-sample.md の該当箇所は「操作の流れ」の手順5（結果を引き継ぐ）なので、「「操作の流れ」の結果の引継ぎ」に直した。",
+    "R4-2 [minor/vp-dev-implementation-readiness] 3.4 `scp-RET-001` References の「`error_handling.retry`（回数の数え方・待機列を含む）」は不正確だった。ifx-cmd.schema.yaml の retry のキーは `on_categories`・`max_attempts`・`backoff` だけで、初回を含む回数と1秒・2秒の待機は ifx-cmd-sample.yaml の注記（126行）にしかない。3つのキーに従い、数え方と秒数は注記を正とする書き方に直した。",
+    "確かめの表（result の実施内容用）: 1 3.3 `execution.timeout_seconds`/`error_handling.timeout_action` 一致（ifx-cmd-sample.yaml 112・129-132行）; 2 3.3 時間切れで子プロセスと子孫を終了し不完全な stdout を採用しない 一致（同130行）; 3 `receipt-print` 一致（同16行）; 4 3.4 送信前ビジーだけ再試行 一致（同82-94行）; 5 3.4 retry の数え方・待機列 不一致→直した（schema 273-289行、sample 126行の注記）; 6 3.7 `KINUYA_API_KEY` と認証設定不足 一致（clis-sample.md 60・102行）; 7 3.7 印刷は認証不要・OS権限拒否 exit 5 一致（ifx-cmd-sample.yaml 78-81・96-104行）; 8 3.8 `config/store-config.yaml` の欠落は既定値・破損は停止 一致（clis-sample.md 59行・6.2の店舗設定不正 exit 4）; 9 3.1 受付と保存を確かめてから会計確定を通知 一致（clis-sample.md 116行）; 10 3.1 参照先「代表的な表示と利用者の次の手」 一致（clis-sample.md 6.2）; 11 3.6 参照先「引継ぎ操作」 不一致→直した（clis-sample.md 3章）; 12 「まず記録する」 一致（prj-overview-sample.md 42行）; 13 `scp-` 接頭辞 一致（rulebook 38行）; 14 架空正本（`kinuya-*`）と架空 script（`npm run check:contracts` など） 確かめられない（正本なし。本文で未同梱の架空のものと明記しているため対象外）。",
+    "F001（vp-ux-language-consistency、5章見出しの略語）は前の段で見出しが「## 5. 関連ドキュメント導線」になり解消済み。R3 の観点のため、この段では手を加えていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140/T-KATA-REVIEW-ALL-sysd-cross-cutting-policy-sample-140-20261126T063724Z-d2c19051/executor.log",
+      "bytes": 7309,
+      "truncated": false
+    }
+  ]
+}

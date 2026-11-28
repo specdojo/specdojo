@@ -1,0 +1,14 @@
+売上登録の詳細契約の参照先が、一覧と CLI 仕様の sample とで食い違っていた点（F001）を直しました。変更したのは `docs/ja/specdojo/samples/ifx-index-sample.yaml` の 1 か所で、schema 検査と Prettier の検査はどちらも通っています。
+
+- **直した内容:** 「本部への売上登録」のコメントに 1 文を足しました。`specdojo:ifx-api-sample` は、CLI 仕様の sample などが参照している架空の詳細契約 `ifx-api-kinuya-sales.yaml` の完成例にあたる、という文です。`spec_ref` と詳細契約へのリンクはそのままです。
+- **相手側を直す案（変更していません）:** `specdojo:clis-sample` は入出力表と残課題の表で、まだ作られていない `ifx-api-kinuya-sales.yaml` を参照したままです。
+  - 案A: 売上登録の参照を `[[specdojo:ifx-api-sample\|本部売上登録API]]` に付け替える。
+  - 案B: 架空正本の名前を残し、完成例として `specdojo:ifx-api-sample` を参照すると書き足す。
+
+  同じ名前は cxd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy・ifx-file の各 sample でも参照しているので、そろえ方は横並びで決める必要があります。どちらにするかは判断をお願いします（要判断）。
+- **食い違いがなかった点:** 確認者として書いているロールと兼務（PO の店主代表、PM・BA・DEV の開発担当、QE の同行レビュー担当、ARC の技術メンター）はメンバー定義と一致しています。印字の詳細契約の参照も、レシート印刷コマンド連携仕様の sample と食い違っていません。
+- **確かめていない点:** YAML の表示用ページ `generated/ifx-index-sample.md` は作り直していないため、このページは古い文面のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: F001 を解消。ifx-index-sample の「本部への売上登録」のコメントに、`specdojo:ifx-api-sample` が CLI 仕様などの参照する架空正本 `ifx-api-kinuya-sales.yaml` の完成例にあたることを追記した。schema 検査と Prettier の検査は成功。","handoff":["No: 1 / 段: R5 整合 / 箇所: docs/ja/specdojo/samples/ifx-index-sample.yaml の「本部への売上登録」のコメント（`spec_ref: specdojo:ifx-api-sample` の直後） / 指摘: `spec_ref` は `specdojo:ifx-api-sample` を指しているが、仮定を共有する `specdojo:clis-sample` の入出力表は同じ契約を、まだ作られていない `ifx-api-kinuya-sales.yaml` として参照しており、売上登録の詳細契約の扱いが両文書で一致しない（F001） / 直した案: 詳細契約のコメントに「CLI 仕様などが参照する架空正本 `ifx-api-kinuya-sales.yaml` の完成例にあたる」と 1 文を足し、対応関係を示した / 根拠: grade の F001（`vp-qe-kata-conformance`）、clis-sample の 64・76・124 行、ifx-api-sample の `info.description` / 印: なし","No: 2 / 段: R5 整合 / 箇所: docs/ja/specdojo/samples/clis-sample.md の 64・76 行（入出力表）と 124 行（本部との契約・障害回復） / 指摘: 売上登録の詳細契約を、まだ作られていない `ifx-api-kinuya-sales.yaml` としてだけ参照している。完成例の `specdojo:ifx-api-sample` が既にあるのに、そこへたどれない（相手側の指摘のため変更していない） / 直した案: 案A は売上登録の参照を `[[specdojo:ifx-api-sample\\|本部売上登録API]]` に付け替える。案B は架空正本の名前を残し、完成例として `specdojo:ifx-api-sample` を参照すると書き足す。同じ名前は cxd-sample・sysd-index-sample・sysd-critical-flows-sample・sysd-cross-cutting-policy-sample・ifx-file-sample でも参照しているため、どちらにするかは横並びで決める / 根拠: grep で確認した各 sample の参照、ifx-api-sample の `x-spec-meta.based_on`（`specdojo:ifx-index-sample`） / 印: 要判断"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/ifx-index-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは sample の YAML だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

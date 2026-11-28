@@ -56,6 +56,7 @@ import type { ReviewViewpointsDoc } from "../review/types.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 import { findingCause, isFindingCause } from "../shared/finding-cause.js";
+import { combineSizeFindings, documentSizeMetrics } from "./size-metrics.js";
 
 export function normalizeGradeExecutorLine(line: string): string {
   let normalized = line.replace(/^\s*(?:>\s*)*(?:[-*+]\s+)?/, "");
@@ -807,14 +808,21 @@ export function applyGradeSubmission(opts: {
         }
       }
       const levelCorrections = [...correctionByViewpoint.values()];
+      const rubric = assertRubric(opts.viewpoints);
+      // 大きさの指標は agent の申告ではなく CLI が測った値のため、level_corrections に含めない。
+      const size = documentSizeMetrics({
+        document,
+        target: opts.target,
+        limits: rubric.size_limits,
+        previous,
+      });
       const evaluated = {
         ...input,
         viewpoints: [
-          ...agentResults,
+          ...combineSizeFindings(agentResults, size?.findings ?? [], levelCapForFindings),
           ...deterministicResults(document, opts.viewpoints, opts.target),
         ],
       };
-      const rubric = assertRubric(opts.viewpoints);
       const summary = scoreDocument(evaluated, rubric, opts.viewpoints, opts.target);
       const gradedAt = (opts.now ?? new Date()).toISOString();
       const usedIds = new Set<string>();
@@ -876,6 +884,7 @@ export function applyGradeSubmission(opts: {
         ...(criteriaResults && definitions && detailRef
           ? { done_criteria: summarizeDoneCriteria(definitions, criteriaResults, detailRef) }
           : {}),
+        ...(size ? { size_metrics: size.metrics } : {}),
       };
       if (criteriaResults && definitions && detailPath && detailRef) {
         const resultById = new Map(criteriaResults.map((criterion) => [criterion.id, criterion]));

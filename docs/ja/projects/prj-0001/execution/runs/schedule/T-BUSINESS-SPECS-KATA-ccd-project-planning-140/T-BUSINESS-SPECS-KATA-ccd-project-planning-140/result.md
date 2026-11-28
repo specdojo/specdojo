@@ -11,7 +11,7 @@ specdojo:
   execution: human
   approach: bootstrap-finalize
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
     - specdojo:ccd-mermaid-rulebook
     - specdojo:ccd-sample
 ---

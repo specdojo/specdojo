@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c7f94e8708da4ebca7994c560a864982
+  ts: "2026-11-23T00:13:26Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 判断が要る止まりの診断の案をヘッドレスの agent に書かせる
+    - field: description
+      from: ""
+      to: 判断が要るものに分けた止まりについて agent を起こし、診断と次の手の案を朝の報告に書かせる。agent には手を打たせない（PJR-52EE の子の 3）
+    - field: input
+      from: ""
+      to: '["PJR-52EE を 4 件に分ける。決まった手当ては規則で行い、判断が要るものは agent に診断の案だけを書かせ（案 C）、立ち上げたままのオーケストレーターのために待つコマンドを足す（案 A）。MCP を使う案は採らない（利用者の決定、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-52EE"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-3M4M"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_0f9b53a8c6c54f3db8f8a78d08533c28
+  ts: "2026-11-23T00:13:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_c7f94e8708da4ebca7994c560a864982
+- v: 1
+  id: reg_8335983729ac428eb1222cd551a6556a
+  ts: "2026-11-27T13:20:12Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0f9b53a8c6c54f3db8f8a78d08533c28
+- v: 1
+  id: reg_807ee1890e1d4ee0b2d229a9d835aec3
+  ts: "2026-11-27T13:42:32Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8335983729ac428eb1222cd551a6556a
+- v: 1
+  id: reg_9c57458998274e33940ca37ca83bc379
+  ts: "2026-11-27T23:22:15Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を決めた（2026-11-28）。実際の見張りで V681 の診断案が朝報告に載り、実 CLI で書き込みが拒まれ、設定と登録簿が変わらないことを確かめた。途中で落ちた診断が running のまま残る扱いは別の issue で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 見張りが判断の要る止まりを読み取り専用の watch-diagnoser（codex terra、read-only sandbox・MCP なし）に診断させ、案を朝報告の第 7 節に載せるようにした。agent は手を打たない
+  previous_event_id: reg_807ee1890e1d4ee0b2d229a9d835aec3

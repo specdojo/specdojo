@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T03:18:40Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: response is not a single JSON value: Expected ',' or '}' after property value in JSON at position 2004 (line 17 column 3)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408"
+  }
+}

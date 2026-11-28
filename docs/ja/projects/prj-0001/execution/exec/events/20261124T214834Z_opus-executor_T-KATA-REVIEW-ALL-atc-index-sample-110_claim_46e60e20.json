@@ -1,0 +1,30 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T21:48:34Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-atc-index-sample-110",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor",
+  "meta": {
+    "limit_deferred": "true",
+    "limit_availability_state": "limited",
+    "limit_retryable": "true",
+    "limit_auto_resume": "true",
+    "limit_kind": "quota_exhausted",
+    "limit_provider": "codex",
+    "limit_observed_at": "2026-11-24T17:17:04.586Z",
+    "limit_raw_message": "ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at 2:17 AM.",
+    "limit_attempts": "2",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-110",
+    "limit_resume_at": "2026-11-25T17:17:00.000Z",
+    "limit_resume_source": "provider_reset",
+    "claim_actor": "sol-executor",
+    "stage_actor": "sol-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-110/T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-110/T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-atc-index-sample-110-20261124T151932Z-e8aed961",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "sol-executor"
+  }
+}

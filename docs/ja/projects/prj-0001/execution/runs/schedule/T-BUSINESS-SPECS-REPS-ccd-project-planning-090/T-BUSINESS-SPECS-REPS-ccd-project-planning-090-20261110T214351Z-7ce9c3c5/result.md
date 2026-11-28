@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: retrofit
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
 ---
 
 # Review Result
@@ -24,7 +24,7 @@ specdojo:
 
 ## 2. 判断根拠
 
-- [[prj-0001:ccd-project-planning|概念クラス図（プロジェクトの立上と計画）]] と先行する edit 記録、実コード、変更履歴を照合し、意図された仕様が反映されていることを確認した。
+- [[ccd-project-planning|概念クラス図（プロジェクトの立上と計画）]] と先行する edit 記録、実コード、変更履歴を照合し、意図された仕様が反映されていることを確認した。
 - 成果物の新設（010）および重複説明の削除（080）の履歴があり、親検証9件すべてが passed となっている事実に基づき、タスクの範囲と完了条件を満たしていると判断した。
 
 ## 3. 未充足事項・改善指示

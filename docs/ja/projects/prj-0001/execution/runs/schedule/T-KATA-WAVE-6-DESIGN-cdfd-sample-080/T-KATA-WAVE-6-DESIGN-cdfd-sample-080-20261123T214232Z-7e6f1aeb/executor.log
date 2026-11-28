@@ -1,0 +1,5 @@
+`docs/ja/specdojo/samples/cdfd-sample.md` の冗長な3箇所を削りました。`lint:md` は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`cdfd-sample.md` の冗長な3箇所を削除した。判断に要る背景・制約・例外・完了条件は残した。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する。"}],"condense_records":[{"location":"6.1. 仕入計画（P-01）の導入文","category":"table-prose","action":"delete","reason":"3章の表と図の内容をなぞる文で、直後の表と重複する。削っても判断情報は失われない。","cause":{"type":"document"}},{"location":"6.2. 入荷検品（P-02）の導入文","category":"table-prose","action":"delete","reason":"3章の表と図の内容をなぞる文で、直後の表と重複する。削っても判断情報は失われない。","cause":{"type":"document"}},{"location":"5.2. 入荷検品（P-02）の図注記の「仕入記録は仕入計画の図と共有し」","category":"repetition","action":"delete","reason":"5.1 の図注記に同じ共有関係が書かれている。5.1 側に残したので、共有の情報は維持される。","cause":{"type":"document"}},{"location":"5.2. 入荷検品（P-02）の図注記の最終文（グループの正常完了条件）","category":"repetition","action":"retain","reason":"グループの完了条件であり、他の箇所にない判断情報である。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

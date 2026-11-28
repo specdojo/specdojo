@@ -22,6 +22,12 @@
       "WebSearch",
       "WebFetch"
     ],
+    "ask": [
+      "Bash(specdojo guarded-push *)",
+      "Bash(npx specdojo guarded-push *)",
+      "Bash(./node_modules/.bin/specdojo guarded-push *)",
+      "Bash(node dist/specdojo.js guarded-push *)"
+    ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",

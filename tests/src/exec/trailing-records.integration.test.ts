@@ -141,6 +141,21 @@ describe("selectTrailingRunRecords", () => {
     expect(selection.paths).not.toContain(relativePaths(fixture, [release])[0]);
     expect(selection.paths).not.toContain(relativePaths(fixture, [humanRun.result])[0]);
   });
+
+  it("selects the records of runs stopped by exec stop", () => {
+    const fixture = setupRepository();
+    const stop = join(
+      fixture.context.executionPath,
+      "exec",
+      "stops",
+      "20261125T113000Z-project.json",
+    );
+    writeFile(stop, "{}\n");
+
+    const selection = selectTrailingRunRecords(fixture.context);
+
+    expect(selection.paths).toEqual(relativePaths(fixture, [stop]));
+  });
 });
 
 describe("commitTrailingRunRecords", () => {
@@ -251,14 +266,14 @@ describe("commitTrailingRunRecords", () => {
     expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
   });
 
-  it("lets a failed run's records be committed before its exec branch merges cleanly later", () => {
+  it("lets a failed run's records be committed before its exec branch merges cleanly later", async () => {
     const fixture = setupRepository();
     const taskId = "T-B-doc-010";
     const runId = `${taskId}-20261115T000000Z-aaaa`;
     const claim = writeEvent(fixture, taskId, "claim", RUNNER);
     const records = writeRunRecords(fixture, taskId, runId);
     const checkpointPaths = [records.plan, records.result, claim];
-    const worktree = checkpointAndEnsureWorktree({
+    const worktree = await checkpointAndEnsureWorktree({
       context: fixture.context,
       worktreeTaskId: taskId,
       base: fixture.worktreeBase,
@@ -281,7 +296,7 @@ describe("commitTrailingRunRecords", () => {
     writeEvent(fixture, taskId, "unblock", RUNNER);
     commitTrailingRunRecords(fixture.context);
 
-    mergeWorktreeIntoCurrent({
+    await mergeWorktreeIntoCurrent({
       context: fixture.context,
       worktree,
       taskId,

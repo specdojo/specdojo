@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: rulebook-maintenance
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
     - specdojo:ccd-mermaid-rulebook
 ---
 

@@ -4,18 +4,18 @@ document: specdojo:pm-issue-log-sample
 path: docs/ja/specdojo/samples/pm-issue-log-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-10-16T20:42:42.613Z"
-graded_by: agy-expert-executor
-content_hash: 011399b7a58b370c5fb3badd887695824a576613077c037a5c0cb9ef1f5f49fb
+verdict: pass
+score: 96
+graded_at: "2026-11-23T11:37:24.728Z"
+graded_by: sonnet-review-executor
+content_hash: 203d0c0d43f48147813e09060f24cd6f23e37759d36a1ffb91364ec6a2ec019d
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 100
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -103,21 +103,27 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: "| IS-001 | 2026-04-02 | テストデータ不足     | 高     | データ生成スクリプト追加 | QA担当   | 2026-04-08 | 対応中     |"
-    message: 更新責任者が未記載である（rulebook 6.1 違反）。
-    message_ja: 更新責任者が未記載である（rulebook 6.1 違反）。
+    rule: vp-pm-control-reporting
+    line: 70
+    anchor: >-
+      | 決定記録   | `kinuya-decision-log` の
+      DR-001                                                                             | IS-003         | 在庫一覧の表示倍率を
+      125% とする判断               |
+    message: 決定記録 `kinuya-decision-log` が `＜project-id＞:...` 形式の修飾済み文書 ID または wikilink で示されておらず、rulebook 6.6 の記法に沿っていない。
+    message_ja: 決定記録 `kinuya-decision-log` が `＜project-id＞:...` 形式の修飾済み文書 ID または wikilink で示されておらず、rulebook 6.6 の記法に沿っていない。
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 22
-    anchor: ""
-    message: 優先度基準および期限設定ルールが未記載である（rulebook 6.3 違反）。
-    message_ja: 優先度基準および期限設定ルールが未記載である（rulebook 6.3 違反）。
+    line: 42
+    anchor: >-
+      | IS-002 | 2026-04-09 に文言の確認会を開き、決まった文言をレシートの印字へ反映する                     | `PO`
+      が確認会に参加する                                                         | 次の確認会が翌週月曜になり期限 2026-04-13 を超える。AC-01
+      の操作結果（レシート）を確認できない        | 現金・つけ・取消の印字見本 3 種を確認会で決めた文言と照合し、差異が 0 件                                         |
+    message: IS-002 は影響欄で AC-01 の確認ができなくなると書いており、優先度 `high` の条件に当たるのに `medium` になっている。優先度か影響の記述のどちらかを合わせるべきである。
+    message_ja: IS-002 は影響欄で AC-01 の確認ができなくなると書いており、優先度 `high` の条件に当たるのに `medium` になっている。優先度か影響の記述のどちらかを合わせるべきである。

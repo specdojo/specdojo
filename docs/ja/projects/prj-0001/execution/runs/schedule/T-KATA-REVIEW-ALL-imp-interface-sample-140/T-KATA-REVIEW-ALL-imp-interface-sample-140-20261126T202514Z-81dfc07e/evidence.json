@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-imp-interface-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T202514Z-81dfc07e",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T20:26:03.289Z",
+    "completed_at": "2026-11-26T20:27:16.082Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/imp-interface-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/imp-interface-sample.md | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/imp-interface-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:imp-interface-sample\n  type: project\n  status: draft\n  rulebook: specdojo:imp-interface-rulebook\n  based_on:\n    - specdojo:imp-business-sample\n    - pjr-c4a1\n  part_of:\n    - prj-0001\n---\n\n# 影響調査（I/F）サンプル\n\n## 1. 目的と適用範囲\n\n本書は、変更要求 `PJR-C4A1`（バーコード会計とキャンペーン値引きの導入）が駄菓子屋の販売管理システムの外部 I/F へ与える影響を判断するための文書である。I/F ごとの変更要否・影響度・対応方針と連携先との調整は、I/F の改修に着手する 2026-05-11 より前に決める。業務への影響は \\[\\[specdoj\n… output omitted …\nを続ける前提で判定する | 2026-05-12 | `PO` | `PJR-I6Q2`（`question`） |\n| 売上登録の結果不明時の扱い | 本部の受付照会の方式 | 決まらないと、再送で値引きが二重に計上されないことを完了条件で確かめられない | 結果不明の取引は自動で再送せず、店舗の控えと本部の受付を照合するまで保留する | 2026-05-15 | `DEV` | `PJR-I6Q3`（`question`） |\n| 店舗プリンタの印字幅 | 値引き合計の行が 1 行に収まるかの実機結果 | 収まらないと代替の 1 行印字も成り立たず、レシートの対応方針を見直す必要がある | 既存の合計行と同じ書式で値引き合計を印字する前提で作る | 2026-05-19 | `DEV` | `PJR-I6Q4`（`question`） |\n\n各事項は、不足情報がそろい「影響詳細一覧」の影響度と「対応方針」の期限を見直した時点で確定とし、転記先の登録項目に結果を記録する。決定期限を過ぎた事項は、担当が対応方針の期限と切替日 2026-06-01 への影響を見直す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7880 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7880 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-imp-interface-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) \n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1743}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  05:27:27\n   Duration  2.51s (transform 4.93s, setup 735ms, import 7.46s, tests 5.60s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nd: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-imp-interface-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-imp-interface-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4 正しさ: sample の事実を正本（rulebook・ifx-index・ifx-msg・ifx-cmd・ほかの imp 系 sample・sf-sample・cxd-sample）と突き合わせた。不一致だった receipt I/F の波及先 ID を `ifx-cmd-receipt-print` から `ifx-cmd-receipt-printer` に直した。F001 は前の段で解消済み（本文 `PJR-C4A1` / frontmatter `pjr-c4a1`）であることを確かめた。",
+  "completion_status": "complete",
+  "handoff": [
+    "[major/R4 正しさ] imp-interface-sample の「影響詳細一覧」の本部商品マスタの照会で、障害波及を「中（照会できなくても商品コードの手入力で会計を続けられる）」としている。また「未解決事項」のバーコード照会の応答時間の当面の扱いが「商品コードの手入力で会計を続ける」となっている。これらは ifx-index-sample の error_handling（接続不能・時間切れ・認証拒否なら CLI は明細を追加せず停止する）と食い違う。商品コード照会も同じ API を使うため、API 停止時は手入力でも会計を続けられない。集約した影響度（高）は変わらない。次のアクション: バーコード値の未登録・読取失敗（手入力で継続）と照会 API の停止（障害波及 高）を分けて書くか、一覧の error_handling を見直すかを ARC が決める。",
+    "[minor/R4 正しさ] imp-interface-sample の「在庫変更イベント」は ifx-msg-sample の仕様名だが、ifx-msg-sample の description では ifx-index での連携名を「本部への在庫変更通知」（一覧に未掲載）としている。次のアクション: 影響調査での呼び名を連携名にそろえるかを判断する。",
+    "[修正済み/R4 正しさ] 「影響詳細一覧」の確定済みレシートの印字の波及先 `ifx-cmd-receipt-print` を、sf-sample の表記 `ifx-cmd-receipt-printer` にそろえた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-140/T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T202514Z-81dfc07e/executor.log",
+      "bytes": 6990,
+      "truncated": false
+    }
+  ]
+}

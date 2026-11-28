@@ -70,3 +70,16 @@
       from: '["PJR-8TQJ","PJR-TE2N"]'
       to: '["PJR-8TQJ","PJR-TE2N","PJR-AD33"]'
   previous_event_id: reg_fdfc797741ca40bf836ec05c4061627d
+- v: 1
+  id: reg_940b28f9af374074a4d73a518f465ea7
+  ts: "2026-11-28T10:36:04Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: v0.10.0 に含めず期限を延ばす（indie、2026-11-28）
+  changes:
+    - field: due
+      from: "2026-11-30"
+      to: "2026-12-31"
+  previous_event_id: reg_57a7cbe9b2314ecf8ae21a1473ef0ed7

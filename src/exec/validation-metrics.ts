@@ -184,6 +184,7 @@ export const TEST_FILE_METRIC_PREFIX = "[parent-validation:test-file] ";
 export class ValidationTestFiles {
   private pending = "";
   private readonly active = new Set<string>();
+  private readonly durations = new Map<string, number>();
   private tail = "";
 
   observe(chunk: string): void {
@@ -197,12 +198,28 @@ export class ValidationTestFiles {
         const value = JSON.parse(line.slice(index + TEST_FILE_METRIC_PREFIX.length)) as {
           event: string;
           file: string;
+          duration_ms?: unknown;
         };
         if (typeof value.file !== "string" || value.file.length > 4096) return;
         if (value.event === "start" && this.active.size < 256) this.active.add(value.file);
-        if (value.event === "end") this.active.delete(value.file);
+        if (value.event === "end") {
+          this.active.delete(value.file);
+          if (
+            typeof value.duration_ms === "number" &&
+            Number.isFinite(value.duration_ms) &&
+            this.durations.size < 4096
+          )
+            this.durations.set(value.file, value.duration_ms);
+        }
       });
     }
+  }
+
+  /** Per-file durations reported by the test reporter, slowest first. */
+  durationsSnapshot(): { file: string; duration_ms: number }[] {
+    return [...this.durations]
+      .map(([file, duration_ms]) => ({ file, duration_ms }))
+      .sort((a, b) => b.duration_ms - a.duration_ms || a.file.localeCompare(b.file));
   }
 
   snapshot() {

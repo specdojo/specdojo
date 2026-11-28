@@ -75,3 +75,21 @@ properties:
   supersedes:
     $ref: "#/$defs/idRefArray"
     default: []
+  translated_from:
+    # 翻訳の variant（例: docs/en/ 配下）が、どの言語のどの版の正本から訳したかを示す。
+    # 正本は同じ id を持つ同じ相対パスの文書（例: docs/ja/<path>）。
+    type: object
+    additionalProperties: false
+    required:
+      - locale
+      - commit
+    properties:
+      locale:
+        type: string
+        pattern: "^[a-z]{2}(?:-[A-Z]{2})?$"
+        description: "正本の言語（docs 直下のロケールディレクトリ名。例: ja）"
+      commit:
+        type: string
+        pattern: "^[0-9a-f]{7,40}$"
+        description: "訳したときの正本の版（正本のファイルを最後に変えた commit）"
+    description: "翻訳元の正本の言語と版。正本の文書には書かない。"

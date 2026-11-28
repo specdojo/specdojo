@@ -1,0 +1,17 @@
+rulebook `docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md` を簡潔にし、grade の finding を反映しました。変更したのはこのファイルだけで、sample・recipe・template には手を入れていません。prettier と markdownlint-cli2 はどちらもエラーなしで通っています。残りの lint は親 runner が実行します。
+
+**finding への対応:**
+- **F001**: 「測定・検証方法」に「検証先」列（`stc-*` / `sac-*` / `opr-*`）を加えました。誰が検証作業を担うかは検証先の計画で決めるものとし、担当の Role code は本書に書かせません（PJR-76N9 と「共通の運用」に合わせるため）。
+- **F002**: 章「例外運用」を新設しました。列は `例外ID` / `対象要件` / `理由` / `代替統制` / `期限` / `承認者` で、例外がない場合は「なし」と書きます。この `承認者` はセキュリティ例外を認める業務上の権限者で、文書の承認とは別だと明記しました。禁止事項の「例外の散在」もこの章を基準にした書き方に直しています。
+- **F003**: 「適用範囲・脅威前提」で、アクセス主体ごとの権限範囲を表に書くよう求めました。禁止事項に「権限範囲を定めずに認可要件を書く」を、用語定義に「アクセス主体」を加えています。
+- **F004 / F005 / F008**: 計画の指示どおりサンプル章（最小例）を削除しました。修正期限と判定の母数の例は記述ガイドの良い例・悪い例に移しています（CVSS 7.0 以上は 14 日以内）。用語は「判定時期」と列名 `id` にそろえました。
+- **全体の構成**: 「本文構成（標準テンプレ）」を執筆標準に合わせて「本文要件」に改名し、受入条件の列と各表の列定義を加えました。記述ガイドは章ごとに判断基準と良い例・悪い例の形にし、正本と重なる記述を削っています。見出しは H3 までです。
+- **F006 / F007 / F009（未解消）**: sample と rulebook の構成がずれていることが原因で、この段では sample を変更できないため解消していません。今回の改訂で章がずれる箇所が増えた（「例外運用」が5章になり「関連ドキュメント導線」が6章へ移った）ので、sample の作り直しが必要です。
+
+**sample を作り直すまでの注意点:**
+- **sample の現状**: sample は rulebook の章構成に合っておらず、rulebook からサンプル章も消えたため、作り直すまで参照できる完成例がありません。rulebook を `ready` にする判断は sample を改訂してから行う想定です。
+- **良い例の ID**: 良い例に出てくる `stc-security` は、例として置いた仮の ID です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-security-safety-rulebook を本文要件・判断基準と良い例・悪い例の形に簡潔化し、サンプル章を削除した。F001〜F005・F008 は rulebook 側で対応済み。F006・F007・F009 は sample との構成乖離が原因で、この段では sample を変更しないため未解消。","handoff":["F006/F007/F009 未解消: specdojo:nfr-security-safety-sample の構成が rulebook の本文要件（概要・適用範囲・脅威前提・機密性・安全性要件一覧・測定・検証方法・例外運用・関連ドキュメント導線の6章）と乖離している。後続の sample 改訂タスクで rulebook に合わせて作り直す必要がある。rulebook を ready にする判断は sample 改訂の完了後に行う。","F001: 検証担当の Role code は「共通の運用」と PJR-76N9 に合わせて本書に書かせず、「検証先」列（stc-*/sac-*/opr-*）で検証タスクへ繋ぐ方針にした。担当の割り当ては検証先の計画とメンバー定義で行う。","rulebook からサンプル章（最小例）を削除したため、sample を改訂するまで参照できる完成例がない。良い例の `stc-security` は例示用の仮の ID である。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

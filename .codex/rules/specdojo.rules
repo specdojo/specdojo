@@ -1,0 +1,71 @@
+# The Dev Container keeps GitHub CLI credentials in a named volume. Keep remote
+# repository mutations under the user's direct control, even when credentials are
+# visible to Codex.
+prefix_rule(
+    pattern = [["git", "/usr/bin/git", "/usr/local/bin/git"], "push"],
+    decision = "forbidden",
+    justification = "SpecDojo agents must hand git push back to the user.",
+    match = [
+        "git push",
+        "git push origin main",
+        "git push --force-with-lease origin feature/example",
+        "/usr/bin/git push origin main",
+    ],
+    not_match = ["git status"],
+)
+
+prefix_rule(
+    pattern = [["gh", "/usr/bin/gh", "/usr/local/bin/gh"]],
+    decision = "forbidden",
+    justification = "GitHub CLI access is reserved for the user because the Dev Container shares its credentials with agents.",
+    match = [
+        "gh pr view 123",
+        "gh pr create --title example --body example",
+        "gh pr merge 123",
+        "gh pr close 123",
+        "gh release create v1.0.0",
+        "gh repo delete owner/repo",
+        "gh api --method POST repos/owner/repo/issues",
+        "/usr/bin/gh pr create --title example --body example",
+    ],
+    not_match = ["git status"],
+)
+
+prefix_rule(
+    pattern = ["env", ["git", "/usr/bin/git", "/usr/local/bin/git"], "push"],
+    decision = "forbidden",
+    justification = "SpecDojo agents must hand git push back to the user.",
+    match = ["env git push origin main", "env /usr/bin/git push origin main"],
+    not_match = ["env git status"],
+)
+
+prefix_rule(
+    pattern = ["env", ["gh", "/usr/bin/gh", "/usr/local/bin/gh"]],
+    decision = "forbidden",
+    justification = "GitHub CLI access is reserved for the user because the Dev Container shares its credentials with agents.",
+    match = ["env gh pr view 123", "env /usr/bin/gh pr create --title example --body example"],
+    not_match = ["env git status"],
+)
+
+# The guarded push entry (PJR-GDMB) may be used only by the interactive orchestrator,
+# with the user's approval on every run. Non-interactive executor / reporter runs use
+# approval_policy="never", so a prompt decision cannot be approved there; the entry
+# also refuses itself when SPECDOJO_AGENT_ROLE is set.
+prefix_rule(
+    pattern = [["specdojo", "./node_modules/.bin/specdojo"], "guarded-push"],
+    decision = "prompt",
+    justification = "Every push needs the user's approval after the dry-run shows the branch, remote and range.",
+    match = [
+        "specdojo guarded-push --project prj-0001",
+        "./node_modules/.bin/specdojo guarded-push --project prj-0001 --branch feature/prj-0001/example",
+    ],
+    not_match = ["specdojo exec status --project prj-0001"],
+)
+
+prefix_rule(
+    pattern = ["npx", "specdojo", "guarded-push"],
+    decision = "prompt",
+    justification = "Every push needs the user's approval after the dry-run shows the branch, remote and range.",
+    match = ["npx specdojo guarded-push --project prj-0001"],
+    not_match = ["npx specdojo exec status --project prj-0001"],
+)

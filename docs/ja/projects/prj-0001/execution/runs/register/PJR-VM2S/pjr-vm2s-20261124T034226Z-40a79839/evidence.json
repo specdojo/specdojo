@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VM2S",
+  "run_id": "pjr-vm2s-20261124T034226Z-40a79839",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T03:43:08.365Z",
+    "completed_at": "2026-11-24T03:44:12.601Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-vm2s.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vm2s-register-branch-migration-trial.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vm2s-register-branch-migration-trial.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../pjr-vm2s-register-branch-migration-trial.md    | 98 ++++++++++++++++++++--\n 1 file changed, 93 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-vm2s-register-branch-migration-trial.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-vm2s-register-branch-migration-trial.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-vm2s-register-branch-migration-trial\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: todo\n  item_status: in-progress\n  priority: medium\n  difficulty: medium\n  owner: DEV\n  registered_at: \"2026-11-23T00:21:57Z\"\n  due_on: \"2026-11-30\"\n  derived_from:\n    - PJR-2TX0\n  depends_on:\n    - PJR-4VD6\n    - PJR-1JF6\n    - P\n… output omitted …\n用ブランチで同期する運用を標準にした」旨を書く。\n\n## 6. 関連ドキュメント\n\n- \\[\\[prj-0001:pjr-2tx0-register-branch-remote-ssot|PJR-2TX0]]\n- \\[\\[prj-0001:pjr-n5j8-register-commit-to-register-branch|PJR-N5J8]]\n- \\[\\[prj-0001:pjr-4vd6-runner-transitions-to-register-branch|PJR-4VD6]]\n- \\[\\[prj-0001:pjr-1jf6-register-branch-merge-into-develop|PJR-1JF6]]\n- \\[\\[prj-0001:pjr-fbp0-register-branch-push-checks|PJR-FBP0]]\n- \\[\\[specdojo:register-operation-guide|register 運用ガイド]]\n- \\[\\[specdojo:git-branching-standard|Git ブランチ運用標準]]"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6682 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6682 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VM2S/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VM2S/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "個票に移行手順・試しの計画と切り替え条件・起票案・保護設定の変更案・CHANGELOG の事項（なし）を記載した。実際の試し（ブランチ作成、push、設定切り替え）は git 状態変更と保護設定の変更を伴い executor では行えないため、作業内容の行 3 を open のまま理由を付けて残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "実際の試しは未実施（個票の作業内容の行 3 は open）。利用者の承認のもとで orchestrator が、個票の「移行手順」に沿って、ブランチ作成、`specdojo.config.json` の `projects.prj-0001.register_sync` 追加、確認、別プロジェクトからの起票確認を行う。",
+    "保護された設定の変更案: `specdojo.config.json` に `register_sync`（`enabled: true`）を追加する。`lefthook.yml` に `register branch-guard --staged`（pre-commit）と `--range`（pre-push）を、`.github/workflows/` に同じ `--range` の検査を追加する。`branch-guard` は現状どの hook・CI にも組み込まれていない。",
+    "起票案: `--from prj-0001:PJR-VM2S` で、`branch-guard` の hook・CI への組み込み、再有効化の手順を運用ガイドへ追加する、の 2 件。",
+    "決めたこと: 試しの期間は 2026-11-25 から 2026-11-30。既存の個票とイベントは移さず、ブランチの起点の commit で引き継ぐ。戻した後も register のブランチは削除せず残す。既定への切り替えの判断は利用者が行う。",
+    "CHANGELOG に書く事項: なし。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VM2S/pjr-vm2s-20261124T034226Z-40a79839/executor.log",
+      "bytes": 3853,
+      "truncated": false
+    }
+  ]
+}

@@ -26,6 +26,18 @@ import {
   writeJson,
 } from "./shared.js";
 import { eventsDirForProject, executionRootForProject } from "./project.js";
+import {
+  gitOutput,
+  repoRelative,
+  restoreIndexAfterPathspecCommit,
+  worktreeStatusPaths,
+} from "../shared/git.js";
+import {
+  inRegisterBranchSync,
+  pushRegisterBranch,
+  execEventsBranchForSchedule,
+} from "../shared/register-branch.js";
+import { ensureSyncWorktreeRegisterIndexes } from "../register/sync-worktree-index.js";
 
 export { collectRepeatable };
 
@@ -271,7 +283,16 @@ function orderSameTimestampEventsByState(items: { path: string; event: ExecEvent
 }
 
 export function readAllEventFiles(projectPath: string): { path: string; event: ExecEventV1 }[] {
-  const dir = eventsDirForProject(projectPath);
+  const target = execEventsBranchForSchedule(projectPath);
+  if (target) {
+    return inRegisterBranchSync(target, (worktree) =>
+      readEventFilesFromDirectory(join(worktree, target.eventsPath)),
+    );
+  }
+  return readEventFilesFromDirectory(eventsDirForProject(projectPath));
+}
+
+function readEventFilesFromDirectory(dir: string): { path: string; event: ExecEventV1 }[] {
   const files = listFilesRecursive(dir).filter((p) => extname(p).toLowerCase() === ".json");
 
   const items: { path: string; event: ExecEventV1 }[] = [];
@@ -338,7 +359,57 @@ export function writeEventFile(
   event: ExecEventV1,
   dependencies: { randomHex?: (bytes: number) => string } = {},
 ): string {
-  const execDir = eventsDirForProject(projectPath);
+  const target = execEventsBranchForSchedule(projectPath);
+  if (!target) return writeEventToDirectory(eventsDirForProject(projectPath), event, dependencies);
+  return inRegisterBranchSync(target, (worktree) => {
+    const execDir = join(worktree, target.eventsPath);
+    const assertClaimAvailable = (exclude?: string): void => {
+      if (event.type !== "claim") return;
+      let state: SimpleTaskState = "todo";
+      for (const item of readEventFilesFromDirectory(execDir)) {
+        if (item.path !== exclude && item.event.task_id === event.task_id) {
+          state = advanceTaskState(state, item.event);
+        }
+      }
+      if (state !== "todo") {
+        throw new Error(
+          `Cannot publish claim for ${event.task_id}: exec-events branch state is ${state}. Inspect concurrent claims before retrying.`,
+        );
+      }
+    };
+    assertClaimAvailable();
+    const path = writeEventToDirectory(execDir, event, dependencies);
+    const relativePath = repoRelative(worktree, path);
+    ensureSyncWorktreeRegisterIndexes(worktree);
+    gitOutput(worktree, ["add", "--", relativePath]);
+    gitOutput(worktree, [
+      "commit",
+      "--only",
+      "-m",
+      `docs(exec): ${event.type} ${event.task_id}`,
+      "--",
+      relativePath,
+    ]);
+    restoreIndexAfterPathspecCommit(worktree, [relativePath]);
+    for (
+      let attempt = 0;
+      attempt < 3 && worktreeStatusPaths(worktree).includes(relativePath);
+      attempt++
+    ) {
+      gitOutput(worktree, ["add", "--", relativePath]);
+      gitOutput(worktree, ["commit", "--only", "--amend", "--no-edit", "--", relativePath]);
+      restoreIndexAfterPathspecCommit(worktree, [relativePath]);
+    }
+    pushRegisterBranch(target, worktree, () => assertClaimAvailable(path));
+    return path;
+  });
+}
+
+function writeEventToDirectory(
+  execDir: string,
+  event: ExecEventV1,
+  dependencies: { randomHex?: (bytes: number) => string },
+): string {
   ensureDir(execDir);
 
   const tsPart = tsForFilenameUtc(event.ts);
@@ -526,11 +597,14 @@ export function canClaimTask(
 
 // A human actor may override the "owned by another actor" guard by passing
 // --force, e.g. to release/complete/block a task held by a stuck agent.
-// Agents never get this exception, preserving claim-stealing protection.
+// Release has a separate, verified stopped-run exception for the orchestrator.
 export type ForceOverride = {
   isHuman?: boolean;
   force?: boolean;
 };
+
+export type StoppedClaimRun = { pid: number; lock_token: string };
+export type ReleaseOverride = ForceOverride & { stoppedRun?: StoppedClaimRun };
 
 function canOverrideCrossActor(override?: ForceOverride): boolean {
   return !!override?.isHuman && !!override?.force;
@@ -682,14 +756,13 @@ export function canUnblockTask(
 }
 
 // release returns a doing/blocked task to todo for re-execution. Only the claiming actor may
-// release it (a human may override with --force), mirroring complete/block so an agent cannot
-// reset another actor's in-flight work.
+// release it. Humans may force; the orchestrator additionally needs verified stopped-run evidence.
 export function canReleaseTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
   actor: string,
-  override?: ForceOverride,
+  override?: ReleaseOverride,
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId);
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
@@ -705,7 +778,9 @@ export function canReleaseTask(
   if (state !== "doing" && state !== "blocked") {
     return { ok: false, reason: `task is not doing or blocked: ${taskId}` };
   }
-  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+  const stoppedRunOverride =
+    actor === "specdojo-orchestrator" && !!override?.force && !!override.stoppedRun;
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override) && !stoppedRunOverride) {
     return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
@@ -742,7 +817,10 @@ function schedulerLockDir(projectPath: string): string {
   return join(executionRootForProject(projectPath), "exec", ".locks", "scheduler.lock");
 }
 
-export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOptions): string {
+function* schedulerLockAttempts(
+  projectPath: string,
+  opts: SchedulerLockOptions,
+): Generator<void, string> {
   const lockDir = schedulerLockDir(projectPath);
   const lockParent = resolve(lockDir, "..");
   ensureDir(lockParent);
@@ -786,9 +864,33 @@ export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOpt
         );
       }
 
-      sleepMs(200);
+      yield;
     }
   }
+}
+
+// Both entry points use the same acquisition, stale-lock and timeout policy.
+export function acquireSchedulerLock(projectPath: string, opts: SchedulerLockOptions): string {
+  const attempts = schedulerLockAttempts(projectPath, opts);
+  let step = attempts.next();
+  while (!step.done) {
+    sleepMs(200);
+    step = attempts.next();
+  }
+  return step.value;
+}
+
+export async function acquireSchedulerLockAsync(
+  projectPath: string,
+  opts: SchedulerLockOptions,
+): Promise<string> {
+  const attempts = schedulerLockAttempts(projectPath, opts);
+  let step = attempts.next();
+  while (!step.done) {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    step = attempts.next();
+  }
+  return step.value;
 }
 
 export function releaseSchedulerLock(lockDir: string): void {

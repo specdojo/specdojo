@@ -1,0 +1,28 @@
+R5（整合）のレビューで、`docs/ja/specdojo/samples/imp-data-sample.md` を 2 か所直しました。同じ接頭辞の sample 4 件、`based_on` と wikilink の参照先、用語集、共通サンプル文脈と突き合わせた結果です。Prettier の形式チェックは通っています。lint は実行後に runner が回します。
+
+**この sample に入れた直し**
+
+- **成功条件の書き方**: 「変更要求の概要」の狙いにある「混雑時の 1 会計あたり平均 90 秒以内」は、業務の sample の表現と食い違っていました。業務の sample の書き方「平日 16:00-18:00 の 1 会計あたり平均処理時間 90 秒以内」にそろえました。
+- **データ量の扱い**: テストの sample は「データ量への影響は `imp-data` で確認する」として扱いを預けていますが、データの sample にはその判断がありませんでした。そこで「目的と適用範囲」の対象外にデータ量を足しました。理由は、1 日の会計件数は変わらず、増えるのは値引きごとのキャンペーン適用履歴の追記だけであることです。
+
+**F001・F002（`based_on` の形式）**
+
+R1 で `pjr-c4a1` に直り、解消済みです。rulebook は大文字の `PJR-XXXX` を求めていますが、schema が英小文字しか通さないという食い違いは R4 が指摘済みなので、ここでは繰り返していません。
+
+**相手側を直す案（変更していない）**
+
+- 業務・I/F・運用・テストの 4 つの sample は、同じ変更要求を本文と `based_on` で今も `cr-2026-004` と書いています。データの sample だけが `PJR-C4A1`（`based_on` は `pjr-c4a1`）で、系列の中で ID が食い違っています。R4 の指摘で rulebook の形が決まったら、4 つの sample をその形にそろえる案です。
+
+**残りの整合は確認済み**
+
+食い違いはありませんでした。
+
+- 4 業務の対応と、業務の sample から届く `imp-data` への波及先
+- I/F の sample の期限 2026-05-22 と `PJR-D4Q1`
+- 運用の sample の前提
+- 波及先 ID（`ifx-api-kinuya-*`、`itc-sales-checkout`、`opd-integrity-check`）
+- 役割名と共通サンプル文脈
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）として imp-data-sample の 2 件の食い違い（成功条件の表現、データ量の扱い）を直した。兄弟の sample の変更要求 ID の食い違いは、相手側を直す案として申し送った。","handoff":["R5-1: 段 R5 / 箇所: 2. 変更要求の概要（狙い） / 指摘: 影響調査（業務）の成功条件を「混雑時の 1 会計あたり平均 90 秒以内」と書いており、imp-business-sample の成功条件「平日 16:00-18:00 の 1 会計あたり平均処理時間が 90 秒以内」と表現が食い違う / 直した案: 「平日 16:00-18:00 の 1 会計あたり平均処理時間 90 秒以内」に直した / 根拠: `vp-qe-kata-conformance`（kata 相互）、imp-business-sample の「変更要求の概要」の成功条件の表 / 印: -","R5-2: 段 R5 / 箇所: 1. 目的と適用範囲（対象外のデータ領域） / 指摘: imp-test-sample は性能テストを対象外とし「データ量への影響は `imp-data` で確認する」と委ねているが、imp-data-sample にはデータ量の判断がない / 直した案: 対象外にデータ量を足し、1 日の会計件数が変わらず、増えるのは値引き 1 件ごとのキャンペーン適用履歴の追記だけであることを理由に書いた / 根拠: `vp-dev-change-impact`、`vp-qe-kata-conformance`、imp-test-sample の「目的と適用範囲」の対象外のテスト範囲 / 印: -","R5-3: 段 R5 / 箇所: frontmatter の `based_on` と 1. 目的と適用範囲（変更要求 ID） / 指摘: 同じ変更要求を、imp-data-sample は `PJR-C4A1`（`based_on` は `pjr-c4a1`）、imp-business・imp-interface・imp-operations・imp-test の各 sample は本文と `based_on` で `cr-2026-004` と書き、系列内で ID が食い違う / 直した案: - / 根拠: `vp-qe-kata-conformance`（kata 相互）。相手側の imp-business-sample・imp-interface-sample・imp-operations-sample・imp-test-sample の `based_on` と本文の変更要求 ID を、R4-1（rulebook の `PJR-XXXX` と schema の `idRef` の食い違い）で決まった形にそろえる案。F001・F002 は R1 で解消済み、rulebook と schema のずれは R4 で指摘済みのため繰り返さない / 印: -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-data-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/imp-data-sample.md だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに *.yaml / *.yml がないため"}]}
+</specdojo_executor_evidence>

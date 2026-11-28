@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
 version: 1
-document: prj-0001:ccd-project-planning
+document: ccd-project-planning
 path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
 target: deliverable
 rubric: grade-rubric-v2

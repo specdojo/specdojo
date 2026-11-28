@@ -20,7 +20,7 @@ specdojo:
     - PJR-Q9AW
   approach: condense
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # PJR-MC63 stsd-task-execution の冗長さを condense で直す

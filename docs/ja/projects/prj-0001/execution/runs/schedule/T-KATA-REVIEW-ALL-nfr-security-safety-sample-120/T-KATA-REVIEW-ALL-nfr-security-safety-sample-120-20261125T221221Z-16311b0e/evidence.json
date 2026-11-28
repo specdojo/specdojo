@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-nfr-security-safety-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-nfr-security-safety-sample-120-20261125T221221Z-16311b0e",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T22:13:08.241Z",
+    "completed_at": "2026-11-25T22:14:06.517Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-security-safety-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票は変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML を変更していない",
+      "reason": "変更したのは Markdown だけで、`*.yaml`・`*.yml` の変更がない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-security-safety-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-security-safety-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-assumptions-constraints-dependencies-sample\n    - specdojo:opd-access-control-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 機密性・安全性要件\n\n## 1. 概要（対象・目的）\n\n常連顧客の氏名とつけ残高、販売・在庫の記録、価格・商品\n… output omitted …\n |\n| 受入条件 | `sac-store-sales` | `nfr-sec-001`〜`nfr-sec-003`、`nfr-sec-006`〜`nfr-sec-008`、`nfr-sec-010` の合否 |\n| 総合テスト | （なし） | 権限・暗号化・秘匿は受入条件で判定するため、`stc-*` を置かない |\n| 運用方針 | \\[\\[specdojo:opd-access-control-sample\\|運用方針・設計（権限・アカウント）]] | 権限区分、付与・剥奪、棚卸し、監査ログ、緊急権限 |\n| 運用方針 | \\[\\[specdojo:opd-incident-management-sample\\|障害対応の運用方針]] | `nfr-sec-005` の紛失・漏えいの疑いの扱い |\n| 運用手順 | \\[\\[specdojo:opr-access-control-sample\\|アカウント付与・剥奪]] | `nfr-sec-001`・`nfr-sec-004`・`nfr-sec-009`〜`nfr-sec-012` の点検と記録の手順 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7426 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7426 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-security-safety-sample-120\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 t\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1687}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  07:14:17\n   Duration  2.50s (transform 5.87s, setup 912ms, import 8.28s, tests 5.87s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nrage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-security-safety-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-security-safety-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2（構成）で sample の 2 か所を直した（`nfr-sec-003` の測定方法に抜けていた管理・本部連携を足した、導線の表の運用手順の行の対象と説明を測定・検証方法の表に合わせた）。章の移動・分割・統合は不要。F004 は直し済みを確認、F001・F005 は kata では使わない観点、F002 は R4 に任せた。",
+  "completion_status": "complete",
+  "handoff": [
+    "R2-1: R2 / 4. 測定・検証方法 / `nfr-sec-003` の母数は主体の表の「許可しない操作」すべてだが、測定方法の対象が店番・運用・保守だけで、管理（監査ログの削除）と本部連携（顧客情報の受け渡し）が抜けている / 測定方法を「店番・管理・運用・保守のアカウントと本部連携の認証値で、主体の表の「許可しない操作」をすべて試す」に直した / `vp-qe-omissions-consistency`（grade F003） / -",
+    "R2-2: R2 / 6. 関連ドキュメント導線 / 運用手順の行の対象に、棚卸し記録で月次に点検する `nfr-sec-001` が入っていない。また「緊急権限の使用ごと」に判定する `nfr-sec-011` を含むのに、説明が「月次点検の手順」になっていて、測定・検証方法の表と食い違う / 対象に `nfr-sec-001` を足し、説明を「点検と記録の手順」に直した / `vp-qe-omissions-consistency` / -",
+    "R2-3: R2 / 6. 関連ドキュメント導線 / `stc-*` への導線がないという grade の指摘（F004）は、総合テストの行（「（なし）」と `stc-*` を置かない理由）がすでにあり、rulebook の求めを満たしている / - / `vp-qe-omissions-consistency`（grade F004）、rulebook の本文要件 / -",
+    "R2-4: R2 / 3. 機密性・安全性要件一覧 / `nfr-sec-012` の `_UNDECIDED_` に決定者・期限・解消の条件がないという grade の指摘（F001・F005）は、kata の段のレビューでは使わない観点（`vp-po-decision-readiness`、`vp-ops-release-readiness`）に当たるので扱わない / - / kata-guide.md の「kata の観点の組」（kata の承認と ready 化は登録簿で追う） / -",
+    "R2-5: R2 / 5. 例外運用 / `nfr-sec-ex-001` の期限「初期リリースの 30 日後」は相対的な書き方で、期限切れを表から判別しにくい（grade F002、`vp-qe-verifiability`）。R4 の観点なので R2 では直さない / - / R4 で rulebook の「期限切れの例外が表から判別できること」と照らし、日付に置き換えるか起算日を明記する案を検討する / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-security-safety-sample-120/T-KATA-REVIEW-ALL-nfr-security-safety-sample-120-20261125T221221Z-16311b0e/executor.log",
+      "bytes": 6078,
+      "truncated": false
+    }
+  ]
+}

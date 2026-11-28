@@ -1,0 +1,21 @@
+レシピの修正は完了しています。変更したのは `docs/ja/specdojo/recipes/bps-recipe.md` だけです。
+
+**F001 の修正内容:** 「仕上げチェック」の章に次の1行を足しました。
+
+- ファイル名・Frontmatter の `id`・`type`・`rulebook` が rulebook の「ファイル命名・ID規則」と「推奨 Frontmatter 項目」に一致し、`npm run lint:md` と `npm run lint:fm` が通る。
+
+この1行は、今回の作業を始めた時点で作業ツリーに未コミットの変更として既に入っていました。この run の前の試行で入ったものとみられます。rulebook の該当箇所と照らし合わせたうえで、そのまま残しています。
+
+- **ファイル名・`id`:** rulebook の「ファイル命名・ID規則」と一致しています。
+- **`type`:** rulebook は `flow`、`rulebook` は `specdojo:bps-rulebook` と定めています（「推奨 Frontmatter 項目」）。
+- **形式の確認:** `npm run lint:md` と `npm run lint:fm` で確かめるという点は、rulebook の「完成判定」と同じです。
+
+rulebook の文面を写すのではなく章を名前で指しているので、言い直しにはあたりません。
+
+**役割と承認の記述（PJR-76N9）:** レシピ内の「承認」は2か所あります。どちらも業務の流れの中で行う判断（店主代表が補充依頼を承認する、など）で、文書を誰が承認するかの話ではないため、そのままにしました。ほかの記述も rulebook と食い違う箇所はなく、変えていません。rulebook と sample には手を付けていません。
+
+**検査:** lint を含む検査は、このあと親 runner が実行するので、こちらでは実行していません。それ以外に必要な検査はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"F001 対応として bps-recipe の「仕上げチェック」に、ファイル名と Frontmatter の `id`・`type`・`rulebook` が rulebook の「ファイル命名・ID規則」「推奨 Frontmatter 項目」に一致し、`npm run lint:md` と `npm run lint:fm` が通ることを確かめる1行を足した。rulebook の「完成判定」と照合した。レシピ内の「承認」は業務の流れの中の判断で、PJR-76N9 の対象外。それ以外の記述は rulebook と食い違いがなく維持した。rulebook と sample は変更していない。","handoff":[],"validations":[]}
+</specdojo_executor_evidence>

@@ -59,4 +59,4 @@ specdojo:
 ## 6. 関連ドキュメント
 
 - [[specdojo:stsd-rulebook]]: 手入れの対象
-- [[prj-0001:stsd-task-execution]]: 欠番の例（`T-12`・`T-13`）
+- [[stsd-task-execution]]: 欠番の例（`T-12`・`T-13`）

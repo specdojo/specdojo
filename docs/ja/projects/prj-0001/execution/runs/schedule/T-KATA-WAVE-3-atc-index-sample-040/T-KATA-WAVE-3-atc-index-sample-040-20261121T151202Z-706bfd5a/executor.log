@@ -1,0 +1,18 @@
+作業は完了しました。`docs/ja/specdojo/rulebooks/atc-index-rulebook.md` を簡潔にし、13 行を追加して 52 行を削除しました。sample・frontmatter・result は変更していません。
+
+**変更内容**
+- **完成例の章を削除**: 「サンプル（最小）」の章を外しました。完成例は sample に任せる方針です。これで見出しは H3 までになりました。
+- **良い例・悪い例を追加**: 記述ガイドの 6.1〜6.8 の各節に、判断の基準となる良い例と悪い例を 1 行ずつ入れました。題材は駄菓子屋の販売管理です。「メモ / 将来課題」には、確定した内容は該当する章へ移すと 1 文足しました。
+- **F001 への対応**: 「共通の運用」に、Frontmatter と Markdown の形式は `npm run lint:fm` と `npm run lint:md` が終了コード 0 になることで確認する、と書き足しました。業務の受入確認には含めないという書き方は残しています。
+
+**確認結果**
+- `npx prettier --check` と `npx markdownlint-cli2` を対象ファイルに実行し、どちらもエラーはありませんでした。
+- 親 runner が実行する検査（`npm run lint:md` など）は、ここでは実行していません。
+
+**このタスクでは解消していない指摘**
+- **F002（sample が本文要件の章構成に合っていない）**: この段では sample を変更しない決まりのため、後続の sample-maintenance で `specdojo:atc-index-sample` を本文要件の 9 章構成に合わせる必要があります。今の sample は rulebook への相対 Markdown リンクも含んでいます。
+- **F003（ready にする条件が整理されていない）**: frontmatter の `recipe` と `template` が `undecided` のままです。plan の指示により宣言は変えていません。template の要否は PJR-WYTX で決め、recipe の要否を決めること、sample を整えることと合わせて、ready にする前の条件になります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"atc-index-rulebook の「サンプル（最小）」の章を削除し、記述ガイドの 6.1〜6.8 に良い例・悪い例を追加した。F001 には lint:fm・lint:md の確認方法を 1 文追記して対応した。F002 と F003 は handoff へ回した。","handoff":["F002: 後続の sample-maintenance で `specdojo:atc-index-sample` を rulebook の本文要件の 9 章構成（本ドキュメントの目的と適用対象〜メモ / 将来課題）に合わせる。現在の sample は相対 Markdown リンクを含む汎用の骨組みである。","F003: `recipe` / `template` は `undecided` のまま（plan の指示で frontmatter は変えていない）。ready にする前に、template の要否（PJR-WYTX）、recipe の要否、sample の整備を済ませる。","根拠: rulebook-authoring-standard（完成例の正本は sample）、兄弟の itc-index-rulebook の簡潔化の前例、grade の run id regrade-kata-2026-11-21 の F001〜F003。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/atc-index-rulebook.md","status":"passed","summary":"Prettier の形式に適合"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/atc-index-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan / result / 個票などの履歴蓄積ファイルを変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>

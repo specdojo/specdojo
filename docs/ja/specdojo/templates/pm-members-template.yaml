@@ -14,7 +14,7 @@ metadata_template:
   id: _PROJECT_ID_:pm-members
   type: project
   status: draft
-  title: メンバー名簿
+  title: "メンバー定義: _PROJECT_NAME_"
   rulebook: specdojo:pm-members-rulebook
   based_on:
     - specdojo:people-and-organization-definition-standard
@@ -23,26 +23,18 @@ metadata_template:
   version: 1
   project_id: _PROJECT_ID_
 
-# Role code の語彙は pm-roles.yaml を参照する。
-# Schedule の owner には Role code を使い、member nickname は書かない。
-# agent 定義は repository 共通の .specdojo/agent-members.yaml に置く。
-
 members:
-  - nickname: _HUMAN_NICKNAME_
-    display_name: _HUMAN_DISPLAY_NAME_
+  - nickname: _MEMBER_NICKNAME_
+    display_name: _MEMBER_DISPLAY_NAME_
     email: null
     roles:
-      - PO
+      - _ROLE_CODE_
     type: human
-    persona: final-decision-maker
+    persona: _PERSONA_
     focus:
-      - _TODO_: 目的、スコープ、優先順位、公開方針に照らして重視する観点を記述する。
+      - "_TODO_: 担当 Role の立場で重視する観点を記述する。"
     scheduler_strategy: critical-first
-    note: "_TODO_: 最終判断、公開可否、説明責任の扱いを 1 行で記述する。"
+    note: "_TODO_: 稼働条件や判断範囲など公開可能な補足を記述する。"
 
 rules:
-  - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
-  - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
-  - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
-  - agent は .specdojo/agent-members.yaml に定義し、この名簿には記載しない。
-  - 公開文書には個人名、私用メールアドレス、非公開組織情報を記載しない。
+  - "_TODO_: 公開制約や交代時の扱いなど project 固有の運用ルールを記述する。"

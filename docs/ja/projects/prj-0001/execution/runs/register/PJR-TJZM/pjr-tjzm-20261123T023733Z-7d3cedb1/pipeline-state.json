@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TJZM",
+  "run_id": "pjr-tjzm-20261123T023733Z-7d3cedb1",
+  "updated_at": "2026-11-23T03:42:39.380Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T03:36:27.273Z",
+      "completed_at": "2026-11-23T03:39:03.932Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-23T03:42:27.475Z",
+      "completed_at": "2026-11-23T03:42:27.475Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T03:42:30.229Z",
+      "completed_at": "2026-11-23T03:42:39.380Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T02:48:04.230Z",
+      "notes": [
+        "親の検証のtest-integrationでtests/src/exec/register-pipeline-e2e.integration.test.tsのdry-runの期待値が、エスケープ付きのタイトルのままで落ちた。dry-runの行はエスケープする前のタイトルを出すように直したので、テストの期待値を新しい出力に合わせる。ほかにエスケープ付きのタイトルを期待するテストがないかをrgで探して直す。"
+      ]
+    },
+    {
+      "at": "2026-11-23T03:36:27.261Z",
+      "notes": [
+        "register-pipeline-e2e.integration.test.tsで足したdry-runの期待値は、下線を含むタイトルを期待しているが、fixtureのPJR-AB12のタイトルには下線がないため落ちている。コードの直し（unescapeMarkdownCell）は正しいので変えない。fixtureに下線を含むタイトルの項目を用意して、下線がエスケープされずに出ることを確かめるテストにする。test:integrationの該当のファイルを流して通ることを確かめてから報告する。"
+      ]
+    }
+  ]
+}

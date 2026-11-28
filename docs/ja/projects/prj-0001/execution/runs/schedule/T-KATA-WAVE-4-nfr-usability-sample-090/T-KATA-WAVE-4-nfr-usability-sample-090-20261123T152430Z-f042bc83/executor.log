@@ -1,0 +1,36 @@
+レビュー結果: 完了条件は満たしています。grade の finding は minor 2件だけで、完了を妨げません。判定は `complete-with-findings` です。
+
+**評価結果の確認**
+- 鮮度確認として、sample と rulebook のそれぞれで `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。出力はどちらも空で、終了コードは 0 でした。このため、評価結果は最新です。
+- sample の grade は `verdict` が `pass`、`score` が 97 で、finding は minor 2件（blocker と major は 0件）です。
+- rulebook の grade は `verdict` が `pass`、`score` が 98 で、finding は minor 2件（blocker と major は 0件）です。
+- 成果物の作業ツリーに変更はありません。未追跡ファイルは runner の `pipeline-state.json` だけです。
+
+**判断根拠（完了条件との照合）**
+- DC-001: sample は「概要」「適用範囲・利用者前提」「操作性要件一覧」「測定・検証方法」「関連ドキュメント導線」の5章構成です。必須の表も揃っています。章立ての網羅性は grade の `vp-qe-omissions-consistency` が 100 点でした。
+- DC-002 と DC-003: 題材は駄菓子屋きぬやで統一されています。禁止事項への抵触は見当たりません。grade の `vp-qe-kata-conformance` は 75 点で、F001 が該当します。
+- DC-004: 要件は `nfr-usb-001` から `nfr-usb-006` の6件で、指標と基準値が付いています。測定方法も6行すべてに書かれ、導線の表もあります。利用者が決める値のうち、端末機種や 90 秒の目安は `_ASSUMPTION_` で明示されています。`_UNDECIDED_` は使われていません。一覧の基準値は、目標から導いた仮の値として示されています。
+- DC-005: 適用範囲の表で、対象と対象外（日次締め、商品・価格の登録）が理由つきで示されています。
+
+**未充足事項・改善指示**
+完了を妨げるものはありません。次の4点は、後続の磨き込みで直すとよいものです。
+
+- sample の F001（71行目）: 表の「受入条件」行で `sac-store-sales` が wikilink になっていません（実際に該当するのは83行目）。文書が実在するなら wikilink にします。未作成なら「未作成」と明記します。
+- sample の F002（54行目）: 判定者列の「利用者代表」が Role code か役割名か判別できません（実際に該当するのは66〜69行目）。メンバー定義の Role code に合わせます。
+- rulebook の F001: Frontmatter の `recipe` と `template` が `undecided` です。作成するか、決定時期を本文に書きます。
+- rulebook の F002: rulebook を `ready` にするために残っている作業が説明されていません。残作業を記録するか、登録簿へ回します。
+
+recipe は `_MISSING_` で、rulebook の `recipe` は `undecided` です。型そのものの整備が必要で、これは上記の rulebook F001 と同じ指摘です。
+
+**approach に応じた確認**
+fully-guided として、フェーズと完了条件が求めた磨き込みが成果物に反映されていることを確認しました。対象外の変更の混入はありません。
+
+**確認できなかった範囲**
+- 先行する edit タスクの実行記録（result）は読んでいません。そのため、検証結果が成功したかは確認していません。
+- wikilink の実在性（`sac-store-sales` など）は確認していません。
+
+**decision**: `verdict` は `complete-with-findings` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。鮮度確認（grade list --changed-only）は sample・rulebook とも出力なしで最新。DC-001〜005 は成果物の読解と grade で充足。minor finding（sample F001 sac-store-sales の wikilink 化、F002 判定者の Role code 表記、rulebook F001 recipe/template undecided、F002 ready までの残作業の記録）は完了を妨げない。確認できなかった範囲: 先行 edit タスクの実行記録と検証結果は未確認。wikilink の実在性は未確認。","handoff":["sample F001: sac-store-sales を wikilink 化するか未作成と明記する","sample F002: 判定者列の「利用者代表」をメンバー定義の Role code に合わせる","rulebook F001/F002: recipe・template の undecided の扱いと ready までの残作業を記録または登録簿へ回す"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-usability-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>

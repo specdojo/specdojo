@@ -1,0 +1,17 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/opd-access-control-sample.md` だけを 2 か所直しました。prettier と markdownlint はどちらも問題ありませんでした。親 runner が流す検査は、ここでは実行していません。
+
+**直したこと**
+
+1. 「概要（access-control）」の最初の文は「具体化する分冊」とだけ書き、どの差分を定めるかが読めませんでした（rulebook の「概要」の書き方）。そこで、権限区分、付与・剥奪の契機、共用タブレットでのログイン、緊急権限、監査ログの記録対象、棚卸しの合否を `opd-index` の差分として定める、と書き換えました。
+2. 「緊急権限」の節は、補足・具体化・例外のどれに当たるかを書いていませんでした（rulebook の「差分を持つ章」の書き方）。`opd-index` に緊急権限の定めがないため、「本節で加える（補足）」の 1 文を足しました。
+
+それ以外の章は、rulebook の必須の 3 章と完了条件（`done_criteria`）の 3 項目を満たしており、要らない内容もないため、そのまま残しました。
+
+**決めていただきたいこと**
+
+- **概要の未決事項の表（R1-3、要判断）:** rulebook は概要を 1〜3 行としていますが、表は未決事項を残す役目があるため削っていません。置き場所の見直しは R2 に任せました。
+- **`opd-sample.md`（R1-4、要判断）:** この kata は rulebook の `sample` 宣言に入っておらず、章立ても rulebook の本文構成と合いません。履歴蓄積ファイルではないので禁止の対象外ですが、Markdown リンクも残っています。plan の編集対象ではないうえ、消すか作り直すかは影響が大きいため、手を付けていません。消すか作り直すかを決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューで opd-access-control-sample.md を 2 か所直した（概要に差分の範囲を書き、緊急権限の節に差分の種類「補足」を足した）。opd-sample.md の扱いと概要の未決事項の表は要判断として handoff に残した。","handoff":["R1-1: R1 / 1. 概要（access-control） / 最初の文が「具体化する分冊」とだけ書き、opd-index のどの章に対して何を差分として定めるかが読めない / 「権限区分、付与・剥奪の契機、共用タブレットでのログイン、緊急権限、監査ログの記録対象、棚卸しの合否を差分として定める分冊」に書き換えた / vp-qe-kata-conformance（opd-rulebook の「概要（`<term>`）」の記述ガイド: 扱う運用ドメインと、どの章を補足・具体化・例外にするかを示す） / -","R1-2: R1 / 2.4. 緊急権限 / 補足・具体化・例外のどれに当たるかが書かれていない。ほかの節には差分の種類がある / 「`opd-index` は緊急権限を定めていないため、本節で加える（補足）」の 1 文を足した / vp-qe-kata-conformance（opd-rulebook の「差分を持つ章」の記述ガイド: 各記述は補足・具体化・例外のどれかが分かるように書く） / -","R1-3: R1 / 1. 概要（access-control） / rulebook は概要を 1〜3 行としているが、概要に未決事項の表が置かれ厚くなっている / - / vp-arc-single-responsibility。未決事項を残すこと自体は document-metadata-standard の未決事項の引き継ぎに合うため削らなかった。選ばなかった案は、表を差分を持つ章の末尾へ移すこと。章の配置の問題なので R2 に任せる / 要判断","R1-4: R1 / opd-sample.md（plan の根拠の成果物） / opd-rulebook の frontmatter の `sample` 宣言に入っておらず、章立て（目的と適用範囲・入力情報・記述内容・最小記述例・未解決事項）が rulebook の本文構成（概要・差分を持つ章・関連ドキュメント導線）と合わない。H1 と表にも Markdown リンクが残っている（履歴蓄積ファイルではないため禁止の対象外） / - / vp-po-purpose-alignment、vp-qe-kata-conformance。plan の編集対象は opd-access-control-sample だけなので直さなかった。相手側の案は、opd-sample.md を消すか、opd-index-sample と分冊の sample を指す案内に作り直すこと。消すかどうかは人が決める / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opd-access-control-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opd-access-control-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは sample だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

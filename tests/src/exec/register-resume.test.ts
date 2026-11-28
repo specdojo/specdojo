@@ -126,6 +126,43 @@ function makeRoster(members: ProjectMember[]): MemberRoster {
   return { version: 1, project_id: "test", members };
 }
 
+describe("preparation resume selection", () => {
+  it.each(["running", "failed", "succeeded"] as const)(
+    "resumes %s preparation ahead of an older run updated more recently",
+    (status) => {
+      const old = makeState({
+        runId: "pjr-ab12-20260820T000000Z-old",
+        updatedAt: "2026-08-30T00:00:00Z",
+        reporterStatus: "succeeded",
+        integrateStatus: "succeeded",
+      });
+      const state = createPipelineState({
+        taskId: TASK_ID,
+        runId: "pjr-ab12-20260821T000000Z-new",
+        updatedAt: "2026-08-21T00:00:00Z",
+      });
+      state.stages.prepare = { ...state.stages.executor, status };
+      expect(
+        selectResumableRegisterRun([
+          makeCandidate({ state: old }),
+          { runId: state.run_id, stateRef: "state.json", statePath: "state.json", state },
+        ]),
+      ).toMatchObject({
+        kind: "resumable",
+        target: { stage: "prepare", runId: state.run_id },
+      });
+    },
+  );
+
+  it("refuses integration when the executor never ran even if the reporter claims success", () => {
+    const state = makeState({ executorStatus: "pending", reporterStatus: "succeeded" });
+    expect(selectResumableRegisterRun([makeCandidate({ state })])).toMatchObject({
+      kind: "not-resumable",
+      reason: expect.stringContaining("requires a succeeded executor"),
+    });
+  });
+});
+
 describe("selectScheduleExecutorResume", () => {
   it.each(["pending", "running", "failed", "rate_limited"] as const)(
     "restarts the executor before a %s reporter, preserving changes and handoff",
@@ -463,6 +500,36 @@ describe("selectResumableRegisterRun", () => {
     expect(actual.target.initialChanges).toEqual(["docs/first-attempt.md"]);
   });
 
+  it("同じ run を再開して上書きされた evidence より、保存済みの最初の試行を下限にする", () => {
+    const runId = "run-same";
+    const firstAttempt: ExecEvidence = {
+      ...makeEvidence(runId),
+      completion_status: "incomplete",
+      attempt_changes: [{ path: "dist/stray.html", status: "??" }],
+    };
+    const coverageBlocked: ExecEvidence = {
+      ...makeEvidence(runId),
+      completion_status: "incomplete",
+      block_reason: "resumed executor did not account for every plan target: dist/stray.html",
+      attempt_changes: [{ path: "docs/ticket.md", status: "M" }],
+    };
+    const candidate = makeCandidate({
+      state: makeState({ runId, executorStatus: "blocked" }),
+      executorEvidence: coverageBlocked,
+      evidence: undefined,
+      archivedExecutorEvidence: [firstAttempt],
+    });
+
+    const actual = selectResumableRegisterRun([candidate], { resumeFrom: "executor" });
+
+    expect(actual.kind).toBe("resumable");
+    if (actual.kind !== "resumable" || actual.target.stage !== "executor") return;
+    expect(actual.target.initialChanges).toEqual(["dist/stray.html"]);
+    expect(actual.target.handoff).toEqual([
+      "resumed executor did not account for every plan target: dist/stray.html",
+    ]);
+  });
+
   it("保護機構で blocked になった run は evidence があっても executor 再開対象にする", () => {
     const candidate = makeCandidate({
       state: makeState({
@@ -582,6 +649,89 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
     }
   }
 
+  it("does not fall back to an integrated run when the latest state is corrupt", () => {
+    const oldId = "20260820T000000Z-old";
+    writeRun(
+      oldId,
+      makeState({ runId: oldId, reporterStatus: "succeeded", integrateStatus: "succeeded" }),
+      makeEvidence(oldId),
+    );
+    const latestId = "20260821T000000Z-new";
+    const latestDir = path.join(root, EXECUTION_REL, "runs/register", TASK_ID, latestId);
+    mkdirSync(latestDir, { recursive: true });
+    writeFileSync(path.join(latestDir, "pipeline-state.json"), "{broken");
+    expect(
+      findResumableRegisterRun({
+        repoRoot: root,
+        worktreePath: root,
+        executionPath: path.join(root, EXECUTION_REL),
+        taskId: TASK_ID,
+      }),
+    ).toMatchObject({
+      kind: "not-resumable",
+      reason: expect.stringContaining(latestId),
+    });
+  });
+
+  it("does not fall back when the latest run has only an incomplete scaffold", () => {
+    const oldId = "20260820T000000Z-old";
+    writeRun(oldId, makeState({ runId: oldId, reporterStatus: "succeeded" }), makeEvidence(oldId));
+    const latestId = "20260821T000000Z-new";
+    const latestDir = path.join(root, EXECUTION_REL, "runs/register", TASK_ID, latestId);
+    mkdirSync(latestDir, { recursive: true });
+    writeFileSync(path.join(latestDir, "plan.md"), "# missing result");
+    expect(
+      findResumableRegisterRun({
+        repoRoot: root,
+        worktreePath: root,
+        executionPath: path.join(root, EXECUTION_REL),
+        taskId: TASK_ID,
+      }),
+    ).toMatchObject({
+      kind: "not-resumable",
+      reason: expect.stringContaining(latestId),
+    });
+  });
+
+  it.each([undefined, "executor.log", "reporter.log", "evidence.json"])(
+    "recovers a root-only legacy scaffold only when execution traces are absent (%s)",
+    (trace) => {
+      const runId = "20260821T000000Z-new";
+      const dir = path.join(root, EXECUTION_REL, "runs/register", TASK_ID, runId);
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(
+        path.join(dir, "plan.md"),
+        `---\nspecdojo:\n  type: exec-plan\n  task_id: ${TASK_ID}\n---\n# Plan\n`,
+      );
+      writeFileSync(
+        path.join(dir, "result.md"),
+        `---\nspecdojo:\n  type: exec-result\n  task_id: ${TASK_ID}\n  status: in_progress\n  agent: exec-1\n---\n# Result\n`,
+      );
+      if (trace) writeFileSync(path.join(dir, trace), "execution started");
+      const lookup = findResumableRegisterRun({
+        repoRoot: root,
+        worktreePath: path.join(root, "worktree"),
+        executionPath: path.join(root, EXECUTION_REL),
+        taskId: TASK_ID,
+      });
+      expect(lookup).toMatchObject(
+        trace
+          ? {
+              kind: "not-resumable",
+              reason: expect.stringContaining(runId),
+            }
+          : {
+              kind: "resumable",
+              target: {
+                stage: "prepare",
+                runId,
+                state: { stages: { executor: { status: "pending" } } },
+              },
+            },
+      );
+    },
+  );
+
   it("worktree の run ディレクトリから state と executor evidence を読み出す", () => {
     const runId = "20260820T000000Z-aaaa";
     writeRun(runId, makeState({ runId }), makeEvidence(runId));
@@ -596,6 +746,39 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
     expect(candidates).toHaveLength(1);
     expect(candidates[0].runId).toBe(runId);
     expect(candidates[0].evidence?.run_id).toBe(runId);
+  });
+
+  it("同じ run の以前の試行の evidence を試行順に読み出す", () => {
+    const runId = "20260820T000000Z-attempts";
+    writeRun(runId, makeState({ runId, executorStatus: "blocked" }), makeEvidence(runId));
+    const dir = path.join(root, EXECUTION_REL, "runs", "register", TASK_ID, runId);
+    for (const [attempt, changed] of [
+      [1, "docs/first.md"],
+      [2, "docs/second.md"],
+    ] as const) {
+      writeFileSync(
+        path.join(dir, `evidence.attempt-${attempt}.json`),
+        `${JSON.stringify({
+          ...makeEvidence(runId),
+          attempt_changes: [{ path: changed, status: "M" }],
+        })}\n`,
+        "utf8",
+      );
+    }
+
+    const candidates = loadRegisterResumeCandidates({
+      repoRoot: root,
+      worktreePath: root,
+      executionPath: path.join(root, EXECUTION_REL),
+      taskId: TASK_ID,
+    });
+
+    expect(
+      candidates[0].archivedExecutorEvidence?.map((evidence) => evidence.attempt_changes),
+    ).toEqual([
+      [{ path: "docs/first.md", status: "M" }],
+      [{ path: "docs/second.md", status: "M" }],
+    ]);
   });
 
   it("evidence.json が無い run は再開不可として理由を返す", () => {

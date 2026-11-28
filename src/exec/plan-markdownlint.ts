@@ -7,7 +7,7 @@ import type * as MarkdownlintSync from "markdownlint/sync";
 import { load } from "../shared/yaml.js";
 import { DEFAULT_MARKDOWNLINT_CONFIG } from "../shared/markdownlint-config.js";
 
-async function markdownlintApi(repoRoot: string) {
+export async function markdownlintApi(repoRoot: string) {
   // Prefer the consumer's installation, then SpecDojo's development installation.
   // Resolve from markdownlint-cli as well, for package managers without hoisting.
   for (let require of [
@@ -52,7 +52,8 @@ async function markdownlintApi(repoRoot: string) {
   );
 }
 
-function planLintConfig(
+// Resolve the same configuration markdownlint-cli reads, falling back to SpecDojo defaults.
+export function planLintConfig(
   repoRoot: string,
   api: Awaited<ReturnType<typeof markdownlintApi>>,
 ): Configuration {

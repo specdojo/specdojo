@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/imp-operations-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-10-12T21:11:58.387Z"
-graded_by: agy-expert-executor
-content_hash: 73bf5ed2ed037d2038632ecdece3e811755f466b8bd0dbda4e455b349a46a30d
+score: 96
+graded_at: "2026-11-23T15:50:21.438Z"
+graded_by: sonnet-review-executor
+content_hash: da3014f7066ef1f21568f6b7b792b020b23dc7b62bdf41e4b113490912dee88b
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +78,11 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,34 +104,23 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 13
-    anchor: ""
-    message: 「運用品質を維持」「初動遅延を防止」を達成したと判定するための指標、閾値、確認時点が定義されていない。
-    message_ja: 「運用品質を維持」「初動遅延を防止」を達成したと判定するための指標、閾値、確認時点が定義されていない。
+    line: 24
+    anchor: "| 値引き適用エラーの検知から初動開始までが上限時間以内           | 警告の記録と初動の記録     | 同じ期間の全件で、警告の表示時刻と初動の記録時刻の差が上限以内                   |"
+    message: "成功条件 2 の上限時間が未決で、判定ができない。決定までは暫定の判定基準（例: 当日の閉店までに初動を開始）を成功条件の欄にも併記する必要がある。"
+    message_ja: "成功条件 2 の上限時間が未決で、判定ができない。決定までは暫定の判定基準（例: 当日の閉店までに初動を開始）を成功条件の欄にも併記する必要がある。"
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 30
-    anchor: "| 日次締め運用       | 要       | 中     | 代替     | 全手順を即時更新すると教育負荷が高いため、当面は差分手順書を併用して段階移行する。     | 2 週間後に一本化判断を行う。     |"
-    message: 影響度（高・中・低）を判定するための具体的な尺度（判定基準）が定義されていない。
-    message_ja: 影響度（高・中・低）を判定するための具体的な尺度（判定基準）が定義されていない。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 33
-    anchor: "## 5. 対応方針"
-    message: 「想定外問い合わせ増加時」の増加を判定する基準値または比較期間がなく、再評価条件の成立を客観的に判定できない。
-    message_ja: 「想定外問い合わせ増加時」の増加を判定する基準値または比較期間がなく、再評価条件の成立を客観的に判定できない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 7
-    anchor: ""
-    message: 「目的と適用範囲」に、rulebook 6.1 が明記を求める対象期間が記載されていない。
-    message_ja: 「目的と適用範囲」に、rulebook 6.1 が明記を求める対象期間が記載されていない。
+    rule: vp-qe-kata-conformance
+    line: 69
+    anchor: >-
+      | 影響度 | 対応項目                               | 期限       | 担当  |
+      前提条件                                                                          |
+      完了条件                                                                        |
+    message: 対応方針の表の「完了条件」列は rulebook の必須列にない。sample が rulebook に先行しないよう、rulebook の必須列へ追記するか、sample 側で列の扱いを揃える必要がある。
+    message_ja: 対応方針の表の「完了条件」列は rulebook の必須列にない。sample が rulebook に先行しないよう、rulebook の必須列へ追記するか、sample 側で列の扱いを揃える必要がある。

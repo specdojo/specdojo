@@ -89,3 +89,191 @@
       from: in-progress
       to: review
   previous_event_id: reg_338a437fa9994ca9b8e8db601cdb2b20
+- v: 1
+  id: reg_665461d2952842d5bfacc5bc98689e8f
+  ts: "2026-11-22T11:59:31Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の完了条件を利用者の確認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_47413815686a4ee8bdd6948b50f123dd
+- v: 1
+  id: reg_cb9e66963e384f7dbd4446e9ad83d584
+  ts: "2026-11-22T11:59:37Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の完了条件を利用者の確認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_665461d2952842d5bfacc5bc98689e8f
+- v: 1
+  id: reg_7bd55e72b2aa4cff9a03a1ea84559c71
+  ts: "2026-11-22T12:03:05Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_cb9e66963e384f7dbd4446e9ad83d584
+- v: 1
+  id: reg_837d3f8214f649fd89c62b2ee7a71284
+  ts: "2026-11-22T12:06:44Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7bd55e72b2aa4cff9a03a1ea84559c71
+- v: 1
+  id: reg_4e8ce599c6e046eb9af992f2ad3736a9
+  ts: "2026-11-22T12:16:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 3 回目の実行の完了条件を利用者の確認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_837d3f8214f649fd89c62b2ee7a71284
+- v: 1
+  id: reg_618aac3996884994919f95fad2adf3d4
+  ts: "2026-11-22T12:16:11Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 3 回目の実行の完了条件を利用者の確認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_4e8ce599c6e046eb9af992f2ad3736a9
+- v: 1
+  id: reg_dcfcdf7968994eb2976141acad157693
+  ts: "2026-11-22T12:17:01Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_618aac3996884994919f95fad2adf3d4
+- v: 1
+  id: reg_84dc2d5d924d48b3bbe4dbd8e6527cac
+  ts: "2026-11-22T12:22:15Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dcfcdf7968994eb2976141acad157693
+- v: 1
+  id: reg_06029c595f97459c8fb1b5516f7480fd
+  ts: "2026-11-22T12:54:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 4 回目の実行の完了条件を足す（利用者の承認）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_84dc2d5d924d48b3bbe4dbd8e6527cac
+- v: 1
+  id: reg_8b8d73f13b1e48de993aa26ac2532e82
+  ts: "2026-11-22T12:54:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 4 回目の実行の完了条件を足す（利用者の承認）
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_06029c595f97459c8fb1b5516f7480fd
+- v: 1
+  id: reg_6733409535cc41388a3e5a0942daddca
+  ts: "2026-11-22T13:01:08Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_8b8d73f13b1e48de993aa26ac2532e82
+- v: 1
+  id: reg_fefdcea79162425bb5d4c4f7fc400ee6
+  ts: "2026-11-22T13:03:58Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6733409535cc41388a3e5a0942daddca
+- v: 1
+  id: reg_f639f665c4604546a88bcacd16f23860
+  ts: "2026-11-22T23:49:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_fefdcea79162425bb5d4c4f7fc400ee6
+- v: 1
+  id: reg_a5fb1d003ba74dbd944a982e889ab424
+  ts: "2026-11-22T23:50:03Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が sld-sample の 4.1・4.2 の読みやすさを確かめ、OK とした（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: sld の rulebook と sample から文書の運用の記述を外し、共通の正本への参照にした。4 回の実行の後、grade は rulebook pass 95・sample pass 91。ほかの型へ広げる「外す記述・残す記述・参照の形」の一覧を個票に残した
+  previous_event_id: reg_f639f665c4604546a88bcacd16f23860

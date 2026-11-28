@@ -1,0 +1,20 @@
+v0.10.0 の CHANGELOG と移行の注意の作業は、指定された 2 組（34 件と 89 件）の個票をすべて照合し終えました。検証は、変更した 3 ファイルへの prettier と markdownlint（0 件）、`validate:history-links`（全件 valid）、`catalog validate --project prj-0001`（成功、既存の警告のみ）を流しました。`npm run lint:md` などは親 runner が流します。
+
+**変更したファイル**
+- `CHANGELOG.md`: `## [0.10.0] - 未公開` の節を書き直しました。区分は、移行の注意・削除・非推奨・追加・利用者から見て動きが変わる点・性能・セキュリティ・型と文書・不具合修正です。
+  - 移行の注意には、agy の対応を外したこと（移す手順つき）、9 コマンドの削除、pm-* のログの型の非推奨、`specdojo update` での上げ方、XC5P の注意を入れました。
+  - kata の手直しは「型と文書」に要約しました。
+  - 公開済みの版の節、`package.json` の版、タグは変えていません。
+- PJR-DMSM の個票: 作業内容の表をすべて `done` にしました。対応結果には、載せた項目と区分、載せなかった項目と理由、文案が見つからなかった項目を表で書きました。
+- PJR-XC5P の個票: 移行の注意に取り込んだことを書いた行のリスト崩れ（余分な空行）を直しました。
+
+**公開前に確かめること**
+- review のまま載せた項目が 4 件あり、行に「review 中」と書きました: PJR-F4TG・PJR-F636・PJR-N0P1・PJR-PXNQ。差し戻されたら行を外すか直してください。PJR-VM2S も review ですが、文案が「なし」なので載せていません。
+- PJR-F636 の文案は「ワークフロー反映後に掲載」となっているため、CI への反映を確かめてください。
+- `@specdojo/docs-site` に関わる変更（PJR-BNAV・XHS8・98HS・E73Z・WNQJ）が入っています。同梱パッケージを公開するか、版をどうするかを決めてください。
+- 文案の節がなかった項目は 6 件です: PJR-2P7C・TQZA・36QG・8PXJ・1FMG・DMSM。理由は個票に書きました。
+- PJR-X141 は指定の 2 組に入っていませんが、完了条件にあるので PJR-SJR7 とあわせて載せました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CHANGELOG.md の v0.10.0 節を全対象個票の文案から区分ごとにまとめ、移行の注意（agy・削除コマンド・pm-* の型の非推奨・specdojo update・XC5P）を記載した。PJR-DMSM の個票の対応結果に収集一覧・不掲載の理由・文案未発見の一覧と review 項目を記録した。","handoff":["review のまま CHANGELOG に載せた項目: PJR-F4TG・PJR-F636・PJR-N0P1・PJR-PXNQ（行に「review 中」と記載）。公開前に close を確かめ、差し戻されたら行を外すか直す。PJR-VM2S は review だが文案が「なし」で不掲載。","PJR-F636 の文案は「ワークフロー反映後に掲載」。公開前に CI のワークフローが反映されたかを確かめる。","`@specdojo/docs-site` に関わる変更（PJR-BNAV・PJR-XHS8・PJR-98HS・PJR-E73Z・PJR-WNQJ）を含む。リリースの手順で同梱パッケージの公開と版を判断する。","文案が見つからなかった項目: PJR-2P7C（decided）・PJR-TQZA（decided）・PJR-36QG（open note）・PJR-8PXJ（rejected、PJR-7EZR に統合）・PJR-1FMG（0.9.2 の節で公開済み）・PJR-DMSM（本項目）。詳細は個票の対応結果。","PJR-X141 は指定の 2 組に無いが、完了条件に従い PJR-SJR7 とあわせて掲載した。","`package.json` の版の更新とタグの作成は行っていない（オーケストレーターが利用者の承認のもとで行う）。"],"validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md","status":"passed","summary":"3 ファイルを整形（個票 1 件の表の幅を整えた）"},{"command":"npx markdownlint-cli2 CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run -s validate:history-links","status":"passed","summary":"全件 valid"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK（既存の based_on 未検出などの WARN のみ）。npm run validate:catalog は前回 sandbox の tsx IPC 制限で失敗したため同等の直接起動で確認"}],"target_coverage":[{"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md"},{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md"}]}
+</specdojo_executor_evidence>
