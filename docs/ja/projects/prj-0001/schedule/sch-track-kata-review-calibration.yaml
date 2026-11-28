@@ -29,7 +29,7 @@ tasks:
       対象の sample が、種別の責務（Sample 記述標準）と rulebook の目的に対し、要る内容を欠いていないか、要らない内容を含んでいないかを確かめ、足す・削る差分を sample に入れる。rulebook など
       sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1
       項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff
-      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: opr-sample
     phase_suffix: "120"
     phase_set: kata-agent-review-pass
@@ -50,7 +50,7 @@ tasks:
       章の順・粒度・表と本文の配置が rulebook の本文構成と template に沿い、前提から結論の順に読めるかを確かめ、章の移動・分割・統合の差分を sample に入れる。rulebook など sample
       以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1
       項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff
-      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: opr-sample
     phase_suffix: "130"
     phase_set: kata-agent-review-pass
@@ -71,7 +71,7 @@ tasks:
       同ガイドの「文章のチェック項目」（W1〜W10）と、その正本として挙げた規約を確かめ、文の直しの差分を sample に入れる。意味と判断に要る背景・例外・制約は変えない。指摘の根拠の列にはチェック項目の No か観点 ID
       を書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は
       handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1
-      回だけ描く。迷った指摘に「要判断」の印を付ける。
+      回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: opr-sample
     phase_suffix: "140"
     phase_set: kata-agent-review-pass
@@ -92,7 +92,7 @@ tasks:
       sample に書いてある事実（コマンド、オプション、キー、既定値、列挙値、パス、挙動）を、schema（docs/specdojo/schemas/v1/）、src/、コマンドリファレンス、必要なら --help
       や検証コマンドの実行と突き合わせる。主張ごとの確かめの表を result の実施内容に書き、誤りの直しの差分を sample に入れる。確かめられなかった主張も表に残す。指摘は同ガイドの「人への報告の形」に従い、executor
       は報告の handoff に 1 件ずつ 1 項目で書き、reporter は出力の findings に 1 件ずつ渡す（表を書かず、summary と handoff に指摘を重ねない。runner が result
-      の実施内容の後に表として 1 回だけ描く）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
+      の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
   - local_id: opr-sample
     phase_suffix: "150"
     phase_set: kata-agent-review-pass
@@ -113,7 +113,8 @@ tasks:
       同じ接頭辞の sample（index と個別）、wikilink と based_on の参照先、用語集（docs/ja/product/010-business-specs/060-glossary/）、Sample
       記述標準の共通サンプル文脈を読み、食い違いを確かめる。sample の側を直す差分を入れ、相手側を直すべき点は変更せずに直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の
       handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1
-      件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1
+      回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: prj-overview-sample
     phase_suffix: "110"
     phase_set: kata-agent-review-pass
@@ -133,7 +134,7 @@ tasks:
       対象の sample が、種別の責務（Sample 記述標準）と rulebook の目的に対し、要る内容を欠いていないか、要らない内容を含んでいないかを確かめ、足す・削る差分を sample に入れる。rulebook など
       sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1
       項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff
-      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: prj-overview-sample
     phase_suffix: "120"
     phase_set: kata-agent-review-pass
@@ -154,7 +155,7 @@ tasks:
       章の順・粒度・表と本文の配置が rulebook の本文構成と template に沿い、前提から結論の順に読めるかを確かめ、章の移動・分割・統合の差分を sample に入れる。rulebook など sample
       以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1
       項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff
-      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: prj-overview-sample
     phase_suffix: "130"
     phase_set: kata-agent-review-pass
@@ -175,7 +176,7 @@ tasks:
       同ガイドの「文章のチェック項目」（W1〜W10）と、その正本として挙げた規約を確かめ、文の直しの差分を sample に入れる。意味と判断に要る背景・例外・制約は変えない。指摘の根拠の列にはチェック項目の No か観点 ID
       を書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は
       handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1
-      回だけ描く。迷った指摘に「要判断」の印を付ける。
+      回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: prj-overview-sample
     phase_suffix: "140"
     phase_set: kata-agent-review-pass
@@ -196,7 +197,7 @@ tasks:
       sample に書いてある事実（コマンド、オプション、キー、既定値、列挙値、パス、挙動）を、schema（docs/specdojo/schemas/v1/）、src/、コマンドリファレンス、必要なら --help
       や検証コマンドの実行と突き合わせる。主張ごとの確かめの表を result の実施内容に書き、誤りの直しの差分を sample に入れる。確かめられなかった主張も表に残す。指摘は同ガイドの「人への報告の形」に従い、executor
       は報告の handoff に 1 件ずつ 1 項目で書き、reporter は出力の findings に 1 件ずつ渡す（表を書かず、summary と handoff に指摘を重ねない。runner が result
-      の実施内容の後に表として 1 回だけ描く）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
+      の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
   - local_id: prj-overview-sample
     phase_suffix: "150"
     phase_set: kata-agent-review-pass
@@ -217,7 +218,8 @@ tasks:
       同じ接頭辞の sample（index と個別）、wikilink と based_on の参照先、用語集（docs/ja/product/010-business-specs/060-glossary/）、Sample
       記述標準の共通サンプル文脈を読み、食い違いを確かめる。sample の側を直す差分を入れ、相手側を直すべき点は変更せずに直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の
       handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1
-      件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1
+      回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: stsd-sample
     phase_suffix: "110"
     phase_set: kata-agent-review-pass
@@ -237,7 +239,7 @@ tasks:
       対象の sample が、種別の責務（Sample 記述標準）と rulebook の目的に対し、要る内容を欠いていないか、要らない内容を含んでいないかを確かめ、足す・削る差分を sample に入れる。rulebook など
       sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1
       項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff
-      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: stsd-sample
     phase_suffix: "120"
     phase_set: kata-agent-review-pass
@@ -258,7 +260,7 @@ tasks:
       章の順・粒度・表と本文の配置が rulebook の本文構成と template に沿い、前提から結論の順に読めるかを確かめ、章の移動・分割・統合の差分を sample に入れる。rulebook など sample
       以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1
       項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff
-      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: stsd-sample
     phase_suffix: "130"
     phase_set: kata-agent-review-pass
@@ -279,7 +281,7 @@ tasks:
       同ガイドの「文章のチェック項目」（W1〜W10）と、その正本として挙げた規約を確かめ、文の直しの差分を sample に入れる。意味と判断に要る背景・例外・制約は変えない。指摘の根拠の列にはチェック項目の No か観点 ID
       を書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は
       handoff の指摘を出力の findings に 1 件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1
-      回だけ描く。迷った指摘に「要判断」の印を付ける。
+      回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
   - local_id: stsd-sample
     phase_suffix: "140"
     phase_set: kata-agent-review-pass
@@ -300,7 +302,7 @@ tasks:
       sample に書いてある事実（コマンド、オプション、キー、既定値、列挙値、パス、挙動）を、schema（docs/specdojo/schemas/v1/）、src/、コマンドリファレンス、必要なら --help
       や検証コマンドの実行と突き合わせる。主張ごとの確かめの表を result の実施内容に書き、誤りの直しの差分を sample に入れる。確かめられなかった主張も表に残す。指摘は同ガイドの「人への報告の形」に従い、executor
       は報告の handoff に 1 件ずつ 1 項目で書き、reporter は出力の findings に 1 件ずつ渡す（表を書かず、summary と handoff に指摘を重ねない。runner が result
-      の実施内容の後に表として 1 回だけ描く）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
+      の実施内容の後に表として 1 回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
   - local_id: stsd-sample
     phase_suffix: "150"
     phase_set: kata-agent-review-pass
@@ -321,4 +323,5 @@ tasks:
       同じ接頭辞の sample（index と個別）、wikilink と based_on の参照先、用語集（docs/ja/product/010-business-specs/060-glossary/）、Sample
       記述標準の共通サンプル文脈を読み、食い違いを確かめる。sample の側を直す差分を入れ、相手側を直すべき点は変更せずに直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の
       handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を出力の findings に 1
-      件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1 回だけ描く。迷った指摘に「要判断」の印を付ける。
+      件ずつ渡し、表を書かず、summary と handoff に指摘を重ねない。runner が findings を result の実施内容の後に表として 1
+      回だけ描き、表へ移した指摘を申し送りから除く。指摘以外の申し送りは残す。迷った指摘に「要判断」の印を付ける。
