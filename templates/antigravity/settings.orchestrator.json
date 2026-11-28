@@ -1,0 +1,34 @@
+{
+  "agentMode": "",
+  "toolPermission": "request-review",
+  "permissions": {
+    "allow": ["command(git status)", "command(git diff)", "command(git log)", "command(git show)"],
+    "ask": ["write_file(*)"],
+    "deny": [
+      "read_file(.env)",
+      "read_file(.env.local)",
+      "read_file(.env.development)",
+      "read_file(.env.development.local)",
+      "read_file(.env.test)",
+      "read_file(.env.test.local)",
+      "read_file(.env.production)",
+      "read_file(.env.production.local)",
+      "read_file(.env.staging)",
+      "read_file(secrets/)",
+      "read_file(.aws/)",
+      "read_file(.ssh/)",
+      "read_file(.gnupg/)",
+      "read_file(.config/gcloud/)",
+      "read_file(.npmrc)",
+      "read_file(.netrc)",
+      "read_file(credentials.json)",
+      "read_file(id_rsa)",
+      "read_file(id_ed25519)",
+      "write_file(.git/)",
+      "command(git push)",
+      "command(gh)",
+      "command(rm -rf)",
+      "command(sudo)"
+    ]
+  }
+}
