@@ -65,4 +65,6 @@ specdojo:
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:pjr-rulebook|プロジェクト登録簿 作成ルール]]
+- [[specdojo:register-operation-guide|登録簿運用ガイド]]
+- [[specdojo:command-reference|CLI コマンドリファレンス]]

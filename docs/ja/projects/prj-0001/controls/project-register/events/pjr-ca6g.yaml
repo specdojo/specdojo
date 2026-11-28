@@ -100,3 +100,16 @@
       from: ""
       to: 影響範囲とフォローアップ
   previous_event_id: reg_e79942ffefab48c69c94079b6993d385
+- v: 1
+  id: reg_7b6e676d6dc745238d68574b6f95d70f
+  ts: "2026-11-28T07:27:00Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 関連ドキュメント を書く
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_4089feab1f5648fcad05a4fd68ff5db0
