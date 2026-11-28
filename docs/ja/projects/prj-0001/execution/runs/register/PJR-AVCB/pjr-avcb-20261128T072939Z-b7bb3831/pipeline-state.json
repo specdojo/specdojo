@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-AVCB",
   "run_id": "pjr-avcb-20261128T072939Z-b7bb3831",
-  "updated_at": "2026-11-28T07:51:03.325Z",
+  "updated_at": "2026-11-28T07:52:18.307Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-28T07:51:03.325Z",
-      "completed_at": null,
+      "completed_at": "2026-11-28T07:52:18.307Z",
       "artifact_ref": null
     }
   },
