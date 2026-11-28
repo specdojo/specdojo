@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2656764ebfcc45029a49dabc493bf7b6
+  ts: "2026-11-28T00:21:36Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata の言語を選ぶ設定 kata\_locale を実装する
+    - field: description
+      from: ""
+      to: PJR-F4MG で決めた設計に沿って、kata（rulebook・recipe・sample・template など）の言語を選ぶ設定 `kata_locale` を実装する。英語版の kata は `docs/en/specdojo/` に日本語版と同じ id で置かれ、npm package にも入っているが、利用者が英語の kata を選ぶ経路がまだない。
+    - field: input
+      from: ""
+      to: '["設計は PJR-F4MG の対応結果「英語の kata の置き場所と言語の選び方」で決めた（設定のキー、init の質問、kata list での見え方、ja へのフォールバック）","英語版の kata は docs/en/specdojo/ に日本語版と同じ id で置き、npm package の files に含めた（c4ce5b53c1）","実装は v0.10.0 の後に入れる。担当 DEV・期限 2026-12-31 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-F4MG"]'
