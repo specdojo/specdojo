@@ -5877,3 +5877,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d0f63bbbf719464fbfd8e14089dc1896
+- v: 1
+  id: reg_b3bad33ccfa949b2825fd28dcf63b3a2
+  ts: "2026-11-28T15:45:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: specdojo-orchestrator が exec smoke の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-29"
+    - field: conclusion
+      from: sync の 2 本のブランチへ移した後も、exec run --register が start から review まで実体の actor で記帳し、統合まで通った
+      to: PJR-3R7V の統合後に exec smoke で start → review と実体 actor（sonnet-executor）を確かめた（2026-11-29）
+  previous_event_id: reg_6e2ffc395d6f40528263234e2d96ec0d

@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: sync の 2 本のブランチへ移した後も、exec run --register が start から review まで実体の actor で記帳し、統合まで通った
+  completed_at: "2026-11-28T15:45:34Z"
+  conclusion: PJR-3R7V の統合後に exec smoke で start → review と実体 actor（sonnet-executor）を確かめた（2026-11-29）
   autopilot: approved
 ---
 
