@@ -56,7 +56,10 @@ specdojo:
 
 ## 5. 注意点
 
-_TODO_: 会話の中で気づいたことを記載する。決まりになるものは playbook へ移す。ない場合は `-` とする。
+- 手動で選んだ schedule のタスクの run（`exec run --task`）は、`--track-state` を付けないと claim・complete が記帳されない。
+- `worktrees/` の下に作る作業ツリーでは、prj-0002 の `repos` の相対パス（`../specdojo-lp` など）が解決できない。commit の hook は、`packages/*` の `node_modules` と、git 管理外の登録簿の一覧（`register build`）がないと止まる。
+- 古い列（runner が動いていない `kra-day1`・`kra-night1`・`kra-night1b`・`rerun-70ss` など）の片づけ方は、まだ決めていない。
+- 12 月末が期限の主な項目: PJR-SVKR（docs-site の型検査を `check:release` に入れる）、PJR-AQJE（入門ガイドの用語）、PJR-0M82（メモの置き場の決定、担当と期限は未定）、PJR-3R7V（kata_locale）、期限を延ばした BA の 7 件。
 
 ## 6. 関連ドキュメント
 

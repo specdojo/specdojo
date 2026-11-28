@@ -71,3 +71,16 @@
       from: ""
       to: 有効な承認の範囲
   previous_event_id: reg_4f9d4ea7cf364d2da132f5b4eb0f9482
+- v: 1
+  id: reg_4234dd7c63784e0b9fb478fc2638c158
+  ts: "2026-11-28T13:27:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 注意点 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 注意点
+  previous_event_id: reg_cbdabf22c37b4f6aa38daff8e66be035
