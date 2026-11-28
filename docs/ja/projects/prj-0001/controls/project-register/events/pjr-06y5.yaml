@@ -29,3 +29,19 @@
     - field: registered
       from: ""
       to: "2026-11-29"
+- v: 1
+  id: reg_6edc1afeace2481aad5b8ffbf76d2c37
+  ts: "2026-11-28T15:49:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "引き継ぎ元と先" updated
+  changes:
+    - field: section
+      from: ""
+      to: 引き継ぎ元と先
+    - field: description
+      from: _TODO_
+      to: "- 引き継ぎ元: 2026-11-28〜29 の対話のオーケストレーターのセッション（Claude Code、Opus 5.5）。PJR-8NRN を受け取り、夜の列で 5 件を流して確かめるところまで行った。 - 引き継ぎ先: 次のオーケストレーターのセッション（LLM は問わない）。受け取ったら、受け取った主体を `--by` にして close する。"
+  previous_event_id: reg_8aa0ee52be024f278a7e71d86dce4d57
