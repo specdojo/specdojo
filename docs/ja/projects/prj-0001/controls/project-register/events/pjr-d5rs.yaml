@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-N6FQ"]'
+- v: 1
+  id: reg_a0942ae805c44ac9a749a8c8a660a9e7
+  ts: "2026-11-28T04:28:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_de8d98cfa32c407c815ec54064ffcbb7
