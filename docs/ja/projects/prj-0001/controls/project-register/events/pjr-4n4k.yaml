@@ -38,3 +38,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-F4MG"]'
+- v: 1
+  id: reg_b7c35740801749f2a0f1e71ba55b728e
+  ts: "2026-11-28T14:25:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_22775aed1b2749de9172114a9910d55f
