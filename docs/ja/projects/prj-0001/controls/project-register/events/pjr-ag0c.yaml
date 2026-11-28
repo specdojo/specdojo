@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_12917ce8555745d5b5f929f999831708
+- v: 1
+  id: reg_2625d4a54c1b4a97af2ff6949e37b38e
+  ts: "2026-11-28T11:00:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合の後に remote にない feature ブランチで --dry-run を流し、Commits が 17597 から 37 になり、基準の 23 本の remote のブランチが Range に示されることを確かめた（2026-11-28）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: remote にないブランチの guarded-push の表示で、Commits を remote のどのブランチにもない commit の数にし、基準にした remote のブランチを Range に示すようにした
+  previous_event_id: reg_06dbd107420c46ed85ce173021fd1c0f
