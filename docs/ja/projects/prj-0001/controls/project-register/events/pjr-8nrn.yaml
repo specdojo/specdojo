@@ -29,3 +29,16 @@
     - field: registered
       from: ""
       to: "2026-11-28"
+- v: 1
+  id: reg_788c34847c294266b50ce6f460c951fb
+  ts: "2026-11-28T13:25:13Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 期限を indie が決めた
+  changes:
+    - field: due
+      from: "-"
+      to: "2026-11-30"
+  previous_event_id: reg_98070d73aef74d608b5a3a96f64b5823

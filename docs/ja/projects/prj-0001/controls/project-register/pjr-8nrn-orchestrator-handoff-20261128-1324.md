@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: PO
   registered_at: "2026-11-28T13:24:15Z"
-  due_on: null
+  due_on: "2026-11-30"
 ---
 
 # PJR-8NRN オーケストレーターの引き継ぎ（2026-11-28 13:24 UTC）
