@@ -48,3 +48,16 @@
       from: ""
       to: 検討した選択肢
   previous_event_id: reg_17c1ea09fcef4d7db6ecc5f6ce2541f6
+- v: 1
+  id: reg_69930cc83bff480b94a64b69bdaf2dc3
+  ts: "2026-11-28T14:00:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 決定内容 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_ad96172b5891421c8dff7784059634ab
