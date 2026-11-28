@@ -9,9 +9,9 @@ specdojo:
   origin: register
   plan_ref: runs/register/PJR-HPAW/pjr-hpaw-20261128T042523Z-be903906/plan.md
   started_at: "2026-11-28T04:25:29.509Z"
-  completed_at: "2026-11-28T04:37:47.503Z"
+  completed_at: "2026-11-28T05:02:33.960Z"
   agent: sol-executor
-  block_reason: "parent validation failed: lint-ts"
+  block_reason: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
 ---
 
 # Edit Result
