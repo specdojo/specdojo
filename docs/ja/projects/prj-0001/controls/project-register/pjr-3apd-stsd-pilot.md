@@ -15,7 +15,7 @@ specdojo:
   owner: BA
   registered_at: "2026-11-03T23:51:57Z"
   start_on: "2026-11-05"
-  due_on: "2026-11-30"
+  due_on: "2026-12-31"
   derived_from:
     - PJR-CYG0
   depends_on:
