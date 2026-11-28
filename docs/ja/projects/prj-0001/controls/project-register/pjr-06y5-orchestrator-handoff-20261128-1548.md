@@ -72,4 +72,9 @@ specdojo:
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]]
+- [[prj-0001:pjr-8nrn-orchestrator-handoff-20261128-1324|PJR-8NRN]] 前の引き継ぎ
+- [[prj-0001:pjr-htym-night-20261128-review-followups|PJR-HTYM]] 夜の 5 件の review で出た判断
+- [[prj-0001:pjr-4efh-register-commit-slow-investigation|PJR-4EFH]] 記帳が遅い原因の調査
+- [[prj-0001:pjr-0fbb-smoke-reopen-not-merged-register-sync|PJR-0FBB]] exec smoke の reopen が取り込まれない
+- [[prj-0001:pjr-0gpz-legacy-plan-change-silently-dropped|PJR-0GPZ]] 旧い置き場の plan・result の変更が黙って外される
