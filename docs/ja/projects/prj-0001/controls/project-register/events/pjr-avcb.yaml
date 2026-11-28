@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_40b821e9173c4ebea036ffd286f3b129
+  ts: "2026-11-28T07:20:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: note を done で close できるように rulebook と CLI を直す
+    - field: description
+      from: ""
+      to: PJR-CA6G の決定に沿って、register close で note を done にできるようにし、pjr-rulebook と登録簿運用ガイドとオーケストレーター本文の note の扱いを直す
+    - field: input
+      from: ""
+      to: '["PJR-CA6G で note を done で close できるようにすると決めた（indie、2026-11-28）。rejected・deferred は note に使わない","今は src/register/update.ts が note の close を拒んでいる","v0.10.0 に入れる。担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CA6G"]'
+- v: 1
+  id: reg_b0c5a172387148cab98068ab9270a9b5
+  ts: "2026-11-28T07:21:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_40b821e9173c4ebea036ffd286f3b129
+- v: 1
+  id: reg_097c63cb45854c74ab5efe2898d726cc
+  ts: "2026-11-28T07:22:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容を書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_b0c5a172387148cab98068ab9270a9b5
