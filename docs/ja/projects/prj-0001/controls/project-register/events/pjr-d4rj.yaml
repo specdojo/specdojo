@@ -93,3 +93,16 @@
       from: ""
       to: 決定内容
   previous_event_id: reg_6b79a4efd5a340d0a18f6467630f6255
+- v: 1
+  id: reg_b111c8f6d1fd49c2a2f385a49a2cd408
+  ts: "2026-11-28T03:28:32Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_f58ef07fa0da40ceaf2245ea79d9305a
