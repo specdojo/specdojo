@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a0942ae805c44ac9a749a8c8a660a9e7
+- v: 1
+  id: reg_822b5e443a5f483f9c7c1e4f54477136
+  ts: "2026-11-28T10:22:44Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 2026-11-28 の GDMB の実機の確認で、indie が agy を templates/antigravity/settings.orchestrator.json と本文で直接起動し、対話と毎回の確認が想定どおり動いた。これを確かめとして indie が close を指示した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: agy を利用者が直接起動する対話のオーケストレーターとして使えるよう、本文のラッパーと設定（templates/antigravity）と .agents/rules を戻した
+  previous_event_id: reg_51bb4aca30884f859251460da603f626

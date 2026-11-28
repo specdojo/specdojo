@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zf6q-watch-scan-md028
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-28T09:56:57Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T10:24:43Z"
+  conclusion: 見回りの報告の診断の章の描き方を直し、注記の前にも項目の行を置いて、引用の間に空行が入らないようにした
   derived_from:
     - PJR-QCJ5
 ---
