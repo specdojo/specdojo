@@ -147,3 +147,16 @@
       from: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
       to: "-"
   previous_event_id: reg_8826ac270d574431b445c6650b1198c7
+- v: 1
+  id: reg_171fc25f54824214b79f20525fa08b74
+  ts: "2026-11-28T05:17:29Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f729768ed4654592acf2262359e00296
