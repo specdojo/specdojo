@@ -100,3 +100,16 @@
       from: ""
       to: 対応結果
   previous_event_id: reg_3de2021519e9495b9b7ce3b7ec406002
+- v: 1
+  id: reg_30b2450c1cb44ec2966b93934755a72c
+  ts: "2026-11-28T13:12:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容の表を終えた状態にする
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_4f49b861ba2146f0b8ac3828ba49da39

@@ -41,14 +41,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                          | 担当         | 状態 | メモ |
-| --- | ------------------------------------------------------------- | ------------ | ---- | ---- |
-| 1   | 範囲の項目が close されていることを確かめる                   | orchestrator | open |      |
-| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | open |      |
-| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | open |      |
-| 4   | WSL の導入確認                                                | PO           | open |      |
-| 5   | push・PR の merge・タグ・npm の公開の承認                     | PO           | open |      |
-| 6   | 公開後の確認                                                  | orchestrator | open |      |
+| No  | 作業                                                          | 担当         | 状態 | メモ                                                       |
+| --- | ------------------------------------------------------------- | ------------ | ---- | ---------------------------------------------------------- |
+| 1   | 範囲の項目が close されていることを確かめる                   | orchestrator | done | 対応結果の「範囲と CHANGELOG」のとおり                     |
+| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | done | 182 件で照合した                                           |
+| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | done | 6c047a458d。docs-site は 86c01a0694 で直して 0.7.1         |
+| 4   | WSL の導入確認                                                | PO           | done | indie が行った（対応結果の「WSL の導入確認」）             |
+| 5   | push・PR の merge・タグ・npm の公開の承認                     | PO           | done | indie が行った（PR #43・#45、タグ 4 つ、stage 3 つの承認） |
+| 6   | 公開後の確認                                                  | orchestrator | done | 対応結果の「公開と公開後の確認」のとおり                   |
 
 ## 5. 対応結果
 
