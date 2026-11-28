@@ -160,3 +160,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f729768ed4654592acf2262359e00296
+- v: 1
+  id: reg_d572b8d4d1a8470aabb5ec04c6842455
+  ts: "2026-11-28T05:19:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票の対応結果・親の検証 12 段を確かめ、build し直した CLI で push（-C・-c を前に置いた形を含む）と send-pack が拒まれ、status・log・merge が動くことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: specdojo git が push・send-pack・http-push・receive-pack を git の起動前に拒むようにした。global option を前に置いた形も拒み、alias・未知のコマンド・外部の git-* はまとめて拒む
+  previous_event_id: reg_171fc25f54824214b79f20525fa08b74
