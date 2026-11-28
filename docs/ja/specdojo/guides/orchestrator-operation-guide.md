@@ -182,12 +182,16 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 
 オーケストレーターは、状態やファイルを変える操作を承認なしに実行しません。CLI 側の権限機構でも同じ方針を多重に担保します。
 
-- 破壊的変更や `git push` は行いません。`git commit` は明示的に依頼した場合のみ行います。
+- 破壊的変更や直接の `git push` は行いません。`git commit` は明示的に依頼した場合のみ行います。
 - 認証情報・秘密鍵・`.env` / `secrets/` は読み込みません。
 - 会話で確定していないプロジェクト事実（担当・期日・結論など）を勝手に埋めません。
 - Codex は `approval_policy` により状態変更時に承認を求めます。OpenCode は読み取り系の `specdojo` のみ許可し、その他の `specdojo` 実行は都度確認します。
 
 影響の大きい操作（`specdojo exec run` など、エージェントを起動して成果物を生成・更新するもの）は、対象と実行範囲を提示して承認を得てから実行します。
+
+push の入口は `npx specdojo guarded-push --project <id> [--branch <branch>] [--remote <name>]` です。オーケストレーターが使うには、利用者の承認のもと指示本文と各環境の権限設定を更新し、この入口だけを毎回の承認対象にします。`git push` の deny と executor・reporter の禁止は維持します。反映前は従来どおり push を利用者へ引き渡してください。
+
+反映後は、まず同じ引数に `--dry-run` を付けてブランチ・remote・commit の範囲と件数を提示し、その送信ごとに承認を得て通常実行します。対象は `project/<id>/develop` と `feature/<id>/*` だけです。承認後にブランチの先端や送信先・範囲が変わった場合は、表示と承認をやり直します。force・タグ・main・同期専用ブランチをこの入口で送ることはできません。同期専用ブランチは従来どおり `register branch-push` などに任せます。検査時の fetch、排他、環境変数による拒否の境界は [[specdojo:command-reference|コマンドリファレンス]] の guarded-push 節を参照してください。
 
 他の agent が claim したまま停止した task は、`exec release --by specdojo-orchestrator --force` で戻せます。CLI が claim の runner PID の終了を確認し、現在の project の run lock を検査してから解除します。動作中または判定不能の場合は拒否理由に従い、人の `--force` に引き継ぎます。`--by` に人の名前を代用しません。`--reset-worktree` と `--all-blocked` は、引き続き利用者の承認を得てから使います。判定情報のない旧 claim などの制約は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
 

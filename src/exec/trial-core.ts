@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { AGENT_ROLE_ENV } from "../shared/agent-role.js";
 import { trackExecutor } from "./validation-metrics.js";
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
@@ -384,7 +385,12 @@ export function spawnAgent(
   return new Promise((resolveOutcome) => {
     const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
     const gitStateBefore = captureAgentGitStateSnapshot(cwd);
-    const child = spawn(command, { cwd, env, shell: true, stdio: ["pipe", "pipe", "pipe"] });
+    const child = spawn(command, {
+      cwd,
+      env: { ...env, [AGENT_ROLE_ENV]: stageRole },
+      shell: true,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
     const stopTracking = stageRole === "executor" ? trackExecutor(child.pid, cwd) : () => undefined;
     let stdout = "";
     let stderr = "";

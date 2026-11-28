@@ -1622,7 +1622,7 @@ specdojo git --project prj-0001 -- merge feature/prj-0001/update-guide
 specdojo git -- status --short
 ```
 
-`push`・`send-pack`・`http-push`・`receive-pack` は、Git を起動する前にエラーで拒否します。`-C`・`-c`・`--config-env` などのグローバルオプションを前に置いても同じです。push は人が行うか、PJR-D4RJ で予定している守りのある入口を使ってください。この入口は別途実装予定です。
+`push`・`send-pack`・`http-push`・`receive-pack` は、Git を起動する前にエラーで拒否します。`-C`・`-c`・`--config-env` などのグローバルオプションを前に置いても同じです。push には下記の `specdojo guarded-push` を使います。登録簿などの同期専用ブランチは引き続き専用コマンドに任せます。
 
 実行できるのは明示的に許可した組み込みコマンドです。commit・merge などの上記の操作や、fetch・pull・branch・tag・stash・worktree などは引き続き利用できます。alias は内容によらず拒否し、未知のサブコマンド・外部の `git-*` コマンド・`--exec-path` による実行先の差し替えも拒否します。alias の連鎖やシェル alias からの push を防ぐため、`-c alias.publish=push publish` のような形も通りません。任意のコマンドを実行できる `bisect`・`submodule`・`for-each-repo` も許可対象外です。必要な処理は許可された組み込みコマンドを直接指定してください。
 
@@ -1633,6 +1633,23 @@ specdojo git -- status --short
 この拒否はコマンドの入口に対する制限です。許可した commit などから起動する hook、pager、外部 diff、通信 helper などの設定されたプログラムは隔離しません。それらの設定・実行権限は別途管理してください。
 
 `specdojo git --project <id> --warn-unlocked` は pre-commit 用の警告チェックです。選択 project の primary / join run が実行中で、Git に渡された token が有効な lifecycle ロックと一致しない場合に警告します。commit は止めません。runner と `specdojo git` は保持中の token を Git 子プロセスへ渡すため警告対象になりません。新規の lefthook scaffold はこのチェックを含みます。既存リポジトリでは pre-commit への追加が必要です。生の Git コマンドや別 project のロックとは直列化されません。
+
+### 17.1. guarded-push（範囲を守る push）
+
+```bash
+specdojo guarded-push --project prj-0001 --dry-run
+specdojo guarded-push --project prj-0001 --branch feature/prj-0001/update-guide --remote origin
+```
+
+`--project <id>` は必須です。`--branch` の既定は現在のブランチ、`--remote` の既定は `origin` です。ローカルと送信先のブランチ名は同じで、`project/<id>/develop` または `feature/<id>/*` のみを通します。main、他 project、同期専用ブランチ、タグ、任意の refspec は拒否します。`--force`・`--force-with-lease`・`--all`・`--mirror`・`--delete` を含む任意の Git 引数は受け付けません。detached HEAD では `--branch` が必要です。
+
+送信前にブランチ・remote 名・commit の範囲・件数を表示します。送信先は指定 remote の push URL で、複数の push URL は拒否します。送信先の実際の先端を取得して fast-forward を検査し、追跡ブランチや upstream の設定には依存しません。送信先が新規なら、そのブランチからたどれる全 commit を件数として表示します。既存ブランチなら先端からの差分です。表示は実際の pack の転送件数ではありません。
+
+`--dry-run` は同じ検査と表示だけを行い、push は起動しません。検査には remote への読み取りと先端の object の fetch を伴いますが、ローカルのブランチ・追跡 ref・`FETCH_HEAD` は更新しません。通常実行では、検査した commit ID を同名の ref 一つへ送ります。remote の mirror・push refspec 設定に依存せず、タグの追随送信と submodule の push を無効にします。検査後に remote が競合する更新を受けた場合も、通常の Git の fast-forward 検査で止まります。
+
+検査から Git と hook の終了まで、`specdojo git`・runner と同じ project の `exec-lifecycle` ロックを保持します。exec と trial の executor・reporter には起動時に `SPECDOJO_AGENT_ROLE` を渡し、この変数が存在する呼び出しは Git 起動前に拒否します。環境変数を消す操作や改変した CLI まで隔離する仕組みではないため、executor の権限設定でもこの入口を拒否する必要があります。hook・通信 helper などの設定されたプログラムは信頼する境界に含まれます。
+
+CLI は人の承認を代行しません。オーケストレーターでは、[[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] のとおり入口だけを毎回の承認対象にし、`git push` の deny を維持します。既存設定と指示の更新が承認・反映されるまでは、従来の push 禁止を維持してください。
 
 ## 18. update
 
