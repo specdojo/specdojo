@@ -78,6 +78,18 @@ specdojo:
 | `guarded-push --dry-run`                         | 範囲と件数を示した。`SPECDOJO_AGENT_ROLE` を付けると拒み、`main` は範囲外として拒んだ        |
 | `sync` の設定と `register branch-push --dry-run` | 設定を読み込み、最初の push では統合先のブランチを先に送るよう案内した（送信は行っていない） |
 
+### 5.4. WSL の導入確認
+
+indie が運用メモの「WSL の導入確認」の手順で、`specdojo-0.10.0.tgz` を WSL2 の Linux 側の空の Git リポジトリ 2 つへ `npm install --save-dev` で入れて確かめた（2026-11-28）。
+
+| 項目    | 内容                                                                                                                                                                                                                          |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 環境    | Ubuntu 24.04.4 LTS、WSL 2.7.12.0、カーネル 6.18.33.2-microsoft-standard-WSL2、WSLg 1.0.73.2                                                                                                                                   |
+| Node.js | v24.20.0                                                                                                                                                                                                                      |
+| package | specdojo 0.10.0                                                                                                                                                                                                               |
+| 手元    | `doctor`（警告なし）・`init --yes --provider claude --no-tmux`・`register add` が成功し、個票にタイトル「WSL check」があった                                                                                                  |
+| tmux    | `doctor --tmux`（警告なし）・`init --yes --provider claude --tmux`・`register add` が成功し、個票にタイトルがあった。`tmux new -s specdojo-check` から `Ctrl-b`、`d` で離脱し、`tmux attach -t specdojo-check` で再接続できた |
+
 ## 6. 関連ドキュメント
 
 - _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。

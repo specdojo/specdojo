@@ -74,3 +74,16 @@
       from: ""
       to: 対応結果
   previous_event_id: reg_0713904148734b4c84150ca4c3807184
+- v: 1
+  id: reg_3de2021519e9495b9b7ce3b7ec406002
+  ts: "2026-11-28T12:09:27Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: WSL の導入確認の結果を記録する
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_be9fcdae36bf437e9a18ccf89cf38f20
