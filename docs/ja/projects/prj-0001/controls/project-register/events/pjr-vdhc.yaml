@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_5c0a6f4c51ba4f8d89a3ccc491d6619f
+  ts: "2026-11-28T11:20:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_7e23caae8b5d4b8981afa4423f34da28
