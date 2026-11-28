@@ -273,7 +273,7 @@ agent は strategy の phase の `agent` で指名します。reporter は書き
 
 - executor: 報告の `handoff` に、指摘を 1 件ずつ 1 項目として書く（項目の書式は `No: 段 / 箇所 / 指摘 / 直した案 / 根拠 / 印`）。表の文字列を 1 項目に詰めない。
 - reporter: `handoff` の指摘を、出力の `findings` に 1 件ずつ 1 つの組（`no`・`stage`・`location`・`finding`・`fix`・`basis`・`mark`）で渡す。表は書かず、`summary` と `handoff` に指摘を重ねない。
-- runner: `findings` を result の `実施内容` の後に Markdown の表として 1 回だけ描く。セルの `|` と改行は runner が直す。
+- runner: `findings` を result の `実施内容` の後に Markdown の表として 1 回だけ描く。セルの `|` と改行は runner が直す。executor と reporter の `handoff` のうち、上の指摘書式で No・段が `findings` と一致する項目は申し送りから除く。番号への言及、検証結果や要判断の理由など、指摘の項目以外の申し送りは残す。
 
 - 指摘の表: 列は `No`、`段`、`箇所`（章の名前）、`指摘`、`直した案`（差分の要約、直さない場合は `-`）、`根拠`（観点 ID またはチェック項目の No）、`印` とする。
 - 印: agent が迷った指摘には `要判断` を付け、迷った理由と選ばなかった案を根拠の列に書く。迷わなかった指摘は `-` とする。

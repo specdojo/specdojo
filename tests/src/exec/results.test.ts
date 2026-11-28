@@ -1331,6 +1331,83 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(content)).toEqual([]);
   });
 
+  it.each(["executor", "reporter", "both"] as const)(
+    "omits finding handoffs from %s while keeping other notes and the source evidence",
+    async (source) => {
+      const { resultPath } = await scaffoldResult({
+        executionPath,
+        taskId: "prj-overview",
+        mode: "edit",
+        projectId: "prj-0001",
+        planRef: "exec/plans/prj-overview-plan.md",
+        agent: "pipeline-executor",
+        startedAt: "2026-08-10T07:00:00.000Z",
+      });
+      const duplicateNotes = [
+        "R5-01: R5 / docs/a.md / 用語が不一致 / 統一した / 用語集 / -",
+        "- **R5-02**: `R5` / docs / ja / b.md / 参照先が不明 / - / 整合 / 要判断",
+      ];
+      const keptNotes = [
+        "検証結果: schema は valid。",
+        "R5-02: 要判断の理由は相手側の責務が決まっていないため。",
+        "R5-01 の差分は統合後に人が確認する。",
+        "R5-03: R5 / docs/c.md / 表にまだない指摘 / - / 整合 / 要判断",
+        "R5-01: R1 / docs/a.md / 別の段の指摘 / - / 目的 / -",
+      ];
+      const evidence = reporterEvidence([{ path: "docs/test.md", status: "M" }]);
+      evidence.handoff = [...(source !== "reporter" ? duplicateNotes : []), ...keptNotes];
+      evidence.validations = [
+        { command: "real-agent-check", status: "requires_human", summary: "統合後の実行が必要" },
+      ];
+      const originalEvidence = structuredClone(evidence);
+      const output = {
+        schema_version: 1 as const,
+        mode: "edit" as const,
+        summary: ["R5 の指摘を直した。"],
+        changed_files: [{ path: "docs/test.md", summary: "文を直した。" }],
+        handoff: [...(source !== "executor" ? duplicateNotes : []), "reporter の追加の申し送り。"],
+        approach: "kata-guide に沿って進めた。",
+        findings: [
+          {
+            no: "R5-01",
+            stage: "R5",
+            location: "docs/a.md",
+            finding: "用語が不一致",
+            fix: "統一した",
+            basis: "用語集",
+            mark: "-",
+          },
+          {
+            no: "R5-02",
+            stage: "R5",
+            location: "docs/ja/b.md",
+            finding: "参照先を特定できない",
+            fix: "-",
+            basis: "整合",
+            mark: "要判断",
+          },
+        ],
+      };
+      const originalOutput = structuredClone(output);
+
+      await renderReporterResult(resultPath, output, evidence);
+      const content = readFileSync(resultPath, "utf8");
+      const handoff = content.slice(content.indexOf("## 3. 申し送り"), content.indexOf("## 4."));
+
+      expect(content.match(/\| No /g)).toHaveLength(1);
+      expect(content).toMatch(/\| R5-01 +\| R5 +\|/u);
+      expect(content).toMatch(/\| R5-02 +\| R5 +\|/u);
+      expect(handoff).not.toContain("用語が不一致");
+      expect(handoff).not.toContain("参照先が不明");
+      for (const note of keptNotes) expect(handoff).toContain(note);
+      expect(handoff).toContain("reporter の追加の申し送り。");
+      expect(handoff).toContain("人の確認が必要: `real-agent-check`（統合後の実行が必要）");
+      expect(evidence).toEqual(originalEvidence);
+      expect(output).toEqual(originalOutput);
+      expect(markdownlintErrors(content)).toEqual([]);
+    },
+  );
+
   it("renders edit output without findings exactly as before", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
@@ -1346,7 +1423,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       mode: "edit" as const,
       summary: ["成果物を更新した。"],
       changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
-      handoff: [],
+      handoff: ["R5-01: R5 / docs/a.md / 用語が不一致 / - / 用語集 / 要判断"],
       approach: "rulebook に沿って進めた。",
     };
     const evidence = reporterEvidence([{ path: "docs/test.md", status: "M" }]);
@@ -1358,6 +1435,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
 
     expect(withoutField).toContain("## 1. 実施内容\n\n- 成果物を更新した。\n\n## 2. 変更ファイル");
     expect(withoutField).not.toContain("| No");
+    expect(withoutField).toContain(base.handoff[0]);
     expect(withEmptyField).toBe(withoutField);
   });
 
