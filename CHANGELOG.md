@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 不具合修正
+
+- `@specdojo/docs-site` を 0.7.1 にしました。0.7.0 は、開発中の版の帯のために `themeConfig` に足した項目（`specdojoChannel`・`specdojoStableUrl`）が型になく、公開の型検査で止まったため npm に出していません。SpecDojo 0.10.0 と一緒に使う版は 0.7.1 です。
+
 ## [0.10.0] - 2026-11-28
 
 ### 移行の注意
