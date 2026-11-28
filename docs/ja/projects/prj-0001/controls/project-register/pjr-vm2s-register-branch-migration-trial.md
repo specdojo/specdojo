@@ -149,7 +149,10 @@ prj-0001 と external_projects で起票している別のプロジェクトで�
 | 記帳           | `register ... --commit`、`exec run --register`、PJR-JSEY の smoke                                        | 記帳が `sync/register` に push され、`branch-merge` と run の前後の自動取り込みで develop に入った。コンテナの再起動の後も記帳が失われなかった |
 
 - schedule の claim・complete が `sync/exec-events` に入ることは、まだ確かめていない（PJR-VKY2 で確かめる）。
-- 別のプロジェクト（`external_projects`）からの起票は、sync への移し替えの後にまだ行っていない。次に実際に起票するときに確かめ、その後に close を判断する。
+- 別のプロジェクトからの試し（2026-11-28、indie の指示による案 A）: prj-0002（`external_projects` の相手、同じリポジトリの別の作業ツリー）の設定は旧 `register_sync` のままだったため、`feature/prj-0002/merge-prj-0001-develop` に prj-0001 の develop を取り込み（93526a0c0、衝突なし）、設定を `sync` に移した。その作業ツリーから `register add --project prj-0001 --commit` で note PJR-MYGE を起票し、`project/prj-0001/sync/register` に commit（12a9172db2）されて remote へ送られたこと、`register branch-check --commit 12a9172db2` が通ること、`register branch-merge` で develop に入ることを確かめた。試しの note は close した。
+- 試しで見つかった点: 作業ツリーを `worktrees/` の下に作ると、prj-0002 の `repos` の相対パス（`../specdojo-lp` など）が解決できず、設定の検査で commit の hook が止まった。また、prj-0002 の登録簿の一覧（git 管理外）がないと index-build の hook が止まった（PJR-MACP と同じ種類）。どちらも作業ツリーの準備の問題で、同期の仕組みの問題ではない。
+- prj-0002 の develop への取り込みは、利用者の確認を待つ。
+- schedule の claim・complete の `sync/exec-events` への記帳は、PJR-VKY2 で確かめる。
 
 ## 6. 関連ドキュメント
 
