@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -86,6 +86,45 @@ async function createFixture(
 }
 
 describe("tools/validate-orchestrator-sync.mjs", () => {
+  it("agy の対話用配布本文のずれを検出し、同期で正本へ戻す", async () => {
+    const target = { path: "templates/antigravity/orchestrator.md", format: "raw" };
+    expect(orchestratorWrappers).toContainEqual(target);
+    const fixture = await createFixture();
+    fixture.write(target.path, "# Stale agy instructions\n");
+
+    expect(validateOrchestratorSync(fixture.rootDir)).toEqual([
+      expect.objectContaining({ path: target.path }),
+    ]);
+    expect(generateOrchestratorWrappers(fixture.rootDir)).toEqual([target.path]);
+    expect(validateOrchestratorSync(fixture.rootDir)).toEqual([]);
+  });
+
+  it("agy の配布設定は対話の承認と push・秘密ファイルの拒否を保つ", () => {
+    const settings = JSON.parse(
+      readFileSync("templates/antigravity/settings.orchestrator.json", "utf8"),
+    ) as {
+      agentMode: string;
+      toolPermission: string;
+      permissions: { ask: string[]; deny: string[] };
+    };
+
+    expect(settings.agentMode).toBe("");
+    expect(settings.toolPermission).toBe("request-review");
+    expect(settings.permissions.ask).toContain("write_file(*)");
+    expect(settings.permissions.deny).toEqual(
+      expect.arrayContaining([
+        "command(git push)",
+        "read_file(.env)",
+        "read_file(.env.local)",
+        "read_file(.env.production)",
+        "read_file(secrets/)",
+        "read_file(.aws/)",
+        "read_file(.ssh/)",
+        "write_file(.git/)",
+      ]),
+    );
+  });
+
   it("Markdown と TOML の全ラッパーが正本と一致すると成功する", async () => {
     const fixture = await createFixture();
 

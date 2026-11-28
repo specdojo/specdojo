@@ -118,7 +118,7 @@ npm run orch:opus
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 
-0.10.0 で、SpecDojo は Antigravity CLI（`agy`）の対応を外しました。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があるとエラーになるため、その member と向き先の別名を消し、`exec-defaults.yaml` の参照をほかの member へ替え、agy を起動する npm script を消してください。
+0.10.0 で、SpecDojo から Antigravity CLI（`agy`）を起動する対応を外しました。[Antigravity の FAQ](https://antigravity.google/docs/faq) が consumer plan の対象外としているのは、他社の agent や application の中に agy を包むこと（wrapping）です。利用者が agy を直接起動し、対話のオーケストレーターとして SpecDojo を操作することはできます。手順は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] の「agy を利用者が直接起動する」を参照してください。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があるとエラーになるため、その member と向き先の別名を消し、`exec-defaults.yaml` の参照をほかの member へ替え、SpecDojo から agy を起動する npm script を消してください。
 
 #### Dev Container を使う場合（任意）
 
