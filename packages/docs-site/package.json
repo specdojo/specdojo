@@ -50,8 +50,8 @@
     "vitepress-sidebar": "^1.36.1"
   },
   "devDependencies": {
-    "@types/node": "^25.9.2",
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.10",
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "vite": "^6.4.4",
