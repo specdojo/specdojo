@@ -73,3 +73,6 @@ specdojo:
 - [[prj-0001:pjr-gdmb-guarded-push-entry|PJR-GDMB]] 範囲を守る push の入口
 - [[prj-0001:pjr-svkr-check-release-docs-site-typecheck|PJR-SVKR]] docs-site の型検査
 - [[prj-0001:pjr-cjnv-routine-resume-timing|PJR-CJNV]] routine の再開の時期
+- [[prj-0001:pjr-6v26-comprehension-debt-core-message|PJR-6V26]] 理解の負債を中心の課題として記述を見直す
+- [[prj-0001:pjr-dm1n-cdfd-diagram-layout|PJR-DM1N]] CDFD の図の描き方
+- [[prj-0001:pjr-756e-cdfd-d2-layout-samples|PJR-756E]] CDFD の D2 の記法と sample の描き直し
