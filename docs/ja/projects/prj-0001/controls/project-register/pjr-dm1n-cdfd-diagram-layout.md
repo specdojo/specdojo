@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-11-28T13:58:16Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-28T14:07:31Z"
+  conclusion: CDFD の図を種類ごとに描き分ける。全体概要は業務のまとまりの囲み、プロセスグループ別は担当ごとのレーンと受け渡しの番号、ユースケース別は D2 の sequence_diagram。まず型の sample から直す（PJR-756E）
 ---
 
 # PJR-DM1N CDFD の図を、種類ごとに囲み・担当のレーン・時系列で描く

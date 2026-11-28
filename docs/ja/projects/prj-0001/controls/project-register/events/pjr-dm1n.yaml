@@ -100,3 +100,22 @@
       from: ""
       to: 影響範囲とフォローアップ
   previous_event_id: reg_a9883c8e805347969f86fb7b677558fb
+- v: 1
+  id: reg_a9849b9a7251484c9e894e01ca165b86
+  ts: "2026-11-28T14:07:31Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が推奨の使い分けを採った（2026-11-28）。反映は PJR-756E、製品の CDFD は PJR-T1D1
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: CDFD の図を種類ごとに描き分ける。全体概要は業務のまとまりの囲み、プロセスグループ別は担当ごとのレーンと受け渡しの番号、ユースケース別は D2 の sequence_diagram。まず型の sample から直す（PJR-756E）
+  previous_event_id: reg_b5386b2512cf486f8a0938e23de865cf
