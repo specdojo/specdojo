@@ -46,6 +46,11 @@ PJR-CA6G の決定に沿って、register close で note を done にできる�
 - `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 
+- 2 回目の実行（2026-11-28）: 1 回目で直した 3 つの文書のほかに、note を終わらせない前提の記述が業務仕様に残っている。次の 2 つを PJR-CA6G の決定に合わせて直す。
+  - ステータス遷移仕様（登録項目）（`stsd-register-entry`）: note の起票済みから完了への遷移（close、conclusion 必須）と、完了から起票済みへの再開を、遷移の図と表に足す。note の却下・延期は使わないことと、「現行制約との対応」の CLI の動き（close は done だけ、conclusion 必須、reject・defer は拒否）を今の実装に合わせる。遷移の番号は、既存の番号を付け直さずに足す。
+  - 分類一覧（登録項目の種別）（`cdt-register-type`）: note の行の説明を、使い終わったら close で done にする記録に直す。
+- 2 回目の実行では src と tests を変えない。v0.3.0 の移行ガイドは過去の版の記録なので変えない。
+
 ## 4. 作業内容
 
 1. done: 終端の共通ガードで note の close を許可し、close では `done` と明示的な `--conclusion` を必須にした。
