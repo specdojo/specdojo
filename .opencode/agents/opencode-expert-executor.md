@@ -40,6 +40,9 @@ permission:
       "git rm --force*": deny,
       "rm -rf*": deny,
     }
+    "specdojo guarded-push*": deny
+    "npx specdojo guarded-push*": deny
+    "./node_modules/.bin/specdojo guarded-push*": deny
   edit:
     {
       "*": deny,

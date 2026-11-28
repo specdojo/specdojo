@@ -22,7 +22,7 @@ SpecDojo is a TypeScript CLI and documentation system for specification-driven e
 
 - Do not read credentials, private keys, `.env`, `.env.*`, or `secrets/`.
 - Do not run destructive Git commands such as `git reset --hard`, `git clean`, or forceful file deletion unless explicitly requested.
-- Do not run `git push`.
+- Do not run `git push`. Only the interactive orchestrator may push, through `npx specdojo guarded-push --project <project-id>`, limited to `project/<project-id>/develop` and `feature/<project-id>/*`: show the branch, remote, commit range and count with `--dry-run` first, and get the user's approval for every push. Never push main, tags, or rewritten history. Executors and reporters never use this entry. Pushes to sync branches stay with the specdojo commands (`register ... --commit`, `exec run`, `register branch-push`).
 - Do not commit generated local settings, auth files, session files, build outputs, or dependency directories.
 
 ## 4. Build And Validation
