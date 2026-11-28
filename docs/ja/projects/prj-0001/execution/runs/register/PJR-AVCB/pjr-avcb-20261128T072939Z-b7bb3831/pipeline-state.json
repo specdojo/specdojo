@@ -2,30 +2,30 @@
   "schema_version": 1,
   "task_id": "PJR-AVCB",
   "run_id": "pjr-avcb-20261128T072939Z-b7bb3831",
-  "updated_at": "2026-11-28T07:30:42.774Z",
+  "updated_at": "2026-11-28T07:40:42.541Z",
   "stages": {
     "executor": {
-      "status": "pending",
+      "status": "succeeded",
       "actor": "sol-executor",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "attempts": 1,
+      "started_at": "2026-11-28T07:31:28.706Z",
+      "completed_at": "2026-11-28T07:36:39.835Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/evidence.json"
     },
     "reporter": {
-      "status": "pending",
+      "status": "failed",
       "actor": "sonnet-reporter",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "attempts": 1,
+      "started_at": "2026-11-28T07:40:32.842Z",
+      "completed_at": "2026-11-28T07:40:42.541Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/result.md"
     },
     "prepare": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-28T07:30:42.774Z",
-      "completed_at": null,
+      "completed_at": "2026-11-28T07:31:28.703Z",
       "artifact_ref": null
     }
   },
