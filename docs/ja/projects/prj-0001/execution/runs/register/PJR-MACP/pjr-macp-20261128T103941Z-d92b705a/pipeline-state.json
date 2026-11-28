@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-MACP",
   "run_id": "pjr-macp-20261128T103941Z-d92b705a",
-  "updated_at": "2026-11-28T10:54:51.430Z",
+  "updated_at": "2026-11-28T10:56:50.930Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -29,11 +29,11 @@
       "artifact_ref": null
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-28T10:54:51.430Z",
-      "completed_at": null,
+      "completed_at": "2026-11-28T10:56:50.930Z",
       "artifact_ref": null
     }
   },
