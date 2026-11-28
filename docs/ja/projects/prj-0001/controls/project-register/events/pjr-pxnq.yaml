@@ -83,3 +83,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ba92dd997bc1452793f29e54285741e4
+- v: 1
+  id: reg_b77c1ec478854af6a49c082595086d04
+  ts: "2026-11-28T13:17:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2026-11-28 に gh api で main の Dependabot の警告を読み、open が 0 件、今日 fixed になったものが 19 件（high 1・medium 15・low 3）であることを確かめた。push のときに出ていた 17 件（high 1・moderate 13・low 3）を含む
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: Dependabot が示した依存の脆弱性を develop で直し、v0.10.0 のリリースで main に入れた。main の open の警告は 0 件になった
+  previous_event_id: reg_b5c9274abe9840849e9e0e1da9c7000c

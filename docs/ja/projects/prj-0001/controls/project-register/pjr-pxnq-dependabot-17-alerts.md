@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pxnq-dependabot-17-alerts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:25:53Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T13:17:37Z"
+  conclusion: Dependabot が示した依存の脆弱性を develop で直し、v0.10.0 のリリースで main に入れた。main の open の警告は 0 件になった
   commit_type: build
   commit_scope: deps
 ---

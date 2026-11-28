@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: PO
   registered_at: "2026-11-28T11:19:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T13:12:50Z"
+  conclusion: "SpecDojo 0.10.0 を公開した（PR #43、merge commit ebf2692e0c、タグ v0.10.0）。docs-lint 0.5.1 と、型の誤りを直した docs-site 0.7.1（PR #45、merge commit 70ddba79e9）も公開した。npm の latest は 3 つとも新しい版で、provenance 付き"
 ---
 
 # PJR-VDHC v0.10.0 をリリースする
@@ -41,14 +43,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                          | 担当         | 状態 | メモ |
-| --- | ------------------------------------------------------------- | ------------ | ---- | ---- |
-| 1   | 範囲の項目が close されていることを確かめる                   | orchestrator | open |      |
-| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | open |      |
-| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | open |      |
-| 4   | WSL の導入確認                                                | PO           | open |      |
-| 5   | push・PR の merge・タグ・npm の公開の承認                     | PO           | open |      |
-| 6   | 公開後の確認                                                  | orchestrator | open |      |
+| No  | 作業                                                          | 担当         | 状態 | メモ                                                       |
+| --- | ------------------------------------------------------------- | ------------ | ---- | ---------------------------------------------------------- |
+| 1   | 範囲の項目が close されていることを確かめる                   | orchestrator | done | 対応結果の「範囲と CHANGELOG」のとおり                     |
+| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | done | 182 件で照合した                                           |
+| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | done | 6c047a458d。docs-site は 86c01a0694 で直して 0.7.1         |
+| 4   | WSL の導入確認                                                | PO           | done | indie が行った（対応結果の「WSL の導入確認」）             |
+| 5   | push・PR の merge・タグ・npm の公開の承認                     | PO           | done | indie が行った（PR #43・#45、タグ 4 つ、stage 3 つの承認） |
+| 6   | 公開後の確認                                                  | orchestrator | done | 対応結果の「公開と公開後の確認」のとおり                   |
 
 ## 5. 対応結果
 
@@ -77,6 +79,27 @@ specdojo:
 | `exec run --register --worktree`（claude）       | start から review まで通り、成果が commit された                                             |
 | `guarded-push --dry-run`                         | 範囲と件数を示した。`SPECDOJO_AGENT_ROLE` を付けると拒み、`main` は範囲外として拒んだ        |
 | `sync` の設定と `register branch-push --dry-run` | 設定を読み込み、最初の push では統合先のブランチを先に送るよう案内した（送信は行っていない） |
+
+### 5.4. WSL の導入確認
+
+indie が運用メモの「WSL の導入確認」の手順で、`specdojo-0.10.0.tgz` を WSL2 の Linux 側の空の Git リポジトリ 2 つへ `npm install --save-dev` で入れて確かめた（2026-11-28）。
+
+| 項目    | 内容                                                                                                                                                                                                                          |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 環境    | Ubuntu 24.04.4 LTS、WSL 2.7.12.0、カーネル 6.18.33.2-microsoft-standard-WSL2、WSLg 1.0.73.2                                                                                                                                   |
+| Node.js | v24.20.0                                                                                                                                                                                                                      |
+| package | specdojo 0.10.0                                                                                                                                                                                                               |
+| 手元    | `doctor`（警告なし）・`init --yes --provider claude --no-tmux`・`register add` が成功し、個票にタイトル「WSL check」があった                                                                                                  |
+| tmux    | `doctor --tmux`（警告なし）・`init --yes --provider claude --tmux`・`register add` が成功し、個票にタイトルがあった。`tmux new -s specdojo-check` から `Ctrl-b`、`d` で離脱し、`tmux attach -t specdojo-check` で再接続できた |
+
+### 5.5. 公開と公開後の確認
+
+- PR #43（develop から main）の CI 11 件が通り、indie が merge commit（`ebf2692e0c`）で merge し、`v0.10.0`・`docs-site-v0.7.0`・`docs-lint-v0.5.1` のタグを push した。
+- `docs-site-v0.7.0` の公開の workflow は、`.vitepress/config.mts` の型の誤り（TS2353、PJR-98HS で足した `themeConfig` の項目が型にない）で、npm に送る前に止まった。押したタグを書き換えず、型を直して版を 0.7.1 に上げ（86c01a0694）、PR #45（merge commit `70ddba79e9`、CI 11 件が通った）を経て `docs-site-v0.7.1` で出し直した（indie の決定）。0.7.0 は npm に出ていない。再発の防止は PJR-SVKR で扱う。
+- indie が 3 つの stage を 2FA の経路で承認した。npm の `latest` は `specdojo` 0.10.0、`@specdojo/docs-site` 0.7.1、`@specdojo/docs-lint` 0.5.1 で、3 つとも provenance（`https://slsa.dev/provenance/v1`）が付いている。
+- タグで起動した `publish-specdojo`・`publish-docs-site`（0.7.1）・`publish-docs-lint`・文書サイトの `deploy`（`v0.10.0`）の workflow は成功した。
+- npm から `specdojo@0.10.0` を空の Git リポジトリへ入れ、`--version`（0.10.0）、`doctor`（前提がそろっている）、`init --yes --provider claude --no-tmux --exec`、`register add`、`guarded-push --help` が動くことを確かめた（2026-11-28）。
+- 残り: PJR-PXNQ で、main の Dependabot の警告が 0 件になったかを確かめる。
 
 ## 6. 関連ドキュメント
 
