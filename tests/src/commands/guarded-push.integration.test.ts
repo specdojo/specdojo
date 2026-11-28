@@ -91,6 +91,41 @@ describe("guarded-push with a local bare remote", () => {
     });
   });
 
+  it("counts only commits missing from every remote branch when showing a new branch", async () => {
+    await fixture(async (root, remote) => {
+      const output = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      try {
+        const options = { project: "p", cwd: root, dryRun: true };
+        expect(await runGuardedPush(options)).toBe(0);
+        const initial = git(root, "rev-parse", "HEAD");
+        expect(output.mock.calls.map(([line]) => String(line)).join("")).toContain(
+          `Range: (new branch) ${initial}; origin has no branches, so the full history is counted\nCommits: 1\n`,
+        );
+        commit(root, "published");
+        expect(await runGuardedPush({ project: "p", cwd: root })).toBe(0);
+        // A remote-only commit on another branch is not local; the dry-run must fetch it.
+        const other = join(root, "..", "other");
+        git(root, "clone", "--quiet", remote, other);
+        git(other, "switch", "-c", "project/p/other");
+        commit(other, "remote only");
+        git(other, "push", "--quiet", "origin", "project/p/other");
+        git(root, "switch", "-c", "feature/p/topic");
+        commit(root, "topic 1");
+        const tip = commit(root, "topic 2");
+        output.mockClear();
+        expect(await runGuardedPush({ ...options, branch: "feature/p/topic" })).toBe(0);
+        expect(output.mock.calls.map(([line]) => String(line)).join("")).toContain(
+          `Range: (new branch) ${tip}, excluding commits on 2 origin branches (project/p/develop, project/p/other)\nCommits: 2\n`,
+        );
+        expect(git(remote, "for-each-ref", "--format=%(refname)")).toBe(
+          "refs/heads/project/p/develop\nrefs/heads/project/p/other",
+        );
+      } finally {
+        output.mockRestore();
+      }
+    });
+  });
+
   it("dry-run checks the live push endpoint and leaves its refs and local tracking refs unchanged", async () => {
     await fixture(async (root, remote) => {
       const options = { project: "p", cwd: root };
