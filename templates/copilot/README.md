@@ -40,5 +40,7 @@ specdojo config scaffold --provider copilot
 
 - フラグの追加・変更は `providers.copilot.command_template` の1箇所で行う（member 側に `command` を書かない）。
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使わない。
-- `--deny-tool` の `git add` / `git commit` / `git push` は維持する。deny は `--allow-all-tools` より優先されるため、許可リストの追記で誤って開くことを防ぐ保険になる。
+- `--deny-tool` の `git add` / `git commit` / `git push` / `git reset` と `guarded-push` の入口は維持する。deny は `--allow-all-tools` より優先されるため、許可リストの追記で誤って開くことを防ぐ保険になる。
+- `shell(<command>)` を足すときは、引数付きのコマンドにも当たるよう素の形と `:*` 付きの形（`shell(<command>:*)`）を並べる。
+- `--no-remote` は今の Copilot CLI で廃止され、`--no-remote-export` は `--sync-session=off` に改名された。廃止された引数を足すと起動が終了コード 1 で失敗する。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。
