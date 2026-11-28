@@ -64,3 +64,16 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_b0c5a172387148cab98068ab9270a9b5
+- v: 1
+  id: reg_f1b077e5936d452b82d6f94008204bac
+  ts: "2026-11-28T07:29:56Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_097c63cb45854c74ab5efe2898d726cc
