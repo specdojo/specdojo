@@ -118,6 +118,21 @@ VS Code の各種 AI 拡張機能からオーケストレーターを利用す�
 - **Codex 拡張**:
   Codex の VS Code 拡張（`Codex – OpenAI's coding agent`）で名前付きの agent の定義を選ぶ仕組みは、公式の文書では確かめられていません（2026-10 時点で未確認）。そのため、会話開始時に SSOT である `.agents/specdojo-orchestrator.agent.md` の本文を最初の指示（プロンプト）として渡して対話を開始します。
 
+### 2.3. agy を利用者が直接起動する
+
+Antigravity CLI（`agy`）は、利用者が直接起動して対話のオーケストレーターに使えます。[Antigravity の FAQ](https://antigravity.google/docs/faq) が consumer plan の対象外としているのは、他社の agent や application の中に agy を包むこと（wrapping）です。本手順は、利用者が起動した agy から `specdojo` コマンドを実行する形として扱います。agy から呼んだ SpecDojo が別の agent を起動することは FAQ に明記されておらず、これは本プロジェクトの運用上の判断です（2026-11-28 確認）。
+
+起動には `templates/antigravity/orchestrator.md`（SSOT と同じ本文）と `templates/antigravity/settings.orchestrator.json` を使います。npm package を利用する場合は、以下の `templates/antigravity/` を `node_modules/specdojo/templates/antigravity/` に読み替えてください。利用リポジトリのルートで、利用者自身が端末から実行します。
+
+```bash
+agy --settings templates/antigravity/settings.orchestrator.json \
+  -i "$(cat templates/antigravity/orchestrator.md)"
+```
+
+`-i` は初期指示を渡して対話を続ける引数です。`--settings` はそのセッションだけに設定を渡し、グローバル設定を保存しません（`agy --help` で確認できます）。設定は `agentMode: ""`・`toolPermission: "request-review"` とし、編集の承認、`git push`、主要な `.env`・認証情報・秘密鍵の配置と `secrets/` の読み取り拒否を指定します。別名・入れ子の秘密ファイルや shell 経由のアクセスまで網羅する設定ではありません。追加の秘密パスを deny に含め、既存設定との優先順位と拒否動作を秘密情報のない環境で確認してから使ってください。[CLI 権限仕様](https://antigravity.google/docs/permissions/?tab=cli) の `*` は全対象指定のため、`.env.*` のようなファイル glob として転記しません。
+
+この起動に `specdojo orchestrator launch` や `agent launch` は使いません。exec の provider、`init`・`config scaffold`・`devcontainer scaffold` の選択肢にも `antigravity` は追加しません。利用リポジトリ固有の規則を読み込ませる場合は、agy の `.agents/rules/*.md` に薄い参照ラッパーを配置できます。
+
 ## 3. 対話の進め方
 
 オーケストレーターは「提案 → 承認 → 実行」を基本とします。
@@ -178,7 +193,7 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 
 ## 5. 設定ファイルの構成
 
-指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーに加え、`config scaffold` で利用者へ配る provider テンプレートも同じ本文から生成します。
+指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。環境ごとの設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーと `config scaffold` の provider テンプレートに加え、利用者が agy を直接起動するための配布本文も同じ正本から生成します。
 
 | 役割               | パス                                       |
 | ------------------ | ------------------------------------------ |
@@ -188,6 +203,7 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 | Codex              | `.codex/agents/specdojo-orchestrator.toml` |
 | OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    |
 | OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   |
+| agy（直接起動用）  | `templates/antigravity/orchestrator.md`    |
 
 本文を変更する場合は、次の手順で全環境を同期します。
 

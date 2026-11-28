@@ -71,7 +71,7 @@ provider、exec、Dev Container、tmux、Git hook、Slidev の順に質問しま
 空の場合も、provider の質問だけをやり直します。非対話環境や `--yes` では再質問せず、従来どおり不正な
 指定をエラーとして終了します。
 
-0.10.0 で、SpecDojo は Antigravity CLI（`agy`）の対応を外しました。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。`init`・`config scaffold`・`devcontainer scaffold`・`orchestrator launch` の provider に `antigravity` はありません。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があると、`disabled: true` でも名簿の読み込みで理由と直し方を示すエラーになります。その member と向き先の別名を消し、`exec-defaults.yaml` の `routing` などにある参照をほかの member へ替え、`providers.antigravity` と agy を起動する npm script を消してください。
+0.10.0 で、SpecDojo から Antigravity CLI（`agy`）を起動する対応を外しました。[Antigravity の FAQ](https://antigravity.google/docs/faq) が consumer plan の対象外としているのは、他社の agent や application の中に agy を包むこと（wrapping）です。利用者が agy を直接起動して対話のオーケストレーターに使う手順は、[[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] の「agy を利用者が直接起動する」を参照してください。exec の provider、`agent launch`・`orchestrator launch`、`init`・`config scaffold`・`devcontainer scaffold` の provider に `antigravity` はありません。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があると、`disabled: true` でも名簿の読み込みで理由と直し方を示すエラーになります。その member と向き先の別名を消し、`exec-defaults.yaml` の `routing` などにある参照をほかの member へ替え、`providers.antigravity` と SpecDojo から agy を起動する npm script を消してください。
 
 非対話環境では質問せず、次の主要オプションと既定値を使います。
 

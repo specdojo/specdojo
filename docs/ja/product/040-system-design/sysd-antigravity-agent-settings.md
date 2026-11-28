@@ -10,7 +10,7 @@ specdojo:
 
 # Antigravity CLI エージェント設定
 
-SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / reporter pipeline を非対話実行するための provider 固有設定を定義する。
+0.10.0 で SpecDojo から Antigravity CLI（`agy`）を起動する provider は削除した。以下は削除前の非対話実行の設計記録であり、現在の設定には適用しない。利用者が agy を直接起動する対話用ラッパーは [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] に従う。
 
 ## 1. 設計方針
 
