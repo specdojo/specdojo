@@ -161,3 +161,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ac44998cfbe944729f5d7e34b8d53cb5
+- v: 1
+  id: reg_4d3b3cdee966439189e8f47169ffd4df
+  ts: "2026-11-28T08:05:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回の exec run の差分と対応結果を完了条件に照らして確かめ、空のリポジトリで dist の CLI により close・拒否 3 通り・reopen が動くことを確かめた。オーケストレーター本文の変更は feature/prj-0001/orchestrator-note-close に用意し、取り込みは利用者の承認を待つ
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: register close で note を done にできるようにした（conclusion 必須、done 以外と reject・defer は拒否、reopen で戻せる）。pjr-rulebook（日英）・登録簿運用ガイド・CLI コマンドリファレンス・ステータス遷移仕様（登録項目）・分類一覧（登録項目の種別）を直した
+  previous_event_id: reg_34085171a6ae4c9b96cf380a8f00e68f

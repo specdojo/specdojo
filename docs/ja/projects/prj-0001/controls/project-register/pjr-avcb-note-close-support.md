@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-avcb-note-close-support
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-28T07:20:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T08:05:55Z"
+  conclusion: register close で note を done にできるようにした（conclusion 必須、done 以外と reject・defer は拒否、reopen で戻せる）。pjr-rulebook（日英）・登録簿運用ガイド・CLI コマンドリファレンス・ステータス遷移仕様（登録項目）・分類一覧（登録項目の種別）を直した
   derived_from:
     - PJR-CA6G
 ---
