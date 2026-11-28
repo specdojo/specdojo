@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: note
-  item_status: open
+  item_status: done
   priority: medium
   registered_at: "2026-11-28T10:53:56Z"
+  completed_at: "2026-11-28T10:55:29Z"
+  conclusion: 試しの記録は PJR-VM2S の対応結果へ移した。prj-0002 から起票した項目が sync/register に届き、remote へ送られたことを確かめた
   derived_from:
     - PJR-VM2S
 ---

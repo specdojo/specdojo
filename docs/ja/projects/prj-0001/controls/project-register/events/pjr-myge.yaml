@@ -35,3 +35,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_c793a84cd7b742959547af214e4f3d88
+  ts: "2026-11-28T10:55:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: VM2S の試しの起票として役目を終えたため
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 試しの記録は PJR-VM2S の対応結果へ移した。prj-0002 から起票した項目が sync/register に届き、remote へ送られたことを確かめた
+  previous_event_id: reg_0c5c4198055c40dca97aa8462193a8b9
