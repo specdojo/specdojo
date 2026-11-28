@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7051b8e5b8da4a1ea0ef438aa29f10a5
+- v: 1
+  id: reg_6283d9b0a6c44395a75f17befb54d48d
+  ts: "2026-11-28T10:24:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果を完了条件に照らして確かめた。1 件・複数件・上限の場合の描画が markdownlint を通る単体テストがあり、親の検証も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 見回りの報告の診断の章の描き方を直し、注記の前にも項目の行を置いて、引用の間に空行が入らないようにした
+  previous_event_id: reg_99b2fdd1f360408f959d35ec23ed5978
