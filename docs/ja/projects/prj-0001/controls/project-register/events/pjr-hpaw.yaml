@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-D4RJ"]'
+- v: 1
+  id: reg_2b84d9de3b3f4e44948c0122dd433502
+  ts: "2026-11-28T04:26:19Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7ed354a91a34437a8a582c1255b38f00
+- v: 1
+  id: reg_4628323a4c25487595716d0da0c6b85d
+  ts: "2026-11-28T04:37:53Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_2b84d9de3b3f4e44948c0122dd433502

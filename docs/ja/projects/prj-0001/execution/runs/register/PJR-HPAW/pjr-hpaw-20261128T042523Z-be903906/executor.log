@@ -1,0 +1,54 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "push・send-pack などを Git 起動前に拒否し、alias・外部コマンド経由も制限しました。回帰テスト、リファレンス、個票を更新しました。追加検査は成功し、型検査・テスト等は親 runner に委ねています。",
+  "handoff": [
+    "変更ファイル: `src/commands/git.ts`、`tests/src/commands/git.test.ts`、`tests/src/commands/git.integration.test.ts`、`docs/ja/specdojo/references/command-reference.md`、`docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md`。result・保護設定・Git 設定は変更していません。",
+    "拒否する26通りの引数と CLI の回帰テストを追加しました。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・その他の指定済み親検証は runner が実行し、その evidence を正としてください。",
+    "alias は安全な内容でも一律に拒否します。許可した操作から起動する hook・pager・外部 diff・通信 helper は隔離しないため、それらが push を呼ぶ危うさは残ります。個票5.3節に制限を記録しました。今回の拒否処理に保護設定の変更は不要です。PJR-D4RJ の守りのある入口は別項目で実装します。",
+    "CHANGELOG 文案は個票5.4節に記載しました。区分は不具合修正で、送信操作の事前拒否と、alias・外部コマンドを防ぐための組み込みコマンドへの限定を記載しています。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --check src/commands/git.ts tests/src/commands/git.test.ts tests/src/commands/git.integration.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md",
+      "status": "passed",
+      "summary": "変更した5ファイルの整形を確認しました。"
+    },
+    {
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md",
+      "status": "passed",
+      "summary": "変更した Markdown 2ファイルで違反はありません。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言に問題はありません。"
+    },
+    {
+      "command": "npm run validate:history-links -- docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md",
+      "status": "passed",
+      "summary": "更新した個票のリンクは有効です。"
+    },
+    {
+      "command": "node --import tsx --input-type=module -e 'import dotenv from \"dotenv\"; dotenv.config = () => ({}); const { runCatalogValidateIfConfigured } = await import(\"./tools/catalog-validate-if-configured.mjs\"); process.exitCode = await runCatalogValidateIfConfigured();'",
+      "status": "passed",
+      "summary": ".env の読み込みを無効にして hook のカタログ検証を実行しました。変更対象外の文書・参照に警告がありますが、エラーはありません。"
+    },
+    {
+      "command": "node --import tsx --input-type=module -e 'import dotenv from \"dotenv\"; dotenv.config = () => ({}); process.argv = [\"node\", \"src/specdojo.ts\", \"register\", \"build\", \"--project\", \"prj-0001\"]; await import(\"./src/specdojo.ts\");'",
+      "status": "passed",
+      "summary": ".env の読み込みを無効にして register build が成功しました。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象の staged 実行記録は0件、検出は0件でした。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

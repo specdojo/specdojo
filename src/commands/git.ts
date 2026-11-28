@@ -36,6 +36,69 @@ const READ_COMMANDS = new Set([
   "version",
   "help",
 ]);
+// Keep this explicit: unknown commands can expand aliases (including !shell aliases)
+// or launch git-* executables. Do not resolve them by executing Git first.
+const SUPPORTED_COMMANDS = new Set([
+  ...READ_COMMANDS,
+  "add",
+  "am",
+  "annotate",
+  "apply",
+  "blame",
+  "branch",
+  "bundle",
+  "check-attr",
+  "check-ignore",
+  "check-mailmap",
+  "check-ref-format",
+  "checkout",
+  "cherry",
+  "cherry-pick",
+  "clean",
+  "clone",
+  "commit",
+  "config",
+  "count-objects",
+  "diff-files",
+  "diff-index",
+  "diff-tree",
+  "fetch",
+  "for-each-ref",
+  "fsck",
+  "gc",
+  "init",
+  "ls-remote",
+  "merge",
+  "mv",
+  "notes",
+  "pull",
+  "range-diff",
+  "rebase",
+  "reflog",
+  "remote",
+  "repack",
+  "replace",
+  "reset",
+  "restore",
+  "revert",
+  "rm",
+  "show-branch",
+  "show-ref",
+  "sparse-checkout",
+  "stash",
+  "switch",
+  "tag",
+  "update-index",
+  "update-ref",
+  "var",
+  "verify-commit",
+  "verify-pack",
+  "verify-tag",
+  "worktree",
+]);
+const REMOTE_WRITE_COMMANDS = new Set(["push", "send-pack", "http-push", "receive-pack"]);
+const PUSH_GUIDANCE =
+  "Push must be performed by a human or through the guarded entry point planned in PJR-D4RJ.";
 const VALUE_OPTIONS = ["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env"];
 const FLAG_OPTIONS = new Set([
   "--bare",
@@ -77,15 +140,22 @@ export function inspectGitArguments(args: readonly string[]): {
         globals.push(args[index++]);
       }
       if (valueOption === "-c" || valueOption === "--config-env") customConfig = true;
-    } else if (FLAG_OPTIONS.has(arg) || arg.startsWith("--exec-path=")) {
+    } else if (FLAG_OPTIONS.has(arg)) {
       globals.push(arg);
-      if (arg.startsWith("--exec-path=")) customConfig = true;
     } else {
       throw new Error(`Unsupported git global option: ${arg}`);
     }
   }
   const command = args[index];
-  // Aliases, unknown commands and output-writing variants join the same queue as writes.
+  if (REMOTE_WRITE_COMMANDS.has(command)) {
+    throw new Error(`specdojo git refuses remote-writing command: ${command}. ${PUSH_GUIDANCE}`);
+  }
+  if (!SUPPORTED_COMMANDS.has(command)) {
+    throw new Error(
+      `Unsupported git command: ${command ?? "(missing)"}. Aliases and external commands are not allowed. ${PUSH_GUIDANCE}`,
+    );
+  }
+  // Output-writing variants and custom configuration join the same queue as writes.
   const writesOutput = args
     .slice(index + 1)
     .some((arg) => arg === "--output" || arg.startsWith("--output="));

@@ -1622,9 +1622,15 @@ specdojo git --project prj-0001 -- merge feature/prj-0001/update-guide
 specdojo git -- status --short
 ```
 
-`status`・`log`・`diff`・`show` などの読み取りはロックも project 設定も不要です。index の任意更新を避けるため `GIT_OPTIONAL_LOCKS=0` を渡します。alias・未知のサブコマンド、`--output` によるファイル出力、`-c` / `--config-env` を伴う呼び出しは書き込みとして扱います。追加依存はなく、既存の heartbeat 付きロックを使います。所有プロセスが落ちた場合、heartbeat が止まってから30秒で後続が取り直せます。
+`push`・`send-pack`・`http-push`・`receive-pack` は、Git を起動する前にエラーで拒否します。`-C`・`-c`・`--config-env` などのグローバルオプションを前に置いても同じです。push は人が行うか、PJR-D4RJ で予定している守りのある入口を使ってください。この入口は別途実装予定です。
+
+実行できるのは明示的に許可した組み込みコマンドです。commit・merge などの上記の操作や、fetch・pull・branch・tag・stash・worktree などは引き続き利用できます。alias は内容によらず拒否し、未知のサブコマンド・外部の `git-*` コマンド・`--exec-path` による実行先の差し替えも拒否します。alias の連鎖やシェル alias からの push を防ぐため、`-c alias.publish=push publish` のような形も通りません。任意のコマンドを実行できる `bisect`・`submodule`・`for-each-repo` も許可対象外です。必要な処理は許可された組み込みコマンドを直接指定してください。
+
+`status`・`log`・`diff`・`show` などの読み取りはロックも project 設定も不要です。index の任意更新を避けるため `GIT_OPTIONAL_LOCKS=0` を渡します。`--output` によるファイル出力、`-c` / `--config-env` を伴う呼び出しは書き込みとして扱います。追加依存はなく、既存の heartbeat 付きロックを使います。所有プロセスが落ちた場合、heartbeat が止まってから30秒で後続が取り直せます。
 
 書き込みには対象 worktree の `.specdojo/specdojo.config.json` が必要です。project の選択順は `--project` → `SPECDOJO_PROJECT` → `current_project` → `projects` の先頭です。Git の `-C`・`--git-dir`・`--work-tree` はロックの対象解決にも反映します。bare repository と未知の Git グローバルオプションは実行前に拒否します。`.env` はロードせず、Git のリポジトリ固有環境変数は既存の隔離規約に従って除きます。
+
+この拒否はコマンドの入口に対する制限です。許可した commit などから起動する hook、pager、外部 diff、通信 helper などの設定されたプログラムは隔離しません。それらの設定・実行権限は別途管理してください。
 
 `specdojo git --project <id> --warn-unlocked` は pre-commit 用の警告チェックです。選択 project の primary / join run が実行中で、Git に渡された token が有効な lifecycle ロックと一致しない場合に警告します。commit は止めません。runner と `specdojo git` は保持中の token を Git 子プロセスへ渡すため警告対象になりません。新規の lefthook scaffold はこのチェックを含みます。既存リポジトリでは pre-commit への追加が必要です。生の Git コマンドや別 project のロックとは直列化されません。
 
