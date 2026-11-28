@@ -18,9 +18,9 @@ jobs:
       # 1 行に 1 件、"<GHSA-id> <YYYY-MM-DD> <PJR-ID>"。期限の翌日から再び止まる。
       AUDIT_EXCEPTIONS: ""
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
 
