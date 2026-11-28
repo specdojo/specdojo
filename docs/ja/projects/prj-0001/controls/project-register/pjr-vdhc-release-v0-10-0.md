@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: PO
   registered_at: "2026-11-28T11:19:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T13:12:50Z"
+  conclusion: "SpecDojo 0.10.0 を公開した（PR #43、merge commit ebf2692e0c、タグ v0.10.0）。docs-lint 0.5.1 と、型の誤りを直した docs-site 0.7.1（PR #45、merge commit 70ddba79e9）も公開した。npm の latest は 3 つとも新しい版で、provenance 付き"
 ---
 
 # PJR-VDHC v0.10.0 をリリースする
