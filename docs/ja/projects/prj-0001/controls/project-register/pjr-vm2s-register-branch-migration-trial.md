@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-vm2s-register-branch-migration-trial
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:21:57Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T11:09:24Z"
+  conclusion: register の同期のブランチへ移る手順を書き、prj-0001 と別のプロジェクト（prj-0002）で試した。prj-0002 から prj-0001 への起票が新しい sync/register に届くことを確かめた
   derived_from:
     - PJR-2TX0
   depends_on:
