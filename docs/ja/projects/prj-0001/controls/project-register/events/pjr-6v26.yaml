@@ -67,3 +67,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_dfb760e236e446208ce588e2d9767a31
+- v: 1
+  id: reg_2cef4e6f6bd6456b90dacdcb86e3f581
+  ts: "2026-11-28T13:46:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_421c4ad1ae99468685584726a278e80a
