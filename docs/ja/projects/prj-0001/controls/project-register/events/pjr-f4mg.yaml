@@ -153,3 +153,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_10f47c878a234de79d6ce349ead117b0
+- v: 1
+  id: reg_093c88471f934d5a818f3ffee68f4267
+  ts: "2026-11-28T00:19:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 英語版の中身は利用者が確認した（2026-11-28）。docs:build・lint:fm・validate:schema が通り、lint:md の指摘は文書にないことを確かめた。package.json の files は利用者の承認のもと反映済み（c4ce5b53c1）。kata_locale の実装は利用者の判断で v0.10.0 の後
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 英語版の最初の範囲（README の英語の節、文書サイトの英語の入口とクイックスタート、入門ガイド、入門の型の組 5 つ）を作り、npm package に含めた。kata の言語の選び方（kata_locale）は設計を決め、実装は v0.10.0 の後に入れる
+  previous_event_id: reg_965b60b3eba8451690686286bde613e6
