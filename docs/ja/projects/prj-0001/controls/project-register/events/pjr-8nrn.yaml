@@ -97,3 +97,16 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_4234dd7c63784e0b9fb478fc2638c158
+- v: 1
+  id: reg_31c590e322d74e3295bb119c0bd6c9b4
+  ts: "2026-11-28T14:08:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: handoff の後に行ったことを足す
+  changes:
+    - field: section
+      from: ""
+      to: 注意点
+  previous_event_id: reg_57d48f3115114e6cb5033c969120456a

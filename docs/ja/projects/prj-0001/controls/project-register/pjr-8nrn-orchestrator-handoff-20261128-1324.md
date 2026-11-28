@@ -60,6 +60,11 @@ specdojo:
 - `worktrees/` の下に作る作業ツリーでは、prj-0002 の `repos` の相対パス（`../specdojo-lp` など）が解決できない。commit の hook は、`packages/*` の `node_modules` と、git 管理外の登録簿の一覧（`register build`）がないと止まる。
 - 古い列（runner が動いていない `kra-day1`・`kra-night1`・`kra-night1b`・`rerun-70ss` など）の片づけ方は、まだ決めていない。
 - 12 月末が期限の主な項目: PJR-SVKR（docs-site の型検査を `check:release` に入れる）、PJR-AQJE（入門ガイドの用語）、PJR-0M82（メモの置き場の決定、担当と期限は未定）、PJR-3R7V（kata_locale）、期限を延ばした BA の 7 件。
+- handoff の起票の後に行ったこと（2026-11-28）:
+  - 定期実行と過去の run が残した実行の記録（job run・報告・見張りの記録・予約の列・止まった schedule の run）を develop に commit した（45bde8702e）。
+  - [[prj-0001:pjr-6v26-comprehension-debt-core-message|PJR-6V26]] の入力・完了条件・作業内容・関連ドキュメントを書いた。範囲は日本語の 4 文書（README・英語版は含めない）、略称は CSpE（CSE は使わない）。indie の LP の文案の全文を入力に載せ、4 つの症状・人と AI の分担・既存の道具との関係・小さく始めること・「未来の誰かが理解できるように」を完了条件に振り分けた。exec に流す前に完了条件を indie が確かめる。
+  - prj-0002 に PJR-9GB9（specdojo-lp を理解の負債を中心のメッセージに書き直す、BA・2026-12-31）を `--from prj-0001:PJR-6V26` で起票し、入力に文案の全文、完了条件に PJR-T1TH の条件を入れた。PJR-T1TH は 9GB9 に含めて reject した。別のリポジトリへの `register add` は `--section` を使えないため、章は prj-0002 の作業ツリーで書いた。
+  - [[prj-0001:pjr-dm1n-cdfd-diagram-layout|PJR-DM1N]] で CDFD の図の描き方を決めた（全体概要は業務のまとまりの囲み、プロセスグループ別は担当ごとのレーンと受け渡しの番号、ユースケース別は D2 の `sequence_diagram`）。反映は [[prj-0001:pjr-756e-cdfd-d2-layout-samples|PJR-756E]]（PJR-PYS2 の子、BA・2026-12-31）で、まず型の sample と `cdfd-d2-rulebook` を直す。製品の CDFD は PJR-T1D1 でそろえる。
 
 ## 6. 関連ドキュメント
 
