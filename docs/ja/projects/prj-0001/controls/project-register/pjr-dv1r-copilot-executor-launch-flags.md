@@ -41,12 +41,22 @@ exec-defaults の Copilot の command_template が、今の Copilot CLI でな�
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                   |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 原因     | Copilot CLI の更新で `--no-remote`・`--no-remote-export` がなくなった。`shell(<command>)` の拒否は、末尾の `:*` がないと引数付きのコマンドに当たらない |
+| 対応策   | 起動の雛形から廃止された引数を外し、代わりの手段があれば使う。拒否の指定を引数付きのコマンドにも当たる形にそろえる                                     |
+| 依存事項 | なし                                                                                                                                                   |
+| 完了条件 | 下の一覧のとおり                                                                                                                                       |
+
+- 配布原本の Copilot の起動の雛形（`templates/init-exec-defaults.yaml` と `templates/copilot/exec-defaults-snippet.yaml`）から `--no-remote` と `--no-remote-export` を外す。remote の接続を断つ代わりの起動引数が今の Copilot CLI（`copilot --help`）にあれば使い、なければ外したことと理由を個票の対応結果に書く。
+- 同じ雛形の `--deny-tool 'shell(<command>)'` を、引数付きのコマンドにも当たる形（末尾に `:*`）にそろえる。`--allow-tool` の指定も、意図どおりに引数付きのコマンドを許すかを確かめ、必要ならそろえる。
+- Copilot の起動の雛形を検査する単体テスト（あれば）を新しい形に合わせる。
+- `.specdojo/exec-defaults.yaml` などの保護された設定は変えない。同じ変更の案を個票の対応結果と報告の `handoff` に書く。反映はオーケストレーターが利用者の承認のもとで行う。
+- Copilot の説明の文書（`templates/copilot/README.md` と exec の設定のガイドの Copilot の段落）に、起動の引数の記述があれば合わせて直す。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run -s lint:md` を通し、親の検証を通す。
+- 統合の後に、オーケストレーターが直した雛形で `copilot -p` を起動し、起動できること、`git push` と `specdojo guarded-push` が拒まれることを確かめてから close する。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 
 ## 5. 対応結果
 
