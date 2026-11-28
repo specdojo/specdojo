@@ -1,4 +1,4 @@
-import { defineConfig } from "vitepress";
+import { defineConfigWithTheme, type DefaultTheme } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
 import {
   buildSpecdojoSidebarItems,
@@ -941,7 +941,13 @@ function projectNavItem():
   };
 }
 
-export default defineConfig({
+/** SpecDojo が themeConfig に足す項目（開発中の版の帯とリリースの版へのリンク、theme/NextChannelBanner.vue）。 */
+interface SpecDojoThemeConfig extends DefaultTheme.Config {
+  specdojoChannel?: string;
+  specdojoStableUrl?: string;
+}
+
+export default defineConfigWithTheme<SpecDojoThemeConfig>({
   title: "SpecDojo",
   description: "Documentation for SpecDojo",
   base,
