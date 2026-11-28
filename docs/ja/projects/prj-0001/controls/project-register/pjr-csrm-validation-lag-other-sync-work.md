@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: deferred
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-25T21:59:34Z"
   due_on: "2026-11-30"
+  conclusion: 平均 2.7 秒は目標どおり。最大 76 秒は目標の 30 秒を超えるが、遅れが検査の時間とほぼ同じで測り方にも疑いがある。v0.10.0 の後に回す
   derived_from:
     - PJR-P8SX
 ---

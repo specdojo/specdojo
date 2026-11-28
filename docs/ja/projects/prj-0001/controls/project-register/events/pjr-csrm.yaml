@@ -138,3 +138,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_c12807e99bcd47c3badf0d90523b5848
+- v: 1
+  id: reg_c9e28e1d06ca41cab7a7ec5c92d03c51
+  ts: "2026-11-28T00:10:58Z"
+  action: defer
+  actor: indie
+  from_status: review
+  to_status: deferred
+  reason: 利用者が後に回すと決めた（2026-11-28）
+  changes:
+    - field: status
+      from: review
+      to: deferred
+    - field: conclusion
+      from: "-"
+      to: 平均 2.7 秒は目標どおり。最大 76 秒は目標の 30 秒を超えるが、遅れが検査の時間とほぼ同じで測り方にも疑いがある。v0.10.0 の後に回す
+  previous_event_id: reg_4256e0a2478a4dad9b4ff2bf8b87b7fb
