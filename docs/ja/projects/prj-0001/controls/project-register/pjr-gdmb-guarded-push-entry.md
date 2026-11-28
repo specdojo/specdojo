@@ -123,6 +123,7 @@ SSOT から Claude・Codex・Copilot・OpenCode と agy の本文・配布テン
 - 反映（2026-11-28、オーケストレーター）: 5.2 と 5.3 の案を `feature/prj-0001/guarded-push-permissions` に反映した（1b159b605f、1d7e3091ea）。Codex はこのリポジトリに project-local rules がなかったため、配布原本を `.codex/rules/specdojo.rules` に置いた。Claude の `.claude/settings.json` の ask だけは、許可を狭める変更のため先に develop へ取り込んだ。
 - executor の拒否（オーケストレーター）: Claude の `settings.edit.json` で `claude -p` に入口の dry-run を頼み、権限で拒まれることを確かめた。Codex の rules は `codex execpolicy check` で、入口が `prompt`、`git push` が `forbidden` になることを確かめた。
 - 対話のオーケストレーターの実機の確認（indie、2026-11-28）: feature ブランチの worktree から Claude（`orch:sonnet`）・Codex（`orch:sol`）・Copilot（`orch:copilot`）・OpenCode（`orch:qwen`）・agy（直接起動）を起動し、`guarded-push --branch project/prj-0001/develop --dry-run` を頼んだ。5 環境とも毎回確認が出て、許可すると dry-run だけが動いて送らず、断ると何も実行されなかった。
+- executor の拒否の実機の確認（オーケストレーター、2026-11-28）: `SPECDOJO_AGENT_ROLE` を付けずに権限の層だけを試した。Codex（`approval_policy="never"`）は rules の `prompt` が自動で拒まれた。OpenCode は 1 回目に拒まなかった（拒否の行を bash の `{ }` の外に足していた）ため中へ移し、2 回目に拒まれた。Copilot は 1 回目に拒まなかった（`shell(specdojo guarded-push)` が引数付きのコマンドに当たらない）ため末尾に `:*` を付け、2 回目に拒まれた（fa68ac8aa3）。どの回も `--dry-run` で、送信はしていない。
 
 ### 5.5. CHANGELOG に書く事項
 
