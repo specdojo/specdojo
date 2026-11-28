@@ -30,7 +30,21 @@ PJR-CA6G の決定に沿って、register close で note を done にできる�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- PJR-CA6G の決定に沿って、`register close` で `item_type: note` を `done` にできるようにする。`--status` を省いたときの終端は `done` とし、`decided` など他の状態は拒む。
+- `register reject` と `register defer` は、今と同じく note を終了コード 1 で拒む。案内の文言は「使い終わった note は `register close` で `done` にする」ことを示す形に直す。
+- close した note は `register reopen` で `open` に戻せる。
+- `register close` の note で `--conclusion` を必須にし、省くと終了コード 1 で拒む。conclusion には移した先または古くなった理由を書く旨を、エラーの文言に含める。
+- `register build` の生成物で、done の note が `open` の一覧から外れ、ほかの type の done と同じ扱いになることを確かめる。
+- 単体テストで、note の close（done）、`--status decided` の拒否、conclusion なしの拒否、reject・defer の拒否、reopen を確かめる。既存の「note は close できない」テストは新しい振る舞いに置き換える。
+- 規範の文書を直す。対象は次の 3 つ（名前で書く）。
+  - プロジェクト登録簿 作成ルール（pjr-rulebook）の item_type 別の終端基準の表と note の注記、例外的な追跡終了の前書き（note は close できるが rejected・deferred は使わない）。
+  - 登録簿運用ガイドの、完了の表と、動いていない項目の整理の段落。
+  - CLI コマンドリファレンスの register の note の段落。
+- オーケストレーターの本文など保護された設定（`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`templates/` の配下のオーケストレーター本文を含む）は変えない。本文の type の表の note の終端状態と、note の扱いの段落の変更案を、個票の対応結果と報告の `handoff` に書く。
+- 英語版の文書（`docs/en/`）に対応する文書があれば、同じ内容に直す。なければ何もしない。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run -s lint:md` を通し、親の検証を通す。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 
 ## 4. 作業内容
 

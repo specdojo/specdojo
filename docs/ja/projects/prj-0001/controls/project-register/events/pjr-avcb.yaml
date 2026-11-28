@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-CA6G"]'
+- v: 1
+  id: reg_b0c5a172387148cab98068ab9270a9b5
+  ts: "2026-11-28T07:21:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_40b821e9173c4ebea036ffd286f3b129
