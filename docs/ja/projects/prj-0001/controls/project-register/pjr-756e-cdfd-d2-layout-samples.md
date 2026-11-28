@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: hard
   owner: BA
   registered_at: "2026-11-28T14:00:03Z"
   due_on: "2026-12-31"
@@ -46,9 +47,13 @@ PJR-DM1N の決定に沿って cdfd-d2-rulebook に図の種類ごとの描き�
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                | 担当  | 状態 | メモ |
+| --- | ------------------------------------------------------------------- | ----- | ---- | ---- |
+| 1   | `cdfd-d2-rulebook` に図の種類ごとの描き方を足し、禁止事項の表を直す | BA    | open | -    |
+| 2   | 主の CDFD の rulebook 3 つで、図の描き方の記述の食い違いを直す      | BA    | open | -    |
+| 3   | 3 つの sample の D2 の図を描き直す（業務の中身・ID・表は変えない）  | BA    | open | -    |
+| 4   | `lint:d2`・`lint:md` と親の検証を通す                               | BA    | open | -    |
+| 5   | 文書サイトで 3 つの図を indie が確かめる                            | indie | open | -    |
 
 ## 5. 対応結果
 

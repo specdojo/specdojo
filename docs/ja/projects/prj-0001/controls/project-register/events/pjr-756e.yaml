@@ -38,3 +38,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-PYS2","PJR-DM1N"]'
+- v: 1
+  id: reg_c57e81f6338a456e987b532bd38c5c73
+  ts: "2026-11-28T14:20:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_f4c602f1504443a2af72d838d06c9161
