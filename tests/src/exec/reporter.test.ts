@@ -207,6 +207,8 @@ describe("reporter structured output", () => {
 
     expect(prompt).toContain("optional findings array");
     expect(prompt).toContain("do not write a table");
+    expect(prompt).toContain("except structured finding notes already represented in findings");
+    expect(prompt).toContain("requiring human judgement, are preserved");
   });
 
   it("supplies a simple mode-specific schema suitable for structured output", () => {
