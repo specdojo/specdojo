@@ -51,31 +51,41 @@ function saveRecord(path: string, record: DiagnosisRecord): void {
   renameSync(temporary, path);
 }
 
+// agent の出力は引用として表示し、見出しや frontmatter を報告に注入させない。
+// 引用どうしが空行だけで並ぶと MD028 に当たるため、注記にも項目の行を置いて引用を分ける。
+export function renderWatchDiagnosisBody(
+  records: Pick<DiagnosisRecord, "target" | "by" | "status" | "started_at" | "proposal">[],
+  warnings: string[],
+): string {
+  const quote = (lines: string[]) => lines.map((line) => `>     ${line}`).join("\n");
+  const sections = records.map(
+    (record) =>
+      `- \`${record.target.id}\` / \`${record.by}\` / \`${record.status}\` / \`${record.started_at}\`\n\n${quote(
+        record.proposal.replaceAll("\r", "").split("\n"),
+      )}`,
+  );
+  sections.push(
+    ...warnings.map(
+      (warning) => `- 注記\n\n${quote([warning.replaceAll("\r", "").replaceAll("\n", " ")])}`,
+    ),
+  );
+  return `診断は案であり、手は打っていない。\n\n${sections.join("\n\n") || "- なし"}\n`;
+}
+
 function writeDiagnosisReport(
   input: Parameters<typeof runWatchDiagnosis>[0],
   records: DiagnosisRecord[],
   warnings: string[],
 ): void {
-  // agent の出力は引用として表示し、見出しや frontmatter を報告に注入させない。
   const currentKeys = new Set(input.outcome.current.map((stall) => stall.key));
   const night = diagnosisNight(input.now, input.timeZone);
-  const sections = records
-    .filter((record) => currentKeys.has(record.key) || record.night === night)
-    .map(
-      (record) =>
-        `- \`${record.target.id}\` / \`${record.by}\` / \`${record.status}\` / \`${record.started_at}\`\n\n${record.proposal
-          .replaceAll("\r", "")
-          .split("\n")
-          .map((line) => `>     ${line}`)
-          .join("\n")}`,
-    );
-  sections.push(...warnings.map((warning) => `>     ${warning.replaceAll("\n", " ")}`));
+  const body = renderWatchDiagnosisBody(
+    records.filter((record) => currentKeys.has(record.key) || record.night === night),
+    warnings,
+  );
   const report = readFileSync(input.outcome.reportPath, "utf8").split(WATCH_DIAGNOSIS_HEADING)[0]!;
   const temporary = `${input.outcome.reportPath}.${process.pid}.tmp`;
-  writeFileSync(
-    temporary,
-    `${report}${WATCH_DIAGNOSIS_HEADING}\n診断は案であり、手は打っていない。\n\n${sections.join("\n\n") || "- なし"}\n`,
-  );
+  writeFileSync(temporary, `${report}${WATCH_DIAGNOSIS_HEADING}\n${body}`);
   renameSync(temporary, input.outcome.reportPath);
 }
 
