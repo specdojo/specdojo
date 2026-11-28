@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-macp-exec-events-sync-index-build
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-28T08:47:36Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T11:07:59Z"
+  conclusion: 同期用の worktree で commit する前に、runner が git 管理外の登録簿の一覧を作るようにし、人と runner の記帳の commit が index-build の hook で止まらなくした
   derived_from:
     - PJR-QCJ5
 ---
