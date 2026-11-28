@@ -60,8 +60,54 @@ exec-defaults の Copilot の command_template が、今の Copilot CLI でな�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 実装と判断
+
+- 配布原本の `templates/init-exec-defaults.yaml` と `templates/copilot/exec-defaults-snippet.yaml` の Copilot の `command_template` から `--no-remote` と `--no-remote-export` を外し、`--sync-session=off` を足した。
+- 引数の根拠は Copilot CLI のコマンドリファレンス（<https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference>）である。`--no-remote` は「Removed. Use `/remote off` during an interactive session」、`--no-remote-export` は「Renamed to `--sync-session=off`」とある。`--remote` は `-p` の起動に使えないため、遠隔操作を断つ起動引数は置かなかった。sandbox から `copilot --help` は実行できなかった（承認が要る）ため、確認はリファレンスによる。
+- 同じ雛形の `--allow-tool 'shell(...)'` と `--deny-tool 'shell(...)'` を、素の形と `:*` 付きの形を並べる形にそろえた。リファレンスでは `:*` は「the command stem followed by a space」に当たるとあり、引数のない素のコマンド（例: `git push`）に当たるかは書かれていない。素の `git push` を拒み損ねないよう、`:*` だけに置き換えず両方を書くと決めた。
+- `--allow-tool` も同じ理由で両方の形にした。末尾に `:*` のない `shell(npm run)` は `npm run lint:md` などの引数付きのコマンドを許していなかったおそれがある。`shell(specdojo:*)` は素の `specdojo` を許す必要がないため据え置いた。
+- `specdojo guarded-push` と `npx specdojo guarded-push` の拒否にも、素の形を足した。
+- 雛形の引数を検査する単体テストはなかった（`tests/` を `no-remote`・`shell(git` で検索）。テストの変更はない。
+- 説明の文書は、exec の設定のガイド（Copilot の段落の雛形と箇条書き）と `templates/copilot/README.md` のカスタマイズの章を直した。
+- `.specdojo/exec-defaults.yaml` は保護された設定のため変えていない。製品設計の [[sysd-github-copilot-agent-settings|GitHub Copilot エージェント設定]] にも同じ引数の記述が残っているが、完了条件に挙がっていないため直していない。
+
+### 5.2. 保護設定の変更案（未反映）
+
+`.specdojo/exec-defaults.yaml` の `providers.copilot.command_template` を、`--model auto` を残したまま次の形にする。反映はオーケストレーターが利用者の承認のもとで行う。
+
+```yaml
+command_template: >-
+  copilot -p "$(cat)" --no-color --no-ask-user --model auto
+  --sync-session=off --disable-builtin-mcps
+  --allow-tool write
+  --allow-tool 'shell(git status)' --allow-tool 'shell(git status:*)'
+  --allow-tool 'shell(git diff)' --allow-tool 'shell(git diff:*)'
+  --allow-tool 'shell(git log)' --allow-tool 'shell(git log:*)'
+  --allow-tool 'shell(git show)' --allow-tool 'shell(git show:*)'
+  --allow-tool 'shell(npm run)' --allow-tool 'shell(npm run:*)'
+  --allow-tool 'shell(npm test)' --allow-tool 'shell(npm test:*)'
+  --allow-tool 'shell(specdojo:*)'
+  --deny-tool 'shell(git add)' --deny-tool 'shell(git add:*)'
+  --deny-tool 'shell(git commit)' --deny-tool 'shell(git commit:*)'
+  --deny-tool 'shell(git push)' --deny-tool 'shell(git push:*)'
+  --deny-tool 'shell(git reset)' --deny-tool 'shell(git reset:*)'
+  --deny-tool 'shell(specdojo guarded-push)' --deny-tool 'shell(specdojo guarded-push:*)'
+  --deny-tool 'shell(npx specdojo guarded-push)' --deny-tool 'shell(npx specdojo guarded-push:*)'
+```
+
+### 5.3. 検証結果
+
+- 2 つの雛形を YAML として読み、展開した `command_template` に `--no-remote` が含まれず、上の引数が並ぶことを確かめた。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run -s lint:md` などは親 runner が実行する。
+- 未了: 統合の後に、オーケストレーターが直した雛形で `copilot -p` を起動し、起動できること、`git push`（素の形と引数付きの形）と `specdojo guarded-push` が拒まれること、`npm run lint:md` などの引数付きの検証が許されることを確かめてから close する。実機の起動は premium request を使うため、executor では行っていない。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 行の文案: Copilot の executor の起動の雛形から、今の Copilot CLI で廃止された `--no-remote`・`--no-remote-export` を外し、`--sync-session=off` に置き換えました。`shell(...)` の許可と拒否は、素の形と `:*` 付きの形を並べ、引数付きのコマンドにも当たるようにしました。既存の `.specdojo/exec-defaults.yaml` は手で同じ形に直してください。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-gdmb-guarded-push-entry|PJR-GDMB guarded-push の入口]]
+- [[specdojo:exec-config-guide|exec 設定ガイド]]
+- [[sysd-github-copilot-agent-settings|GitHub Copilot エージェント設定]]
