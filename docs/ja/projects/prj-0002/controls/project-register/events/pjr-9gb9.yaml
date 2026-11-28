@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bdb7f9ad97624b98b57ef9d564ea9bcb
+  ts: "2026-11-28T13:45:14Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-lp を、理解の負債を中心の課題とするメッセージに書き直す
+    - field: description
+      from: ""
+      to: indie の文案（ヒーロー「人類最大の借金、理解の負債。」と「記して、形にして、磨き続ける。」）をもとに、specdojo-lp の日本語の各節を組み直し、Continuous Specification Engineering（CSpE）の名称と位置づけも載せる（PJR-T1TH を含む）
+    - field: input
+      from: ""
+      to: '["担当 BA・期限 2026-12-31 は indie の指示（2026-11-28）。章の本文は prj-0002 の作業ツリーで書く"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["prj-0001:PJR-6V26"]'
