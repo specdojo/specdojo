@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bxym-civic-tech-starter-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T13:11:07Z"
+  completed_at: "2026-11-28T07:15:26Z"
+  conclusion: シビックテック入門ガイドを、型の文書をオーケストレーターに頼んで todo・epic で agent に作らせる流れに直した（3 回の実行で 4.1〜4.3 節と 5 節まで反映）
   derived_from:
     - PJR-Y5RD
   commit_type: docs
