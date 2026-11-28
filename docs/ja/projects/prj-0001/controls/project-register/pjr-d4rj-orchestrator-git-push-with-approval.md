@@ -37,12 +37,14 @@ specdojo:
 
 ## 4. 決定内容
 
-選択肢 B を採る。オーケストレーターに、次の範囲の `git push` を、毎回の利用者の承認を前提に許す。
+選択肢 B を採る（2026-11-28 に決め直した。最初は本文の文言だけで許す形を決めたが、各環境の権限の設定が push を拒んでいること、`specdojo git` が push を通す穴があることが分かったため）。
 
-- 許すもの: `project/<id>/develop` と `feature/<project-id>/*` への普通の push。承認を求めるときは、push するブランチ、commit の範囲と件数を示す。
-- 許さないもの: `main` への push、`--force` など履歴を書き換える push、タグの push、npm の公開。リリースの公開は人が行う。
-- 登録簿の同期ブランチ（`sync/register`・`sync/exec-events`）への push は、今どおり specdojo のコマンドに任せ、`git push` を打たない。
-- 反映は `CLAUDE.md` とオーケストレーターの本文（保護された文書）の書き換えで行い、feature ブランチで利用者が内容を確かめてから develop に入れる。反映するまでは今の決まりのまま push しない。
+- 範囲を守る push の入口を specdojo のコマンドとして作る。`project/<id>/develop` と `feature/<project-id>/*` への普通の push だけを通し、`main`・`--force` など履歴を書き換える push・タグの push を拒む。送るブランチと commit の範囲・件数を表示する。exec の executor・reporter の実行中に呼ばれたときは拒む。
+- オーケストレーターの設定では、この入口を毎回の承認（ask など）で許す。claude・codex・copilot・opencode の `git push` の deny と、executor の守りは残す。
+- `npm` の公開とリリースの公開は人が行う。登録簿の同期ブランチへの push は、今どおり specdojo のコマンドに任せる。
+- `CLAUDE.md`・`AGENTS.md`・`.opencode/AGENTS.md`・`.github/copilot-instructions.md`・オーケストレーターの本文の文言は、入口ができてから同じ内容にそろえる。反映までは今の決まりのまま push しない。
+- `specdojo git` が `push` を止めずに通す穴は、別の issue で先に塞ぐ。
+- 実装は別の todo で行い、feature ブランチ `feature/prj-0001/orchestrator-git-push`（b36caa3900）の文言の案はそこで直す。
 
 ## 5. 採択理由
 
