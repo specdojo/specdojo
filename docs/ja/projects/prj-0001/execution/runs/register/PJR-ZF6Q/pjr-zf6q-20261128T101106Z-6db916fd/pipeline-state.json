@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-ZF6Q",
   "run_id": "pjr-zf6q-20261128T101106Z-6db916fd",
-  "updated_at": "2026-11-28T10:21:08.641Z",
+  "updated_at": "2026-11-28T10:22:28.480Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -29,11 +29,11 @@
       "artifact_ref": null
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-28T10:21:08.641Z",
-      "completed_at": null,
+      "completed_at": "2026-11-28T10:22:28.480Z",
       "artifact_ref": null
     }
   },
