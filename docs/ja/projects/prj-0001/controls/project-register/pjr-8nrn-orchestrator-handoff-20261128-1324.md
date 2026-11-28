@@ -63,4 +63,8 @@ specdojo:
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]]
+- [[prj-0001:pjr-vdhc-release-v0-10-0|PJR-VDHC]] v0.10.0 のリリース
+- [[prj-0001:pjr-gdmb-guarded-push-entry|PJR-GDMB]] 範囲を守る push の入口
+- [[prj-0001:pjr-svkr-check-release-docs-site-typecheck|PJR-SVKR]] docs-site の型検査
+- [[prj-0001:pjr-cjnv-routine-resume-timing|PJR-CJNV]] routine の再開の時期

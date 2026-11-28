@@ -84,3 +84,16 @@
       from: ""
       to: 注意点
   previous_event_id: reg_cbdabf22c37b4f6aa38daff8e66be035
+- v: 1
+  id: reg_57d48f3115114e6cb5033c969120456a
+  ts: "2026-11-28T13:27:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 関連ドキュメント を書く
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_4234dd7c63784e0b9fb478fc2638c158
