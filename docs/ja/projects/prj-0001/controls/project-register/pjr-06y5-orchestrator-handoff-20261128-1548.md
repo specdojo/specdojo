@@ -63,7 +63,12 @@ specdojo:
 
 ## 5. 注意点
 
-_TODO_: 会話の中で気づいたことを記載する。決まりになるものは playbook へ移す。ない場合は `-` とする。
+- 夜の列 `night-2026-11-28b` の 5 段はすべて成功し、5 件とも review になった（23:35〜00:31 JST）。最初の列 `night-2026-11-28` は reporter の指定の誤りで 5 段とも起動の前に止まり、作り直した。
+- オーケストレーターが朝の前に確かめたこと: 5 件の差分と個票の対応結果を完了条件に照らした。`lint:d2`（38 図）と `docs:build`（237 秒）が通った。`index stale-translations` と `kata list` の `LOCALE` 列を手元で流した。3R7V の統合の後に JSEY を流して成功し、JSEY を close した。
+- indie に確かめてもらうこと: 756E は文書サイトで 3 つの図の読みやすさ、6V26 は 4 文書の文面、AQJE は用語の表の言葉。3R7V・4N4K は対応結果と残課題。決めることは [[prj-0001:pjr-htym-night-20261128-review-followups|PJR-HTYM]]にまとめた。
+- `exec smoke` は register_sync の project で、reopen を develop へ取り込まずに `exec run` を始めて止まる。`register branch-merge` の後に流し直すと通る（PJR-0FBB）。
+- 記帳 1 件の `--commit` に 47〜90 秒かかる（PJR-4EFH で調べる）。
+- prj-0002 の orchestrator が PJR-0GPZ（旧い置き場の plan・result の変更が黙って外される、high）を起票した。夜の 5 件はこの置き場を変えていない。
 
 ## 6. 関連ドキュメント
 
