@@ -9,7 +9,9 @@ specdojo:
   item_type: issue
   item_status: open
   priority: high
+  owner: DEV
   registered_at: "2026-11-28T09:56:16Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-GDMB
 ---
