@@ -224,6 +224,28 @@ describe("Section utility functions", () => {
       );
     });
 
+    it("相対パスは cwd ではなく渡した基点のディレクトリから解決する", () => {
+      const root = mkdtempSync(join(tmpdir(), "validate-section-"));
+      try {
+        mkdirSync(join(root, "tmp"));
+        writeFileSync(join(root, "tmp", "memo.md"), "- 本文\n", "utf8");
+        expect(validateSectionFile("tmp/memo.md", root)).toBe("- 本文\n");
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+
+    it("相対パスのファイルが無いときは渡したパスと解決した絶対パスをエラーに含める", () => {
+      const root = mkdtempSync(join(tmpdir(), "validate-section-"));
+      try {
+        expect(() => validateSectionFile("tmp/missing.md", root)).toThrow(
+          `Cannot read section file: tmp/missing.md (resolved to ${join(root, "tmp", "missing.md")})`,
+        );
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+
     it("Markdown 見出しを含むファイルはエラーになる", () => {
       const root = mkdtempSync(join(tmpdir(), "validate-section-"));
       try {

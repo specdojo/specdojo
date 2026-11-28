@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { CrossProcessMutex, releaseLock, tryAcquirePoolSlot } from "./cross-process-lock.js";
+import {
+  acquirePoolSlotSync,
+  CrossProcessMutex,
+  releaseLock,
+  type SyncWaitOptions,
+} from "./cross-process-lock.js";
 import { gitOutput, gitResult, repoRelative, worktreeStatusPaths } from "./git.js";
 import {
   getProjectExecutionPath,
@@ -9,67 +14,139 @@ import {
   getProjectSchedulePath,
   loadConfig,
   specdojoRootDir,
+  SYNC_BRANCH_KINDS,
+  type SyncBranchKind,
 } from "./specdojo-config.js";
 
+/**
+ * A dedicated branch that publishes bookkeeping. `kind` is `legacy` for `register_sync`, where
+ * one branch carries both the register and the schedule events; `scope` lists the repo-relative
+ * directories the branch may change.
+ */
 export type RegisterBranchTarget = {
   repoRoot: string;
   projectId: string;
+  kind: SyncBranchKind | "legacy";
   branch: string;
   remote: string;
   registerPath: string;
   eventsPath: string;
+  scope: string[];
 };
 
-export function resolveRegisterBranchTarget(projectId: string): RegisterBranchTarget | undefined {
+function validatedBranch(repoRoot: string, setting: string, branch: string): string {
+  if (gitResult(repoRoot, ["check-ref-format", "--branch", branch]).status !== 0) {
+    throw new Error(`Invalid ${setting}: ${branch}`);
+  }
+  return branch;
+}
+
+/**
+ * Every sync branch of the project in intake order (register first, then exec-events), or an
+ * empty array when neither `sync` nor `register_sync` is enabled.
+ */
+export function resolveSyncBranchTargets(projectId: string): RegisterBranchTarget[] {
   const repoRoot = specdojoRootDir();
   const { config } = loadConfig(repoRoot);
   const project = config?.projects[projectId];
-  if (!project?.register_sync?.enabled) return undefined;
-  const branch = project.register_sync.branch?.trim() || `project/${projectId}/register`;
-  const remote = project.register_sync.remote?.trim() || "origin";
-  if (gitResult(repoRoot, ["check-ref-format", "--branch", branch]).status !== 0) {
-    throw new Error(`Invalid register_sync.branch: ${branch}`);
-  }
+  const sync = project?.sync?.enabled ? project.sync : undefined;
+  const legacy = project?.register_sync?.enabled ? project.register_sync : undefined;
+  if (!project || (!sync && !legacy)) return [];
+  const setting = sync ? "sync" : "register_sync";
+  const remote = (sync ?? legacy)?.remote?.trim() || "origin";
   // Only named remotes are accepted; never treat the setting as a URL or a Git option.
-  if (!/^(?!-)[^\s:]+$/.test(remote)) throw new Error(`Invalid register_sync.remote: ${remote}`);
+  if (!/^(?!-)[^\s:]+$/.test(remote)) throw new Error(`Invalid ${setting}.remote: ${remote}`);
   if (!gitOutput(repoRoot, ["remote"]).trim().split(/\r?\n/).includes(remote)) {
     throw new Error(
-      `Register remote ${remote} is not configured; add a named remote before enabling register_sync.`,
+      `Register remote ${remote} is not configured; add a named remote before enabling ${setting}.`,
     );
   }
-  const registerPath = getProjectRegisterPath(project);
-  if (!registerPath) throw new Error(`project_register_path not set for ${projectId}`);
-  return {
+  const registerSetting = getProjectRegisterPath(project);
+  if (!registerSetting) throw new Error(`project_register_path not set for ${projectId}`);
+  const registerPath = repoRelative(repoRoot, resolve(repoRoot, registerSetting));
+  const eventsPath = repoRelative(
     repoRoot,
-    projectId,
-    branch,
-    remote,
-    registerPath: repoRelative(repoRoot, resolve(repoRoot, registerPath)),
-    eventsPath: repoRelative(
-      repoRoot,
-      resolve(repoRoot, getProjectExecutionPath(project), "exec", "events"),
-    ),
-  };
+    resolve(repoRoot, getProjectExecutionPath(project), "exec", "events"),
+  );
+  const base = { repoRoot, projectId, remote, registerPath, eventsPath };
+  if (!sync) {
+    const branch = legacy?.branch?.trim() || `project/${projectId}/register`;
+    return [
+      {
+        ...base,
+        kind: "legacy",
+        branch: validatedBranch(repoRoot, "register_sync.branch", branch),
+        scope: [registerPath, eventsPath],
+      },
+    ];
+  }
+  const targets = SYNC_BRANCH_KINDS.map((kind): RegisterBranchTarget => {
+    const branch = sync.branches?.[kind]?.branch?.trim() || `project/${projectId}/sync/${kind}`;
+    return {
+      ...base,
+      kind,
+      branch: validatedBranch(repoRoot, `sync.branches.${kind}.branch`, branch),
+      scope: [kind === "register" ? registerPath : eventsPath],
+    };
+  });
+  if (targets[0]!.branch === targets[1]!.branch) {
+    throw new Error(
+      `sync.branches.register and sync.branches.exec-events must name different branches: ` +
+        targets[0]!.branch,
+    );
+  }
+  return targets;
 }
 
-export function registerBranchForSchedule(schedulePath: string): RegisterBranchTarget | undefined {
+/** The branch that carries register tickets and events, or undefined when sync is disabled. */
+export function resolveRegisterBranchTarget(projectId: string): RegisterBranchTarget | undefined {
+  return resolveSyncBranchTargets(projectId).find((target) => target.kind !== "exec-events");
+}
+
+/** The branch that carries `execution/exec/events/`, or undefined when sync is disabled. */
+export function resolveExecEventsBranchTarget(projectId: string): RegisterBranchTarget | undefined {
+  return resolveSyncBranchTargets(projectId).find((target) => target.kind !== "register");
+}
+
+/** The sync branch selected by kind; `legacy` targets answer for both kinds. */
+export function resolveSyncBranchTarget(
+  projectId: string,
+  kind: SyncBranchKind,
+): RegisterBranchTarget | undefined {
+  return kind === "register"
+    ? resolveRegisterBranchTarget(projectId)
+    : resolveExecEventsBranchTarget(projectId);
+}
+
+/** True when `path` (repo-relative) is published through one of the project's sync branches. */
+export function isInSyncScope(targets: readonly RegisterBranchTarget[], path: string): boolean {
+  return targets.some((target) => isInBranchScope(target, path));
+}
+
+export function isInBranchScope(target: RegisterBranchTarget, path: string): boolean {
+  return target.scope.some((prefix) => path.startsWith(`${prefix}/`));
+}
+
+export function execEventsBranchForSchedule(
+  schedulePath: string,
+): RegisterBranchTarget | undefined {
   const repoRoot = specdojoRootDir();
   const { config } = loadConfig(repoRoot);
   const entry = Object.entries(config?.projects ?? {}).find(
     ([, project]) => resolve(repoRoot, getProjectSchedulePath(project)) === resolve(schedulePath),
   );
-  return entry ? resolveRegisterBranchTarget(entry[0]) : undefined;
+  return entry ? resolveExecEventsBranchTarget(entry[0]) : undefined;
 }
 
 export function assertRegisterBranchPaths(
   target: RegisterBranchTarget,
   paths: readonly string[],
 ): void {
-  const prefixes = [target.registerPath, target.eventsPath];
-  const outside = paths.filter((path) => !prefixes.some((prefix) => path.startsWith(`${prefix}/`)));
+  const outside = paths.filter((path) => !isInBranchScope(target, path));
   if (outside.length) {
     throw new Error(
-      `Register branch cannot include paths outside bookkeeping: ${outside.join(", ")}`,
+      `Sync branch ${target.branch} cannot include paths outside ${target.scope.join(", ")}: ` +
+        outside.join(", "),
     );
   }
 }
@@ -84,7 +161,11 @@ function branchStoragePaths(target: RegisterBranchTarget): {
     gitOutput(target.repoRoot, ["rev-parse", "--git-common-dir"]).trim(),
   );
   const key = createHash("sha256").update(target.branch).digest("hex").slice(0, 16);
-  const storage = join(commonDir, "specdojo", "register", key);
+  // Legacy register_sync keeps its original place; sync branches live under specdojo/sync/<kind>.
+  const storage =
+    target.kind === "legacy"
+      ? join(commonDir, "specdojo", "register", key)
+      : join(commonDir, "specdojo", "sync", target.kind, key);
   // Branch creation and worktree discovery share repository metadata across projects.
   return {
     storage,
@@ -269,6 +350,12 @@ export function pushRegisterBranch(
   }
 }
 
+/** The `register branch-push` command that publishes or recovers exactly this sync branch. */
+export function branchPushCommand(target: RegisterBranchTarget): string {
+  const sync = target.kind === "legacy" ? "" : ` --sync ${target.kind}`;
+  return `specdojo register branch-push --project ${target.projectId}${sync}`;
+}
+
 function recoveryError(target: RegisterBranchTarget, worktree: string, error: unknown): Error {
   const cause = error instanceof Error ? error.message : String(error);
   // Prevent a later unrelated command from accidentally publishing an unresolved claim or
@@ -284,13 +371,13 @@ function recoveryError(target: RegisterBranchTarget, worktree: string, error: un
       );
     }
   }
+  const command = branchPushCommand(target);
   return new Error(
     `${cause}\nRegister bookkeeping is preserved locally; inspect worktree ${worktree} ` +
       `and branch ${target.branch}. If the remote branch is missing, create it from the project ` +
-      `develop branch with specdojo register branch-push --project ${target.projectId}. Fix ` +
+      `develop branch with ${command}. Fix ` +
       `connectivity/permissions, resolve conflicts (git add the resolved files) and commit any ` +
-      `remaining bookkeeping in that worktree, then run specdojo register branch-push --project ` +
-      `${target.projectId}; it finishes git rebase --continue, rebases onto ` +
+      `remaining bookkeeping in that worktree, then run ${command}; it finishes git rebase --continue, rebases onto ` +
       `${target.remote}/${target.branch} and pushes (git rebase --abort returns to the local commits). ` +
       `Do not repeat add to retry a push.`,
     { cause: error },
@@ -315,15 +402,39 @@ export async function inRegisterBranch<T>(
   });
 }
 
-/** Event APIs are synchronous. Busy callers retry instead of blocking an async writer in this process. */
+/**
+ * How long a synchronous writer waits for the branch lock. One `register ... --commit` holds it
+ * for a fetch, a rebase and a push, which normally takes seconds and rarely more than a minute.
+ */
+export const REGISTER_BRANCH_SYNC_WAIT_MS = 120_000;
+
+/**
+ * Event APIs are synchronous, so they block the thread while another process holds the branch
+ * lock, up to `waitMs`. A lock held by an async writer in this process cannot be released while
+ * the thread is blocked; that case fails at once.
+ */
 export function inRegisterBranchSync<T>(
   target: RegisterBranchTarget,
   operation: (worktree: string) => T,
+  wait: Partial<Pick<SyncWaitOptions, "timeoutMs" | "pollMs" | "sleep" | "now">> = {},
 ): T {
   const storage = branchStorage(target);
-  const handle = tryAcquirePoolSlot(storage.pool, 1, { actor: "SpecDojo", label: "schedule sync" });
-  if (!handle)
-    throw new Error(`Register branch ${target.branch} is busy; retry the schedule operation.`);
+  const timeoutMs = wait.timeoutMs ?? REGISTER_BRANCH_SYNC_WAIT_MS;
+  const acquired = acquirePoolSlotSync(
+    storage.pool,
+    1,
+    { actor: "SpecDojo", label: "schedule sync" },
+    { ...wait, timeoutMs },
+  );
+  if (acquired.kind !== "acquired") {
+    const seconds = (acquired.waitedMs / 1000).toFixed(1);
+    const reason =
+      acquired.kind === "timeout"
+        ? `is still busy after waiting ${seconds}s (limit ${timeoutMs / 1000}s)`
+        : `is busy in this process (waited ${seconds}s)`;
+    throw new Error(`Register branch ${target.branch} ${reason}; retry the schedule operation.`);
+  }
+  const handle = acquired.handle;
   let worktree = worktreeForBranch(target) ?? storage.worktree;
   try {
     worktree = prepareWorktree(target, storage.worktree);

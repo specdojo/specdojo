@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a7427097ee0c4074b701ad52b82c3d86
+- v: 1
+  id: reg_34b7b64f2ec84cc79e0353ab9b11c89c
+  ts: "2026-11-28T07:08:04Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が feature ブランチの差分を確かめ、develop への取り込みを承認した（478581792f）。lint:orchestrator-sync は OK
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 運用メモの一般の知見を、章の名前を変えずにオーケストレーター本文へ足し、12 の同期先へ反映した
+  previous_event_id: reg_204ebecf3161413a845523f80716f681

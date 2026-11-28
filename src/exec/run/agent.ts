@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { AGENT_ROLE_ENV } from "../../shared/agent-role.js";
 import { existsSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { trackExecutor, withValidationMetrics } from "../validation-metrics.js";
@@ -577,7 +578,7 @@ export async function executeAgent(
   // chunk is teed to the parent's stdout so live output/logging is preserved.
   const child = spawn(agentCommand, {
     cwd,
-    env,
+    env: { ...env, [AGENT_ROLE_ENV]: stageRole },
     shell: true,
     stdio: ["pipe", "pipe", "pipe"],
     // PJR-K8F1: 時間の上限があるときは、孫まで止められるよう agent を自分の process group で起動する。

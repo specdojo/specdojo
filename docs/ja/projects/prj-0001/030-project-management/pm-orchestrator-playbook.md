@@ -54,7 +54,7 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 難しさごとの既定の振り分けは `.specdojo/exec-defaults.yaml` の `routing` にある（hard は opus で代わりは sonnet、medium は sonnet で代わりは opus、easy はローカルの qwen で代わりは sonnet、reporter は gemma26 で代わりは sonnet-reporter）。routing に加えて、次のように選ぶ。
 
 - codex の sol（`sol-executor`）は hard、terra（`terra-executor`）は medium の作業に使える。routing には入れず、使うときは `--executor-by` で指定する（sol は 2026-11-21 に routing から外し、2026-11-24 から再び使えるようにした）。
-- agy（Antigravity）は使わない（PJR-5V0T。consumer plan では他社の agent や application から agy を起動することが規約で対象外のため）。
+- SpecDojo から agy（Antigravity）は起動しない（PJR-5V0T・PJR-N6FQ）。consumer plan の FAQ が対象外とするのは他社の agent や application の中に agy を包むこと（wrapping）のため、利用者が agy を直接起動し、対話のオーケストレーターとして使う手順は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] に従う（PJR-D5RS）。
 - easy でも、ローカルの qwen は、検査やファイルの削除を伴わない文書の作業だけに使う。それ以外は sonnet で流す。
 
 次の癖も踏まえる。

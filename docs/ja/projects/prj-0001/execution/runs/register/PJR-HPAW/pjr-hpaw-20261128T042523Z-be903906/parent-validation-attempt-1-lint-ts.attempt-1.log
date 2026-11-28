@@ -1,0 +1,127 @@
+parent validation: lint-ts
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:ts
+> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'
+
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/catalog/catalog.ts
+  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/dashboard/dashboard.ts
+  1144:1  warning  File has too many lines (1122). Maximum allowed is 1000  max-lines
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/devcontainer/scaffold.ts
+  189:8  warning  Async function 'runDevcontainerScaffold' has too many lines (332). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/commands.ts
+  125:8  warning  Function 'registerExecCommands' has too many lines (622). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/reporter.ts
+  1198:1  warning  File has too many lines (1135). Maximum allowed is 1000  max-lines
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/agent-pipeline.ts
+  144:8  warning  Async function 'runReporterStage' has too many lines (228). Maximum allowed is 200  max-lines-per-function
+  416:8  warning  Async function 'runAgentPipeline' has too many lines (257). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/agent.ts
+  683:8  warning  Async function 'runWithRetry' has too many lines (294). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/in-place.ts
+  301:8  warning  Async function 'runInPlaceMode' has too many lines (522). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/job.ts
+    96:1  warning  Async function 'runCommandJobMode' has too many lines (251). Maximum allowed is 200    max-lines-per-function
+   562:1  warning  Async function 'runJobWorktreeMode' has too many lines (306). Maximum allowed is 200   max-lines-per-function
+   879:1  warning  Async function 'runJobModeUnchecked' has too many lines (206). Maximum allowed is 200  max-lines-per-function
+  1046:1  warning  File has too many lines (1096). Maximum allowed is 1000                                max-lines
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/lifecycle-commands.ts
+  559:8  warning  Async function 'runResumeMode' has too many lines (368). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/register-command.ts
+   26:8   warning  Function 'registerRunCommand' has too many lines (425). Maximum allowed is 200  max-lines-per-function
+  187:37  warning  Async arrow function has too many lines (265). Maximum allowed is 200           max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/register-core.ts
+  421:8  warning  Async function 'runSingleRegisterItem' has too many lines (269). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/register-mode.ts
+  65:8  warning  Async function 'runRegisterMode' has too many lines (339). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/register-post-review.ts
+  383:8  warning  Async function 'runRegisterPostReview' has too many lines (224). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/register-resume.ts
+  301:8  warning  Async function 'resumeSingleRegisterItemWorktree' has too many lines (511). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/register-worktree.ts
+   212:1  warning  Async function 'integrateRegisterWorktreeRun' has too many lines (416). Maximum allowed is 200   max-lines-per-function
+   666:8  warning  Async function 'runSingleRegisterItemWorktree' has too many lines (429). Maximum allowed is 200  max-lines-per-function
+   738:5  warning  Async arrow function has too many lines (268). Maximum allowed is 200                            max-lines-per-function
+  1091:1  warning  File has too many lines (1032). Maximum allowed is 1000                                          max-lines
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/schedule-mode.ts
+  119:8  warning  Async function 'runBatchMode' has too many lines (332). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/schedule-prepare.ts
+  327:8  warning  Async function 'prepareSingleTask' has too many lines (471). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/run/schedule-task.ts
+   121:8   warning  Async function 'runPreparedTask' has too many lines (849). Maximum allowed is 200  max-lines-per-function
+   615:78  warning  Async arrow function has too many lines (364). Maximum allowed is 200              max-lines-per-function
+  1061:1   warning  File has too many lines (1058). Maximum allowed is 1000                            max-lines
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/schedule/gantt-chart-render.ts
+  51:8  warning  Function 'buildGanttChartSvg' has too many lines (429). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/exec/strategy.ts
+  188:8  warning  Function 'buildPhaseModeIndex' has too many lines (210). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/grade/apply.ts
+  749:8  warning  Function 'applyGradeSubmission' has too many lines (213). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/grade/command-apply.ts
+  59:8  warning  Function 'registerGradeApplyCommands' has too many lines (304). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/grade/plan.ts
+  293:1  warning  Function 'renderGradePlanWithEmbedding' has too many lines (243). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/grade/run.ts
+  146:1  warning  Async function 'runGradeUnlocked' has too many lines (408). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/job/definition.ts
+  576:8  warning  Function 'parseJobDefinition' has too many lines (359). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/register/create-commands.ts
+   63:8   warning  Function 'registerCreateCommands' has too many lines (301). Maximum allowed is 200  max-lines-per-function
+  380:8   warning  Function 'registerUpdateCommand' has too many lines (490). Maximum allowed is 200   max-lines-per-function
+  479:33  warning  Async arrow function has too many lines (392). Maximum allowed is 200               max-lines-per-function
+  482:57  warning  Arrow function has too many lines (389). Maximum allowed is 200                     max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/register/transition-commands.ts
+  9:8  warning  Function 'registerTransitionCommands' has too many lines (277). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/routine/routine.ts
+  529:8  warning  Function 'registerRoutineCommands' has too many lines (243). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/schedule/build.ts
+  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/schedule/strategy-generate-document.ts
+  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/src/shared/specdojo-config.ts
+  1273:1  warning  File has too many lines (1198). Maximum allowed is 1000  max-lines
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HPAW/tests/src/commands/git.test.ts
+  28:35  error  `import()` type annotations are forbidden  @typescript-eslint/consistent-type-imports
+
+✖ 46 problems (1 error, 45 warnings)
+
+
+
+--- stderr ---

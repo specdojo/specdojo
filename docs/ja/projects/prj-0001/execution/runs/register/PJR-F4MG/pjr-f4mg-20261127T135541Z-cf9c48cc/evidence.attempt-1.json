@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-F4MG",
+  "run_id": "pjr-f4mg-20261127T135541Z-cf9c48cc",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-27T13:59:07.080Z",
+    "completed_at": "2026-11-27T14:05:38.517Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".remarkrc.yaml",
+      "status": "M"
+    },
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/specdojo/guides/quick-start-guide.md",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": ".remarkrc.yaml",
+      "status": "M"
+    },
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/specdojo/guides/quick-start-guide.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".remarkrc.yaml                                     |  3 ++\n README.md                                          |  2 +-\n docs/en/index.md                                   | 12 ++++--\n docs/index.md                                      |  2 +-\n .../pjr-f4mg-english-edition-first-scope.md        | 45 +++++++++++++++++++---\n .../pipeline-state.json                            | 10 ++---\n .../standards/id-and-file-naming-standard.md       |  1 +\n .../schemas/v1/common-frontmatter.schema.yaml      | 18 +++++++++\n 8 files changed, 77 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/en/specdojo/guides/quick-start-guide.md docs/en/index.md docs/index.md README.md docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md docs/specdojo/schemas/v1/common-frontmatter.schema.yaml .remarkrc.yaml docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "No history-link violations, including the updated ticket"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "Required by the completion criteria. It rewrites `.specdojo/doc-index.json`, which the agent may not write, so the orchestrator must run it on the host and confirm the `docs/en/` pages build"
+    }
+  ],
+  "final_message": "Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `docs/en` guides). Decided where English kata go and how the language is chosen, and recorded this in the ticket. The English starter kata set is not done because PJR-BXYM is still in progress and the set is undecided.",
+  "completion_status": "incomplete",
+  "handoff": [
+    "Not done: the English starter kata set (ticket work item 5). PJR-BXYM is still in progress and the set is undecided. After BXYM is settled, translate the kata into `docs/en/specdojo/{rulebooks,recipes,samples,templates}/` with the same file names and ids, and add `specdojo.translated_from` (`locale: ja`, plus the commit that last changed the Japanese file).",
+    "To ship English kata in the npm package, add `docs/en/specdojo` (excluding `generated`) to `files` in `package.json`. This is protected configuration, so it was not changed.",
+    "Implementation is a separate item: `kata_locale` (top level of `.specdojo/specdojo.config.json`, `ja`/`en`, default `ja`, falls back to `ja` when the English version is missing), the `init` question `Kata language (ja / en) [ja]:` and `--kata-locale`, and a `LOCALE` column at the end of `kata list` (`ja (fallback)` on fallback). Suggest filing it as its own register item.",
+    "_UNDECIDED_: whether the `init` default follows the OS language (`LANG`), and whether orchestrator and CLI messages switch language with the same key. Both need the user's decision.",
+    "The completion criteria require `npm run docs:build`. It rewrites `.specdojo/doc-index.json`, so the executor could not run it. The orchestrator should run it on the host and confirm that the `docs/en/` pages (English Quick Start and entry page) build.",
+    "Since `.remarkrc.yaml` now runs the guide frontmatter schema on `docs/en/specdojo/guides/**/*.md`, check that the parent `lint:fm` passes for the English Quick Start (including `translated_from`)."
+  ],
+  "block_reason": "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `docs/en` guides). Decided where English kata go and how the language is chosen, and recorded this in the ticket. The English starter kata set is not done because PJR-BXYM is still in progress and the set is undecided.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/executor.attempt-1.log",
+      "bytes": 5449,
+      "truncated": false
+    }
+  ]
+}

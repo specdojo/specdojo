@@ -26,18 +26,18 @@ SpecDojo Unit を管理するリポジトリで、プロジェクト単位の変
 
 ## 3. ブランチの種類と命名
 
-| 種類             | 命名パターン                    | 必須          | 分岐元                     | 統合先                     | 管理主体         |
-| ---------------- | ------------------------------- | ------------- | -------------------------- | -------------------------- | ---------------- |
-| 安定統合         | `main`                          | ○             | -                          | -                          | リポジトリ管理者 |
-| プロジェクト統合 | `project/<project-id>/develop`  | ○             | `main`                     | `main`                     | プロジェクト     |
-| feature          | `feature/<project-id>/<topic>`  | ○             | 対象 project の `develop`  | 対象 project の `develop`  | 人               |
-| exec             | `exec/<project-id>-<task-id>`   | ○             | 実行時の project `develop` | 実行時の project `develop` | SpecDojo CLI     |
-| register         | `project/<project-id>/register` | 複数人運用で○ | `develop`                  | `develop`（一方向）        | SpecDojo CLI     |
+| 種類             | 命名パターン                       | 必須          | 分岐元                     | 統合先                     | 管理主体         |
+| ---------------- | ---------------------------------- | ------------- | -------------------------- | -------------------------- | ---------------- |
+| 安定統合         | `main`                             | ○             | -                          | -                          | リポジトリ管理者 |
+| プロジェクト統合 | `project/<project-id>/develop`     | ○             | `main`                     | `main`                     | プロジェクト     |
+| feature          | `feature/<project-id>/<topic>`     | ○             | 対象 project の `develop`  | 対象 project の `develop`  | 人               |
+| exec             | `exec/<project-id>-<task-id>`      | ○             | 実行時の project `develop` | 実行時の project `develop` | SpecDojo CLI     |
+| sync             | `project/<project-id>/sync/<kind>` | 複数人運用で○ | `develop`                  | `develop`（一方向）        | SpecDojo CLI     |
 
 - `<project-id>` は対象プロジェクトの ID と一致させます。
 - `<topic>` は英小文字、数字、ハイフンを使い、変更の目的を識別できる名前にします。
 - `<task-id>` は対象 schedule task の ID から機械的に導出します。
-- register ブランチは、複数人運用で register の記帳を共有するための専用ブランチです。置くもの、書き手、統合方向は `4.1. developへ入る3層の変更経路` と `4.2. 運用規模ごとの必須条件` に従います。
+- sync ブランチは、複数人運用で記帳を共有するための専用ブランチです。`<kind>` は `register`（登録簿の記帳）と `exec-events`（schedule の実行のイベント）で、将来ほかのものを共有するときは `sync/` の下に足します（PJR-EVWA）。v0.10.0 の互換の設定 `register_sync` では、両方を 1 本の `project/<project-id>/register` に置きます。置くもの、書き手、統合方向は `4.1. developへ入る3層の変更経路` と `4.2. 運用規模ごとの必須条件` に従います。
 - 既存の `feature/<topic>` は進行中の作業が完了するまで使用できます。新規作成する feature には project ID を含めます。
 
 ### 3.1. 対話型 agent の常設 worktree
@@ -58,7 +58,8 @@ main
    ├─ feature/<project-id>/<topic>
    └─ exec/<project-id>-<task-id>
 
-project/<project-id>/register ──(一方向 merge)──> project/<project-id>/develop
+project/<project-id>/sync/register    ──(一方向 merge)──> project/<project-id>/develop
+project/<project-id>/sync/exec-events ──(一方向 merge)──> project/<project-id>/develop
 ```
 
 | 操作                                     | 判定基準                                                                  |
@@ -77,18 +78,18 @@ project/<project-id>/register ──(一方向 merge)──> project/<project-id
 
 project `develop` へ入る変更は、変更の作成主体と事前レビューの要否により次の3層へ分けます。
 
-| 層  | 変更の種類                                                    | 作業ブランチ                                                               | `develop` への統合方法                                                                                |
-| --- | ------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| 1   | SpecDojo exec が task 単位で自動実行する変更                  | `exec/<project-id>-<task-id>`                                              | 単独運用は runner が `--no-ff` で merge する。複数人運用は Pull Request で統合する                    |
-| 2   | 人または対話型 agent が内容を書いた実装、設定、規範・設計文書 | `feature/<project-id>/<topic>`                                             | Pull Request で差分の承認を得てから merge する                                                        |
-| 3   | register の起票・close・状態遷移と、schedule の実行のイベント | 単独運用は project `develop`、複数人運用は `project/<project-id>/register` | 単独運用は直接 commit する。複数人運用は register ブランチへ push し、`develop` へ一方向に merge する |
+| 層  | 変更の種類                                                    | 作業ブランチ                                                                  | `develop` への統合方法                                                                            |
+| --- | ------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 1   | SpecDojo exec が task 単位で自動実行する変更                  | `exec/<project-id>-<task-id>`                                                 | 単独運用は runner が `--no-ff` で merge する。複数人運用は Pull Request で統合する                |
+| 2   | 人または対話型 agent が内容を書いた実装、設定、規範・設計文書 | `feature/<project-id>/<topic>`                                                | Pull Request で差分の承認を得てから merge する                                                    |
+| 3   | register の起票・close・状態遷移と、schedule の実行のイベント | 単独運用は project `develop`、複数人運用は `project/<project-id>/sync/<kind>` | 単独運用は直接 commit する。複数人運用は sync ブランチへ push し、`develop` へ一方向に merge する |
 
 層2と層3の境界は、変更内容に事前レビューの価値があるかで判断します。実装、設定、本文、判断内容のようにレビューで誤りを発見できる変更は、コマンドで生成・記録した場合でも層2です。層3は、既に決まった実行事実を register へ記帳するだけで、内容の判断を伴わない変更に限定します。記帳と内容変更が同じ作業に含まれる場合は、全体を層2として扱います。
 
 複数人運用の層3は、次の方式で扱います（PJR-2TX0 の決定。PJR-11EX の統合専用 actor の方式は置き換えられました）。
 
-- register ブランチは `project/<project-id>/register` とし、リモートを正本とします。
-- register ブランチに置くものは、登録簿の個票とイベント（`controls/project-register/`）と、schedule の実行のイベント（`execution/exec/events/` の claim・complete など）です。run の記録と grade の結果は exec の成果と組で生まれるため `develop` 側に残します。
+- sync ブランチは `project/<project-id>/sync/register` と `project/<project-id>/sync/exec-events` の 2 本とし、リモートを正本とします（PJR-EVWA の決定）。
+- `sync/register` には登録簿の個票とイベント（`controls/project-register/`）を、`sync/exec-events` には schedule の実行のイベント（`execution/exec/events/` の claim・complete など）を置きます。どちらも自分の範囲の外のファイルを含めません。以下の「register ブランチ」は、register の記帳では `sync/register`、実行のイベントでは `sync/exec-events` を指します。run の記録と grade の結果は exec の成果と組で生まれるため `develop` 側に残します。
 - runner は、状態の遷移（start・review・waiting など）と対応結果を register ブランチへ直接書いて push します。exec ブランチには個票の変更を含めません。agent が exec の worktree に書いた対応結果は、統合の段で register ブランチへ写します。
 - register ブランチは `develop` へ一方向に merge し、`develop` では register のファイルを直接変えません（hook と CI で止めます）。個票を読む文書の wikilink、文書サイトの build、`exec plan` は `develop` のファイルを読むため変わりません。
 - `register ... --commit` は commit に続けて register ブランチへ push し、non-fast-forward のときは `pull --rebase` して push し直します。CI は push のたびに記録の形と schema を検査し、register の範囲の外のファイルを含む commit を止めます。
@@ -96,7 +97,7 @@ project `develop` へ入る変更は、変更の作成主体と事前レビュ�
 
 層3を例外にできるのは、register ID が連番ではなく乱数で採番され、index と view の生成物が `.gitignore` で Git 管理対象外になっており、Git 管理する実体が項目単位の個票と event に分かれているためです。これらの前提が成立しない register や、同じ正本ファイルを複数人が更新する記帳には例外を適用せず、層2として扱います。
 
-CLI の専用ブランチ経路は v0.10.0 の `register_sync` で明示的に有効にします。register の `--commit`、schedule の実行イベント、register runner の状態遷移と対応結果は、共通の Git 同期接点で別 worktree・排他・rebase・push を扱います。executor の個票編集は検証後・exec の commit 前に転送し、push 成功後に実行元の個票を HEAD の内容へ戻します。同期対象外のファイルは記帳前と push 前に拒否し、同期失敗時はローカルの記帳を保持して復旧まで後続の同期を止めます。設定と初期作成・復旧の手順は [[specdojo:specdojo-config-reference|設定リファレンス]] と [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。develop への一方向の取り込みは `register branch-merge` が行い、`exec run --register --worktree` は worktree を作る前と統合後に取り込みます。develop での直接の変更は `register branch-guard` で検出します。手順は [[specdojo:command-reference|CLI コマンドリファレンス]] を参照してください。register のブランチへの push は `register branch-check` が pre-push の hook と CI で検査します。CI への検査の組み込みなど、複数人運用への移行準備は別途必要です。
+CLI の専用ブランチ経路は v0.10.0 の `sync`（1 本にまとめる互換の形は `register_sync`）で明示的に有効にします。1 回の操作が両方へ書く場合は `sync/register` を先に、`sync/exec-events` を後に 1 本ずつ書きます。register の `--commit`、schedule の実行イベント、register runner の状態遷移と対応結果は、共通の Git 同期接点で別 worktree・排他・rebase・push を扱います。executor の個票編集は検証後・exec の commit 前に転送し、push 成功後に実行元の個票を HEAD の内容へ戻します。同期対象外のファイルは記帳前と push 前に拒否し、同期失敗時はローカルの記帳を保持して復旧まで後続の同期を止めます。設定と初期作成・復旧の手順は [[specdojo:specdojo-config-reference|設定リファレンス]] と [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。develop への一方向の取り込みは `register branch-merge` が行い、`exec run --register --worktree` は worktree を作る前と統合後に取り込みます。develop での直接の変更は `register branch-guard` で検出します。手順は [[specdojo:command-reference|CLI コマンドリファレンス]] を参照してください。register のブランチへの push は `register branch-check` が pre-push の hook と CI で検査します。CI への検査の組み込みなど、複数人運用への移行準備は別途必要です。
 
 exec に流す `todo` の個票と実行に必要な記帳は、実行前に project `develop` へ統合済みでなければなりません。`exec run --worktree` は project `develop` の commit を起点に worktree を作るため、feature にだけ存在する `todo` は実行対象にしません。
 

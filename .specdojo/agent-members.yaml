@@ -851,6 +851,25 @@ members:
       変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。model の ID は
       `codex debug models` で確かめた gpt-6.1-terra（2026-11-16）。
 
+  - nickname: watch-diagnoser
+    disabled: false
+    # 通常の自動選択に入らないよう、優先度は最後にする。見張りは watch.diagnosis.by で名指しする。
+    priority: 99
+    display_name: Codex Watch Diagnoser
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6.1-terra
+    mode: review
+    proficiency: normal
+    capabilities: []
+    command: 'codex exec --ephemeral --sandbox read-only -c approval_policy="never" -c ''mcp_servers={}'' --model gpt-6.1-terra -c model_reasoning_effort="medium"'
+    note: >-
+      見張り（watch scan）が判断の要る止まりの診断に使う読み取り専用の agent（PJR-YNQG）。読み取りと標準出力への案の返却だけを行い、
+      朝報告への転記は見張りが行う。既存の review 用 template は workspace-write のため使わず、read-only の sandbox・MCP なしの専用
+      command で起動する。書き込みが拒まれることを実 CLI で確かめた（2026-11-28）。
+
   - nickname: astra-executor
     disabled: false
     priority: 9

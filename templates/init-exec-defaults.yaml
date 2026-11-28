@@ -101,12 +101,20 @@ providers:
         frontier: {}
     command_template: >-
       copilot -p "$(cat)" --no-color --no-ask-user --model auto
-      --no-remote --no-remote-export --disable-builtin-mcps
-      --allow-tool write --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
-      --allow-tool 'shell(specdojo:*)' --deny-tool 'shell(git add)'
-      --deny-tool 'shell(git commit)' --deny-tool 'shell(git push)'
-      --deny-tool 'shell(git reset)'
+      --sync-session=off --disable-builtin-mcps
+      --allow-tool write
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git status:*)'
+      --allow-tool 'shell(git diff)' --allow-tool 'shell(git diff:*)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git log:*)'
+      --allow-tool 'shell(git show)' --allow-tool 'shell(git show:*)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm run:*)'
+      --allow-tool 'shell(npm test)' --allow-tool 'shell(npm test:*)'
+      --allow-tool 'shell(specdojo:*)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git add:*)'
+      --deny-tool 'shell(git commit)' --deny-tool 'shell(git commit:*)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git push:*)'
+      --deny-tool 'shell(git reset)' --deny-tool 'shell(git reset:*)'
+      --deny-tool 'shell(specdojo guarded-push)' --deny-tool 'shell(specdojo guarded-push:*)'
+      --deny-tool 'shell(npx specdojo guarded-push)' --deny-tool 'shell(npx specdojo guarded-push:*)'
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", quota, premium request]

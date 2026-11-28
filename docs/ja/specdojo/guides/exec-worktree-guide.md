@@ -248,7 +248,7 @@ stage 済み変更は merge 対象との重複にかかわらず、複製の解�
 
 merge とその後の dist 更新も非同期で待ち、完了まで scheduler lock とタスク統合の排他を保持します。lock の取得待ちも event loop を止めません。処理別の所要時間は runner の標準エラーへ JSON の `worktree-operation-timing` として記録します。`operation` は `npm-ci`・`specdojo-build`・`yaml-pages-build`・`root-merge`・`product-merge`・`build-if-stale`、`at` は開始時刻、`duration_ms` は所要時間、`event_loop_delay_max_ms` は待機中の最長の停止時間です（PJR-CSRM）。
 
-`register_sync.enabled: true` の場合、個票・イベントは専用ブランチへ書き、exec の commit から除きます。統合先には exec の merge のほかに専用ブランチの取り込みが増えます。転送と復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] に従います。以下の個票・イベントの競合解決は専用ブランチを使わない場合の処理です。
+`sync.enabled: true`（または `register_sync.enabled: true`）の場合、個票・イベントと exec のイベントは専用ブランチへ書き、exec の commit から除きます。統合先には exec の merge のほかに専用ブランチの取り込みが増えます。転送と復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] に従います。以下の個票・イベントの競合解決は専用ブランチを使わない場合の処理です。
 
 register 項目の統合で競合したのが項目自身の記帳ファイル（個票・イベント・plan・result）だけの場合は、記帳ファイルを次のように解決して merge commit を作ります。`waiting` を複数回経た項目では、wait 時の同期 merge の後も統合先と exec branch の双方で記帳ファイルが変わるためです。解決後の commit は通常の `git merge` と同じく pre-commit hook を実行しません。
 

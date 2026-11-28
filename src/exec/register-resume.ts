@@ -1,25 +1,34 @@
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
 import {
   integratedRepoNames,
+  createPipelineState,
   loadPipelineResumeCheckpoint,
+  updatePipelineStage,
   type PipelineState,
 } from "./pipeline-state.js";
-import { recordStem, resumeStatePaths, runEvidencePath, taskRecordPaths } from "./run-records.js";
+import {
+  recordStem,
+  resumeStatePaths,
+  runEvidencePath,
+  runItemDirectory,
+  taskRecordPaths,
+} from "./run-records.js";
+import { readSpecdojoNamespace } from "../shared/frontmatter-namespace.js";
 
 // register 項目の executor/reporter pipeline を、途中で止まった段から再開するための run 特定と
 // 入力復元。途中で止まった run は worktree の未コミット成果と `pipeline-state.json` /
 // `evidence.json` が残っている。ここではその run と再開段を特定し、reporter へ渡す
 // plan / result / evidence を復元する（実行は exec-run 側が行う）。
 //
-// 再開段は3つある。executor が running のまま中断した場合は既存 worktree 上で executor を
+// 準備段で止まった run は同じ plan/result で準備をやり直す。executor が running のまま中断した場合は既存 worktree 上で executor を
 // 再実行する。executor が成功済みで reporter が未完了なら reporter 段から、reporter も成功して
 // 統合（commit → merge → worktree 撤去）だけが残っているなら integrate 段から再開する。
 // reporter 段から再開可能な run は、明示指定により既存成果を保持して executor へ戻せる。
 // schedule では、どのリポジトリも統合していない統合の段の run も executor へ戻せる。
 
-export type RegisterResumeStage = "executor" | "reporter" | "integrate";
+export type RegisterResumeStage = "prepare" | "executor" | "reporter" | "integrate";
 export type RegisterResumeFrom = "executor";
 
 type RegisterResumeSelectOptions = {
@@ -66,6 +75,7 @@ type RegisterResumeTargetBase = {
 };
 
 export type RegisterResumeTarget =
+  | (RegisterResumeTargetBase & { stage: "prepare" })
   | (RegisterResumeTargetBase & {
       stage: "executor";
       initialChanges: string[];
@@ -131,7 +141,7 @@ export function loadRegisterResumeCandidates(input: {
       stateRef,
       taskId: input.taskId,
     });
-    if (!checkpoint) continue;
+    if (!checkpoint || checkpoint.state.run_id !== runId) continue;
     candidates.push({
       runId,
       stateRef,
@@ -164,12 +174,42 @@ export function selectResumableRegisterRun(
     return { kind: "not-resumable", reason: "no pipeline run state found in the worktree" };
   }
   const ordered = [...candidates].sort((a, b) => {
-    if (a.state.updated_at !== b.state.updated_at) {
-      return a.state.updated_at < b.state.updated_at ? -1 : 1;
+    const aTime = runCreationOrder(a.runId, a.state.updated_at);
+    const bTime = runCreationOrder(b.runId, b.state.updated_at);
+    if (aTime !== bTime) {
+      return aTime < bTime ? -1 : 1;
     }
     return a.runId < b.runId ? -1 : a.runId > b.runId ? 1 : 0;
   });
   const latest = ordered[candidates.length - 1];
+  if (
+    latest.state.stages.reporter.status === "succeeded" &&
+    latest.state.stages.executor.status !== "succeeded"
+  ) {
+    return {
+      kind: "not-resumable",
+      reason: `integration requires a succeeded executor stage for run ${latest.runId}`,
+    };
+  }
+  if (
+    latest.state.stages.prepare &&
+    (latest.state.stages.prepare.status !== "succeeded" ||
+      latest.state.stages.executor.status === "pending")
+  ) {
+    if (
+      latest.state.stages.executor.status !== "pending" ||
+      latest.state.stages.executor.attempts !== 0 ||
+      latest.state.stages.executor.started_at !== null ||
+      latest.state.stages.reporter.status !== "pending" ||
+      latest.state.stages.integrate
+    ) {
+      return {
+        kind: "not-resumable",
+        reason: `inconsistent preparation state for run ${latest.runId}`,
+      };
+    }
+    return { kind: "resumable", target: { ...latest, stage: "prepare" } };
+  }
   // The earliest interrupted or incomplete attempt is the stable lower bound for later resumes.
   // Rejected protection-block changes are intentionally excluded; the handoff requires removing
   // them before resume. `attempt_changes` also excludes runner lifecycle changes that predated the
@@ -325,10 +365,138 @@ export function findResumableRegisterRun(input: {
   taskId: string;
   resumeFrom?: RegisterResumeFrom;
 }): RegisterResumeLookup {
+  const candidates = loadRegisterResumeCandidates(input);
+  // Preparation can fail before checkpoint files reach the worktree. Include root-side run
+  // directories, and never let a missing/corrupt latest state expose an older integrated run.
+  const executionRel = relative(input.repoRoot, input.executionPath);
+  const directories = [...new Set([input.repoRoot, input.worktreePath])].flatMap((root) => {
+    const itemDir = runItemDirectory(join(root, executionRel), "register", input.taskId);
+    return existsSync(itemDir)
+      ? readdirSync(itemDir, { withFileTypes: true })
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => ({ root, runId: entry.name, directory: join(itemDir, entry.name) }))
+      : [];
+  });
+  const latestRunId = directories
+    .map((entry) => entry.runId)
+    .sort(
+      (a, b) => runCreationOrder(a, a).localeCompare(runCreationOrder(b, b)) || a.localeCompare(b),
+    )
+    .at(-1);
+  if (latestRunId) {
+    const records = directories.filter((entry) => entry.runId === latestRunId);
+    let candidate = candidates.find((entry) => entry.runId === latestRunId);
+    if (
+      !candidate &&
+      records.some(
+        (record) =>
+          record.root === input.worktreePath &&
+          existsSync(join(record.directory, "pipeline-state.json")),
+      )
+    ) {
+      return {
+        kind: "not-resumable",
+        reason: `pipeline state is invalid for latest run ${latestRunId}; refusing to resume an older run`,
+      };
+    }
+    if (!candidate) {
+      for (const record of records) {
+        const stateRef = relative(record.root, join(record.directory, "pipeline-state.json"))
+          .split(sep)
+          .join("/");
+        const checkpoint = loadPipelineResumeCheckpoint({
+          worktreePath: record.root,
+          stateRef,
+          taskId: input.taskId,
+        });
+        if (
+          checkpoint?.state.run_id === latestRunId &&
+          checkpoint.state.stages.prepare &&
+          checkpoint.state.stages.executor.status === "pending"
+        ) {
+          candidate = {
+            runId: latestRunId,
+            stateRef,
+            statePath: join(input.worktreePath, stateRef),
+            state: checkpoint.state,
+          };
+          break;
+        }
+      }
+    }
+    // Compatibility for runs interrupted by older runners before they wrote any state. Only
+    // untouched plan/result scaffolds with no execution traces qualify for preparation recovery.
+    if (
+      !candidate &&
+      records.every((record) => !existsSync(join(record.directory, "pipeline-state.json")))
+    ) {
+      for (const record of records) {
+        const planPath = join(record.directory, "plan.md");
+        const resultPath = join(record.directory, "result.md");
+        if (!existsSync(planPath) || !existsSync(resultPath)) continue;
+        if (
+          records.some((entry) =>
+            readdirSync(entry.directory).some((name) =>
+              /^(evidence|executor|reporter)([.-]|$)/.test(name),
+            ),
+          )
+        )
+          break;
+        const plan = readSpecdojoNamespace(readFileSync(planPath, "utf8"));
+        const result = readSpecdojoNamespace(readFileSync(resultPath, "utf8"));
+        if (
+          plan.type !== "exec-plan" ||
+          result.type !== "exec-result" ||
+          plan.task_id !== input.taskId ||
+          result.task_id !== input.taskId ||
+          result.status !== "in_progress" ||
+          result.completed_at
+        )
+          continue;
+        const stateRef = relative(record.root, join(record.directory, "pipeline-state.json"))
+          .split(sep)
+          .join("/");
+        const state = updatePipelineStage(
+          createPipelineState({
+            taskId: input.taskId,
+            runId: latestRunId,
+            updatedAt:
+              typeof result.started_at === "string" ? result.started_at : new Date().toISOString(),
+            executorActor: typeof result.agent === "string" ? result.agent : undefined,
+            artifacts: {
+              plan_ref: relative(record.root, planPath).split(sep).join("/"),
+              result_ref: relative(record.root, resultPath).split(sep).join("/"),
+            },
+          }),
+          "prepare",
+          { status: "failed" },
+          new Date().toISOString(),
+        );
+        candidate = {
+          runId: latestRunId,
+          stateRef,
+          statePath: join(input.worktreePath, stateRef),
+          state,
+        };
+        break;
+      }
+    }
+    if (!candidate)
+      return {
+        kind: "not-resumable",
+        reason: `pipeline state is missing or invalid for latest run ${latestRunId}; refusing to resume an older run`,
+      };
+    // Root is authoritative only until the preparation checkpoint reaches the worktree.
+    if (!candidates.some((entry) => entry.runId === latestRunId)) candidates.push(candidate);
+  }
   return selectResumableRegisterRun(
-    loadRegisterResumeCandidates(input),
+    candidates,
     input.resumeFrom ? { resumeFrom: input.resumeFrom } : {},
   );
+}
+
+function runCreationOrder(runId: string, fallback: string): string {
+  return runId.match(/\d{8}T\d{6}Z/)?.[0] ?? fallback;
 }
 
 // Schedule の明示的な executor 再開は、成功済み executor から reporter または統合の段へ進んだ run と、

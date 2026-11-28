@@ -13,6 +13,7 @@ describe("checkLines", () => {
     registerPath: "docs/sample/controls/project-register",
     eventsPath: "docs/sample/execution/exec/events",
     branch: "project/sample/register",
+    scope: ["docs/sample/controls/project-register", "docs/sample/execution/exec/events"],
   };
 
   it("adds the hint of the real run when the check would stop", () => {
@@ -102,6 +103,13 @@ describe("register branch-push arguments and preconditions", () => {
     await expect(parse("--project", PROJECT, "refs/heads/main")).rejects.toThrow(
       /too many arguments/,
     );
+  });
+
+  it("rejects a --sync value that is not a sync branch kind", async () => {
+    await parse("--project", PROJECT, "--sync", "main");
+
+    expect(process.exitCode).toBe(1);
+    expect(stderr.join("")).toContain("--sync must be one of register, exec-events: main");
   });
 
   it("stops with exit code 1 and the reason when register_sync is not enabled", async () => {

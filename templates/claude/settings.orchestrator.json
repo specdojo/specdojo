@@ -23,6 +23,7 @@
       "Bash(gh workflow list:*)",
       "Bash(gh workflow view:*)"
     ],
+    "ask": ["Bash(specdojo guarded-push:*)", "Bash(npx specdojo guarded-push:*)"],
     "deny": [
       "Bash(git push:*)",
       "Bash(gh api:*)",

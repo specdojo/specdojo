@@ -13,6 +13,8 @@
     "dist",
     "docs/ja/specdojo",
     "!docs/ja/specdojo/**/generated/**",
+    "docs/en/specdojo",
+    "!docs/en/specdojo/**/generated/**",
     "docs/specdojo",
     "!docs/specdojo/**/generated/**",
     "templates",

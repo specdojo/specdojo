@@ -60,3 +60,87 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_24b73615f42240bd84f516b3be8e9a26
+- v: 1
+  id: reg_418509f93cba4323bf7ae37ef6db88e7
+  ts: "2026-11-27T10:49:51Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_642e2293d150413e95d223f308cbfc9c
+- v: 1
+  id: reg_941461e963f040939257bc16e8d41ff5
+  ts: "2026-11-27T10:53:45Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_418509f93cba4323bf7ae37ef6db88e7
+- v: 1
+  id: reg_4ea4711683e34b74b34b510b599c053f
+  ts: "2026-11-27T11:20:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_941461e963f040939257bc16e8d41ff5
+- v: 1
+  id: reg_0f86417637df47378f2fa1fc15e0c7d8
+  ts: "2026-11-27T11:38:16Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_4ea4711683e34b74b34b510b599c053f
+- v: 1
+  id: reg_39062c61040847adbb94c7384b513c40
+  ts: "2026-11-27T11:41:50Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0f86417637df47378f2fa1fc15e0c7d8
+- v: 1
+  id: reg_54b53ed19b5b4f2398b3f9bf30a5bbc9
+  ts: "2026-11-27T12:21:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の exec run --register の結果を差分・個票で確かめ、統合後に型の grade（qr23-ifx-file-20261127）を流して major がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: ifx-file の sample を YAML に作り直して承認の記述を外し、rulebook の参照キー・照合先・minor の指摘を直した。型の grade は rulebook pass 95、sample pass 92
+  previous_event_id: reg_39062c61040847adbb94c7384b513c40

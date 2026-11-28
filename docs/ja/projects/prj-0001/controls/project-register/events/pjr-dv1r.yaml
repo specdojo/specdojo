@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_736bea671e84497fbfdc873cbc36fd82
+  ts: "2026-11-28T09:56:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Copilot の executor の起動の設定が今の CLI に合わず、起動と拒否の指定が効かないおそれがある
+    - field: description
+      from: ""
+      to: exec-defaults の Copilot の command\_template が、今の Copilot CLI でなくなった --no-remote・--no-remote-export を渡すため起動で失敗する。--deny-tool 'shell(git push)' など末尾に :\* のない拒否は、引数付きのコマンドに当たらないおそれがある
+    - field: input
+      from: ""
+      to: '["2026-11-28 の GDMB の executor の確認で、copilot -p に雛形の引数を渡すと「error: --no-remote was removed. Use /remote off in a session; manage incoming connections in /environments.」で終了コード 1 になった","同じ確認で、--deny-tool ''shell(specdojo guarded-push)'' は引数付きの specdojo guarded-push … を拒まず、''shell(specdojo `guarded-push:*)''` にすると拒んだ。既存の shell(git push)・shell(git add)・shell(git commit)・shell(git reset) にも `:*` がない","executor の雛形は git push を許していないため、--no-ask-user の起動では今も拒まれるはずだが、拒否の指定そのものが効いているかは確かめていない","indie が推奨どおりの起票を指示した（2026-11-28）。担当と期限は未定"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GDMB"]'
+- v: 1
+  id: reg_4730a961ef2d44dc9578c8f78ce7c692
+  ts: "2026-11-28T10:02:42Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 担当と期限を indie が決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_736bea671e84497fbfdc873cbc36fd82
+- v: 1
+  id: reg_49fb2573eeb34382986287ff61401c67
+  ts: "2026-11-28T10:03:30Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 影響範囲 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_4730a961ef2d44dc9578c8f78ce7c692
+- v: 1
+  id: reg_913ffd9ccc6b4a299c1cefef1de59775
+  ts: "2026-11-28T10:04:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 対応方針 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_49fb2573eeb34382986287ff61401c67
+- v: 1
+  id: reg_14b029849bc74f80b87c3d30603ea961
+  ts: "2026-11-28T10:11:23Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_913ffd9ccc6b4a299c1cefef1de59775
+- v: 1
+  id: reg_8e61f392497e4799a58747c5eff79752
+  ts: "2026-11-28T10:17:12Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_14b029849bc74f80b87c3d30603ea961

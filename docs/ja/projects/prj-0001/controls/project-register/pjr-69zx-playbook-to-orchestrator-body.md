@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-69zx-playbook-to-orchestrator-body
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-24T23:02:05Z"
+  completed_at: "2026-11-28T07:08:04Z"
+  conclusion: 運用メモの一般の知見を、章の名前を変えずにオーケストレーター本文へ足し、12 の同期先へ反映した
 ---
 
 # PJR-69ZX 運用メモの一般の知見をオーケストレーターの本文へ移す

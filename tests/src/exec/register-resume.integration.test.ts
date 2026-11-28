@@ -18,6 +18,8 @@ import { registerExecCommands } from "../../../src/exec/exec.js";
 import type { ExecEvidence } from "../../../src/exec/evidence.js";
 import { listRunRecords } from "../../../src/exec/run-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
+import * as worktreeModule from "../../../src/exec/worktree.js";
+import type { PipelineState } from "../../../src/exec/pipeline-state.js";
 
 // PJR-6VFN / PJR-PG6W: `exec run --register --worktree --resume` の E2E 検証。executor が
 // 成功した直後に reporter だけが失敗した run と、保護機構で executor が block された run を、
@@ -420,6 +422,175 @@ afterEach(() => {
 });
 
 describe("exec run --register --worktree --resume", () => {
+  it(
+    "refuses integration without a successful executor before changing either checkout",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        const stderr: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          stderr.push(String(chunk));
+          return true;
+        });
+        await runWithFailingReporter(markerPath, worktreeBase);
+        const worktreePath = worktreePathFor(root)!;
+        const runsDir = join(worktreePath, EXECUTION_REL, "runs/register/PJR-CD34");
+        const runId = readdirSync(runsDir)[0];
+        const statePath = join(runsDir, runId, "pipeline-state.json");
+        const state = JSON.parse(readFileSync(statePath, "utf8")) as PipelineState;
+        state.stages.executor.status = "pending";
+        state.stages.reporter.status = "succeeded";
+        writeFileSync(statePath, JSON.stringify(state));
+        const rootHead = git(root, "rev-parse", "HEAD");
+        const worktreeHead = git(worktreePath, "rev-parse", "HEAD");
+        const rootStatus = git(root, "status", "--porcelain");
+        const worktreeStatus = git(worktreePath, "status", "--porcelain");
+        stderr.length = 0;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+        expect(process.exitCode).toBe(1);
+        expect(stderr.join("")).toContain("integration requires a succeeded executor stage");
+        expect(git(root, "rev-parse", "HEAD")).toBe(rootHead);
+        expect(git(worktreePath, "rev-parse", "HEAD")).toBe(worktreeHead);
+        expect(git(root, "status", "--porcelain")).toBe(rootStatus);
+        expect(git(worktreePath, "status", "--porcelain")).toBe(worktreeStatus);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+      });
+    },
+  );
+
+  it.each(["recorded", "legacy"])(
+    "resumes %s preparation after an older run was integrated, then runs executor and parent validation before reporting",
+    { timeout: 180_000 },
+    async (format) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        writeFileSync(
+          join(root, "package.json"),
+          JSON.stringify({
+            private: true,
+            scripts: {
+              "test:integration": `node -e "process.exit(require('fs').existsSync('${ARTIFACT_NAME}') ? 0 : 1)"`,
+            },
+          }),
+        );
+        const defaultsPath = join(root, ".specdojo/exec-defaults.yaml");
+        writeFileSync(
+          defaultsPath,
+          `${readFileSync(defaultsPath, "utf8")}pipeline:\n  parent_validations:\n    - test-integration\n`,
+        );
+        git(root, "add", "package.json", ".specdojo/exec-defaults.yaml");
+        git(root, "commit", "-m", "configure parent validation");
+        const args = [
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ];
+        await runExec(args);
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(worktreePathFor(root)).toBeNull();
+        const runsDir = join(root, EXECUTION_REL, "runs/register/PJR-CD34");
+        const previousRun = readdirSync(runsDir)[0];
+        const previousState = readFileSync(
+          join(runsDir, previousRun, "pipeline-state.json"),
+          "utf8",
+        );
+
+        writeFileSync(
+          join(root, TICKET_REL),
+          readFileSync(join(root, TICKET_REL), "utf8").replace(
+            "item_status: review",
+            "item_status: open",
+          ),
+        );
+        rmSync(join(root, ARTIFACT_NAME));
+        git(root, "add", TICKET_REL, ARTIFACT_NAME);
+        git(root, "commit", "-m", "request another run");
+        const builder = vi
+          .spyOn(worktreeModule, "generateWorktreeArtifacts")
+          .mockRejectedValueOnce(
+            new Error("Worktree preparation failed: specdojo build exited with 1"),
+          );
+        await runExec(args);
+        expect(process.exitCode).toBe(1);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const runId = readdirSync(runsDir).find((id) => id !== previousRun)!;
+        const stateRel = `${EXECUTION_REL}/runs/register/PJR-CD34/${runId}/pipeline-state.json`;
+        const pending = JSON.parse(readFileSync(join(root, stateRel), "utf8")) as PipelineState;
+        expect(pending.stages.prepare?.status).toBe("failed");
+        expect(pending.stages.executor.status).toBe("pending");
+        expect(existsSync(join(root, ARTIFACT_NAME))).toBe(false);
+        expect(existsSync(join(worktreePath, ARTIFACT_NAME))).toBe(false);
+        expect(
+          existsSync(
+            join(worktreePath, EXECUTION_REL, "runs/register/PJR-CD34", runId, "evidence.json"),
+          ),
+        ).toBe(false);
+        builder.mockRestore();
+        if (format === "legacy") {
+          rmSync(join(root, stateRel));
+          rmSync(join(worktreePath, stateRel));
+          git(root, "add", stateRel);
+          git(root, "commit", "-m", "simulate a legacy preparation checkpoint");
+        }
+        stdout.length = 0;
+        await runExec([...args, "--resume"]);
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(stdout.join("")).toContain(`Resuming preparation of run ${runId}`);
+        expect(stdout.join("")).not.toContain("before integrate resume");
+        expect(readdirSync(runsDir).sort()).toEqual([previousRun, runId].sort());
+        expect(readFileSync(join(runsDir, previousRun, "pipeline-state.json"), "utf8")).toBe(
+          previousState,
+        );
+        const resumed = JSON.parse(readFileSync(join(root, stateRel), "utf8")) as PipelineState;
+        expect(resumed.stages.prepare?.status).toBe("succeeded");
+        expect(resumed.stages.executor.status).toBe("succeeded");
+        expect(resumed.stages.reporter.status).toBe("succeeded");
+        expect(resumed.stages.integrate?.status).toBe("succeeded");
+        const evidence = JSON.parse(
+          readFileSync(join(runsDir, runId, "evidence.json"), "utf8"),
+        ) as ExecEvidence;
+        expect(evidence.run_id).toBe(runId);
+        expect(evidence.validations).toContainEqual(
+          expect.objectContaining({
+            source: "runner",
+            command: "npm run test:integration",
+            status: "passed",
+          }),
+        );
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+        expect(worktreePathFor(root)).toBeNull();
+        expect(git(root, "status", "--porcelain")).toBe("");
+      });
+    },
+  );
+
   it(
     "retains an untracked archive move and resumes after the human commits both sides",
     { timeout: 180_000 },

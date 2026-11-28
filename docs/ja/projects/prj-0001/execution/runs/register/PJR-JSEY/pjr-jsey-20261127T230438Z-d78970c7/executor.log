@@ -1,0 +1,11 @@
+個票の「対応結果」の表に、今回の確認対象を追記しました。変更したのは個票のみです。親 runner の検証は、この後の段で走ります。
+
+- **追記した行:** `2026-11-28 08:06`、`PJR-YNQG`、`sonnet-executor`。
+- **確認対象の選び方:** 対象一覧の項目のうち、`git log --merges` の件名に出る最新の統合は PJR-YNQG でした。merge commit は `7a65a61a2f`（2026-11-27 22:43 JST）で、この worktree の HEAD に含まれています。前回の PJR-1TYG（21a27d974e）より新しいので、確認対象を更新しました。
+- **補足文と作業内容の表:** 補足文の確認対象・merge commit・run ID を PJR-YNQG と今回の run に合わせました。作業内容の表のメモも更新しました。
+- **確認していないこと:** PJR-YNQG が実行時点で `review` または `done` かどうかは調べていません。
+- **コミットと検証:** 他のファイルは変更せず、コミットもしていません。`pipeline-state.json` が変更扱いになっているのは runner 側の更新で、私は触れていません。検証コマンドは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に 2026-11-28 08:06 / PJR-YNQG / sonnet-executor を追記し、補足文と作業内容のメモを更新した。変更ファイルは個票のみ。","handoff":["確認対象は対象一覧のうち merge commit が最新の PJR-YNQG（7a65a61a2f、2026-11-27 22:43 JST）とした。PJR-YNQG が実行時点で review または done かは確認していない。","親 runner の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため executor では実行していない。"}]}
+</specdojo_executor_evidence>

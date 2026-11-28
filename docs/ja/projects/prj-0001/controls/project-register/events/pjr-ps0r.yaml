@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b0b75f6e46bd4565b4105a26e440fdc3
+  ts: "2026-11-27T10:39:54Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 外部の project の置き場がないと、設定の読み込みでどのコマンドも止まる
+    - field: description
+      from: ""
+      to: external\_projects の path が見つからないとき、設定の読み込みがエラーになり、外部の project を使わないコマンドも止まる。GitHub の検査（Check register branch push・Check execution record layout）が 11-26 から失敗し続けている
+    - field: input
+      from: ""
+      to: "[\"d7d8cdf7e8（11-26）で `external_projects.prj-0002`（path: ../specdojo-prj-0002）を足してから、GitHub の Check register branch push と Check execution record layout が、置き場がないエラーで失敗し続けている。検査のサーバーは specdojo のリポジトリだけを checkout する\",\"エラーは src/shared/specdojo-config.ts の検証で出る: `external_projects.prj-0002.path` \\\"../specdojo-prj-0002\\\" does not exist\",\"利用者（indie）は、置き場がないことは警告にとどめ、使うときだけエラーにする案 B を選んだ。マシンごとの設定（specdojo.local.config.json）へ置き場を移せるかは、この項目で確かめて記録する（2026-11-27）\"]"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_ae45f558f2ba424dbf55d63b80529839
+  ts: "2026-11-27T10:42:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_b0b75f6e46bd4565b4105a26e440fdc3
+- v: 1
+  id: reg_9dcc311ad2a443f6983166556b914cdc
+  ts: "2026-11-27T11:44:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ae45f558f2ba424dbf55d63b80529839
+- v: 1
+  id: reg_3b9fc77512754763a0894126b09822d8
+  ts: "2026-11-27T11:55:07Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9dcc311ad2a443f6983166556b914cdc
+- v: 1
+  id: reg_cb39c95987954cac9542440a0b78d87f
+  ts: "2026-11-27T13:33:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・テストを確かめ、develop の push（255414eb53）で GitHub の Check execution record layout が prj-0002 の checkout のない環境で通ったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: external_projects の置き場がないときは設定の読み込みを警告にとどめ、外部の project を使う操作だけをエラーで止める。マシンごとの置き場は specdojo.local.config.json で差し替え・追加できる（PJR-F6MC で対応済み）
+  previous_event_id: reg_3b9fc77512754763a0894126b09822d8

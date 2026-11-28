@@ -3,29 +3,29 @@ version: 1
 document: specdojo:prj-overview-sample
 path: docs/ja/specdojo/samples/prj-overview-sample.md
 target: kata
-rubric: grade-rubric-v2
+rubric: grade-rubric-v3
 verdict: pass
-score: 100
-graded_at: "2026-11-23T20:41:33.115Z"
-graded_by: sonnet-review-executor
-content_hash: 94a621156fecca9ffd7e2585d207b6441962c6fbabed5cd55a0336fdd910bd58
+score: 93
+graded_at: "2026-11-27T14:11:26.720Z"
+graded_by: opus-review-executor
+content_hash: 422a26c9a7766e087f77809ea24aeb08f69e5c9aae321fb6e4825e100bbc3ff1
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -33,17 +33,17 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -72,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,13 +101,55 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 90
-    anchor: 本プロジェクトが成り立つために、次の条件に依存する。
-    message: 依存前提（タブレット、ベースライン記録、家族利用者代表の参加）が成立しなかった場合の影響（初期公開の遅れ、指標の判定不能など）と、リスクまたは未決事項として渡す後続文書を一文で追記する。
-    message_ja: 依存前提（タブレット、ベースライン記録、家族利用者代表の参加）が成立しなかった場合の影響（初期公開の遅れ、指標の判定不能など）と、リスクまたは未決事項として渡す後続文書を一文で追記する。
+    rule: vp-po-decision-readiness
+    line: 106
+    anchor: "- オフライン時の運用方針は _UNDECIDED_: 初期公開の計画で決定する。"
+    message: >-
+      未決事項（初期公開の日付、オフライン時の運用方針）の決定先が「初期公開の計画」とだけ書かれており、どの文書（wikilink）で、いつまでに決めるかが分からない。初期公開の日付は繁忙期の前に終える期限とベースライン測定の開始に関わるため、決定先の文書と決定期限（例:
+      繁忙期開始の2か月前まで）を添える。
+    message_ja: >-
+      未決事項（初期公開の日付、オフライン時の運用方針）の決定先が「初期公開の計画」とだけ書かれており、どの文書（wikilink）で、いつまでに決めるかが分からない。初期公開の日付は繁忙期の前に終える期限とベースライン測定の開始に関わるため、決定先の文書と決定期限（例:
+      繁忙期開始の2か月前まで）を添える。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 104
+    anchor: "- 顧客の氏名とつけ残高は店内の記録にのみ置き、共有する文書（本書を含む）には記載しない。顧客の連絡先は管理しない。"
+    message: >-
+      公開方針が「共有する文書に記載しないもの」だけで構成され、本書と成果物を誰にどこまで共有・公開するか（例:
+      店主・家族の内部共有に限る、公開リポジトリのサンプルとして公開する）と、その範囲を選んだ理由がない。公開する側の範囲を一文で追記する。
+    message_ja: >-
+      公開方針が「共有する文書に記載しないもの」だけで構成され、本書と成果物を誰にどこまで共有・公開するか（例:
+      店主・家族の内部共有に限る、公開リポジトリのサンプルとして公開する）と、その範囲を選んだ理由がない。公開する側の範囲を一文で追記する。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 69
+    anchor: "| 操作負担 | 1営業日の販売・在庫・つけの記録・確認にかかる追加操作時間        | 1日あたり合計10分以内 | 初期運用期間に記録・確認の所要時間を日次で計測             |"
+    message: "短期指標の操作負担の目標「1日あたり合計10分以内」が、2週間の平均で判定するのか全営業日で満たすのかが不明で、判定が割れる。判定方法（例: 初期運用2週間の営業日平均で10分以内）を測定方法の列に明記する。"
+    message_ja: "短期指標の操作負担の目標「1日あたり合計10分以内」が、2週間の平均で判定するのか全営業日で満たすのかが不明で、判定が割れる。判定方法（例: 初期運用2週間の営業日平均で10分以内）を測定方法の列に明記する。"
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 104
+    anchor: "- 顧客の氏名とつけ残高は店内の記録にのみ置き、共有する文書（本書を含む）には記載しない。顧客の連絡先は管理しない。"
+    message: recipe の前提条件の書き方は「公開方針は、公開する対象と公開しない対象を書き分ける」としているが、sample は公開しない対象だけを示している。完成例として recipe と揃うよう、公開・共有する対象の行を加える。
+    message_ja: recipe の前提条件の書き方は「公開方針は、公開する対象と公開しない対象を書き分ける」としているが、sample は公開しない対象だけを示している。完成例として recipe と揃うよう、公開・共有する対象の行を加える。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 34
+    anchor: >-
+      3. **Small Start, Improve Later（小さく始めて改善する）**:
+      初期公開（店頭で使い始める最初の版の提供）では単一店舗の店頭運用に絞り、記録が安定してから仕入れ支援や分析を拡張する。拡張の要否は短期指標の結果を見て決める。
+    message: 「初期公開」は店頭で使い始める最初の版の提供と定義されているが、指標の起点には「運用開始」が使われ、両者が同じ時点か別の時点か明示されていない。初期公開の定義に「初期公開の日を運用開始日とする」などの一文を加え、判定期間の起点を一つに揃える。
+    message_ja: 「初期公開」は店頭で使い始める最初の版の提供と定義されているが、指標の起点には「運用開始」が使われ、両者が同じ時点か別の時点か明示されていない。初期公開の定義に「初期公開の日を運用開始日とする」などの一文を加え、判定期間の起点を一つに揃える。
+size_metrics:
+  characters: 3963
+  operations_characters: 450
+  operations_ratio: 0.11

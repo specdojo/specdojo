@@ -26,7 +26,8 @@ const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[k
 
 const FAKE_AGENT_CMD =
   `node -e "const fs=require('node:fs');` +
-  `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'))"`;
+  `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'));` +
+  `fs.writeFileSync('agent-role.txt',process.env.SPECDOJO_AGENT_ROLE || '')"`;
 const FAKE_AGENT_NICKNAME = "test-edit-agent";
 
 function configurePipeline(repo: string, reporterCommandOverride?: string): void {
@@ -828,6 +829,7 @@ describe("exec run (in-place, default)", () => {
       const received = readFileSync(join(repo, "agent-ran.txt"), "utf8");
       expect(received).toContain("# Edit Plan: T-TEST-doc-010");
       expect(received).toContain("Content is complete");
+      expect(readFileSync(join(repo, "agent-role.txt"), "utf8")).toBe("executor");
 
       // A scheduled task retains a separate run directory even without worktree or events.
       const planFiles = listRunRecords(executionPath, "plan");

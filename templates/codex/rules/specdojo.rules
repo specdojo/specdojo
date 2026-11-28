@@ -46,3 +46,26 @@ prefix_rule(
     match = ["env gh pr view 123", "env /usr/bin/gh pr create --title example --body example"],
     not_match = ["env git status"],
 )
+
+# The guarded push entry (PJR-GDMB) may be used only by the interactive orchestrator,
+# with the user's approval on every run. Non-interactive executor / reporter runs use
+# approval_policy="never", so a prompt decision cannot be approved there; the entry
+# also refuses itself when SPECDOJO_AGENT_ROLE is set.
+prefix_rule(
+    pattern = [["specdojo", "./node_modules/.bin/specdojo"], "guarded-push"],
+    decision = "prompt",
+    justification = "Every push needs the user's approval after the dry-run shows the branch, remote and range.",
+    match = [
+        "specdojo guarded-push --project prj-0001",
+        "./node_modules/.bin/specdojo guarded-push --project prj-0001 --branch feature/prj-0001/example",
+    ],
+    not_match = ["specdojo exec status --project prj-0001"],
+)
+
+prefix_rule(
+    pattern = ["npx", "specdojo", "guarded-push"],
+    decision = "prompt",
+    justification = "Every push needs the user's approval after the dry-run shows the branch, remote and range.",
+    match = ["npx specdojo guarded-push --project prj-0001"],
+    not_match = ["npx specdojo exec status --project prj-0001"],
+)

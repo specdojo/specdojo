@@ -363,6 +363,8 @@ specdojo exec release \
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
 
+他の actor が claim した task を戻す場合、人は `--force` を使えます。`specdojo-orchestrator` も、claim に記録された runner PID の終了を CLI が確認できる場合に限って `--force` を使えます。実行中の run や判定情報のない旧 claim、読めない lock がある場合は拒否されます。拒否理由を確認し、人の `--force` に引き継ぎます。詳細な判定条件とイベント記録は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 #### 2.2.1. 人が unblock するときの続行と引き取り
 
 `exec unblock` を人が実行しても、claim の持ち主は変わりません。claim の持ち主は `claim` イベントの actor で、`note` やほかの actor の `unblock` では移りません。人が障害を取り除いて agent の run を続けさせる場合と、人が自分で直して完了させる場合は、`--take-over` の有無で区別します。
@@ -517,7 +519,7 @@ executor と reporter が成功した後の commit・merge・worktree 撤去で�
 
 ### 2.7. register統合後のreviewと自動close
 
-`register_sync.enabled: true` の project では、runner の状態遷移と検証済みの個票編集は専用ブランチへ commit・push します。exec の commit には個票・イベントを含めず、成功後に専用ブランチを呼び出し元へ取り込んでから post-review を始めます。転送・競合・復旧の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]] の専用ブランチの節を参照してください。未設定の場合は従来の記帳経路を使います。
+`sync.enabled: true`（または `register_sync.enabled: true`）の project では、runner の状態遷移と検証済みの個票編集は register の専用ブランチへ commit・push します。exec の commit には個票・イベントを含めず、成功後に専用ブランチ（register、exec-events の順）を呼び出し元へ取り込んでから post-review を始めます。転送・競合・復旧の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]] の専用ブランチの節を参照してください。未設定の場合は従来の記帳経路を使います。
 
 register の worktree 実行では、`--post-review` を付けると、成果を統合した後に読み取り専用の review pipeline を実行できます。review executor の既定は `claude-expert-review-executor` で、`--review-by` により変更できます。reporter は `stage_role: reporter` の候補から選び、edit pipeline で `--reporter-by` を指定している場合は同じ reporter を使います。
 
@@ -646,18 +648,22 @@ specdojo exec run --project <project-id> --register <PJR-ID> --worktree --resume
 
 `specdojo.config.json` の project に `repos` を宣言している場合、統合段は宣言順のプロダクトリポジトリ、最後にプロジェクトリポジトリの順で統合し、リポジトリ別の状態（`pending` / `merged` / `unchanged` / `failed`）を `pipeline-state.json` の `integrate.repos` に記録します。途中で失敗すると、統合済みのリポジトリはそのまま残し、項目を `waiting` へ戻して全リポジトリの worktree を保持します。統合段の再開では、統合先へ取り込み済みのプロダクトを merge し直さず、失敗したリポジトリから統合を続けます。統合の順序と部分状態の詳細は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの統合の失敗と再開」を参照してください。
 
-再開できるかどうかは、対象 worktree の最新 run だけで判定します。次の場合は worktree・exec ブランチ・未コミットの成果を一切変更せず、理由を出力して終了コード 1 で終わります。
+再開対象は、統合ブランチと worktree にある plan・result・状態記録の run ディレクトリから、run ID の作成日時で最新のものを選びます。最新 run の記録が欠けていても、古い run へは遡りません。worktree の用意で止まった pipeline は `prepare` 段から同じ run ID で準備をやり直し、executor → 親検証 → reporter → 統合へ進みます。準備段の状態記録がない旧 run では、未完了の plan/result が揃い、executor・reporter の実行記録がない場合だけ準備から復元します。
 
-| 状況                                                 | 扱い                                                         |
-| ---------------------------------------------------- | ------------------------------------------------------------ |
-| 項目の exec worktree が無い                          | 再開せず、通常の再実行を促す                                 |
-| 宣言したプロダクトリポジトリの worktree が欠けている | 再開せず、通常の再実行を促す                                 |
-| 最新 run の executor が `pending` / `failed`         | 再開せず、通常の再実行を促す（古い run へは遡らない）        |
-| 最新 run の executor が `rate_limited` / `blocked`   | 既存 worktree の executor 段から再開する                     |
-| succeeded executor の `evidence.json` が欠損・不整合 | executor の記録を再利用できないため拒否する                  |
-| 親検証の設定 ID が変更・欠損                         | 現在の固定許可リストで親検証を再実行して evidence を更新する |
-| result を worktree から復元できない                  | 再開の入力が揃わないため拒否する                             |
-| 再開した段が再び失敗した                             | worktree と成果を保持したまま `waiting` へ戻す               |
+再開時の主な条件と扱いは次のとおりです。再開を拒否する場合は、理由を出力して終了コード 1 で終わります。
+
+| 状況                                                  | 扱い                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| 項目の exec worktree が無い                           | 準備段なら作成をやり直し、それ以外は通常の再実行を促す       |
+| 宣言したプロダクトリポジトリの worktree が欠けている  | 準備段なら作成をやり直し、それ以外は通常の再実行を促す       |
+| 準備段の記録がなく executor が `pending` / `failed`   | 再開せず、通常の再実行を促す（古い run へは遡らない）        |
+| 最新 run の準備段が `running` / `failed`              | 準備をやり直す（executor は `pending`、reporter も未実行）   |
+| executor 未成功で reporter が成功済みと記録されている | 記録の不整合を示して止め、統合しない                         |
+| 最新 run の executor が `rate_limited` / `blocked`    | 既存 worktree の executor 段から再開する                     |
+| succeeded executor の `evidence.json` が欠損・不整合  | executor の記録を再利用できないため拒否する                  |
+| 親検証の設定 ID が変更・欠損                          | 現在の固定許可リストで親検証を再実行して evidence を更新する |
+| result を worktree から復元できない                   | 再開の入力が揃わないため拒否する                             |
+| 再開した段が再び失敗した                              | worktree と成果を保持したまま `waiting` へ戻す               |
 
 再開可能な run が残っている項目を `--resume` なしで再実行しようとした場合は、worktree を破棄する手前で中断します（未統合の成果を失わないための保護）。破棄したうえで最初からやり直す場合は `--force-restart` を明示します。
 

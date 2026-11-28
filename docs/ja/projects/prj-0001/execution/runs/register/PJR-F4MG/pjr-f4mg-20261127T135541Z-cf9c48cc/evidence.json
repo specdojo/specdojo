@@ -1,0 +1,460 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-F4MG",
+  "run_id": "pjr-f4mg-20261127T135541Z-cf9c48cc",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-27T14:43:58.693Z",
+    "completed_at": "2026-11-27T14:50:31.261Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".remarkrc.yaml",
+      "status": "M"
+    },
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/specdojo/guides/civic-tech-starter-guide.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/guides/quick-start-guide.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/recipes/br-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/recipes/prj-issues-and-approach-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/recipes/prj-overview-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/rulebooks/br-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/rulebooks/prj-issues-and-approach-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/rulebooks/prj-overview-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/rulebooks/sf-index-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/samples/br-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/samples/prj-issues-and-approach-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/samples/prj-overview-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/samples/sf-index-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/br-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-change-request-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-decision-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-dependent-items-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-derived-items-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-epic-items-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-epic-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-handoff-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-handoffs-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-index-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-issue-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-note-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-question-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-risk-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-todo-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-views-by-owner-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-views-by-priority-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/pjr-views-by-status-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/prj-issues-and-approach-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/en/specdojo/templates/prj-overview-template.md",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/en/specdojo/guides/quick-start-guide.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 44,
+    "summary": ".remarkrc.yaml                                     | 12 +++\n README.md                                          |  2 +-\n docs/en/index.md                                   | 27 +++++-\n docs/index.md                                      |  2 +-\n .../pjr-f4mg-english-edition-first-scope.md        | 69 ++++++++++++++--\n .../pipeline-state.json                            | 38 +++++----\n .../pjr-f4mg-20261127T135541Z-cf9c48cc/plan.md     |  6 ++\n .../standards/document-metadata-standard.md        |  1 +\n .../standards/id-and-file-naming-standard.md       |  1 +\n .../schemas/v1/common-frontmatter.schema.yaml      | 18 ++++\n packages/docs-lint/src/deliverable-type.cjs        | 64 ++++++++++++---\n tests/packages/docs-lint/deliverable-type.test.ts  | 96 ++++++++++++++++++++++\n 12 files changed, 297 insertions(+), 39 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write .remarkrc.yaml README.md docs/index.md docs/en/index.md 'docs/en/specdojo/**/*.md' docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md docs/ja/specdojo/standards/id-and-file-naming-standard.md docs/ja/specdojo/standards/document-metadata-standard.md docs/specdojo/schemas/v1/common-frontmatter.schema.yaml packages/docs-lint/src/deliverable-type.cjs tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "passed",
+      "summary": "累積の成果物変更を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "passed",
+      "summary": "最終追記後の個票を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --check packages/docs-lint/src/deliverable-type.cjs",
+      "status": "passed",
+      "summary": "型照合モジュールの構文検査に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/check-f4mg-translation.mjs",
+      "status": "passed",
+      "summary": "英語34文書のメタ情報・正本の最終更新commit・置換トークン・view-slotを照合。英語14件、日本語フォールバック52件のリンクを解決した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema tmp/f4mg-json-schema-meta.schema.json --data docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "passed",
+      "summary": "一時ラッパー経由で共通frontmatterスキーマをJSON Schema 2020-12に照らして検証した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成文書や再export参照などの警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と派生ビューの生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "最終差分に空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "保護された文書索引を更新するため、ホスト側でビルドと表示確認が必要。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG/src/dashboard/dashboard.ts\n  1144:1  warning  File has too many lines (1122). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG/src/shared/specdojo-config.ts\n  1273:1  warning  File has too many lines (1198). Maximum allowed is 1000  max-lines\n\n✖ 45 problems (0 errors, 45 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7976 file(s), 91 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 67 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7976 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 8ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"duration_ms\":8}\n[parent-vali\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1632}\n\n Test Files  19 passed (19)\n      Tests  507 passed (507)\n   Start at  23:51:10\n   Duration  2.65s (transform 5.34s, setup 770ms, import 7.94s, tests 5.97s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (test infrastructure or settings changed: docs/specdojo/schemas/v1/common-frontmatter.schema.yaml): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-…",
+      "test_selection": {
+        "mode": "full",
+        "reason": "test infrastructure or settings changed: docs/specdojo/schemas/v1/common-frontmatter.schema.yaml"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-F4MG\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/reporter.test.ts\"}\n ✓ tests/src/exec/reporter.test.ts (136 tests) 66ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/exec/reporter.test.ts\",\"duration_ms\":66}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": ".remarkrc.yaml",
+      "status": "changed",
+      "path": ".remarkrc.yaml",
+      "reason": ""
+    },
+    {
+      "target": "README.md",
+      "status": "changed",
+      "path": "README.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/en/index.md",
+      "status": "changed",
+      "path": "docs/en/index.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/index.md",
+      "status": "changed",
+      "path": "docs/index.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-f4mg-english-edition-first-scope.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/en/specdojo/guides/quick-start-guide.md",
+      "status": "changed",
+      "path": "docs/en/specdojo/guides/quick-start-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/en/specdojo/guides/civic-tech-starter-guide.md",
+      "status": "changed",
+      "path": "docs/en/specdojo/guides/civic-tech-starter-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "changed",
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "reason": ""
+    },
+    {
+      "target": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "英語34文書・README・文書サイト入口を整備。同一言語の rulebook を優先する型照合と回帰テストを追加し、MD028 違反を修正した。方針・理由・検証結果を個票に記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "英語版は日本語と同じ論理 ID を維持する。ID 標準との整合と参照の維持を理由に、英語専用 ID・名前空間は採用しなかった。型照合では `.specdojo/index-config.yaml` の `locales` に従い同じ言語を優先し、無ければ宣言順で最初に存在する言語へ戻る。同一言語の重複、言語中立 ID との衝突、未修飾参照の曖昧さは検出を維持する。個票5.4に記録済み。",
+    "親 runner が lint・型検査・テスト・全体スキーマ検証を実行する。前回失敗した Markdown と frontmatter lint の再評価、および追加した言語解決の回帰テストの結果を確認すること。executor では指定された親検証を重複実行していない。",
+    "`npm run docs:build` は保護された `.specdojo/doc-index.json` を更新するためホスト側で実行する。他の重い処理と重ねず、英語入口・両ガイド・5つの型の描画とリンクを確認すること。個票の作業6は理由付きで open とした。",
+    "PJR-BXYM は review 中だが、再開指示に従い統合済みの5つの型を翻訳した。人の確認後に組や本文が変わった場合は翻訳追従 todo を起票し、各文書の `translated_from.commit` から正本の差分を確認して英語文書・入門ガイド・入口を更新する。個票に記録済み。",
+    "CLI の `kata_locale`・`init` の質問と `--kata-locale`・`kata list` の LOCALE 列は設計決定のみで、実装は後続項目とする。npm 配布には保護された `package.json` の files への英語文書追加が必要。LANG による既定値と案内言語の切り替えは未決事項として個票に記録した。",
+    "result は reporter が記入する。CHANGELOG に集める Added・Fixed の文案は個票5.2に記録済み。登録簿と個票のステータスは変更していない。検証用の一時ファイルは削除済み。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4MG/pjr-f4mg-20261127T135541Z-cf9c48cc/executor.log",
+      "bytes": 7128,
+      "truncated": false
+    }
+  ]
+}

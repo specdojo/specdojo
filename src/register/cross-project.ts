@@ -3,8 +3,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { gitOutput, gitResult, worktreeStatusPaths } from "../shared/git.js";
 import {
+  isProjectSyncEnabled,
   loadConfig,
-  resolveExternalProjectRoot,
+  requireExternalProjectRoot,
   specdojoRootDir,
   type SpecDojoConfig,
   type SpecDojoProjectConfig,
@@ -124,7 +125,7 @@ export function resolveCrossProjectMutationTarget(
   if (!project) {
     const externalProject = config.external_projects?.[projectId];
     if (externalProject) {
-      const targetRoot = resolveExternalProjectRoot(repoRoot, externalProject);
+      const targetRoot = requireExternalProjectRoot(repoRoot, projectId, externalProject);
       throw new Error(
         `Cross-repository register ${command} is not supported for external project ${projectId}. ` +
           `Run the command in ${targetRoot} for project ${externalProject.project_id}.`,
@@ -141,7 +142,7 @@ export function resolveCrossProjectMutationTarget(
   assertCrossProjectMutationAllowed(command, projectId, opts.commit);
   // The dedicated register route resolves/fetches its own branch. Preserve the cross-project
   // add-only policy without requiring a local develop branch for that route.
-  if (project.register_sync?.enabled) return undefined;
+  if (isProjectSyncEnabled(project)) return undefined;
   requireLocalBranch(repoRoot, projectId, branch);
   return { projectId, branch };
 }

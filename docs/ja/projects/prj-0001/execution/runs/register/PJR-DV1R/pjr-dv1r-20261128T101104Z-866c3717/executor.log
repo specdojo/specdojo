@@ -1,0 +1,35 @@
+Copilot の executor 用の配布雛形を直しました。ただし、直した引数で Copilot が実際に起動するかは確かめていません。この sandbox では `copilot --help` も起動も承認なしには動かせず、引数の根拠は Copilot CLI の公式コマンドリファレンスだけです。
+
+**直したこと**
+- **廃止された引数:** `templates/init-exec-defaults.yaml` と `templates/copilot/exec-defaults-snippet.yaml` から `--no-remote` と `--no-remote-export` を外し、`--sync-session=off` を足しました。
+  - リファレンスによると、`--no-remote` は廃止で、代わりの起動引数はありません。`--no-remote-export` は `--sync-session=off` に名前が変わりました。
+  - 遠隔操作を始める `--remote` は `-p` の起動では使えないため、遠隔操作を断つ引数は置いていません。
+- **許可と拒否の書き方:** すべての `shell(...)` を、素の形と `:*` 付きの形の 2 つ並べる書き方にしました（例: `shell(git push)` と `shell(git push:*)`）。
+  - `:*` は「コマンドに空白と引数が続く形」に当たると書かれています。引数のない `git push` にも当たるかは書かれていません。そのため `:*` 付きだけに置き換えず、両方を書くことにしました。
+  - 許可も同じ書き方にしました。今の `shell(npm run)` は、`npm run lint:md` のような引数付きのコマンドを許していなかった可能性があります。
+  - `specdojo guarded-push` の拒否にも素の形を足しました。`shell(specdojo:*)` の許可はそのままです。
+- **説明の文書:** exec の設定のガイドの Copilot の段落（雛形と説明の箇条書き）と、`templates/copilot/README.md` のカスタマイズの章を、新しい書き方に合わせました。
+- **個票:** 対応結果に、決めた内容とその理由、保護された設定の変更案、検証結果、CHANGELOG の文案（区分 Fixed）を書き、関連ドキュメントの欄も埋めました。
+- 雛形の引数を検査する単体テストはなかったので、テストは変えていません。
+
+**検証**
+- 2 つの雛形を YAML として読み、展開したコマンドに廃止された引数が残っていないことを確かめました。
+- `npm run validate:history-links` は通りました。Prettier で崩れていたのは個票だけで、整形し直しました。
+- typecheck・lint・単体テストなどは、このあと親 runner が流します。
+
+**残っていること**
+- **保護された設定:** `.specdojo/exec-defaults.yaml` は変えていません。同じ形に直す案（`--model auto` は残す）を個票に書いたので、承認をもらって反映してください。
+- **実機での確認:** 統合の後に直した雛形で `copilot -p` を起動し、次の 3 点を確かめてから close してください。premium request を使うため、ここでは行っていません。
+  - 起動できること。
+  - `git push`（素の形と引数付き）と `specdojo guarded-push` が拒まれること。
+  - `npm run lint:md` など引数付きの検証は許されること。
+- **製品設計の文書:** `sysd-github-copilot-agent-settings` にも同じ古い引数が残っています。完了条件に入っていないので直していません。直すかどうか決めてください。
+
+参照した資料:
+- [Copilot CLI command reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference)
+- [Allowing tools (Copilot CLI)](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/allowing-tools)
+- [steer remotely](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/steer-remotely)
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Removed the deprecated --no-remote and --no-remote-export from the Copilot templates (templates/init-exec-defaults.yaml and templates/copilot/exec-defaults-snippet.yaml) and added --sync-session=off. Every allow and deny shell(...) pattern is now written in both the bare form and the :* form. The exec config guide, templates/copilot/README.md and the ticket's response section were updated to match. The protected .specdojo/exec-defaults.yaml was not changed; the proposed change is in the ticket and in handoff.","handoff":["Protected config: update `providers.copilot.command_template` in `.specdojo/exec-defaults.yaml` to the form in the ticket's proposal section (keep `--model auto`; replace `--no-remote --no-remote-export` with `--sync-session=off`; write each allow and deny `shell(...)` pattern in both the bare form and the `:*` form). The orchestrator applies this with the user's approval.","Real-device check after integration (requires_human): launch `copilot -p` with the updated template and confirm (1) it starts, (2) `git push` (bare and with arguments) and `specdojo guarded-push` are denied, and (3) argument-bearing validations such as `npm run lint:md` are allowed. Close the ticket after that.","Decision: the reference says `:*` matches 'the command stem followed by a space' and does not say whether it matches the bare command, so the bare form and the `:*` form are written side by side rather than replacing one with the other. `shell(specdojo:*)` was left as is.","Not changed: the product design doc `sysd-github-copilot-agent-settings` still contains the old `--no-remote --no-remote-export` and the bare-only shell patterns. It is not in the completion conditions; decide whether it needs a separate fix.","CHANGELOG draft (category Fixed) is in the ticket's response section, under the CHANGELOG subsection."],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; all history files valid"},{"command":"npx prettier --check (changed md/yaml files)","status":"passed","summary":"Formatted the ticket with prettier --write; the other files already passed"},{"command":"copilot -p (real launch and deny check)","status":"requires_human","summary":"Launching the real Copilot CLI uses premium requests and needs approval. After integration, the orchestrator confirms it starts and that git push and guarded-push are denied."}]}
+</specdojo_executor_evidence>

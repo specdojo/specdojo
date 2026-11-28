@@ -41,3 +41,245 @@
     - field: derived_from
       from: ""
       to: '["PJR-98HS"]'
+- v: 1
+  id: reg_37c033ba2a424f0d8b177e112c856e59
+  ts: "2026-11-27T10:28:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_b8080f0728b84453b5e502c55662d72b
+- v: 1
+  id: reg_ade8c47faa404bb49e39c3a1b7957191
+  ts: "2026-11-27T10:55:22Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_37c033ba2a424f0d8b177e112c856e59
+- v: 1
+  id: reg_15b473ebc4b94006b1bf0841bbb4dbc8
+  ts: "2026-11-27T11:02:13Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ade8c47faa404bb49e39c3a1b7957191
+- v: 1
+  id: reg_5ffa1d538b664aaca160a8efa9c4f2cf
+  ts: "2026-11-27T12:08:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_15b473ebc4b94006b1bf0841bbb4dbc8
+- v: 1
+  id: reg_5ce4f20cf12940e3a000bf060829e3fe
+  ts: "2026-11-27T12:21:51Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_5ffa1d538b664aaca160a8efa9c4f2cf
+- v: 1
+  id: reg_69ed5bea42334b64a14e55b87577b758
+  ts: "2026-11-27T12:23:48Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+  previous_event_id: reg_5ce4f20cf12940e3a000bf060829e3fe
+- v: 1
+  id: reg_bd9048a5a6d447e89d89f8a5a85e0654
+  ts: "2026-11-27T12:25:18Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86RK. Generated docs are gitignored and must be rebuilt per worktr…"
+      to: "-"
+  previous_event_id: reg_69ed5bea42334b64a14e55b87577b758
+- v: 1
+  id: reg_d1db819979ee439999ef523442e69d98
+  ts: "2026-11-27T12:30:29Z"
+  action: wait
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+  previous_event_id: reg_bd9048a5a6d447e89d89f8a5a85e0654
+- v: 1
+  id: reg_b3ca3c71372843a4bb78a458aaf475b4
+  ts: "2026-11-27T12:35:48Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: index-build: Generated project register index is missing or invalid: ja/projects/prj-0001/controls/project-register/generated/pjr-index.md; integrated rep…"
+      to: "-"
+  previous_event_id: reg_d1db819979ee439999ef523442e69d98
+- v: 1
+  id: reg_61906eb0892a4490b44e89f2131f3e37
+  ts: "2026-11-27T12:42:40Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b3ca3c71372843a4bb78a458aaf475b4
+- v: 1
+  id: reg_a4abca4558cc4c7f987ff2f4f71445cb
+  ts: "2026-11-27T12:45:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_61906eb0892a4490b44e89f2131f3e37
+- v: 1
+  id: reg_dd2ee0dc75434ccc896aec3843e96f80
+  ts: "2026-11-27T13:24:00Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_a4abca4558cc4c7f987ff2f4f71445cb
+- v: 1
+  id: reg_caff04a46c2f44fc96a1b813f7724e04
+  ts: "2026-11-27T13:31:37Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dd2ee0dc75434ccc896aec3843e96f80
+- v: 1
+  id: reg_bdf028e631dc4a42a37cf8b9051ccaa5
+  ts: "2026-11-27T13:35:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_caff04a46c2f44fc96a1b813f7724e04
+- v: 1
+  id: reg_5651cf498748461ca2332581393babc9
+  ts: "2026-11-27T13:39:15Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_bdf028e631dc4a42a37cf8b9051ccaa5
+- v: 1
+  id: reg_d0811f63d84049d8b3611213257a95b2
+  ts: "2026-11-27T13:47:30Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5651cf498748461ca2332581393babc9
+- v: 1
+  id: reg_1eafeef7326b4167b25cacfead2e10b7
+  ts: "2026-11-27T13:49:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 4 回目の統合後、開発中の版と本番の版の開発サーバーをヘッドレスのブラウザで幅 640・960・1280・1440 で写して比べ、本文のずれが帯の高さ（38px）だけであることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: 開発中の版の帯の高さを --vp-layout-top-height に反映し、960px 以上では帯を固定して local nav の上書きを VitePress の scoped 規則に勝たせた。幅 640・960・1280・1440 で本番の版から帯の高さだけずれる
+  previous_event_id: reg_d0811f63d84049d8b3611213257a95b2

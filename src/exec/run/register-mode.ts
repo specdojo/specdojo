@@ -192,20 +192,20 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
       const { item } = resolveRegisterRunTarget(projectId, pjrId);
       requireRunnableRegisterItem(item);
       const worktree = findExecWorktree(repoRoot, qualifyTaskId(projectId, item.id));
-      if (!worktree) {
-        process.stdout.write(`[dry-run]   ${item.id}: no exec worktree — not resumable\n`);
-        continue;
-      }
       const lookup = findResumableRegisterRun({
         repoRoot,
-        worktreePath: worktree.path,
+        worktreePath: worktree?.path ?? repoRoot,
         executionPath,
         taskId: item.id,
         ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
       });
+      if (!worktree && lookup.kind === "resumable" && lookup.target.stage !== "prepare") {
+        process.stdout.write(`[dry-run]   ${item.id}: no exec worktree — not resumable\n`);
+        continue;
+      }
       process.stdout.write(
         lookup.kind === "resumable"
-          ? `[dry-run]   ${item.id}: resume the ${lookup.target.stage} stage of run ${lookup.target.runId} in ${worktree.path}\n`
+          ? `[dry-run]   ${item.id}: resume the ${lookup.target.stage} stage of run ${lookup.target.runId} in ${worktree?.path ?? "a new worktree"}\n`
           : `[dry-run]   ${item.id}: not resumable (${lookup.reason})\n`,
       );
     }

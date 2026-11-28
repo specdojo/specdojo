@@ -1,17 +1,21 @@
 import { gitOutput, gitResult } from "./git.js";
-import { resolveRegisterBranchTarget, type RegisterBranchTarget } from "./register-branch.js";
+import {
+  isInBranchScope,
+  isInSyncScope,
+  resolveSyncBranchTargets,
+  type RegisterBranchTarget,
+} from "./register-branch.js";
+
+/** Outcome per sync branch; `source` is the sync branch, `branch` the current branch. */
+export type RegisterBranchMergeOutcome =
+  | { status: "on-register-branch"; source: string; branch: string }
+  | { status: "up-to-date"; source: string; branch: string }
+  | { status: "merged"; source: string; branch: string; commit: string };
 
 export type RegisterMergeOutcome =
-  | { status: "disabled" }
-  | { status: "on-register-branch"; branch: string }
-  | { status: "up-to-date"; branch: string }
-  | { status: "merged"; branch: string; commit: string };
+  { status: "disabled" } | { status: "checked"; branches: RegisterBranchMergeOutcome[] };
 
 const EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
-
-function isRegisterPath(target: RegisterBranchTarget, path: string): boolean {
-  return [target.registerPath, target.eventsPath].some((prefix) => path.startsWith(`${prefix}/`));
-}
 
 function splitPaths(output: string): string[] {
   return output.split("\0").filter(Boolean);
@@ -32,17 +36,33 @@ function isAncestor(worktree: string, ancestor: string, descendant: string): boo
 }
 
 /**
- * Merges the remote register branch into the current branch, one way and with `--no-ff`.
- * The register branch must only add bookkeeping on top of develop, so the merge never conflicts
- * unless develop edited a register file directly; that case is aborted and reported.
+ * Merges every remote sync branch into the current branch, one way and with `--no-ff`, in the
+ * order register then exec-events. A sync branch only adds bookkeeping on top of develop, so a
+ * merge never conflicts unless develop edited a synced file directly; that case is aborted and
+ * reported, and the later sync branches are not merged.
  */
 export function mergeRegisterBranch(projectId: string): RegisterMergeOutcome {
-  const target = resolveRegisterBranchTarget(projectId);
-  if (!target) return { status: "disabled" };
-  const worktree = target.repoRoot;
-  const branch = currentBranch(worktree);
+  const targets = resolveSyncBranchTargets(projectId);
+  if (!targets.length) return { status: "disabled" };
+  const branch = currentBranch(targets[0]!.repoRoot);
   if (!branch) throw new Error("Register merge requires a checked-out branch (HEAD is detached).");
-  if (branch === target.branch) return { status: "on-register-branch", branch };
+  // A sync branch must never receive another sync branch's bookkeeping.
+  if (targets.some((target) => target.branch === branch)) {
+    return {
+      status: "checked",
+      branches: targets.map((target) => ({
+        status: "on-register-branch",
+        source: target.branch,
+        branch,
+      })),
+    };
+  }
+  return { status: "checked", branches: targets.map((target) => mergeOneBranch(target, branch)) };
+}
+
+function mergeOneBranch(target: RegisterBranchTarget, branch: string): RegisterBranchMergeOutcome {
+  const worktree = target.repoRoot;
+  const isRegisterPath = (path: string): boolean => isInBranchScope(target, path);
   if (revision(worktree, "MERGE_HEAD")) {
     throw new Error("Register merge cannot start while another merge is in progress.");
   }
@@ -59,7 +79,7 @@ export function mergeRegisterBranch(projectId: string): RegisterMergeOutcome {
     ]),
   )
     .map((record) => record.slice(3))
-    .filter((path) => isRegisterPath(target, path));
+    .filter(isRegisterPath);
   if (dirty.length) {
     throw new Error(
       `Register files have uncommitted changes on ${branch}; they belong to ${target.branch}: ` +
@@ -69,11 +89,13 @@ export function mergeRegisterBranch(projectId: string): RegisterMergeOutcome {
 
   gitOutput(worktree, ["fetch", "--", target.remote, `refs/heads/${target.branch}`]);
   const remoteHead = gitOutput(worktree, ["rev-parse", "FETCH_HEAD"]).trim();
-  if (isAncestor(worktree, remoteHead, "HEAD")) return { status: "up-to-date", branch };
+  if (isAncestor(worktree, remoteHead, "HEAD")) {
+    return { status: "up-to-date", source: target.branch, branch };
+  }
 
   const outside = splitPaths(
     gitOutput(worktree, ["diff", "--name-only", "-z", "--no-renames", `HEAD...${remoteHead}`]),
-  ).filter((path) => !isRegisterPath(target, path));
+  ).filter((path) => !isRegisterPath(path));
   if (outside.length) {
     throw new Error(
       `Register branch ${target.branch} changes paths outside bookkeeping; refusing to merge: ` +
@@ -92,7 +114,12 @@ export function mergeRegisterBranch(projectId: string): RegisterMergeOutcome {
         `${String(merge.stdout ?? "")}${String(merge.stderr ?? "")}`.trim(),
     );
   }
-  return { status: "merged", branch, commit: gitOutput(worktree, ["rev-parse", "HEAD"]).trim() };
+  return {
+    status: "merged",
+    source: target.branch,
+    branch,
+    commit: gitOutput(worktree, ["rev-parse", "HEAD"]).trim(),
+  };
 }
 
 export type RegisterGuardMode = { kind: "staged" } | { kind: "range"; range: string };
@@ -112,13 +139,19 @@ function stagedBlob(worktree: string, path: string): string | undefined {
   return line ? line.split(" ")[1] : undefined;
 }
 
-function registerRefs(target: RegisterBranchTarget, extra: readonly string[]): string[] {
+function registerRefs(
+  targets: readonly RegisterBranchTarget[],
+  extra: readonly string[],
+): string[] {
   const candidates = [
-    `refs/remotes/${target.remote}/${target.branch}`,
-    `refs/heads/${target.branch}`,
+    ...targets.flatMap((target) => [
+      `refs/remotes/${target.remote}/${target.branch}`,
+      `refs/heads/${target.branch}`,
+    ]),
     ...extra,
   ];
-  return [...new Set(candidates.flatMap((ref) => revision(target.repoRoot, ref) ?? []))];
+  const repoRoot = targets[0]!.repoRoot;
+  return [...new Set(candidates.flatMap((ref) => revision(repoRoot, ref) ?? []))];
 }
 
 /**
@@ -133,17 +166,17 @@ function registerBases(worktree: string, parent: string, refs: readonly string[]
 }
 
 function violationsFor(
-  target: RegisterBranchTarget,
+  targets: readonly RegisterBranchTarget[],
   label: string,
   changed: readonly string[],
   blobOf: (path: string) => string | undefined,
   otherParents: readonly string[],
   refs: readonly string[],
 ): string[] {
-  const worktree = target.repoRoot;
+  const worktree = targets[0]!.repoRoot;
   const bases = otherParents.flatMap((parent) => registerBases(worktree, parent, refs));
   return changed
-    .filter((path) => isRegisterPath(target, path))
+    .filter((path) => isInSyncScope(targets, path))
     .filter((path) => {
       const blob = blobOf(path);
       return !bases.some((base) => blobAt(worktree, base, path) === blob);
@@ -152,19 +185,23 @@ function violationsFor(
 }
 
 /**
- * Detects direct edits of register files outside the register branch. A change is allowed only
- * when its content equals what a merged-in parent received from the register branch.
+ * Detects direct edits of synced files (register and exec events) outside the sync branches.
+ * A change is allowed only when its content equals what a merged-in parent received from a
+ * sync branch. On a sync branch itself, its scope is enforced by `register branch-check`.
  */
 export function checkRegisterGuard(
   projectId: string,
   mode: RegisterGuardMode,
 ): RegisterGuardResult {
-  const target = resolveRegisterBranchTarget(projectId);
-  if (!target) return { status: "disabled" };
-  const worktree = target.repoRoot;
+  const targets = resolveSyncBranchTargets(projectId);
+  if (!targets.length) return { status: "disabled" };
+  const worktree = targets[0]!.repoRoot;
 
   if (mode.kind === "staged") {
-    if (currentBranch(worktree) === target.branch) return { status: "checked", violations: [] };
+    const branch = currentBranch(worktree);
+    if (targets.some((target) => target.branch === branch)) {
+      return { status: "checked", violations: [] };
+    }
     const head = revision(worktree, "HEAD");
     const changed = splitPaths(
       gitOutput(worktree, [
@@ -178,11 +215,11 @@ export function checkRegisterGuard(
     );
     const mergeHead = revision(worktree, "MERGE_HEAD");
     const parents = mergeHead ? [mergeHead] : [];
-    const refs = registerRefs(target, parents);
+    const refs = registerRefs(targets, parents);
     return {
       status: "checked",
       violations: violationsFor(
-        target,
+        targets,
         "staged",
         changed,
         (path) => stagedBlob(worktree, path),
@@ -192,12 +229,12 @@ export function checkRegisterGuard(
     };
   }
 
-  const refs = registerRefs(target, []);
+  const refs = registerRefs(targets, []);
   const lines = gitOutput(worktree, ["rev-list", "--parents", mode.range, "--"]).trim();
   const violations: string[] = [];
   for (const line of lines ? lines.split("\n") : []) {
     const [commit, firstParent, ...otherParents] = line.split(" ") as [string, ...string[]];
-    // Commits made on the register branch itself are the source of truth.
+    // Commits made on a sync branch itself are the source of truth.
     if (refs.some((ref) => isAncestor(worktree, commit, ref))) continue;
     const changed = splitPaths(
       gitOutput(worktree, [
@@ -211,7 +248,7 @@ export function checkRegisterGuard(
     );
     violations.push(
       ...violationsFor(
-        target,
+        targets,
         commit.slice(0, 12),
         changed,
         (path) => blobAt(worktree, commit, path),

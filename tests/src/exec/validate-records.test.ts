@@ -274,6 +274,7 @@ describe("run record layout audit", () => {
         JSON.stringify({
           version: 1,
           current_project: "test",
+          external_projects: { customer: { path: "../missing-external", project_id: "remote" } },
           projects: {
             test: {
               schedule_path: "schedule",

@@ -95,7 +95,9 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 | `project_id` | 必須 | 相手の `specdojo.config.json` の `projects` にある実際の project ID です。                                                    |
 | `source_url` | 任意 | 相手のリポジトリ相対のパスを後ろに足すと文書の URL になる基点です。`http://` か `https://` で始めます。文書サイトが使います。 |
 
-別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
+別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` が空・絶対パス・ディレクトリでないファイルの場合は、設定の読み込み時にエラーにします。存在しないパスは、ローカル設定の上書き後に標準エラーへ警告を出し、設定の読み込みを続けます。同じ宣言と解決先への警告は、CLI のプロセス内で 1 回だけです。外部 project を使わない `register branch-check` や `exec validate --records-only` は、相手を checkout していなくても実行できます。
+
+相手を使う操作では、置き場がなければ別名・`project_id`・設定の `path`・解決した絶対パスを含むエラーで止まります。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は宣言したすべての外部リポジトリを使うため、それらが存在する必要があります。`repos` に加えて各外部リポジトリへ provider 別の編集許可を付けます。文書サイトの wikilink は後述の警告と未解決表示の扱いに従います。
 
 linked worktree（`exec run --worktree` の作業場所など）では、`path` を worktree ではなく、その worktree を持つ主の作業ツリーのルートから解決します。相手のリポジトリは主の作業ツリーの隣にあり、task の worktree の隣にはないためです。主の作業ツリーでの解決は変わりません。
 
@@ -165,7 +167,8 @@ Claude Code・Copilot・OpenCode の編集拒否は provider のファイルツ�
 | キー                 | 既定値                         | 役割・利用箇所                                                                                                                                      |
 | -------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `integration_branch` | `project/<project-id>/develop` | 別 project の作業ツリーから `register add --project <project-id> --commit` で直接記帳する統合ブランチです。                                         |
-| `register_sync`      | `{ "enabled": false }`         | register の `--commit` と schedule の実行イベントを専用ブランチへ同期します。詳細は次節を参照してください。                                         |
+| `sync`               | `{ "enabled": false }`         | 登録簿の記帳と schedule の実行イベントを、種類ごとの専用ブランチへ同期します。詳細は「`sync` のキー」を参照してください。                           |
+| `register_sync`      | `{ "enabled": false }`         | `sync` の前の形で、両方を 1 本の専用ブランチへ同期します。`sync` と同時には書けません。詳細は「`register_sync` のキー（互換）」を参照してください。 |
 | `project_context`    | `["prj-overview"]`             | edit / review plan へ常に渡す project 共通文書のローカル ID です。空配列 `[]` で無効化できます。`depends_on` や成果物の `based_on` は変更しません。 |
 | `commit_types`       | なし                           | 登録項目 type（`todo`・`issue` 等）から Conventional Commits type への対応マッピングです。                                                          |
 | `run`                | `{}`                           | agent 実行、worktree、登録日の表示に関する project 単位の設定です。                                                                                 |
@@ -173,29 +176,45 @@ Claude Code・Copilot・OpenCode の編集拒否は provider のファイルツ�
 
 project の `integration_branch` は、`repos[].integration_branch` とは別の設定です。前者は project リポジトリ内の登録簿へ直接記帳するブランチ、後者は exec が各プロダクトリポジトリへ変更を統合するブランチを表します。指定した project の統合ブランチはローカルに存在していなければなりません。
 
-### 4.1. `register_sync` のキー
+### 4.1. `sync` のキー
 
-`projects.<project-id>.register_sync` は v0.10.0 からの任意設定です。
+`projects.<project-id>.sync` は v0.10.0 からの任意設定です。専用ブランチを種類ごとに分け、`branches` の下に種類ごとの置き場を書きます。
 
-| キー      | 既定値                          | 役割                                                                                                                                   |
-| --------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled` | `false`                         | `true` なら register の `--commit` と schedule のイベントを専用 worktree に書き、commit・push します。未設定・`false` は従来動作です。 |
-| `branch`  | `project/<project-id>/register` | 記帳専用の Git ブランチ名です。                                                                                                        |
-| `remote`  | `origin`                        | fetch・pull・push に使う登録済みのリモート名です。URL とオプション形式は指定できません。                                               |
+| キー                          | 既定値                                  | 役割                                                                                                                                   |
+| ----------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`                     | `false`                                 | `true` なら register の `--commit` と schedule のイベントを専用 worktree に書き、commit・push します。未設定・`false` は従来動作です。 |
+| `remote`                      | `origin`                                | fetch・pull・push に使う登録済みのリモート名です。URL とオプション形式は指定できません。                                               |
+| `branches.register.branch`    | `project/<project-id>/sync/register`    | 登録簿の個票とイベント（`project_register_path` の配下）を記帳する Git ブランチ名です。                                                |
+| `branches.exec-events.branch` | `project/<project-id>/sync/exec-events` | schedule の実行イベント（`execution_path/exec/events/` の配下）を記帳する Git ブランチ名です。                                         |
 
 ```json
 {
-  "register_sync": {
+  "sync": {
     "enabled": true,
-    "branch": "project/prj-0001/register",
-    "remote": "origin"
+    "remote": "origin",
+    "branches": {
+      "register": { "branch": "project/prj-0001/sync/register" },
+      "exec-events": { "branch": "project/prj-0001/sync/exec-events" }
+    }
   }
 }
 ```
 
+`branches` とその中の種類は省略でき、省略した種類は既定の名前を使います。2 つの種類に同じブランチは指定できません。`branches` に書ける種類は `register` と `exec-events` だけです。
+
 有効時は `integration_branch` よりこの同期先を優先します。`external_projects` 経由の起票も、相手の CLI と project の設定に従います。相手も v0.10.0 以上に更新してください。`--commit` のない register 操作は現在の worktree に書き、`--dry-run --commit` は同期しません。
 
-同期範囲は `project_register_path` と `execution_path/exec/events/` です。`exec run --register` の状態遷移と検証済みの個票編集も同期し、exec の commit から個票・イベントを除きます。run の記録・成果物は従来の実行先に残ります。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成と push、競合の復旧は `specdojo register branch-push --project <project-id>` で行い、push の先はこの `remote` と `branch` だけです。手順と develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+各ブランチは自分の範囲だけを変えます。register のブランチは `project_register_path`、exec-events のブランチは `execution_path/exec/events/` です。`exec run --register` の状態遷移と検証済みの個票編集は register のブランチへ同期し、exec の commit から個票・イベントを除きます。run の記録・成果物は従来の実行先に残ります。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/sync/<種類>/<識別子>/worktree` に作成します。どのブランチへの同期も 1 つのロックで直列にします。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは exec-events のブランチを更新して参照するため、通信が必要です。初期ブランチの作成と push、競合の復旧は `specdojo register branch-push --project <project-id>`（1 本だけなら `--sync <種類>`）で行い、push の先はこの `remote` と `branches` のブランチだけです。手順、develop への取り込み、`register_sync` からの移し替えは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+
+### 4.2. `register_sync` のキー（互換）
+
+`projects.<project-id>.register_sync` は `sync` の前の形で、登録簿の記帳と schedule の実行イベントを 1 本の専用ブランチへ同期します。動作は `sync` と同じで、範囲が両方になる点と、専用 worktree の置き場が `specdojo/register/<識別子>/worktree` である点だけが違います。新しく有効にする project は `sync` を使ってください。`sync` と `register_sync` を同時に書くと設定の読み込みでエラーになります。
+
+| キー      | 既定値                          | 役割                                                                                     |
+| --------- | ------------------------------- | ---------------------------------------------------------------------------------------- |
+| `enabled` | `false`                         | `true` なら `sync` と同じく同期します。                                                  |
+| `branch`  | `project/<project-id>/register` | 両方を記帳する Git ブランチ名です。                                                      |
+| `remote`  | `origin`                        | fetch・pull・push に使う登録済みのリモート名です。URL とオプション形式は指定できません。 |
 
 ## 5. `run`のキー
 

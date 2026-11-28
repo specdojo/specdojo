@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3dbc73af81af473f82cfbfaa120d7f6c
+  ts: "2026-11-27T03:37:53Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register\_sync のブランチを sync/register と sync/exec-events に分ける
+    - field: description
+      from: ""
+      to: register\_sync の専用ブランチを project/`<id>`/sync/register（登録簿）と project/`<id>`/sync/exec-events（schedule の実行のイベント）の 2 本に分け、名前と置き場を中身に合わせる
+    - field: input
+      from: ""
+      to: '["現在の専用ブランチ project/prj-0001/register には、登録簿の記帳と execution/exec/events/ の claim・complete の両方が載る（直近 40 件中 8 件が schedule の task の記帳）","利用者は、将来登録簿と関係ないものも共有する場合に register の名前では行き詰まる点を懸念し、sync/ の下に種類ごとのブランチを置く階層の形を選んだ（2026-11-27）","exec run --register は登録簿の状態遷移だけを記帳し、schedule の task の実行は exec の events だけを記帳するため、今の作りでは 1 回の実行が両方のブランチへ書く場面はない","決めること: 両方へ書く必要が出た場合の順番と片方が失敗したときの扱い、exec-events という名前、今のブランチからの移し替えの手順（実行中の run がない時に切り替える）","変更の範囲: 設定（sync.branches など）、push・merge・guard・check のコマンド、exec run の後の自動取り込み、CI（check-register-push.yml）、lefthook、専用の worktree の置き場"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_aad3279d00034619b16218aefa770214
+  ts: "2026-11-27T10:03:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景
+    - field: description
+      from: register\_sync の専用ブランチを project/`<id>`/sync/register（登録簿）と project/`<id>`/sync/exec-events（schedule の実行のイベント）の 2 本に分け、名前と置き場を中身に合わせる
+      to: register\_sync の専用ブランチ `project/<id>/register` には、登録簿の記帳（個票とイベント）と、schedule の task の実行のイベント（`execution/exec/events/` の claim・complete）の両方が載っている。ブランチの名前が中身と合っていない。
+  previous_event_id: reg_3dbc73af81af473f82cfbfaa120d7f6c
+- v: 1
+  id: reg_460cf634c2c143cd82ec14103f4c649c
+  ts: "2026-11-27T10:03:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_aad3279d00034619b16218aefa770214
+- v: 1
+  id: reg_89d4149a8dcf43e8a40272e1ccbab18f
+  ts: "2026-11-27T10:04:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲とフォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_460cf634c2c143cd82ec14103f4c649c
+- v: 1
+  id: reg_b52028345389417c87bd3c83ca8a6a77
+  ts: "2026-11-27T10:07:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_89d4149a8dcf43e8a40272e1ccbab18f
+- v: 1
+  id: reg_c58f570f2a504bee890cc8a55d7dec0c
+  ts: "2026-11-27T10:07:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_b52028345389417c87bd3c83ca8a6a77
+- v: 1
+  id: reg_943ad530be5e43e6bd34602a7031167f
+  ts: "2026-11-27T10:08:50Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_c58f570f2a504bee890cc8a55d7dec0c
+- v: 1
+  id: reg_5e4c32184d234e25a4238a70c360b243
+  ts: "2026-11-27T10:09:51Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で推奨の D を採った（2026-11-27）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: D を採る。register_sync の専用ブランチを project/`<id>`/sync/register と project/`<id>`/sync/exec-events の 2 本に分ける。実装は別の todo で行う
+  previous_event_id: reg_943ad530be5e43e6bd34602a7031167f

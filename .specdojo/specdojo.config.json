@@ -18,7 +18,7 @@
         "register_date_timezone": "Asia/Tokyo",
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       },
-      "register_sync": {
+      "sync": {
         "enabled": true
       }
     },

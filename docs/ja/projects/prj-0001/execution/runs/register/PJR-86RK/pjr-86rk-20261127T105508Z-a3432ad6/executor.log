@@ -1,0 +1,18 @@
+広い画面でも、開発中の版の帯がメニューに隠れないように直しました。ブラウザでの見え方は確かめていません。この確認は個票の作業 3 で、オーケストレーターが行います。
+
+原因は、帯が VitePress の `--vp-layout-top-height` に自分の高さを伝えていなかったことです。VitePress は固定表示のナビゲーション・サイドバー・本文をこの変数の分だけ下げます。変数が未設定だったので、広い画面（固定表示）では帯がナビゲーションの下に潜っていました。
+
+- **直し方:** `NextChannelBanner.vue` で `ResizeObserver` を使い、帯の実測の高さを `document.documentElement` の `--vp-layout-top-height` に反映します。文が折り返して高さが変わっても追従します。帯を出さない本番では要素がなく、変数も設定しないので、見え方は変わりません。
+- **追加したファイル:** 変数の設定と解除をする `packages/docs-site/.vitepress/theme/layout-top-height.ts` と、その単体テスト `tests/packages/docs-site/layout-top-height.test.ts` です。
+- **個票:** 作業内容の表と対応結果を更新し、「CHANGELOG に書く事項」の小節を追加しました。区分は Fixed で、行の文案も書いてあります。`CHANGELOG.md` は変えていません。
+
+検査の結果は次のとおりです。
+
+- 新しい単体テストの 4 件は通りました。
+- `npm run typecheck` は出力がなく、通っています。
+- `npm run lint:ts` はエラー 0 件でした。43 件の警告のうち、確認した 1 件は `src/shared/specdojo-config.ts` の行数超過で、今回の変更とは関係ありません。
+- `npm run test:unit` と `npm run lint:md` は、親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"帯の高さを ResizeObserver で --vp-layout-top-height に反映するよう NextChannelBanner.vue を修正し、ヘルパーと単体テストを追加、個票を更新した。ブラウザ確認はオーケストレーターが行う。","handoff":["ブラウザでの広い画面・狭い画面の見え方の確認（個票の作業 3）はオーケストレーターが行う。状態は open のまま。","CHANGELOG に書く事項: 区分 Fixed。文書サイトの開発中の版で、広い画面でも「開発中の版」の帯がナビゲーションに隠れず表示されるようにした。（個票の対応結果にも記載済み）"],"validations":[{"command":"npx vitest run tests/packages/docs-site/layout-top-height.test.ts","status":"passed","summary":"4 tests passed"},{"command":"npm run typecheck","status":"passed","summary":"no errors"},{"command":"npm run lint:ts","status":"passed","summary":"0 errors, 43 warnings (none in changed files)"}]}
+</specdojo_executor_evidence>

@@ -565,6 +565,30 @@ export function renderFindingsTable(findings: readonly ReporterFinding[]): strin
   ].join("\n");
 }
 
+// kata-guide の指摘書式（No: 段 / 箇所 / 指摘 / 直した案 / 根拠 / 印）で
+// findings へ移した項目だけを除く。No への言及だけで要判断の理由などを消さない。
+// 本文の言い換えには依存せず No と段で照合し、元の evidence は変更しない。
+function handoffWithoutFindings(
+  handoff: readonly string[],
+  findings: readonly ReporterFinding[] = [],
+): string[] {
+  const identityText = (value: string): string =>
+    reporterInlineText(value).replace(/[`*]/g, "").trim();
+  const identities = new Set(
+    findings.map((finding) =>
+      JSON.stringify([identityText(finding.no), identityText(finding.stage)]),
+    ),
+  );
+  return handoff.filter((note) => {
+    const columns = stripLeadingListMarker(reporterInlineText(note)).split(/\s+\/\s+/u);
+    // 欄内のパスなどにも / が入りうるため、列数の上限は設けない。
+    if (columns.length < 6 || columns.some((column) => column.trim() === "")) return true;
+    const identity = identityText(columns[0]!).match(/^(.+?)\s*[:：]\s*(.+)$/u);
+    if (!identity) return true;
+    return !identities.has(JSON.stringify([identity[1]!.trim(), identity[2]!.trim()]));
+  });
+}
+
 function findGitRoot(startDir: string): string | null {
   try {
     let current = resolve(startDir);
@@ -878,7 +902,9 @@ export function renderEditReporterBody(
     "",
     reporterBulletList(
       [
-        ...new Set([...output.handoff, ...(evidence.handoff ?? [])]),
+        ...new Set(
+          handoffWithoutFindings([...output.handoff, ...(evidence.handoff ?? [])], output.findings),
+        ),
         ...unchangedTargetNotes,
         ...notApplicableValidationNotes,
         ...runnerOwnedValidationNotes,

@@ -1185,8 +1185,10 @@ from the stored grade result. Record that judgement in verdict and put unmet ite
 instructions in improvements. If evidence.final_message identifies "確認できなかった範囲",
 record that scope in rationale or improvements and reflect it in the verdict.`
       : `\n\nThe runner preserves evidence.handoff mechanically in the result's handoff section, even when
-your handoff is empty. Do not omit, reinterpret, or contradict those executor notes. Use your
-handoff only for additional notes supported by evidence; do not repeat evidence.handoff.
+your handoff is empty, except structured finding notes already represented in findings (matched
+by No and stage in the kata-guide format). Other notes, including validation results and reasons
+requiring human judgement, are preserved. Do not omit, reinterpret, or contradict those executor
+notes. Use your handoff only for additional notes supported by evidence; do not repeat evidence.handoff.
 
 When the plan asks for review findings (No, stage, location, finding, fix, basis, mark), put each
 finding from evidence in the optional findings array as one object and omit findings otherwise.

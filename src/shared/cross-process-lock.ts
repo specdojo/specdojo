@@ -275,6 +275,49 @@ export async function acquirePoolSlot(
   }
 }
 
+export type SyncWaitOptions = LockTimingOptions & {
+  timeoutMs: number;
+  pollMs?: number;
+  // Injected in tests; the default blocks the thread without busy-looping.
+  sleep?: (milliseconds: number) => void;
+  now?: () => number;
+};
+
+export type SyncPoolSlotResult =
+  | { kind: "acquired"; handle: LockHandle }
+  | { kind: "timeout"; waitedMs: number }
+  // A live slot belongs to this process. Blocking the thread would keep that holder from
+  // releasing it, so the caller has to fail instead of waiting.
+  | { kind: "held-by-this-process"; waitedMs: number };
+
+function blockThread(milliseconds: number): void {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+/** Synchronous `acquirePoolSlot` with an upper bound, for callers that cannot await. */
+export function acquirePoolSlotSync(
+  poolDir: string,
+  limit: number,
+  owner: LockOwnerInput,
+  options: SyncWaitOptions,
+): SyncPoolSlotResult {
+  const pollMs = options.pollMs ?? LOCK_POLL_MS;
+  const sleep = options.sleep ?? blockThread;
+  const now = options.now ?? Date.now;
+  const startedAt = now();
+  for (;;) {
+    const handle = tryAcquirePoolSlot(poolDir, limit, owner, options);
+    if (handle) return { kind: "acquired", handle };
+    const waitedMs = now() - startedAt;
+    const staleMs = options.staleMs ?? LOCK_STALE_MS;
+    if (livePoolHolders(poolDir, staleMs).some((slot) => slot.owner?.pid === process.pid)) {
+      return { kind: "held-by-this-process", waitedMs };
+    }
+    if (waitedMs >= options.timeoutMs) return { kind: "timeout", waitedMs };
+    sleep(Math.min(pollMs, options.timeoutMs - waitedMs));
+  }
+}
+
 /** Lists the slot locks that currently exist in the pool, including stale ones. */
 export function listPoolSlots(poolDir: string, staleMs: number = LOCK_STALE_MS): PoolSlotStatus[] {
   if (!existsSync(poolDir)) return [];

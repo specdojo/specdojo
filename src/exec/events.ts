@@ -35,7 +35,7 @@ import {
 import {
   inRegisterBranchSync,
   pushRegisterBranch,
-  registerBranchForSchedule,
+  execEventsBranchForSchedule,
 } from "../shared/register-branch.js";
 
 export { collectRepeatable };
@@ -282,7 +282,7 @@ function orderSameTimestampEventsByState(items: { path: string; event: ExecEvent
 }
 
 export function readAllEventFiles(projectPath: string): { path: string; event: ExecEventV1 }[] {
-  const target = registerBranchForSchedule(projectPath);
+  const target = execEventsBranchForSchedule(projectPath);
   if (target) {
     return inRegisterBranchSync(target, (worktree) =>
       readEventFilesFromDirectory(join(worktree, target.eventsPath)),
@@ -358,7 +358,7 @@ export function writeEventFile(
   event: ExecEventV1,
   dependencies: { randomHex?: (bytes: number) => string } = {},
 ): string {
-  const target = registerBranchForSchedule(projectPath);
+  const target = execEventsBranchForSchedule(projectPath);
   if (!target) return writeEventToDirectory(eventsDirForProject(projectPath), event, dependencies);
   return inRegisterBranchSync(target, (worktree) => {
     const execDir = join(worktree, target.eventsPath);
@@ -372,7 +372,7 @@ export function writeEventFile(
       }
       if (state !== "todo") {
         throw new Error(
-          `Cannot publish claim for ${event.task_id}: register branch state is ${state}. Inspect concurrent claims before retrying.`,
+          `Cannot publish claim for ${event.task_id}: exec-events branch state is ${state}. Inspect concurrent claims before retrying.`,
         );
       }
     };
@@ -595,11 +595,14 @@ export function canClaimTask(
 
 // A human actor may override the "owned by another actor" guard by passing
 // --force, e.g. to release/complete/block a task held by a stuck agent.
-// Agents never get this exception, preserving claim-stealing protection.
+// Release has a separate, verified stopped-run exception for the orchestrator.
 export type ForceOverride = {
   isHuman?: boolean;
   force?: boolean;
 };
+
+export type StoppedClaimRun = { pid: number; lock_token: string };
+export type ReleaseOverride = ForceOverride & { stoppedRun?: StoppedClaimRun };
 
 function canOverrideCrossActor(override?: ForceOverride): boolean {
   return !!override?.isHuman && !!override?.force;
@@ -751,14 +754,13 @@ export function canUnblockTask(
 }
 
 // release returns a doing/blocked task to todo for re-execution. Only the claiming actor may
-// release it (a human may override with --force), mirroring complete/block so an agent cannot
-// reset another actor's in-flight work.
+// release it. Humans may force; the orchestrator additionally needs verified stopped-run evidence.
 export function canReleaseTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
   actor: string,
-  override?: ForceOverride,
+  override?: ReleaseOverride,
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId);
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
@@ -774,7 +776,9 @@ export function canReleaseTask(
   if (state !== "doing" && state !== "blocked") {
     return { ok: false, reason: `task is not doing or blocked: ${taskId}` };
   }
-  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+  const stoppedRunOverride =
+    actor === "specdojo-orchestrator" && !!override?.force && !!override.stoppedRun;
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override) && !stoppedRunOverride) {
     return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 

@@ -33,6 +33,9 @@ permission:
     "npm run lint:md*": allow
     "npm run lint:fm*": allow
     "npm run validate:schema:file*": allow
+    "specdojo guarded-push*": ask
+    "npx specdojo guarded-push*": ask
+    "./node_modules/.bin/specdojo guarded-push*": ask
   edit:
     "*": deny
     "docs/**": allow
@@ -57,14 +60,15 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 
 - 回答は原則として日本語で行う。
 - 操作は「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、「承認の聞き方」に従って何をするかを日本語で示し、利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
-- 破壊的変更や `git push` は行わない。`register_sync` を有効にした project の登録簿の専用ブランチへの push は、specdojo のコマンド（`register ... --commit`・`exec run`・`register branch-push`）に任せ、`git push` を自分で打たない。
+- 破壊的変更や直接の `git push` は行わない。`register_sync` を有効にした project の登録簿の専用ブランチへの push は、specdojo のコマンド（`register ... --commit`・`exec run`・`register branch-push`）に任せる。
+- 自分の push は `npx specdojo guarded-push --project <project-id>` だけで行う。送れるのは `project/<project-id>/develop` と `feature/<project-id>/*` で、fast-forward に限る。先に同じ引数で `--dry-run` を流して送るブランチ・remote・commit の範囲と件数を示し、その送信ごとに承認を得てから通常実行する。ブランチの先端・送信先・範囲が変わったら、示し直して承認を取り直す。範囲の外の push と、npm の公開・リリースの公開は利用者へ引き渡す。
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
   - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
   - 書き込みを伴う git 操作（commit・merge・add・restore など）は `npx specdojo git --project <project-id> -- <git の引数>` で流し、runner の統合と同じロックに並べる。register の記帳は、これまでどおり `register ... --commit` を使う。
 - commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
   - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
-  - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
+  - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。push は利用者が求めたときに `guarded-push` で行い、PR 作成は行わず利用者へ引き渡す。
   - `exec run` は現在ブランチを統合先にするため、実行前に対象 project の `develop` にいることを確認する。
   - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
 - commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
@@ -72,7 +76,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - 自分で、または subagent で項目を実装するときは、skill `specdojo-exec-in-session`（`.agents/skills/specdojo-exec-in-session/SKILL.md`）があればその手順に従う。
 - 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録や、自分で行った起票・記帳は `specdojo-orchestrator` で残す。`--by` は人と agent の名簿の nickname・alias と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）だけを受け付け、それ以外は記帳の前にエラーで止まる。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
-- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
+- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。そのリポジトリへの push は行わず、利用者へ引き渡す。宣言していないリポジトリは参照も変更もしない。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
 - 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
 - タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利用者に確認する。
@@ -153,7 +157,7 @@ type は次のように使い分ける。
 | `question`       | 判断を保留し、後で決める             | `decided` |
 | `risk`           | 将来の不確実性                       | `done`    |
 | `change-request` | 合意済み範囲の変更要求               | `done`    |
-| `note`           | 記録として残す観測・分析             | なし      |
+| `note`           | 記録として残す観測・分析             | `done`    |
 | `epic`           | track ごとの仕事の着手と完了の管理   | `done`    |
 | `handoff`        | セッション・LLM の切り替えの引き継ぎ | `done`    |
 
@@ -193,7 +197,11 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 
 順番のある項目は `--depends-on <PJR-XXXX>`（繰り返し指定できる）で先に終わっているべき項目を記録する。起票の由来を表す `--from`（`derived_from`）とは別の意味で、どちらかで他方を兼ねない。先行の項目がすべて `done` / `decided` になるまで、`exec run --register` は止まり、夜間の実行では飛ばされる。状態は自動では `waiting` にならない。外すときは `--depends-on -` を指定する。後続の項目は一覧の `depends_on` 列と `generated/pjr-dependent-items.md` で確かめる。
 
-`note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
+`note` の `open` は継続して更新できる記録を表す。使い終わった note（内容を別の項目・文書・運用メモへ移した、または古くなった）は `register close --conclusion <text>` で `done` にし、移した先または古くなった理由を必ず書く。`decided`・`rejected`・`deferred` は使わない。必要になれば `register reopen` で `open` に戻す。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
+
+別の project の登録簿へ起票するときは `register add --project <project-id> --commit` を使い、起票の元は `--from <project-id>:PJR-XXXX` で指す。close などの状態遷移は、その project の作業ツリーで行う。別のリポジトリの project は `external_projects` に宣言してから起票する。`register_sync` を有効にした project では、記帳が専用ブランチへ commit・push されるため、develop への取り込みは登録簿運用ガイドに従う。どちらも設定リファレンスを確かめてから案内する。
+
+個票の本文に素の URL を書くと markdownlint の MD034 で commit が止まるため、`<https://...>` と書く。
 
 ## 実践の型（kata）の扱い
 
@@ -249,26 +257,37 @@ npx specdojo exec validate --project <project-id>
 - 完了条件にない変更（特に保護された設定や、利用者の環境に関わる設定）が入っていないかを確かめる。
 - runner や CLI の動きを変えた項目は、統合の後に実際の `exec run --register` を 1 回流して動作を確かめてから close する。生成物を変えた項目は、空のリポジトリで生成して確かめる。
 - 確かめられない条件（ホストでの確認など）が残る場合は close せず `review` のまま残し、利用者に確かめ方を示す。
+- result に `requires_human` と書かれた検証は、手元で流せるものは自分で流して確かめる。
+- 外部の事実（モデルのタグ名・版・価格など）は、result に確かめ方がなければ一次情報で確かめる。
 - 確かめた結果、または利用者の確認で直す点が出たら、同じ目的・同じ対象のファイルの手直しは新しく起票しない。元の todo の完了条件に「n 回目の実行（日付）」として直す点を足し、`review` のまま `exec run --register` で流し直す。人の確定を待つ decision は、確定するまで開けたままにし、各回の指摘と判断を個票に足していく。目的が変わる、対象の型やファイルが変わる、元の項目を close してから時間がたっている、のどれかに当たるときだけ新しく起票する。
 - 見つけた別の問題は、元の項目を `--from` で記録して起票する。完了条件の範囲を勝手に広げない。
 
 ## 止まったときの対処
 
-| 止まった理由                                   | 対処                                                                                                                 |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| agent の rate limit・つながらない              | `--fallback-executor-by` / `--fallback-reporter-by` で代わりの agent を指定して再開する。解除の時刻が分かれば待つ    |
-| 親の検証の失敗（型・lint・テストの本当の失敗） | `--resume --resume-from executor` で executor からやり直す。失敗した検証の結果が引き継がれる                         |
-| 負荷による時間切れ                             | 負荷を下げてから `--resume` で親の検証を流し直す                                                                     |
-| 統合での衝突（同じファイルの同じ行など）       | 両方の行を残す形に exec ブランチ側をそろえてから `--resume` する。記帳のファイルの衝突は runner に任せ、手で解かない |
-| 保護された設定への変更                         | worktree でその変更だけを戻して `--resume` するか、`exec handoff apply` で利用者の承認のもと当てる                   |
-| commit の hook の失敗                          | 失敗した段（markdownlint など）の出力を読み、記録のファイルを規約に合わせてから commit する                          |
-| 既に統合済みで再開できない                     | 新しい run として `--force-restart` で流す                                                                           |
+| 止まった理由                                   | 対処                                                                                                                                                                                                                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| agent の rate limit・つながらない              | `--fallback-executor-by` / `--fallback-reporter-by` で代わりの agent を指定して再開する。解除の時刻が分かれば待つ                                                                                                                                            |
+| 親の検証の失敗（型・lint・テストの本当の失敗） | `--resume --resume-from executor` で executor からやり直す。失敗した検証の結果が引き継がれる                                                                                                                                                                 |
+| 負荷による時間切れ                             | 負荷を下げてから `--resume` で親の検証を流し直す                                                                                                                                                                                                             |
+| 統合での衝突（同じファイルの同じ行など）       | 両方の行を残す形に exec ブランチ側をそろえてから `--resume` する。記帳のファイルの衝突は runner に任せ、手で解かない                                                                                                                                         |
+| 保護された設定への変更                         | worktree でその変更だけを戻して `--resume` するか、`exec handoff apply` で利用者の承認のもと当てる                                                                                                                                                           |
+| commit の hook の失敗                          | 失敗した段（markdownlint など）の出力を読み、記録のファイルを規約に合わせてから commit する                                                                                                                                                                  |
+| 既に統合済みで再開できない                     | 新しい run として `--force-restart` で流す                                                                                                                                                                                                                   |
+| 別の agent が claim したまま停止               | `exec release --by specdojo-orchestrator --force` を使う。CLI が runner の停止を確認できない場合や実行中の場合は拒否理由を示し、人の `--force` に引き継ぐ。`--by` に人の名前を代用しない。`--reset-worktree` と `--all-blocked` は利用者の承認を得てから使う |
+
+- 再開の前に追加の指示を入れるときは、plan を直さず `exec run --register <PJR-XXXX> --resume --resume-from executor --resume-note <text>` を使う。worktree の plan を直すと、統合の前に範囲外の変更として止まる。
+- executor が個票の完了条件を壊した（完了条件の中に対応の記録を差し込んだなど）ときは、worktree で完了条件を統合先の版に戻し、記録を対応結果へ移してから `--resume` する。
+- reporter の result の書式の違反が直らずに `waiting` になったときは、worktree の result の該当行だけを直し、統合だけを流し直す。成果物は変えない。
+- schedule のタスクの再開は `exec resume --task <task-id>` を使う。`exec run --register` の `--resume` とは別のコマンドである。
 
 ## 完了条件の書き方
 
 - 検証できる形で書く。完了条件は `exec plan` の入力になり、曖昧だと agent が意図と違う範囲を実装する。
 - 作業を終える前に流す検査（型検査・lint・単体テスト）と、通すべき親の検証を書く。
 - CHANGELOG の書き方は、プロジェクトの運用メモの決まりに従うと書く。決まりがなければ、各項目が CHANGELOG の同じ節へ直接書くと並べて流したときに統合で衝突しやすいことを踏まえ、書き方を利用者と決める。公開済みの版の節は変えないと書く。
+- 決まりがないときの推奨は、項目では `CHANGELOG.md` を変えず、個票の対応結果に「CHANGELOG に書く事項」の小節を作って区分（追加・変更・不具合修正など）と行の文案を書かせ、リリースでその小節を集める方式である。
+- 完了条件の中に、見出しの形の文字列（連番付きの小節の見出しなど）をそのまま書かない。executor が見出しと取り違え、完了条件の文の途中に記録を差し込む。
+- 読むだけの文書はパスで書かず、名前で書く。runner は完了条件に書かれたパスを変更の範囲と推定し、同じパスを書いた項目どうしを順番待ちにする。
 - 保護された設定に触れる場合、register の項目では案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。反映は利用者の承認のもとで行うと書く。「result に書く」は executor が result を直接書ける実行形式に限る。
 - 未決の点は `_UNDECIDED_` で残すか、executor に決めさせて理由を記録させるかを明記する。register の項目では個票の対応結果に書かせ、pipeline では報告の `handoff` にも書かせる。「result に書く」は executor が result を直接書ける実行形式に限る。
 - Markdown では、`*` や `_` を含む語（glob など）をコードの書式にする。コードの書式の中を空白で始めたり終えたりしない。
@@ -292,6 +311,6 @@ npx specdojo exec validate --project <project-id>
 ## 禁止事項
 
 - 状態変更・ファイル生成を伴うコマンドを、承認なしに実行すること。
-- `git push` や履歴を書き換える破壊的操作を行うこと。
+- 直接の `git push`、`guarded-push` の範囲の外への push、承認のない push、履歴を書き換える破壊的操作を行うこと。
 - 認証情報・秘密・`.env`・`secrets/` の読み取り。
 - 会話で確定していないプロジェクト事実（担当・期日・結論など）を勝手に埋めること。

@@ -16,12 +16,19 @@ import {
 } from "../../shared/specdojo-config.js";
 import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
+import {
+  createPipelineState,
+  pipelineStateLocation,
+  readPipelineState,
+  updatePipelineStage,
+  writePipelineState,
+  type PipelineState,
+} from "../pipeline-state.js";
 import { integratedCommitRange, runPostIntegration } from "../post-integration.js";
 import { buildInPlaceStem } from "../plans.js";
 import { resolveProductBranches } from "../product-branches.js";
 import { countPriorItemCommits, registerProductMessage } from "../register-product-message.js";
-import { findResumableRegisterRun } from "../register-resume.js";
+import { findResumableRegisterRun, type RegisterResumeArtifacts } from "../register-resume.js";
 import {
   generateRegisterPlan,
   requireRunnableRegisterItem,
@@ -115,6 +122,7 @@ import {
 } from "./register-state.js";
 import { downgradeUnfilledResult } from "./schedule-prepare.js";
 import { appendScopeWaitNotes } from "./change-scope.js";
+import { appendResumeNotesToPlan, nextResumeNotes } from "./resume-notes.js";
 import {
   rateLimitRecoveryReason,
   resolvePinnedRateLimitRunOptions,
@@ -660,6 +668,7 @@ export async function runSingleRegisterItemWorktree(
   opts: RunOpts,
   pjrId: string,
   lifecycleLock?: AsyncLock,
+  preparation?: { state: PipelineState; artifacts: RegisterResumeArtifacts },
 ): Promise<RegisterItemSummary> {
   const { projectId, schedulePath, executionPath, repoRoot, worktreeBase } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
@@ -695,7 +704,7 @@ export async function runSingleRegisterItemWorktree(
         provider: undefined as AgentProvider | undefined,
       };
   const resolvedProvider = provider ?? resolveAgentMember(context.roster, actor)?.provider;
-  const stem = buildInPlaceStem(pjrId.toLowerCase());
+  const stem = preparation?.state.run_id ?? buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
   const pipelineRunId = pipelineAgents ? stem : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
@@ -709,9 +718,11 @@ export async function runSingleRegisterItemWorktree(
       ticketPath,
       projectConfig: loadConfig().config?.projects[projectId],
       overrides: opts.branch,
+      resume: !!preparation,
     },
   );
   const integrationBranchOverrides = integrationBranchOverrideRecord(opts.integrationBranch);
+  let preparationState: PipelineState | undefined;
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -725,12 +736,17 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
-    // PJR-1JF6: register_sync の project では、develop の作業の前に register のブランチを
-    // 一方向に取り込む。未設定なら何もしない。取り込めないときは worktree を作らずに止める。
+    // PJR-1JF6・PJR-VKY2: sync（register_sync）の project では、develop の作業の前に専用の
+    // ブランチ（register → exec-events の順）を一方向に取り込む。未設定なら何もしない。
+    // 取り込めないときは worktree を作らずに止める。
     try {
       const intake = mergeRegisterBranch(projectId);
-      if (intake.status === "merged") {
-        process.stdout.write(`  [run] merged register branch: ${intake.commit.slice(0, 12)}\n`);
+      for (const entry of intake.status === "checked" ? intake.branches : []) {
+        if (entry.status === "merged") {
+          process.stdout.write(
+            `  [run] merged sync branch ${entry.source}: ${entry.commit.slice(0, 12)}\n`,
+          );
+        }
       }
     } catch (error) {
       const message = `register branch merge failed: ${error instanceof Error ? error.message : String(error)}`;
@@ -772,7 +788,9 @@ export async function runSingleRegisterItemWorktree(
     // executor が成功した run の worktree を、全体再実行が破棄しないよう保護する。
     // discardStaleExecWorktree は worktree と exec ブランチを強制削除するため、未コミットの
     // executor 成果が失われる。この場合は何も壊さずに中断し、再開か明示的な破棄を促す。
-    const protection = protectResumableRegisterWorktree(context, opts, item.id, worktreeTaskId);
+    const protection = preparation
+      ? null
+      : protectResumableRegisterWorktree(context, opts, item.id, worktreeTaskId);
     if (protection) {
       process.stderr.write(`${protection}\n`);
       return {
@@ -785,39 +803,57 @@ export async function runSingleRegisterItemWorktree(
       };
     }
 
-    const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
+    const discarded = preparation
+      ? null
+      : discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
 
     reserveProductBranches(products, worktreeTaskId);
 
-    const { planPath } = await generateRegisterPlan({
-      executionPath,
-      projectId,
-      ...(context.catalogPath ? { catalogPath: context.catalogPath } : {}),
-      ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
-      ...(context.viewpointsPath ? { viewpointsPath: context.viewpointsPath } : {}),
-      ...(context.projectContext ? { projectContext: context.projectContext } : {}),
-      registerPaths,
-      item,
-      stem,
-    });
-    appendScopeWaitNotes(planPath, opts.changeScopeWaits);
+    const { planPath } = preparation
+      ? { planPath: resolve(repoRoot, preparation.artifacts.planRef) }
+      : await generateRegisterPlan({
+          executionPath,
+          projectId,
+          ...(context.catalogPath ? { catalogPath: context.catalogPath } : {}),
+          ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
+          ...(context.viewpointsPath ? { viewpointsPath: context.viewpointsPath } : {}),
+          ...(context.projectContext ? { projectContext: context.projectContext } : {}),
+          registerPaths,
+          item,
+          stem,
+        });
+    if (!preparation) appendScopeWaitNotes(planPath, opts.changeScopeWaits);
+    const resumeNoteEntry =
+      preparation && opts.resumeNote?.length
+        ? { at: new Date().toISOString(), notes: opts.resumeNote }
+        : undefined;
+    if (resumeNoteEntry) appendResumeNotesToPlan(planPath, resumeNoteEntry);
     const prompt = expandPromptRefs(readPlanFile(planPath));
-    const { resultPath, supersededPaths } = await scaffoldResult({
-      executionPath,
-      taskId: item.id,
-      mode: "edit",
-      projectId,
-      origin: "register",
-      planRef: recordRef(executionPath, planPath),
-      agent: actor,
-      startedAt: new Date().toISOString(),
-      stem,
-      ...(item.approach ? { approach: item.approach } : {}),
-      ...(item.targets && item.targets.length > 0
-        ? { targets: isAuthoringApproach(item.approach) ? item.targets.slice(0, 1) : item.targets }
-        : {}),
-    });
+    const { resultPath, supersededPaths } = preparation
+      ? {
+          resultPath: resolve(repoRoot, preparation.artifacts.resultRef),
+          supersededPaths: [],
+        }
+      : await scaffoldResult({
+          executionPath,
+          taskId: item.id,
+          mode: "edit",
+          projectId,
+          origin: "register",
+          planRef: recordRef(executionPath, planPath),
+          agent: actor,
+          startedAt: new Date().toISOString(),
+          stem,
+          ...(item.approach ? { approach: item.approach } : {}),
+          ...(item.targets && item.targets.length > 0
+            ? {
+                targets: isAuthoringApproach(item.approach)
+                  ? item.targets.slice(0, 1)
+                  : item.targets,
+              }
+            : {}),
+        });
     const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
     process.stdout.write(
@@ -849,6 +885,51 @@ export async function runSingleRegisterItemWorktree(
         }),
       ),
     ];
+    const preparationLocation = pipelineRunId
+      ? pipelineStateLocation({
+          repoRoot,
+          worktreePath: repoRoot,
+          executionPath,
+          taskId: item.id,
+          runId: pipelineRunId,
+        })
+      : undefined;
+    if (preparationLocation) {
+      const startedAt = new Date().toISOString();
+      preparationState = updatePipelineStage(
+        preparation?.state ??
+          createPipelineState({
+            taskId: item.id,
+            runId: pipelineRunId!,
+            updatedAt: startedAt,
+            executorActor: actor,
+            reporterActor: pipelineAgents?.reporterCandidates[0]?.actor,
+            artifacts: {
+              plan_ref: repoRelativePath(repoRoot, planPath),
+              result_ref: repoRelativePath(repoRoot, resultPath),
+            },
+            ...(integrationBranchOverrides
+              ? { integrationBranches: integrationBranchOverrides }
+              : {}),
+          }),
+        "prepare",
+        {
+          status: "running",
+          actor,
+          started_at: startedAt,
+          completed_at: null,
+          attempts: (preparation?.state.stages.prepare?.attempts ?? 0) + 1,
+        },
+        startedAt,
+      );
+      if (resumeNoteEntry)
+        preparationState.resume_notes = nextResumeNotes(
+          preparationState.resume_notes,
+          resumeNoteEntry,
+        );
+      writePipelineState(preparationLocation.path, preparationState);
+      checkpointPaths.push(preparationLocation.path);
+    }
     const checkpointFailureLogPath = pipelineRunId
       ? integrateLogPath(
           pipelineStateLocation({
@@ -869,7 +950,18 @@ export async function runSingleRegisterItemWorktree(
         commitMessage: `exec(register ${item.id}): start`,
         products,
         failureLogPath: checkpointFailureLogPath,
+        resumeCheckpoint: !!preparation,
       });
+      if (preparationState && preparationLocation) {
+        const completedAt = new Date().toISOString();
+        preparationState = updatePipelineStage(
+          preparationState,
+          "prepare",
+          { status: "succeeded", completed_at: completedAt },
+          completedAt,
+        );
+        writePipelineState(resolve(worktree.path, preparationLocation.ref), preparationState);
+      }
       const setupAction = worktree.created ? "setup" : "reuse";
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
@@ -884,6 +976,19 @@ export async function runSingleRegisterItemWorktree(
         bookkeepingPaths: checkpointPaths,
       };
     } catch (error) {
+      if (preparationState && preparationLocation) {
+        const failedAt = new Date().toISOString();
+        preparationState = updatePipelineStage(
+          preparationState,
+          "prepare",
+          { status: "failed", completed_at: failedAt },
+          failedAt,
+        );
+        writePipelineState(preparationLocation.path, preparationState);
+        const existing = findExecWorktree(repoRoot, worktreeTaskId);
+        if (existing)
+          writePipelineState(resolve(existing.path, preparationLocation.ref), preparationState);
+      }
       // checkpoint 失敗時は exec branch に commit が無く、root の実行管理ファイルが正本のまま。
       // start を巻き戻して waiting にし、その状態を root の wait commit 1件にまとめる
       // （作りかけの worktree は次回実行の discardStaleExecWorktree が片付ける）。
@@ -949,6 +1054,8 @@ export async function runSingleRegisterItemWorktree(
       productWorktrees: worktree.repos,
       ...(integrationBranchOverrides ? { integrationBranchOverrides } : {}),
       runId: pipelineRunId,
+      preparationStage: preparationState?.stages.prepare,
+      resumeNotes: preparationState?.resume_notes,
       executorRateLimitOptions: opts.executorBy
         ? resolvePinnedRateLimitRunOptions(
             opts,

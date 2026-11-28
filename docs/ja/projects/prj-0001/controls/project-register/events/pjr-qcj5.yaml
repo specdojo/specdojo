@@ -73,3 +73,61 @@
       from: in-progress
       to: review
   previous_event_id: reg_0314ba1bebe946fd88a9a71dd3b8f1d9
+- v: 1
+  id: reg_c99e345d24844494822cea7431c82491
+  ts: "2026-11-28T09:55:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の完了条件を足す
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_a75fde1e9c6947feb6944bd62b71dd62
+- v: 1
+  id: reg_f0f54a5f596f415f8961111ddf2c3594
+  ts: "2026-11-28T09:58:12Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_c99e345d24844494822cea7431c82491
+- v: 1
+  id: reg_57b67c26bac54c4c93ceab603c6801f8
+  ts: "2026-11-28T10:09:23Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f0f54a5f596f415f8961111ddf2c3594
+- v: 1
+  id: reg_97bd1815e4c841369cd1143148693d20
+  ts: "2026-11-28T10:31:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合の後に目合わせの R5（opr-sample）を opus で流し直し（2026-11-28）、result の表が 1 回だけで、申し送りに指摘が重ならず、指摘でない申し送りが残ることを確かめた。run は無関係の見回りの報告の MD028 で親の検証に落ちたが、result の形の確かめには影響しない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 段の result の指摘の表を、runner が実施内容の後に Markdown の表として 1 回だけ描き、申し送りから表に移した指摘を取り除くようにした。指摘でない申し送りは残す
+  previous_event_id: reg_57b67c26bac54c4c93ceab603c6801f8

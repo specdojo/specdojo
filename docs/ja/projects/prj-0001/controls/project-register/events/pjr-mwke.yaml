@@ -38,3 +38,90 @@
     - field: derived_from
       from: ""
       to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_edac1a2d71bd435481299bdfeb0a706d
+  ts: "2026-11-27T13:14:04Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_a3d69f7d4f69428184cc84541e9f26e9
+- v: 1
+  id: reg_33d0d594230e483582413d56c05a6770
+  ts: "2026-11-27T13:44:40Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_edac1a2d71bd435481299bdfeb0a706d
+- v: 1
+  id: reg_5eba19a744b04cdc91011e4c11f67041
+  ts: "2026-11-27T13:54:04Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_33d0d594230e483582413d56c05a6770
+- v: 1
+  id: reg_d7d07a6c648f413d901659a560378d45
+  ts: "2026-11-27T14:12:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_5eba19a744b04cdc91011e4c11f67041
+- v: 1
+  id: reg_e4de95043f64440ca98adda63c9c2739
+  ts: "2026-11-27T14:13:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_d7d07a6c648f413d901659a560378d45
+- v: 1
+  id: reg_ffdb90c9f93c404589dac6bb4b42f07b
+  ts: "2026-11-27T14:14:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、同期を有効にした prj-0001 で相対パスの --section-file を使った register update --commit が通ることを実際の記帳（631e92fd2f・5bcf25372e）で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: register add / update の --section-file の相対パスを、記帳の場所へ移る前に呼び出し元の cwd から解決するようにした
+  previous_event_id: reg_e4de95043f64440ca98adda63c9c2739

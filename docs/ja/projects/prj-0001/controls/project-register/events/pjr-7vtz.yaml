@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f3ecf228c0294bc499781da9fc3e1b4a
+  ts: "2026-11-27T12:32:10Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 専用ブランチが使用中だと、exec のイベントの書き込みが待たずに失敗する
+    - field: description
+      from: ""
+      to: inRegisterBranchSync が使用中ならすぐ例外を投げるため、register の記帳と重なった exec refresh が worktree の用意の段で失敗し、run が waiting になる
+    - field: input
+      from: ""
+      to: '["2026-11-27 の PJR-86RK の 2 回目で、worktree の用意の exec refresh が「Register branch project/prj-0001/register is busy; retry the schedule operation.」で失敗し、run が waiting になった。同じ時刻にオーケストレーターが PJR-G5DY の close を register ... --commit で記帳していた","エラーは src/shared/register-branch.ts の inRegisterBranchSync が tryAcquirePoolSlot で枠を取れないときに投げる。非同期の inRegisterBranch は CrossProcessMutex で待つ"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-27"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-86RK"]'
+- v: 1
+  id: reg_a73e4653168f495d823d627515288de1
+  ts: "2026-11-27T12:33:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_f3ecf228c0294bc499781da9fc3e1b4a
+- v: 1
+  id: reg_657c869740634e55a063941a2588a289
+  ts: "2026-11-27T12:48:06Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a73e4653168f495d823d627515288de1
+- v: 1
+  id: reg_b6394f88e4fd4c7597978489328a117f
+  ts: "2026-11-27T12:57:34Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_657c869740634e55a063941a2588a289
+- v: 1
+  id: reg_9aa76964f24442d58045e0d60b653bc3
+  ts: "2026-11-27T14:16:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、記帳と並行した 5 件の exec run --register（--join を含む）が worktree の用意で使用中のために止まらずに流れることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-27"
+    - field: conclusion
+      from: "-"
+      to: 専用ブランチが使用中のとき、exec のイベントの書き込みは最大 120 秒待ってから書く。上限を超えるとブランチ名と待った時間を示して止まる
+  previous_event_id: reg_b6394f88e4fd4c7597978489328a117f

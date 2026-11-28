@@ -90,7 +90,7 @@ specdojo register add --project prj-0002 --type todo \
   --from prj-0001:PJR-AB12 --commit
 ```
 
-対象 project の `register_sync.enabled` が有効なら、後述の専用ブランチへ記帳して push します。未設定なら `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または記帳先のブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
+対象 project の `sync.enabled`（または `register_sync.enabled`）が有効なら、後述の register の専用ブランチへ記帳して push します。未設定なら `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または記帳先のブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
 
 別リポジトリの project へ起票する場合は、`specdojo.config.json` のトップレベルに別名を宣言し、その別名を `--project` に指定します。
 
@@ -212,17 +212,17 @@ specdojo register close --id PJR-AB12 --by <受け取った主体>
 
 登録項目の状態はコマンドで遷移させます。手で status セルを書き換えるより、遷移ガードの効くコマンドを優先します。
 
-| 場面                     | コマンド          | 遷移後の状態                                                          |
-| ------------------------ | ----------------- | --------------------------------------------------------------------- |
-| 登録する                 | `register add`    | `open`                                                                |
-| 着手する                 | `register start`  | `in-progress`                                                         |
-| 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                             |
-| 確認・レビューに回す     | `register review` | `review`                                                              |
-| 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は終端させない） |
-| 対応しないと判断する     | `register reject` | `rejected`（`note` と `handoff` は拒否）                              |
-| 延期する                 | `register defer`  | `deferred`（`note` と `handoff` は拒否）                              |
-| 終了済み項目を再開する   | `register reopen` | `open`                                                                |
-| 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
+| 場面                     | コマンド          | 遷移後の状態                                                                |
+| ------------------------ | ----------------- | --------------------------------------------------------------------------- |
+| 登録する                 | `register add`    | `open`                                                                      |
+| 着手する                 | `register start`  | `in-progress`                                                               |
+| 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                                   |
+| 確認・レビューに回す     | `register review` | `review`                                                                    |
+| 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は `conclusion` 必須） |
+| 対応しないと判断する     | `register reject` | `rejected`（`note` と `handoff` は拒否）                                    |
+| 延期する                 | `register defer`  | `deferred`（`note` と `handoff` は拒否）                                    |
+| 終了済み項目を再開する   | `register reopen` | `open`                                                                      |
+| 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                            |
 
 - 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
 - 起票と完了は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`register reopen` は `completed_at` を削除します。
@@ -264,7 +264,7 @@ specdojo register close --id PJR-AB12 --by <受け取った主体>
 - 状態遷移は `open` から終端まで順に辿る必要はありません。人が対応した項目や、対話型 orchestrator がその場で処理した項目は、`start` を経ずに `close` / `reject` して構いません。着手を記録していない時点の遷移を後から補うと、実際には起きていない事実がイベントログに残ります。詳しい基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `中間状態を経ない終端` を参照します。
 - 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
 - agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。
-- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。ただし `note` の `open` は生きている記録を意味し、終端させません。`register close` / `register reject` / `register defer` は `note` をエラー終了し、対応・回答・判断が必要な場合は、目的に合う別項目の起票を案内します。
+- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。`note` の `open` は生きている記録を意味します。使い終わった note は `register close --conclusion <text>` で `done` にし、移した先または古くなった理由を残します。`--status` を省いた場合も `done` になり、`decided` など他の状態は拒否します。`register reject` / `register defer` は使いません。必要になれば `register reopen` で `open` に戻せます。対応・回答・判断が必要な場合は、目的に合う別項目を起票します。
 - `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは `waiting` 中だけの現在値であり、`start` / `review` / `close` などで別の状態へ遷移すると個票から削除されます。削除前の理由は項目別イベントログに残り、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。誤った現在値を状態遷移なしで削除する場合は `register update --block-reason -` を使います。
 
 すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
@@ -294,36 +294,38 @@ specdojo register close \
 
 #### 専用ブランチへの同期（v0.10.0）
 
-[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は、設定を含む develop の commit をリモートへ入れたあと、`register branch-push` でブランチを用意します。
+[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。専用ブランチは種類ごとに 2 本あり、登録簿の個票とイベント（`project_register_path`）は `project/<project-id>/sync/register`、schedule の実行イベント（`execution_path/exec/events/`）は `project/<project-id>/sync/exec-events` に載せます（名前は既定値）。リモートは `origin` です。互換の `register_sync` は両方を 1 本（既定は `project/<project-id>/register`）に載せます。移し替えは「専用ブランチを `register_sync` から `sync` へ移し替える」を参照してください。初回は、設定を含む develop の commit をリモートへ入れたあと、`register branch-push` でブランチを用意します。
 
 ```bash
 specdojo register branch-push --project prj-0001 --dry-run
 specdojo register branch-push --project prj-0001
 ```
 
-`register branch-push` は、push の先を `register_sync` の `remote` と `branch` だけに絞った専用のコマンドです。手元にもリモートにもブランチが無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）のリモートの先端から作って push します。手元にしかない統合のブランチの commit は含めません。リモートに統合のブランチが無いときだけ、手元の先端から作り、その旨を案内します。リモートにだけあれば、手元のブランチと専用 worktree を作るだけにします。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えません。
+`register branch-push` は、push の先を設定した `remote` と専用ブランチだけに絞った専用のコマンドです。`--sync register` または `--sync exec-events` で 1 本に絞れます。省くと register、exec-events の順に処理します。手元にもリモートにもブランチが無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）のリモートの先端から作って push します。手元にしかない統合のブランチの commit は含めません。リモートに統合のブランチが無いときだけ、手元の先端から作り、その旨を案内します。リモートにだけあれば、手元のブランチと専用 worktree を作るだけにします。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えません。
 
 ほかの利用者は初回の同期時にリモートからローカルブランチと worktree を作れます。既存の専用 worktree は再利用し、無ければ Git 共通ディレクトリ配下に作成して保持します。hook が使う依存関係や、追跡外の名簿などが必要な環境では、事前に専用 worktree を用意して必要なセットアップを行ってください。元の worktree の未 commit 変更は専用ブランチへコピーしません。
 
-同期は fetch と `pull --rebase` の後に記帳し、non-fast-forward なら再び `pull --rebase` して push し直します。push は最大 3 回です。同じリポジトリの同期処理は共通のロックで直列化します。schedule の同期処理が busy になった場合は、処理の終了後にコマンドを再実行してください。
+同期は fetch と `pull --rebase` の後に記帳し、non-fast-forward なら再び `pull --rebase` して push し直します。push は最大 3 回です。同じリポジトリの同期処理は、どの専用ブランチへの同期も共通のロックで直列化します。schedule の同期処理が busy になった場合は、処理の終了後にコマンドを再実行してください。
 
-schedule の claim・complete なども、`execution_path/exec/events/` のイベントだけを専用 worktree へ commit・push します。イベントの読み取りも同期先を参照し、既に claim されたタスクへの claim を拒否します。run の記録・grade・成果物は元の実行経路に残ります。`external_projects` 経由の起票では相手側を v0.10.0 以上に更新し、相手の project で同期を有効にしてください。
+schedule の claim・complete なども、`execution_path/exec/events/` のイベントだけを exec-events のブランチの専用 worktree へ commit・push します。イベントの読み取りもそのブランチを参照し、既に claim されたタスクへの claim を拒否します。
 
-register のブランチは develop へ一方向に取り込みます。develop（や feature）の作業の前に `specdojo register branch-merge --project <project-id>` を実行してください。`exec run --register --worktree` は worktree を作る前に自動で取り込みます。取り込みの merge の commit は、通常の PR で develop へ入ります。develop では register のファイルを直接変えないでください。`specdojo register branch-guard --project <project-id> --staged` を pre-commit の hook に、`--range <base>..<head>` を pre-push の hook や CI に置くと、直接の変更を止められます。
+1 回の操作が両方のブランチへ書く場合は、register のブランチを先に、exec-events のブランチを後に、1 本ずつロックを取り直して commit・push します。片方の中でもう片方を書く入れ子にはしません。register のブランチで失敗したときは exec-events のブランチへ書かずに止まります。register のブランチの push の後に exec-events のブランチで失敗したときは、register の記帳は公開済みのまま残し、exec-events の記帳を表示された worktree に残して止まります。取り消しは行いません。`specdojo register branch-push --project <project-id> --sync exec-events` で公開してから、操作を再実行してください。現在の作りでは両方へ書く操作はありません（`exec run --register` は register のブランチだけ、schedule の task の実行は exec-events のブランチだけへ書きます）。run の記録・grade・成果物は元の実行経路に残ります。`external_projects` 経由の起票では相手側を v0.10.0 以上に更新し、相手の project で同期を有効にしてください。
 
-register のブランチへの push は `specdojo register branch-check --project <project-id> --commit <sha> --base <push 前の sha> --remote-ref refs/heads/<register-branch>` で検査します。register の範囲（個票・イベントの置き場）の外のファイルを含む commit と、個票とイベントの形の違反を止め、どのファイルのどこが違うかと直し方を出します。pre-push の hook（`tools/check-register-push.mjs`）が自動で流し、CI でも同じコマンドを流せます。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。
+専用ブランチは develop へ一方向に取り込みます。develop（や feature）の作業の前に `specdojo register branch-merge --project <project-id>` を実行してください。register、exec-events の順に 1 本ずつ merge し、途中で止まったときは後のブランチを取り込みません。`exec run --register --worktree` は worktree を作る前に自動で取り込みます。取り込みの merge の commit は、通常の PR で develop へ入ります。develop では個票・イベントと exec のイベントを直接変えないでください。`specdojo register branch-guard --project <project-id> --staged` を pre-commit の hook に、`--range <base>..<head>` を pre-push の hook や CI に置くと、直接の変更を止められます。
+
+専用ブランチへの push は `specdojo register branch-check --project <project-id> --commit <sha> --base <push 前の sha> --remote-ref refs/heads/<sync-branch>` で検査します。そのブランチの範囲の外のファイルを含む commit（たとえば exec-events のブランチに載った個票）と、register のブランチでは個票とイベントの形の違反を止め、どのファイルのどこが違うかと直し方を出します。pre-push の hook（`tools/check-register-push.mjs`）が自動で流し、CI でも同じコマンドを流せます。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。
 
 失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。次の順に復旧してください。
 
 1. 通信・権限を直します。衝突で止まった場合は、表示された worktree で衝突したファイルを直して `git add` します。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
 2. 未 commit の記帳があれば、表示された worktree で内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
-3. `specdojo register branch-push --project <project-id>` で共有します。止まった rebase を続け、`pull --rebase` から push までを流し直します。衝突が残っていれば、ファイルと直し方を出して終了コード 1 で止まります。失敗した `add` を push の代わりに再実行しないでください。
+3. `specdojo register branch-push --project <project-id>`（表示に `--sync <種類>` があればそれも付ける）で共有します。止まった rebase を続け、`pull --rebase` から push までを流し直します。衝突が残っていれば、ファイルと直し方を出して終了コード 1 で止まります。失敗した `add` を push の代わりに再実行しないでください。
 
-`register branch-push` は、push の前に `register branch-check` と同じ検査（register の範囲の外のファイル、個票とイベントの形）を流し、違反があれば push しません。同期と同じロックの中で動くため、同期中の別の記帳と取り合いません。
+`register branch-push` は、push の前に `register branch-check` と同じ検査（そのブランチの範囲の外のファイル、個票とイベントの形）を流し、違反があれば push しません。同期と同じロックの中で動くため、同期中の別の記帳と取り合いません。
 
 未解消の記帳がある間は後続の同期を停止します。復旧後、worktree が clean でローカル HEAD がリモートに含まれることを次の同期が確認し、再開します。
 
-`exec run --register` も、start・review・waiting と post-review の close を専用ブランチへ commit・push します。executor は従来どおり実行中の worktree で個票を編集し、runner が検証後・exec の commit 前にその編集を専用ブランチへ転送します。転送は共通のロック内で最新を取得し、状態欄を専用ブランチの値に揃えて本文を三方向でマージします。重ならない編集は両方保持し、競合や push の失敗では元の編集を残して停止します。失敗した run の未検証の本文は転送せず、再開用 worktree に保持します。exec の commit には個票・イベントを含めません。
+`exec run --register` も、start・review・waiting と post-review の close を register のブランチへ commit・push します。executor は従来どおり実行中の worktree で個票を編集し、runner が検証後・exec の commit 前にその編集を専用ブランチへ転送します。転送は共通のロック内で最新を取得し、状態欄を専用ブランチの値に揃えて本文を三方向でマージします。重ならない編集は両方保持し、競合や push の失敗では元の編集を残して停止します。失敗した run の未検証の本文は転送せず、再開用 worktree に保持します。exec の commit には個票・イベントを含めません。
 
 worktree 実行の成功後は、専用ブランチを呼び出し元へ一方向に取り込んでから post-review へ進みます。in-place 実行では、最新の個票を見る前に `register branch-merge` してください。文書サイトや `exec plan` も取り込んだ個票を読みます。hook・CI の移行準備は [[specdojo:git-branching-standard|Git ブランチ運用標準]] に従って行います。参照文書を register の外で書き換える改名・再採番は、専用ブランチでは書き込み前に停止するため、通常の feature と PR で扱ってください。
 
@@ -670,6 +672,18 @@ exec-defaults の `watch.remedies` で手当てを選んだ種類だけ、見張
 - 前で流して待つ: 区切りまで待つときは `exec watch --target <ID> --event stalled,cleared --state waiting,done --timeout 2h` を前で流し、終わったら出力に従って次の手を決める。
 - 手で直すときは、先に `orchestrator watch-pause --id <ID>` で印を付け、直し終えたら `orchestrator watch-resume --id <ID>` で外す。
 
+### 3.6. 判断が要る止まりの診断案
+
+`watch.diagnosis.by` を設定すると、見張りの対象外を除いた `needs_decision` のうち、止まった時刻が古いものから 1 回の見張りにつき 1 件を診断します。設定・上限・権限の準備は [[specdojo:exec-config-guide|exec設定ガイド]] の「判断が要る止まりの診断」に従います。cron と既存の routine から動き、MCP や立ち上げたままのオーケストレーターを必要としません。別の run が実行ロックを持つ間も、`--if-busy scan` では読み取り専用の診断を行えます。
+
+playbook（`where playbook` の出力先）と、止まった理由・根拠・次にすべきことを標準入力で渡します。agent は診断・根拠・次の手の案・人が決める点を標準出力に返し、見張りが朝報告の「7. agent の診断案」へ引用として転記します。claim・再開・release・commit・設定変更・登録簿への記帳は行いません。報告の再描画では既存の診断節を保持し、agent の起動前にも保存済みの案と今回の「診断中」を書きます。報告は一時ファイルから置き換えるため、書き込み途中で中断しても直前の報告が残ります。
+
+起動前に `execution/watch/diagnoses/<止まりの鍵の SHA-256>.json` を排他的に作り、鍵・対象・晩の日付・担当・起動時刻・状態・案を記録します。診断用の別ロックで同時起動を防ぎ、ロックを取れない回は待たずに保存済みの記録を報告します。ロックの心拍が 30 秒途絶えると次の見張りが取得し直せます。取得後に残っている `running` は、前の持ち主の診断が終了または中断した記録として `interrupted` へ変えます。PID の再利用に影響されず、所有者の情報が無い既存の記録も扱えます。
+
+初回が `interrupted` の止まりは 1 回だけ再診断でき、`<止まりの鍵の SHA-256>.retry.json` に別の起動記録を残します。初回と再診断は、それぞれ起動した晩の上限に数えます。上限に達していれば次の晩まで待ちます。再診断も中断した場合は、人が記録を確認してください。成功・失敗・時間切れには再依頼せず、同じ鍵では初回と再診断の計 2 回を超えて起動しません。記録を消すと重複防止と回数の根拠が失われるため、運用中は保持してください。
+
+当晩に試みた診断と、現在も止まっている対象の過去の案は、朝報告を書き直しても引き継ぎます。回数の上限・設定不備・playbook 不在は報告と標準エラーへ残し、診断だけを見送ります。`--no-diagnosis` は設定があっても起動を止めますが、中断した記録の状態と報告は更新します。`--dry-run` と全体の見張り停止では記録も起動も行いません。`--no-remedy` は決まった手当てだけを止めるため、診断も止める場合は両方を付けます。
+
 ## 4. 例外対応と特殊な運用
 
 ID 重複の復旧と PO 留保事項の承認運用など、通常運用から外れる場面を扱います。
@@ -723,3 +737,23 @@ PR 承認が必要な決定範囲（憲章の PO 留保事項）、branch 保護
 - PJR-ID の乱数部分は、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁のランダム値である。例: `PJR-4B7K`。
 - `register add` は現在の作業ツリーに個票を作成し、既存 ID または簡易な不適切語ブロックリストに一致した候補は再抽選する。
 - 統合ブランチへの自動ルーティング、予約起票、同期用オプションは廃止済みである。廃止済みのオプションを指定した場合は未知オプションとしてエラー終了する。
+
+### 4.4. 専用ブランチを `register_sync` から `sync` へ移し替える
+
+`register_sync` の 1 本（`project/<project-id>/register`）から、`sync` の 2 本（`project/<project-id>/sync/register` と `project/<project-id>/sync/exec-events`）へ移す手順です。移す間に記帳が古いブランチへ入らないよう、実行中の run・queue・routine が無いときに行います。
+
+1. 実行中の run が無いことを確かめます（`exec run`・`exec queue run`・routine のプロセスが残っていないこと）。止まった同期があれば、先に `specdojo register branch-push --project <project-id>` で古いブランチへ公開します。
+2. develop で `specdojo register branch-merge --project <project-id>` を実行し、古いブランチの記帳をすべて develop へ取り込みます。取り込みの commit をリモートの develop へ入れます。
+3. 新しい 2 本を、取り込み済みの develop の先端から作って push します。どちらも記帳の範囲の外の commit を持たないため、検査を通ります。
+
+   ```bash
+   git branch project/<project-id>/sync/register project/<project-id>/develop
+   git branch project/<project-id>/sync/exec-events project/<project-id>/develop
+   git push origin project/<project-id>/sync/register project/<project-id>/sync/exec-events
+   ```
+
+4. `.specdojo/specdojo.config.json` の `register_sync` を `sync` に置き換えます（`{ "enabled": true }` なら `"sync": { "enabled": true }`）。`register_sync.branch` を独自の名前にしていた場合は、`sync.branches` に種類ごとの名前を書きます。この変更は feature ブランチで develop へ入れます。2 つを同時には書けません。
+5. 新しい設定で `specdojo register branch-push --project <project-id> --dry-run` を流し、2 本とも「already on」になることを確かめます。古いブランチの専用 worktree（Git 共通ディレクトリの `specdojo/register/<識別子>/worktree`）は `git worktree remove` で外します。
+6. 古いブランチ `project/<project-id>/register` は、ほかの利用者が新しい設定に揃うまで残します。揃ったら手元とリモートから消します。CI の push の検査は、新旧のブランチ名の両方を対象にしておきます。
+
+移し替えの後に、古い設定のままの利用者が古いブランチへ記帳した場合は、その commit を範囲ごとに新しいブランチへ移します。個票・イベントの commit は `sync/register` の専用 worktree で、exec のイベントの commit は `sync/exec-events` の専用 worktree で `git cherry-pick` し、`specdojo register branch-push --project <project-id> --sync <種類>` で公開します。両方の範囲を含む commit は範囲ごとに分けてから移します。新しいブランチへ develop を merge しないでください。範囲の外の commit が入り、検査で止まります。

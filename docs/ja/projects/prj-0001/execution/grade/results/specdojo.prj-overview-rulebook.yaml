@@ -3,29 +3,29 @@ version: 1
 document: specdojo:prj-overview-rulebook
 path: docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
 target: kata
-rubric: grade-rubric-v2
+rubric: grade-rubric-v3
 verdict: pass
-score: 97
-graded_at: "2026-11-23T20:42:05.011Z"
-graded_by: sonnet-review-executor
-content_hash: a3979c0439f00128c47dbadbcc9b6e3a91a48977aa0978e75ab212c165f08819
+score: 90
+graded_at: "2026-11-27T14:10:11.201Z"
+graded_by: opus-review-executor
+content_hash: 3cab3276f4572b6d1f8ddb03d162d93165f2c5f23789cd380ab2bc4777af6fa5
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -72,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,10 +101,39 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 7
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 91
+    anchor: "- 読み手が「次に何を決めればよいか」が分かるように、未確定は未確定として明示します。"
+    message: >-
+      6.1 の「未確定は未確定として明示します」には書き方と決め方の規定がないため、`_UNDECIDED_` の目印を使い、どの文書またはタイミングで決めるかを添えることを求め、PO
+      が判断する論点と期限を成果物から読み取れるようにする必要がある。
+    message_ja: >-
+      6.1 の「未確定は未確定として明示します」には書き方と決め方の規定がないため、`_UNDECIDED_` の目印を使い、どの文書またはタイミングで決めるかを添えることを求め、PO
+      が判断する論点と期限を成果物から読み取れるようにする必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 139
+    anchor: "- 変えない前提（例: 運用体制は当面変えない）と、依存前提（例: 他部門の協力が必要）を区別します。"
+    message: >-
+      6.8 は変えない前提と依存前提の区別しか求めておらず、recipe と sample にある「依存先・成立条件・未成立時の影響」の組と、影響の大きいものをリスクまたは未決事項として後続文書へ引き継ぐ規定がないため、6.8
+      に追記してスケジュールや後続成果物への影響を拾えるようにする必要がある。
+    message_ja: >-
+      6.8 は変えない前提と依存前提の区別しか求めておらず、recipe と sample にある「依存先・成立条件・未成立時の影響」の組と、影響の大きいものをリスクまたは未決事項として後続文書へ引き継ぐ規定がないため、6.8
+      に追記してスケジュールや後続成果物への影響を拾えるようにする必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 114
+    anchor: "- プロジェクトの設計思想や判断軸を 2〜5 件程度に絞って記述します。"
+    message: 6.5 の「2〜5 件程度」は件数の範囲を守ったかどうか判定できない表現で、recipe の「2〜5 件に絞る」とも違っているため、「程度」を削って判定できる範囲に揃える必要がある。
+    message_ja: 6.5 の「2〜5 件程度」は件数の範囲を守ったかどうか判定できない表現で、recipe の「2〜5 件に絞る」とも違っているため、「程度」を削って判定できる範囲に揃える必要がある。
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 31
@@ -115,10 +144,32 @@ findings:
     message_ja: >-
       3.2 の「メタ情報（Frontmatter）を付ける場合」は任意に読める一方、4.1 では `specdojo.id`・`type`・`status`・`rulebook`
       を必須としており、「付ける場合」の条件を削除して必須であることに揃える必要がある。
-  - id: F002
+  - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 137
     anchor: "### 6.8. 前提条件"
     message: 前提条件の記述ガイド 6.8 に未決事項（`_UNDECIDED_` と決定タイミング）の記述規約がなく、template と recipe にある未決事項の扱いと整合していないため、6.8 に追記する必要がある。
     message_ja: 前提条件の記述ガイド 6.8 に未決事項（`_UNDECIDED_` と決定タイミング）の記述規約がなく、template と recipe にある未決事項の扱いと整合していないため、6.8 に追記する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 83
+    anchor: "| 前提条件       | ○    | 依存条件、制約、変えないこと、適用上の前提を示す       |"
+    message: >-
+      本文要件の表の前提条件の目的が「依存条件、制約、変えないこと、適用上の前提」に留まり、recipe と template が分けて書く判断責任・公開方針・取捨選択方針・未決事項が rulebook
+      側の要件に含まれていないため、表と 6.8 に揃えて記載し Kata 内の責務を一致させる必要がある。
+    message_ja: >-
+      本文要件の表の前提条件の目的が「依存条件、制約、変えないこと、適用上の前提」に留まり、recipe と template が分けて書く判断責任・公開方針・取捨選択方針・未決事項が rulebook
+      側の要件に含まれていないため、表と 6.8 に揃えて記載し Kata 内の責務を一致させる必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 90
+    anchor: "- “事実/観察” と “推測/仮説” を混ぜないでください（混ざる場合はラベルで区別）。"
+    message: 6.1 の “事実/観察” “推測/仮説” と禁止事項の “だいたい/適切に” だけが二重引用符 “ ” で、ほかの箇所の「」と記号が混ざっているため、「」に統一する必要がある。
+    message_ja: 6.1 の “事実/観察” “推測/仮説” と禁止事項の “だいたい/適切に” だけが二重引用符 “ ” で、ほかの箇所の「」と記号が混ざっているため、「」に統一する必要がある。
+size_metrics:
+  characters: 4965
+  operations_characters: 0
+  operations_ratio: 0

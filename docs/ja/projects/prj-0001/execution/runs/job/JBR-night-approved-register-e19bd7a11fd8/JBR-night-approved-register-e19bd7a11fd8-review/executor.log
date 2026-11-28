@@ -1,0 +1,34 @@
+レビューの結論は `complete` で、この job run の出力はそのまま統合できます。`succeeded` で終わったのは、実行時点で承認済み（`autopilot: approved`）の open 項目が 0 件だったためで、承認済みの項目を処理したわけではありません。
+
+**差分の範囲**
+- `7952a3a..db353e4` は commit `db353e4`（chore(routine)）の 1 件だけで、追加された 7 ファイルのみです。
+  - Run JSON
+  - 朝報告 `night-orchestrator-20261127T150000000Z.md`
+  - 実行記録 5 件（`plan.md`、`result.md`、`evidence.json`、標準出力ログ、標準エラーログ）
+- 既存ファイルの変更や削除はなく、job run 以外の変更は混ざっていません。
+
+**状態・command evidence・result の整合**
+- Run JSON は `state: succeeded` で、試行は 1 回、`exit_code: 0` でした。
+- `evidence.json` の `job-command` は passed（exit 0）です。記録されたコマンドは plan の解決済みコマンドと一致しています。
+- 標準出力は「承認済みの列 0/10、なし」と「朝報告のパス」の 2 行です。標準エラーは空（0 bytes）です。
+- 朝報告の集計は「close なし／`waiting` なし／新しい承認待ちなし」で、実行結果の表は「skipped、承認済みの open todo/issue なし」です。標準出力と一致しています。
+- result は `status: complete` で、変更ファイルとして挙げた 2 件は evidence の `changes` と一致しています。
+
+**0 件が正しいかの確認**
+- 実行前 commit の時点で `autopilot: approved` が付いた個票は 18 件ありました。
+- 18 件とも `item_status` は open・doing・waiting・todo のどれでもなく、例として PJR-1VF0 は `done` でした。
+- 承認済みで open の項目は実際に 0 件で、「処理対象なし」という結果は事実と一致しています。
+
+**score・verdict・finding・失敗文書**
+- どれもありません。Run は `succeeded` なので、`partial` / `failed` の場合の条件は当てはまりません。
+
+**確認できなかった範囲**
+- `specdojo grade list` による評価結果の鮮度確認はしていません。対象は job run の記録と朝報告（`status: draft`）だけで、grade の評価対象になる成果物が plan に示されていないためです。
+- 18 件の承認済み個票は、`item_status` の値だけを確かめました。本文までは読んでいません。
+- 検査コマンドは実行していません。Markdown の検査は親 runner が行います。
+
+reviewer として job run の出力は変更していません。review result の作成は reporter に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 候補: complete。7952a3a..db353e4 は job run の commit db353e4 だけで、追加された 7 ファイル（Run JSON、朝報告、plan・result・evidence・stdout・stderr）のみ。既存ファイルの変更はない。Run JSON（`state: succeeded`、`exit_code: 0`、試行 1 回）、evidence の `job-command`（passed、exit 0、plan と同じコマンド）、stdout（approved queue (0/10): none と朝報告のパス）、空の stderr、朝報告（close・`waiting`・新しい承認待ちはなし、skipped の理由は承認済みの open todo/issue なし）、result（`status: complete`、変更ファイル 2 件が evidence の `changes` と一致）は互いに整合している。実行前 commit で `autopilot: approved` の個票は 18 件あり、どれも `item_status` が open・doing・waiting・todo ではない（例: PJR-1VF0 は done）。承認済みで open の項目は 0 件で、出力と一致する。score・finding・失敗文書はなく、partial・failed の条件は当てはまらない。確認できなかった範囲: grade list による評価結果の鮮度確認はしていない（対象は job run の記録と draft の朝報告だけで、plan に grade の評価対象がないため）。18 件の個票は `item_status` だけを確かめ、本文は読んでいない。Markdown の検査は親 runner に任せた。","handoff":[],"validations":[{"command":"git diff --stat 7952a3aff7896a3c23edbc63984dd31a92d25632..db353e417315a67ac37e0e3e89e58561ab766824","status":"passed","summary":"7 files changed, 239 insertions(+)。すべて job run の出力"},{"command":"git diff --name-status 7952a3aff7896a3c23edbc63984dd31a92d25632..db353e417315a67ac37e0e3e89e58561ab766824","status":"passed","summary":"7 件すべて A（追加）で、Run JSON・朝報告・実行記録 5 件のみ"}]}
+</specdojo_executor_evidence>

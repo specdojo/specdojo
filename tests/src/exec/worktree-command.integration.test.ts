@@ -14,6 +14,7 @@ const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[k
 const FAKE_AGENT_CMD =
   `node -e "const fs=require('node:fs');` +
   `fs.writeFileSync('agent-ran.txt',fs.readFileSync(0,'utf8'));` +
+  `fs.writeFileSync('agent-role.txt',process.env.SPECDOJO_AGENT_ROLE || '');` +
   `fs.writeFileSync('agent-git-env.json',JSON.stringify({GIT_DIR:process.env.GIT_DIR,GIT_WORK_TREE:process.env.GIT_WORK_TREE}))"`;
 
 function git(cwd: string, ...args: string[]): string {
@@ -215,6 +216,7 @@ describe("exec worktree commands", () => {
         "Update README.",
       );
       expect(readFileSync(join(worktree!.path, "agent-git-env.json"), "utf8")).toBe("{}");
+      expect(readFileSync(join(worktree!.path, "agent-role.txt"), "utf8")).toBe("executor");
 
       writeFileSync(join(worktree!.path, "README.md"), "# updated\n", "utf8");
       writeFileSync(

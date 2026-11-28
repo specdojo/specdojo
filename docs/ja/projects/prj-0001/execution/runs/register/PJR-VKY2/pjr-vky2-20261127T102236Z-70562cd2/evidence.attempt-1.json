@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VKY2",
+  "run_id": "pjr-vky2-20261127T102236Z-70562cd2",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-27T10:24:15.602Z",
+    "completed_at": "2026-11-27T10:38:27.295Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vky2-register-sync-branch-split-impl.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/branch-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/branch-push.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/cross-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/external-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/push-check.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/register-branch.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/register-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/branch-push.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/push-check.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/register-sync-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/sync-branches.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vky2-register-sync-branch-split-impl.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/branch-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/branch-push.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/cross-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/external-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/push-check.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/register-branch.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/register-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/branch-push.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/push-check.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/register-sync-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/sync-branches.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 23,
+    "summary": ".../pjr-vky2-register-sync-branch-split-impl.md    |  71 ++++++++++-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |   2 +-\n .../ja/specdojo/guides/register-operation-guide.md |  42 ++++--\n docs/ja/specdojo/references/command-reference.md   |  50 ++++----\n .../references/specdojo-config-reference.md        |  41 ++++--\n .../specdojo/standards/git-branching-standard.md   |  35 ++---\n .../schemas/v1/specdojo-config.schema.yaml         |  37 +++++-\n src/exec/events.ts                                 |   8 +-\n src/exec/run/register-sync.ts                      |  12 +-\n src/exec/run/register-worktree.ts                  |  13 +-\n src/register/branch-commands.ts                    |  67 ++++++----\n src/register/branch-push.ts                        |  57 +++++++--\n src/register/cross-project.ts                      |   3 +-\n src/register/external-project.ts                   |   5 +-\n src/register/push-check.ts                         |  52 +++++---\n src/shared/register-branch.ts                      | 142 ++++++++++++++++-----\n src/shared/register-merge.ts                       | 115 +++++++++++------\n src/shared/specdojo-config.ts                      |  52 +++++++-\n tests/src/register/branch-push.test.ts             |   8 ++\n tests/src/register/push-check.test.ts              |   1 +\n tests/src/shared/register-sync-config.test.ts      |  60 ++++++++-\n 22 files changed, 660 insertions(+), 215 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.integration.config.ts tests/src/register/sync-branches.integration.test.ts tests/src/register/register-branch.integration.test.ts tests/src/register/register-branch-merge.integration.test.ts tests/src/register/register-branch-push.integration.test.ts",
+      "status": "passed",
+      "summary": "4 files, 41 tests passed, including the new split-branch integration test"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/register/push-check.test.ts tests/src/register/branch-push.test.ts tests/src/shared/register-sync-config.test.ts tests/src/register/external-project.test.ts",
+      "status": "passed",
+      "summary": "4 files, 64 tests passed"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsc --noEmit -p tsconfig.test.json",
+      "status": "passed",
+      "summary": "No type errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint (changed src/tests files)",
+      "status": "passed",
+      "summary": "0 errors, 3 existing max-lines warnings"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write (changed files)",
+      "status": "passed",
+      "summary": "Changed files formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "All history files valid, including the updated ticket"
+    }
+  ],
+  "final_message": "Implemented the split of the sync branches into project/<id>/sync/register and project/<id>/sync/exec-events. Added the new `sync` config with per-kind `branches` and kept legacy `register_sync` as a one-branch compatibility mode. Two plan items remain open because executor cannot write the files: the CI workflow (.github/workflows is denied) and the prj-0001 config migration. Proposals for both are in the ticket and in handoff.",
+  "completion_status": "incomplete",
+  "handoff": [
+    "Protected change proposal (needs user approval, feature branch): .github/workflows/check-register-push.yml. Add \"project/*/sync/register\" and \"project/*/sync/exec-events\" to on.push.branches, keeping \"project/*/register\" until migration completes. Change project extraction from `project=\"${project%/register}\"` to `project=\"${project%%/*}\"`. branch-check picks the branch scope from --remote-ref, so nothing else changes. Executor could not write .github/workflows/ (permission denied). Ticket work row 5 is left open for this.",
+    "Migration of prj-0001 from project/prj-0001/register to the two sync branches, to be done by the orchestrator when no run, queue or routine is active. (1) Publish any stopped sync with register branch-push. (2) Run register branch-merge on develop and push develop. (3) Create project/prj-0001/sync/register and project/prj-0001/sync/exec-events from the merged develop tip and push them. (4) Replace \"register_sync\": {\"enabled\": true} with \"sync\": {\"enabled\": true} in .specdojo/specdojo.config.json via a feature branch. (5) Check that register branch-push --project prj-0001 --dry-run reports both as already on origin, then remove the old dedicated worktree. (6) Delete the old branch once other users have switched. Ticket work row 9 is left open for this.",
+    "Decision recorded in the ticket: legacy `register_sync` is not aliased to `sync`. Aliasing would switch writes to not-yet-existing branches as soon as the CLI is upgraded. The switch therefore happens explicitly when the config changes. `sync` and `register_sync` together is a config error.",
+    "Decision recorded in the ticket: when one operation writes both branches, register goes first and exec-events second, one at a time and not nested (the lock is shared). A register failure stops before exec-events. An exec-events failure keeps the published register bookkeeping, and recovery is `register branch-push --sync exec-events` followed by a retry. No current operation writes both.",
+    "CHANGELOG lines (Added / Migration notes) are drafted in the ticket's response section 'CHANGELOG に書く事項' per the playbook rule (PJR-EPQ3). CHANGELOG.md was not edited."
+  ],
+  "block_reason": "executor reported incomplete: Implemented the split of the sync branches into project/<id>/sync/register and project/<id>/sync/exec-events. Added the new `sync` config with per-kind `branches` and kept legacy `register_sync` as a one-branch compatibility mode. Two plan items remain open because executor cannot write the files: the CI workflow (.github/workflows is denied) and the prj-0001 config migration. Proposals for both are in the ticket and in handoff.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VKY2/pjr-vky2-20261127T102236Z-70562cd2/executor.attempt-1.log",
+      "bytes": 8412,
+      "truncated": false
+    }
+  ]
+}

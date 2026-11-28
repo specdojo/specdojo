@@ -6,7 +6,7 @@ SpecDojo is an open-source toolkit that aims to make civic tech sustainable by r
 
 SpecDojo organizes specifications and design upstream of other spec-driven development tools, supporting both new work and the recovery of knowledge from existing systems.
 
-Start with the [Quick Start guide](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) and explore the [documentation site](https://specdojo.github.io/specdojo/ja/). Both are currently in Japanese.
+Start with the [Quick Start guide](https://specdojo.github.io/specdojo/en/specdojo/guides/quick-start-guide.html) and the [Civic Tech Starter Guide](https://specdojo.github.io/specdojo/en/specdojo/guides/civic-tech-starter-guide.html). The [English documentation](https://specdojo.github.io/specdojo/en/) includes five starter kata. The English edition is being built in stages; the full [documentation site](https://specdojo.github.io/specdojo/ja/) is in Japanese, which remains the source of truth.
 
 SpecDojo は、Spec道（仕様道）の道場です。
 仕様と設計を作り、運用まで保つための体系を整えます。判断を記帳し、型に沿って実戦で書き、評定で鍛え続け、講評で完了を判断します。人と生成 AI が同じ成果物を作成・検証・更新できるようにし、仕様駆動開発のツールに対しては、その上流で仕様と設計の体系を担います。
@@ -118,7 +118,7 @@ npm run orch:opus
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 
-0.10.0 で、SpecDojo は Antigravity CLI（`agy`）の対応を外しました。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があるとエラーになるため、その member と向き先の別名を消し、`exec-defaults.yaml` の参照をほかの member へ替え、agy を起動する npm script を消してください。
+0.10.0 で、SpecDojo から Antigravity CLI（`agy`）を起動する対応を外しました。[Antigravity の FAQ](https://antigravity.google/docs/faq) が consumer plan の対象外としているのは、他社の agent や application の中に agy を包むこと（wrapping）です。利用者が agy を直接起動し、対話のオーケストレーターとして SpecDojo を操作することはできます。手順は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] の「agy を利用者が直接起動する」を参照してください。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があるとエラーになるため、その member と向き先の別名を消し、`exec-defaults.yaml` の参照をほかの member へ替え、SpecDojo から agy を起動する npm script を消してください。
 
 #### Dev Container を使う場合（任意）
 

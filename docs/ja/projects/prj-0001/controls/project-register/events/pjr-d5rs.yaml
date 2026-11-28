@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_de8d98cfa32c407c815ec54064ffcbb7
+  ts: "2026-11-28T04:17:59Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agy を対話のオーケストレーターとして使えるようにラッパーを戻す
+    - field: description
+      from: ""
+      to: PJR-N6FQ で agy の対応を外した際、SpecDojo が agy を起動する経路と一緒に、利用者が agy を自分で起動して使う対話のオーケストレーターのラッパーも消した。agy を対話のオーケストレーターとして使えるよう、ラッパーだけを戻す。SpecDojo から agy を起動する経路（exec の provider、`orchestrator launch`、`agent launch`）は戻さない。
+    - field: input
+      from: ""
+      to: '["利用者は agy をオーケストレーターとして使いたい（indie、2026-11-28）","Antigravity の FAQ が consumer plan で禁じるのは、他社の agent や application の中に agy を包むこと（wrapping）と、他社のソフトから Antigravity にアクセスすること。利用者が agy を起動し、agy が specdojo のコマンドを打つ形は、包むことに当たらないと読める。agy から動かした specdojo がさらに別の agent を起動することは、FAQ に書かれていない（2026-11-28 の確認）","N6FQ（f1071c571）で templates/antigravity/orchestrator.md・settings.orchestrator.json と、orchestrator:sync の対象の agy のラッパーを消した","push の守りは PJR-D4RJ の決定（各環境の git push の deny を残す）に合わせる。v0.10.0 に入れる。担当 DEV・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-N6FQ"]'
+- v: 1
+  id: reg_a0942ae805c44ac9a749a8c8a660a9e7
+  ts: "2026-11-28T04:28:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_de8d98cfa32c407c815ec54064ffcbb7
+- v: 1
+  id: reg_51bb4aca30884f859251460da603f626
+  ts: "2026-11-28T04:43:11Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a0942ae805c44ac9a749a8c8a660a9e7
+- v: 1
+  id: reg_822b5e443a5f483f9c7c1e4f54477136
+  ts: "2026-11-28T10:22:44Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 2026-11-28 の GDMB の実機の確認で、indie が agy を templates/antigravity/settings.orchestrator.json と本文で直接起動し、対話と毎回の確認が想定どおり動いた。これを確かめとして indie が close を指示した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: agy を利用者が直接起動する対話のオーケストレーターとして使えるよう、本文のラッパーと設定（templates/antigravity）と .agents/rules を戻した
+  previous_event_id: reg_51bb4aca30884f859251460da603f626

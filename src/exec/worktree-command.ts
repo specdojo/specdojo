@@ -1,5 +1,6 @@
 import { type Command } from "commander";
 import { spawn } from "node:child_process";
+import { AGENT_ROLE_ENV } from "../shared/agent-role.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -453,6 +454,7 @@ async function agent(opts: AgentOpts): Promise<void> {
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
       ...productRepoEnvironment(worktree.path, worktree.repos, resolved.access),
+      [AGENT_ROLE_ENV]: "executor",
     },
     shell: true,
     stdio: ["pipe", "inherit", "inherit"],

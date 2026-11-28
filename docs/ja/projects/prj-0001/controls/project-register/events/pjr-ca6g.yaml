@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_48b5c7ae0a984fd69ac64aa4b9f33959
+  ts: "2026-11-28T07:19:58Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: note を done で close できるようにする
+    - field: description
+      from: ""
+      to: 使い終わった note（中身を別の項目・文書へ移した、古くなった）を done で close し、移した先または古くなった理由を conclusion に残す。rejected・deferred は note に使わない
+    - field: input
+      from: ""
+      to: '["利用者の問題提起（2026-11-28）: note は気軽に起票できるが、終わらせられないため open がたまる","比べた案: A note を done で close できるようにする / B 終わらせず一覧で追記の新旧を分ける / C 今のまま。indie が A を選んだ（2026-11-28）","v0.10.0 に入れる。担当 BA・期限 2026-11-30 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_7beb6829f20b4153a13990a03792220a
+  ts: "2026-11-28T07:23:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 検討した選択肢 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_48b5c7ae0a984fd69ac64aa4b9f33959
+- v: 1
+  id: reg_7a16acb4ff164b21bfe6c83c362b5b43
+  ts: "2026-11-28T07:24:11Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 決定内容 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_7beb6829f20b4153a13990a03792220a
+- v: 1
+  id: reg_7ec49995c3b741f59d3d7ffebd31c587
+  ts: "2026-11-28T07:24:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 採択理由 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_7a16acb4ff164b21bfe6c83c362b5b43
+- v: 1
+  id: reg_e79942ffefab48c69c94079b6993d385
+  ts: "2026-11-28T07:25:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 承認 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_7ec49995c3b741f59d3d7ffebd31c587
+- v: 1
+  id: reg_4089feab1f5648fcad05a4fd68ff5db0
+  ts: "2026-11-28T07:26:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 影響範囲とフォローアップ を書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_e79942ffefab48c69c94079b6993d385
+- v: 1
+  id: reg_7b6e676d6dc745238d68574b6f95d70f
+  ts: "2026-11-28T07:27:00Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 関連ドキュメント を書く
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_4089feab1f5648fcad05a4fd68ff5db0
+- v: 1
+  id: reg_48be2101b4344bbead405f95d22d93b5
+  ts: "2026-11-28T07:28:35Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が 3 案から案 A を選んだ（2026-11-28）。反映は PJR-AVCB で行う
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 案 A を採る。使い終わった note は register close で done にし、conclusion に移した先または古くなった理由を書く。rejected・deferred は note に使わない。必要なら reopen で戻す
+  previous_event_id: reg_7b6e676d6dc745238d68574b6f95d70f

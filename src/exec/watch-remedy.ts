@@ -19,6 +19,11 @@ export type TargetSyncRemedyAction = "none" | "sync";
 
 /** exec-defaults の `watch`。省略した手当ては `none`（手を打たない）。 */
 export type WatchRemedyConfig = {
+  diagnosis?: {
+    by?: string;
+    max_per_night?: number;
+    timeout_seconds?: number;
+  };
   remedies?: {
     usage_limit?: {
       action?: UsageLimitRemedyAction;

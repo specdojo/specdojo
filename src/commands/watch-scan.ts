@@ -12,6 +12,8 @@ import {
   type WatchControlLine,
 } from "../exec/watch-control.js";
 import { resolveWatchRemedies } from "../exec/watch-remedy.js";
+import { runWatchDiagnosis } from "../exec/watch-diagnosis.js";
+import { resolvePlaybookPaths } from "../project/playbook.js";
 import { STALL_CATEGORY_LABELS, type StallCategory } from "../exec/watch-scan-classify.js";
 import { runWatchScan, type WatchLogLine } from "../exec/watch-scan.js";
 import { loadRegisterItems, resolveRegisterPaths } from "../register/register.js";
@@ -49,6 +51,7 @@ type ScanOpts = {
   staleAfter: string;
   execDefaults?: string;
   remedy: boolean;
+  diagnosis: boolean;
   dryRun: boolean;
   ifBusy: string;
 };
@@ -66,16 +69,15 @@ function formatAppended(line: WatchLogLine, dryRun: boolean): string {
   }
 }
 
-function scanAction(opts: ScanOpts): void {
+async function scanAction(opts: ScanOpts): Promise<void> {
   const staleMs = parseStaleAfter(opts.staleAfter);
   const ifBusy = parseIfBusy(opts.ifBusy);
   const resolved = resolveProjectPaths({ project: opts.project });
   const projectId = resolved.projectId ?? opts.project;
   if (!projectId) throw new Error("orchestrator watch-scan requires --project <id>.");
   const root = specdojoRootDir();
-  const remedies = opts.remedy
-    ? resolveWatchRemedies(loadExecDefaultsConfig(opts.execDefaults, resolved.executionPath).watch)
-    : undefined;
+  const defaults = loadExecDefaultsConfig(opts.execDefaults, resolved.executionPath);
+  const remedies = opts.remedy ? resolveWatchRemedies(defaults.watch) : undefined;
   let register: Parameters<typeof runWatchScan>[0]["register"];
   let timeZone = "UTC";
   try {
@@ -135,14 +137,32 @@ function scanAction(opts: ScanOpts): void {
   for (const warning of outcome.warnings)
     process.stderr.write(`[watch-scan] warning: ${warning}\n`);
   if (!opts.dryRun) {
+    try {
+      await runWatchDiagnosis({
+        outcome,
+        config: defaults,
+        roster: loadRosterForExecutionPath(resolved.executionPath),
+        executionPath: resolved.executionPath,
+        root,
+        playbookPath: resolvePlaybookPaths({ project: projectId }).playbookPath,
+        now: new Date(),
+        timeZone,
+        dryRun: opts.dryRun,
+        enabled: opts.diagnosis,
+      });
+    } catch (error) {
+      process.stderr.write(
+        `[watch-diagnosis] warning: ${error instanceof Error ? error.message : String(error)}\n`,
+      );
+    }
     process.stdout.write(`[watch-scan] log: ${relative(root, outcome.logPath)}\n`);
     process.stdout.write(`[watch-scan] morning report: ${relative(root, outcome.reportPath)}\n`);
   }
 }
 
-function runCommand(label: string, body: () => void): void {
+async function runCommand(label: string, body: () => void | Promise<void>): Promise<void> {
   try {
-    body();
+    await body();
   } catch (error) {
     process.stderr.write(`[${label}] ${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;
@@ -206,7 +226,7 @@ export function registerWatchScanCommand(orchestrator: Command): void {
   orchestrator
     .command("watch-scan")
     .description(
-      "Find stalled tasks, register items, and queues, classify why, write the watch log and morning report, and launch the remedies selected in exec-defaults watch.remedies (none by default; never on targets a person or the orchestrator is working on)",
+      "Find and classify stalls, write the watch log and morning report, and launch configured remedies or read-only diagnosis agents (both disabled by default; exclude targets a person or orchestrator is working on)",
     )
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .option(
@@ -223,7 +243,14 @@ export function registerWatchScanCommand(orchestrator: Command): void {
       "--exec-defaults <path>",
       "Path to exec-defaults.yaml (default: .specdojo/exec-defaults.yaml)",
     )
-    .option("--no-remedy", "Only record and report; launch no remedy even when configured")
+    .option(
+      "--no-remedy",
+      "Launch no remedy even when configured (diagnosis is controlled separately)",
+    )
+    .option(
+      "--no-diagnosis",
+      "Launch no diagnosis agent even when watch.diagnosis.by is configured",
+    )
     .option("--dry-run", "Print what would be recorded and launched without writing", false)
     .action((opts: ScanOpts) => runCommand("watch-scan", () => scanAction(opts)));
 

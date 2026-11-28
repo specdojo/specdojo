@@ -44,6 +44,9 @@ permission:
     "git push*": deny
     "rm -rf*": deny
     "gh *": deny
+    "specdojo guarded-push*": deny
+    "npx specdojo guarded-push*": deny
+    "./node_modules/.bin/specdojo guarded-push*": deny
   edit:
     "*": deny
     "docs/**": allow

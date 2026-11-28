@@ -1,0 +1,35 @@
+PJR-BXYM の作業を終えました。入門の型の組を決め、導入ガイドを新しく書いて文書サイトに載せました。`npm run lint:md`・`npm run lint:fm` などの親の検証は、このあと runner が流すので、まだ結果は出ていません。
+
+**入門の型の組（5 つ）**
+1. プロジェクト概要
+2. 課題と解決アプローチ
+3. ビジネスルール
+4. システム化機能一覧
+5. プロジェクト登録簿（決めたことは decision に残す）
+
+あとで足す型は 10 個（用語集・ステークホルダー登録簿・スコープ・成功基準と受入条件・業務プロセス仕様・業務受入条件・機能仕様・画面仕様・非機能要件・議事録）で、それぞれに足す目安を表にしました。
+
+**ガイド** `docs/ja/specdojo/guides/civic-tech-starter-guide.md`（`status: draft`）
+- 理解の負債と、復元・確認状態・人の確定・記録の 4 段を説明しています。
+- 新しく作る場合と、既存のシステムから始める場合（復元）の残す順番を、それぞれ手順で書きました。
+- `_ASSUMPTION_`・`_UNDECIDED_` の使い方と、全部の型を求めないこと（Sustainable Participation）を書きました。
+
+あわせて、文書サイトのサイドバーの「はじめに」と、全体概要ガイドの「目的別の次の読み物」にこのガイドを足しました。
+
+**個票** 作業内容の表をすべて `done` にし、対応結果に判断の理由と「CHANGELOG に書く事項」（区分は Added）を書きました。
+
+**決めたこと（個票の 5.2 にも記録）**
+- **業務仕様の入口はビジネスルール:** 制度の計算・判定を当事者と確かめやすく、プログラムから復元しやすいためです。業務プロセス仕様はあとで足す型にしました。
+- **判断の記録は独立した型にしない:** 決定記録（`dec`）の型は非推奨なので、登録簿の decision に含め、組を 5 つとしました。
+- **用語集はあとで足す型の先頭:** 最初から全員に書く手間を求めないためです。
+- **復元でも概要は聞き取りから:** プログラムからは「なぜ」が戻らないためです。
+- **PJR-DZMV の案 D は書いていない:** 内容ごとに確認状態を表に残す案は採否が未定なので、今ある目印と「確かめた人と日付を本文に書く」ことだけを書きました。採った場合は、ガイドの「確認状態の目印を使う」を直す必要があります。
+
+**決めていただきたいこと**
+- 「理解の負債」と「Sustainable Participation」は、SpecDojo 本体の文書ではこのガイドが初出です。用語集に足すかどうかは決めていません。
+
+検証は、Prettier の整形、変えた Markdown 3 件の markdownlint、`npm run validate:history-links`、`git diff --check` をこの場で流し、どれも通りました。ガイドの wikilink 先の ID が実在することも確かめました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"シビックテック向けの入門の型の組（プロジェクト概要・課題と解決アプローチ・ビジネスルール・システム化機能一覧・プロジェクト登録簿）と、あとで足す型 10 個とその目安を決めた。導入ガイド docs/ja/specdojo/guides/civic-tech-starter-guide.md を draft で新設し、サイドバーと全体概要ガイドに足した。個票の作業内容・対応結果・CHANGELOG の文案・関連ドキュメントを埋めた。","handoff":["判断: 業務仕様の入口はビジネスルール（br）とし、業務プロセス仕様（bps）はあとで足す型にした。制度の計算・判定を当事者と確かめやすく、プログラムから復元しやすいため。","判断: 判断の記録は独立した型にせず、登録簿の decision に含めた（決定記録 `dec` の rulebook は非推奨）。このため候補の「判断の記録」と「登録簿」を 1 つと数え、入門の型の組を 5 つにした。","判断: 用語集はあとで足す型の先頭に置いた。最初から全員に書く手間を求めないため（Sustainable Participation）。","判断: 復元の場合も、概要はプログラムから復元せず聞き取りから始める順にした（PJR-Y5RD: プログラムから「なぜ」は戻らない）。","申し送り: PJR-DZMV の案 D（内容ごとの確認表）は採否が未定のため、ガイドには既存の目印と「確かめた人と日付を本文に書く」運用だけを書いた。案 D を採った場合は、ガイドの「確認状態の目印を使う」を直す。","申し送り: 「理解の負債」「Sustainable Participation」は SpecDojo 本体の文書ではこのガイドが初出。用語集に足すかは利用者が決める。","CHANGELOG に書く事項（個票 5.3 にも記載）: 区分 Added。文案「シビックテックの小さなチーム向けに、最初に使う 5 つの型（入門の型の組）と、理解の負債を減らすために残す順番・確認状態の目印の使い方を示す「シビックテック入門ガイド」を追加した。」"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/civic-tech-starter-guide.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bxym-civic-tech-starter-kata.md packages/docs-site/.vitepress/sidebar-config.ts","status":"passed","summary":"変えた 4 ファイルを整形した（sidebar-config.ts は変更なし）"},{"command":"npx markdownlint docs/ja/specdojo/guides/civic-tech-starter-guide.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bxym-civic-tech-starter-kata.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"すべての履歴ファイルが valid。PJR-BXYM の個票を含む"},{"command":"git diff --check","status":"passed","summary":"空白のエラーなし"}]}
+</specdojo_executor_evidence>

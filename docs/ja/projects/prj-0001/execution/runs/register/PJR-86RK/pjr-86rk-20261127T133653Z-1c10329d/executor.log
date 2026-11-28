@@ -1,0 +1,21 @@
+幅 960〜1279 で本文が帯 2 つ分ずれる原因を突き止めて直しました。ただし CSS と詳細度から推した直し方で、ブラウザでの実測はまだです。
+
+**原因:** 前回足した `.VPLocalNav` の上書き（`padding-top: 0` と `top` の書き換え）が、まったく効いていませんでした。VitePress 側の規則は scoped の `.VPLocalNav[data-v-…]`（詳細度 0,2,0）で、こちらのほうが強かったためです。`node_modules/vitepress` の CSS で `--vp-layout-top-height` を使う規則のうち、本文の上端に効くのは次の 2 つで、帯の高さがそれぞれ 1 回ずつ足されていました。`.VPDoc` には本文を下げる規則はありません。
+
+- `.VPLocalNav` の `padding-top`
+- `.VPContent.has-sidebar` の `margin-top`
+
+これで報告の測定値と合います。本文の差は 76px（帯 2 つ分）で、「On this page」の帯の下端の差は 38px です。後者は `top` が VitePress の既定のまま残り、`padding-top` の分だけ下端が下がったためです。
+
+**直し方:** 上書きのセレクタを `html .Layout > .VPLocalNav`（詳細度 0,2,1）に変え、VitePress の規則に勝たせました。これで local nav の `padding-top` が 0 になり、本文の上端も local nav の下端も、本番とのずれが帯の高さ 1 回分になるはずです。ほかの幅への影響はありません。1280px 以上では local nav が出ず、960px 未満は上書きの対象外です。
+
+**変更したファイル:**
+- `packages/docs-site/.vitepress/theme/NextChannelBanner.vue`：セレクタの変更と理由のコメント
+- `tests/packages/docs-site/layout-top-height.test.ts`：詳細度を上げた形のセレクタを確かめるように変更
+- 個票 `pjr-86rk-docs-next-banner-hidden.md`：対応結果に「4 回目の対応」を追記。ブラウザでの確認（作業 3）は `open` のまま残しました
+
+**検証:** `npx prettier --check` は 3 ファイルとも通りました。`npm run validate:history-links` も、出力を見る限り違反はありません。`npm run typecheck`・`npm run test:unit`・`npm run lint:md` などは親の runner が実行するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"幅 960〜1279 で本文が帯 2 つ分ずれる原因を特定して直した。前回足した `.VPLocalNav` の上書きが VitePress の scoped 規則（詳細度 0,2,0）に負けて効いておらず、local nav の `padding-top` と `.VPContent.has-sidebar` の `margin-top` で帯の高さが二重に足されていた。セレクタを `html .Layout > .VPLocalNav`（詳細度 0,2,1）に変えて上書きを効かせ、単体テストと個票の対応結果を更新した。ブラウザでの実測は未実施。","handoff":["幅 960〜1279 の直し方は CSS と詳細度からの推定である（`_ASSUMPTION_`）。オーケストレーターがヘッドレスのブラウザで、幅 960・1280・1440・640 の本文の上端の差が帯の高さ（約 38px）になることを確かめる必要がある（個票の作業 3 は `open` のまま）。","CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の小節のとおり（区分: Fixed）。"],"validations":[{"command":"npx prettier --check packages/docs-site/.vitepress/theme/NextChannelBanner.vue tests/packages/docs-site/layout-top-height.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-86rk-docs-next-banner-hidden.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"出力を見る限り違反なし（すべての個票が valid）"}]}
+</specdojo_executor_evidence>

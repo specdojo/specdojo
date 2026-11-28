@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-1tyg-queue-stop-after-failure-resume
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-25T21:58:24Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T08:32:03Z"
+  conclusion: exec stop で止めた段を、止める前の失敗の有無に依らず止めた扱いにし、同じ exec queue run で止めた段から再開できるようにした
   derived_from:
     - PJR-32PN
 ---

@@ -13,7 +13,10 @@
       "Bash(/usr/bin/gh *)",
       "Bash(/usr/local/bin/git push)",
       "Bash(/usr/local/bin/git push *)",
-      "Bash(/usr/local/bin/gh *)"
+      "Bash(/usr/local/bin/gh *)",
+      "Bash(specdojo guarded-push*)",
+      "Bash(npx specdojo guarded-push*)",
+      "Bash(./node_modules/.bin/specdojo guarded-push*)"
     ]
   }
 }

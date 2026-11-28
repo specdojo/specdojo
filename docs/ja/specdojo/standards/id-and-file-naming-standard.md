@@ -90,6 +90,7 @@ Kata の配置は authority と対応させる。SpecDojo core は `docs/ja/spec
 - 言語サブツリー: `docs/` 直下のロケールディレクトリ（例: `docs/ja/`、`docs/en/`）を言語スコープとする。ロケール集合は `.specdojo/index-config.yaml` の `locales` で宣言する。
 - 言語中立文書: ロケールディレクトリに属さない配下（例: `docs/specdojo/` 配下のスキーマ）は言語中立として Unit 全体で一意とする。言語中立IDと言語別IDに同一IDを用いてはならない。
 - 参照とID解決: 参照は言語を書かず `[[id]]` で行う。ID解決は参照元ファイルの言語と同一言語の variant を優先し、無ければ既定言語へフォールバックする。これにより翻訳時に本文中の参照を書き換える必要がない。
+- 翻訳元の版: 日本語を正本とし、翻訳の variant は frontmatter の `specdojo.translated_from` に正本の言語（`locale`）と、訳したときに正本のファイルを最後に変えた commit（`commit`）を書く。正本には書かない。正本の差分は `git log <commit>.. -- docs/ja/<path>` で追える。
 - `locales` 未宣言時: 言語スコープは無効となり、ID は Unit 全体で一意（従来動作）に扱う。
 
 ## 3. クイックサマリー（要点）

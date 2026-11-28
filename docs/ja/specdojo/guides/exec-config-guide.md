@@ -538,6 +538,22 @@ watch:
 
 期間は `<正の整数><m|h|d>` で書きます。不正な値は `exec run` などが exec-defaults を読む時点でエラーになります。
 
+### 5.3. 判断が要る止まりの診断
+
+`watch.diagnosis.by` に読み取り専用の診断用 member（`mode: review`）を指定すると、`needs_decision` の止まりについて診断と次の手の案を依頼します。省略時は起動しません。起動コマンドは通常の名簿と provider の `command_template`・`command_params`（または member の `command`）から解決します。
+
+```yaml
+watch:
+  diagnosis:
+    by: watch-diagnoser
+    max_per_night: 3
+    timeout_seconds: 300
+```
+
+`max_per_night` は 1〜100（既定 3）、`timeout_seconds` は 1〜3600 秒（既定 300）です。1 晩は登録簿の日付の時間帯の正午から翌正午までとし、夜中の日付変更では回数を戻しません。失敗・時間切れ・中断も 1 回と数えます。同じ止まりの鍵には翌晩も再依頼しませんが、初回の見張りが中断した場合に限り、上限内で 1 回だけ再診断します。再診断も起動した晩の上限に数えます。時刻や状態が変わった止まりは別件です。診断の動作と記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「判断が要る止まりの診断案」を参照してください。
+
+有効にする前に、診断専用 member の起動コマンドと provider 設定で読み取り専用の権限を用意してください。`mode: review` とプロンプトだけでは OS の書き込み権限は制限されません。一般の executor・reporter の書き込み許可を継がせず、shell による書き込み・状態変更、編集ツール、MCP を禁止します。agent は標準入力で渡す playbook と止まりの記録を読み、標準出力へ案を返します。朝報告への書き込みは見張りが代行するため、agent へのファイル書き込み許可は不要です。保護された設定は人が確認して適用します。
+
 ## 6. executor / reporter pipeline の構成
 
 pipeline は、成果物の編集と検証を行う executor と、evidence から result を構成する reporter の 2 stage で 1 タスクを実行します。設定は phase（`agent_pipeline.stages`）、member（`stage_role`）、provider（`command_template`）の 3 箇所に分かれ、それぞれの責務は `設定ファイルの分担` と同じです。
@@ -885,21 +901,28 @@ providers:
   copilot:
     command_template: >-
       copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
+      --sync-session=off --disable-builtin-mcps
       --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git status:*)'
+      --allow-tool 'shell(git diff)' --allow-tool 'shell(git diff:*)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git log:*)'
+      --allow-tool 'shell(git show)' --allow-tool 'shell(git show:*)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm run:*)'
+      --allow-tool 'shell(npm test)' --allow-tool 'shell(npm test:*)'
       --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git add:*)'
+      --deny-tool 'shell(git commit)' --deny-tool 'shell(git commit:*)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git push:*)'
+      --deny-tool 'shell(git reset)' --deny-tool 'shell(git reset:*)'
+      --deny-tool 'shell(specdojo guarded-push)' --deny-tool 'shell(specdojo guarded-push:*)'
+      --deny-tool 'shell(npx specdojo guarded-push)' --deny-tool 'shell(npx specdojo guarded-push:*)'
 ```
 
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使いません（claude の bypassPermissions 相当）。
 - ファイルアクセスはデフォルトで cwd（= worktree）配下 + 一時ディレクトリに制限されます。`--allow-all-paths` を使わないことで codex の `workspace-write` 相当の境界になります。
 - `write` はパス単位に絞れない（worktree 全域に書ける）ため、review agent でも `write` を許可して result を記入させ、変更の境界は commit 許可リストで作ります。
-- shell は `--allow-tool 'shell(...)'` の許可リストです。git / gh は第1サブコマンド単位でマッチするため読み取り系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` を明示 deny します（deny 優先の保険です。許可リストの追記で誤って開くことを防ぎます）。
-- 外部送信面を閉じます: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化します。セッションの GitHub web / mobile への共有・遠隔操作は `--no-remote --no-remote-export` で無効化します。URL アクセスはデフォルト確認制のため `--allow-url` を追加しません（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow します）。
+- shell は `--allow-tool 'shell(...)'` の許可リストです。読み取り系・検証系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` / `git reset` と `guarded-push` の入口を明示 deny します（deny 優先の保険です。許可リストの追記で誤って開くことを防ぎます）。末尾に `:*` のない `shell(<command>)` は引数付きのコマンドに当たらないことがあるため、allow・deny とも素の形と `:*` 付きの形を並べます。`:*` はコマンドの先頭部分に空白が続く形に当たり、引数のない素のコマンドに当たるかは公式の説明にないためです。
+- 外部送信面を閉じます: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化します。セッション履歴の同期は `--sync-session=off` で止めます。遠隔操作は `-p` の起動では有効にできないため、起動引数を置きません（`--no-remote` は廃止され、`--no-remote-export` は `--sync-session=off` に改名されました）。URL アクセスはデフォルト確認制のため `--allow-url` を追加しません（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow します）。
 - `-p` は引数必須のため、stdin で渡される plan は `-p "$(cat)"` で受けます。`--no-ask-user` で質問ツールを無効化し、無人実行で停止しないようにします。
 - shell パターンのマッチ粒度（`shell(npm run)` が `npm run <script>` 全体を許可するか等）は、member 追加時に最初のタスクで permission ログを確認して調整します。
 

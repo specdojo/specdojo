@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JSEY",
+  "run_id": "pjr-jsey-20261127T230438Z-d78970c7",
+  "updated_at": "2026-11-27T23:09:10.228Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T23:06:48.239Z",
+      "completed_at": "2026-11-27T23:07:07.702Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JSEY/pjr-jsey-20261127T230438Z-d78970c7/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-27T23:07:23.098Z",
+      "completed_at": "2026-11-27T23:07:23.098Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JSEY/pjr-jsey-20261127T230438Z-d78970c7/result.md"
+    },
+    "prepare": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T23:06:04.223Z",
+      "completed_at": "2026-11-27T23:06:48.232Z",
+      "artifact_ref": null
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-27T23:07:23.114Z",
+      "completed_at": "2026-11-27T23:09:10.228Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JSEY/pjr-jsey-20261127T230438Z-d78970c7/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JSEY/pjr-jsey-20261127T230438Z-d78970c7/result.md"
+  }
+}

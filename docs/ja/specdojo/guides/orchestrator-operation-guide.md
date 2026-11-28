@@ -118,6 +118,21 @@ VS Code の各種 AI 拡張機能からオーケストレーターを利用す�
 - **Codex 拡張**:
   Codex の VS Code 拡張（`Codex – OpenAI's coding agent`）で名前付きの agent の定義を選ぶ仕組みは、公式の文書では確かめられていません（2026-10 時点で未確認）。そのため、会話開始時に SSOT である `.agents/specdojo-orchestrator.agent.md` の本文を最初の指示（プロンプト）として渡して対話を開始します。
 
+### 2.3. agy を利用者が直接起動する
+
+Antigravity CLI（`agy`）は、利用者が直接起動して対話のオーケストレーターに使えます。[Antigravity の FAQ](https://antigravity.google/docs/faq) が consumer plan の対象外としているのは、他社の agent や application の中に agy を包むこと（wrapping）です。本手順は、利用者が起動した agy から `specdojo` コマンドを実行する形として扱います。agy から呼んだ SpecDojo が別の agent を起動することは FAQ に明記されておらず、これは本プロジェクトの運用上の判断です（2026-11-28 確認）。
+
+起動には `templates/antigravity/orchestrator.md`（SSOT と同じ本文）と `templates/antigravity/settings.orchestrator.json` を使います。npm package を利用する場合は、以下の `templates/antigravity/` を `node_modules/specdojo/templates/antigravity/` に読み替えてください。利用リポジトリのルートで、利用者自身が端末から実行します。
+
+```bash
+agy --settings templates/antigravity/settings.orchestrator.json \
+  -i "$(cat templates/antigravity/orchestrator.md)"
+```
+
+`-i` は初期指示を渡して対話を続ける引数です。`--settings` はそのセッションだけに設定を渡し、グローバル設定を保存しません（`agy --help` で確認できます）。設定は `agentMode: ""`・`toolPermission: "request-review"` とし、編集の承認、`git push`、主要な `.env`・認証情報・秘密鍵の配置と `secrets/` の読み取り拒否を指定します。別名・入れ子の秘密ファイルや shell 経由のアクセスまで網羅する設定ではありません。追加の秘密パスを deny に含め、既存設定との優先順位と拒否動作を秘密情報のない環境で確認してから使ってください。[CLI 権限仕様](https://antigravity.google/docs/permissions/?tab=cli) の `*` は全対象指定のため、`.env.*` のようなファイル glob として転記しません。
+
+この起動に `specdojo orchestrator launch` や `agent launch` は使いません。exec の provider、`init`・`config scaffold`・`devcontainer scaffold` の選択肢にも `antigravity` は追加しません。利用リポジトリ固有の規則を読み込ませる場合は、agy の `.agents/rules/*.md` に薄い参照ラッパーを配置できます。
+
 ## 3. 対話の進め方
 
 オーケストレーターは「提案 → 承認 → 実行」を基本とします。
@@ -167,16 +182,22 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 
 オーケストレーターは、状態やファイルを変える操作を承認なしに実行しません。CLI 側の権限機構でも同じ方針を多重に担保します。
 
-- 破壊的変更や `git push` は行いません。`git commit` は明示的に依頼した場合のみ行います。
+- 破壊的変更や直接の `git push` は行いません。`git commit` は明示的に依頼した場合のみ行います。
 - 認証情報・秘密鍵・`.env` / `secrets/` は読み込みません。
 - 会話で確定していないプロジェクト事実（担当・期日・結論など）を勝手に埋めません。
 - Codex は `approval_policy` により状態変更時に承認を求めます。OpenCode は読み取り系の `specdojo` のみ許可し、その他の `specdojo` 実行は都度確認します。
 
 影響の大きい操作（`specdojo exec run` など、エージェントを起動して成果物を生成・更新するもの）は、対象と実行範囲を提示して承認を得てから実行します。
 
+push の入口は `npx specdojo guarded-push --project <id> [--branch <branch>] [--remote <name>]` です。オーケストレーターが使うには、利用者の承認のもと指示本文と各環境の権限設定を更新し、この入口だけを毎回の承認対象にします。`git push` の deny と executor・reporter の禁止は維持します。反映前は従来どおり push を利用者へ引き渡してください。
+
+反映後は、まず同じ引数に `--dry-run` を付けてブランチ・remote・commit の範囲と件数を提示し、その送信ごとに承認を得て通常実行します。対象は `project/<id>/develop` と `feature/<id>/*` だけです。承認後にブランチの先端や送信先・範囲が変わった場合は、表示と承認をやり直します。force・タグ・main・同期専用ブランチをこの入口で送ることはできません。同期専用ブランチは従来どおり `register branch-push` などに任せます。検査時の fetch、排他、環境変数による拒否の境界は [[specdojo:command-reference|コマンドリファレンス]] の guarded-push 節を参照してください。
+
+他の agent が claim したまま停止した task は、`exec release --by specdojo-orchestrator --force` で戻せます。CLI が claim の runner PID の終了を確認し、現在の project の run lock を検査してから解除します。動作中または判定不能の場合は拒否理由に従い、人の `--force` に引き継ぎます。`--by` に人の名前を代用しません。`--reset-worktree` と `--all-blocked` は、引き続き利用者の承認を得てから使います。判定情報のない旧 claim などの制約は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 ## 5. 設定ファイルの構成
 
-指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーに加え、`config scaffold` で利用者へ配る provider テンプレートも同じ本文から生成します。
+指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。環境ごとの設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーと `config scaffold` の provider テンプレートに加え、利用者が agy を直接起動するための配布本文も同じ正本から生成します。
 
 | 役割               | パス                                       |
 | ------------------ | ------------------------------------------ |
@@ -186,6 +207,7 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 | Codex              | `.codex/agents/specdojo-orchestrator.toml` |
 | OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    |
 | OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   |
+| agy（直接起動用）  | `templates/antigravity/orchestrator.md`    |
 
 本文を変更する場合は、次の手順で全環境を同期します。
 

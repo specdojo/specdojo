@@ -386,40 +386,59 @@ describe("resolveOrchestratorLaunch", () => {
     }
   });
 
-  it("allows declared external-project repositories alongside the selected project's repos", () => {
-    const root = mkdtempSync(join(tmpdir(), "specdojo-orchestrator-external-"));
-    const productRoot = join(root, "product");
-    const externalRoot = join(root, "external-project");
-    try {
-      mkdirSync(join(root, ".specdojo"), { recursive: true });
-      mkdirSync(productRoot);
-      mkdirSync(externalRoot);
-      writeFileSync(
-        join(root, ".specdojo", "specdojo.config.json"),
-        JSON.stringify({
-          version: 1,
-          current_project: "local",
-          projects: {
-            local: { repos: [{ name: "product", path: "product" }] },
-          },
-          external_projects: {
-            customer: { path: "external-project", project_id: "remote" },
-          },
-        }),
-      );
-      process.chdir(root);
+  it.each([true, false])(
+    "requires declared external-project repositories (exists: %s)",
+    (exists) => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-orchestrator-external-"));
+      const productRoot = join(root, "product");
+      const externalRoot = join(root, "external-project");
+      try {
+        mkdirSync(join(root, ".specdojo"), { recursive: true });
+        mkdirSync(productRoot);
+        if (exists) mkdirSync(externalRoot);
+        writeFileSync(
+          join(root, ".specdojo", "specdojo.config.json"),
+          JSON.stringify({
+            version: 1,
+            current_project: "local",
+            projects: {
+              local: { repos: [{ name: "product", path: "product" }] },
+            },
+            external_projects: {
+              customer: { path: "external-project", project_id: "remote" },
+            },
+          }),
+        );
+        process.chdir(root);
 
-      const launch = resolveOrchestratorLaunch({
-        provider: "codex",
-        providerArgs: ["prompt"],
-      });
+        if (!exists) {
+          expect(() =>
+            resolveOrchestratorLaunch({ provider: "codex", providerArgs: ["prompt"] }),
+          ).toThrow(
+            `external_projects.customer.path "external-project" does not exist ` +
+              `(project_id "remote", resolved to ${externalRoot})`,
+          );
+          return;
+        }
 
-      expect(launch.args).toEqual(["prompt", "--add-dir", productRoot, "--add-dir", externalRoot]);
-    } finally {
-      process.chdir(originalCwd);
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
+        const launch = resolveOrchestratorLaunch({
+          provider: "codex",
+          providerArgs: ["prompt"],
+        });
+
+        expect(launch.args).toEqual([
+          "prompt",
+          "--add-dir",
+          productRoot,
+          "--add-dir",
+          externalRoot,
+        ]);
+      } finally {
+        process.chdir(originalCwd);
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
 });
 
 describe("runOrchestratorLaunch", () => {

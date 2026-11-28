@@ -91,6 +91,20 @@ async function fixture(
 }
 
 describe("specdojo git CLI", () => {
+  it("reports remote-write refusal before resolving the repository or project", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-git-refusal-"));
+    try {
+      const wrapper = launch(root, ["--project", "p", "--", "-C", "missing", "push"]);
+      expect(await wrapper.result, wrapper.output()).toBe(1);
+      expect(wrapper.output()).toContain("refuses remote-writing command: push");
+      expect(wrapper.output()).toContain("PJR-D4RJ");
+      expect(wrapper.output()).not.toContain("No config found");
+      expect(wrapper.output()).not.toContain("cannot change to");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("queues behind the runner, holds through the entire hook, then lets runner integration proceed", async () => {
     await fixture(async (root, execution, children) => {
       git(root, ["add", "file.txt"]);

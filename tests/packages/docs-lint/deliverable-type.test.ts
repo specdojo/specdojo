@@ -254,6 +254,102 @@ describe("Markdown deliverable type matching in the frontmatter plugin", () => {
     ]);
   });
 
+  it.each([
+    ["docs/ja/product/example.md", "data"],
+    ["docs/en/specdojo/samples/example.md", "api"],
+    ["target.md", "data"],
+  ])("selects the language variant for %s", async (file, type) => {
+    const root = workspace();
+    write(root, ".specdojo/index-config.yaml", "locales: [ja, en]\n");
+    rulebook(root, "specdojo:example-rulebook", "data");
+    rulebook(root, "specdojo:example-rulebook", "api", "docs/en/specdojo/rulebooks/example.md");
+    expect(await messages(root, document(type), file)).toEqual([]);
+    expect(await messages(root, document("project"), file)).toEqual([
+      expect.stringContaining(`declared deliverable_type is "${type}"`),
+    ]);
+  });
+
+  it("checks a template against the rulebook in the template's language", async () => {
+    const root = workspace();
+    write(root, ".specdojo/index-config.yaml", "locales: [ja, en]\n");
+    rulebook(root, "specdojo:example-rulebook", "data");
+    rulebook(root, "specdojo:example-rulebook", "api", "docs/en/specdojo/rulebooks/example.md");
+    const template = `---\nspecdojo:\n  type: template\n  frontmatter_template:\n    specdojo:\n      type: api\n      rulebook: specdojo:example-rulebook\n---\n`;
+    expect(await messages(root, template, "docs/en/specdojo/templates/example.md")).toEqual([]);
+  });
+
+  it("falls back in configured locale order when the source language has no variant", async () => {
+    const root = workspace();
+    write(root, ".specdojo/index-config.yaml", "locales: [en, ja, fr]\n");
+    rulebook(root, "specdojo:example-rulebook", "data");
+    rulebook(root, "specdojo:example-rulebook", "api", "docs/en/specdojo/rulebooks/example.md");
+    expect(await messages(root, document("api"), "docs/fr/product/example.md")).toEqual([]);
+    expect(await messages(root, document("api"))).toEqual([]);
+    expect(
+      await messages(root, document("data", "example-rulebook"), "docs/ja/product/example.md"),
+    ).toEqual([]);
+  });
+
+  it.each(["locales: [ja, en]\n", "locales: [en]\n", "{}\n"])(
+    "retains ambiguity within a locale or when language scopes are disabled (%s)",
+    async (config) => {
+      const root = workspace();
+      write(root, ".specdojo/index-config.yaml", config);
+      rulebook(root, "specdojo:example-rulebook", "data");
+      rulebook(root, "specdojo:example-rulebook", "api", "docs/ja/specdojo/rulebooks/duplicate.md");
+      rulebook(root, "specdojo:example-rulebook", "data", "docs/en/specdojo/rulebooks/example.md");
+      expect(await messages(root, document("data"), "docs/ja/product/example.md")).toEqual([
+        expect.stringContaining("is ambiguous"),
+      ]);
+    },
+  );
+
+  it("does not hide neutral/localized collisions or cross-authority ambiguity by language", async () => {
+    const root = workspace();
+    write(root, ".specdojo/index-config.yaml", "locales: [ja, en]\n");
+    rulebook(root, "specdojo:example-rulebook", "data");
+    rulebook(root, "team:example-rulebook", "api", "docs/en/specdojo/rulebooks/team.md");
+    expect(
+      await messages(root, document("data", "example-rulebook"), "docs/ja/product/example.md"),
+    ).toEqual([expect.stringContaining("is ambiguous")]);
+    rulebook(root, "specdojo:example-rulebook", "data", "docs/shared/rulebooks/example.md");
+    createChecker.clearCache(root);
+    expect(await messages(root, document("data"), "docs/ja/product/example.md")).toEqual([
+      expect.stringContaining("is ambiguous"),
+    ]);
+  });
+
+  it("applies language selection to YAML metadata too", () => {
+    const root = workspace();
+    write(root, ".specdojo/index-config.yaml", "locales: [ja, en]\n");
+    rulebook(root, "specdojo:example-rulebook", "data");
+    rulebook(root, "specdojo:example-rulebook", "api", "docs/en/specdojo/rulebooks/example.md");
+    const check = createChecker(root);
+    for (const [locale, type] of [
+      ["ja", "data"],
+      ["en", "api"],
+    ]) {
+      expect(
+        check(
+          { type, rulebook: "specdojo:example-rulebook" },
+          `docs/${locale}/example.yaml`,
+          "",
+          true,
+          "yaml",
+        ),
+      ).toEqual([]);
+    }
+  });
+
+  it("falls back to an installed Japanese rulebook for an English document", async () => {
+    const root = workspace();
+    write(root, ".specdojo/index-config.yaml", "locales: [ja, en]\n");
+    const installed = join(root, "node_modules/specdojo");
+    write(installed, "package.json", '{"name":"specdojo"}');
+    rulebook(installed, "specdojo:example-rulebook", "data");
+    expect(await messages(root, document("data"), "docs/en/product/example.md")).toEqual([]);
+  });
+
   it("uses installed rulebooks and gives local copies with the same ID precedence", async () => {
     const fallbackRoot = workspace();
     const fallbackInstalled = join(fallbackRoot, "node_modules/specdojo");

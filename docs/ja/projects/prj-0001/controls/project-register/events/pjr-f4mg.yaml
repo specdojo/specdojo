@@ -63,3 +63,112 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_3736698a02bb43979e19c7f37d640b65
+- v: 1
+  id: reg_bf569ea2398649189355cece8fde25fb
+  ts: "2026-11-27T13:57:42Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6cad3966473c4d34a426d3ecbbcd7901
+- v: 1
+  id: reg_13c50f1144324ac48f72f915668c48b5
+  ts: "2026-11-27T14:05:46Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
+  previous_event_id: reg_bf569ea2398649189355cece8fde25fb
+- v: 1
+  id: reg_07582dee1aad484db028d7bf4620281f
+  ts: "2026-11-27T14:18:56Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: Made the README English section, the docs site English entry, the English Quick Start, and the `translated_from` field (common schema, ID standard, frontmatter lint for `…"
+      to: "-"
+  previous_event_id: reg_13c50f1144324ac48f72f915668c48b5
+- v: 1
+  id: reg_3d2f1b9a38b14d5ea62a4f4510b88beb
+  ts: "2026-11-27T14:39:24Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md-changed, lint-fm-changed, lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md-changed, lint-fm-changed, lint-fm"
+  previous_event_id: reg_07582dee1aad484db028d7bf4620281f
+- v: 1
+  id: reg_10f47c878a234de79d6ce349ead117b0
+  ts: "2026-11-27T14:43:10Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md-changed, lint-fm-changed, lint-fm"
+      to: "-"
+  previous_event_id: reg_3d2f1b9a38b14d5ea62a4f4510b88beb
+- v: 1
+  id: reg_965b60b3eba8451690686286bde613e6
+  ts: "2026-11-27T14:55:19Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_10f47c878a234de79d6ce349ead117b0
+- v: 1
+  id: reg_093c88471f934d5a818f3ffee68f4267
+  ts: "2026-11-28T00:19:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 英語版の中身は利用者が確認した（2026-11-28）。docs:build・lint:fm・validate:schema が通り、lint:md の指摘は文書にないことを確かめた。package.json の files は利用者の承認のもと反映済み（c4ce5b53c1）。kata_locale の実装は利用者の判断で v0.10.0 の後
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 英語版の最初の範囲（README の英語の節、文書サイトの英語の入口とクイックスタート、入門ガイド、入門の型の組 5 つ）を作り、npm package に含めた。kata の言語の選び方（kata_locale）は設計を決め、実装は v0.10.0 の後に入れる
+  previous_event_id: reg_965b60b3eba8451690686286bde613e6

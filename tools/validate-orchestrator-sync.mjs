@@ -23,6 +23,8 @@ export const ORCHESTRATOR_WRAPPERS = [
   { path: "templates/opencode/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: "templates/codex/agents/specdojo-orchestrator.toml", format: "toml" },
   { path: "templates/codex/orchestrator.md", format: "raw" },
+  // 利用者が agy を直接起動する対話用。SpecDojo の provider としては起動しない。
+  { path: "templates/antigravity/orchestrator.md", format: "raw" },
 ];
 
 // 利用者へ配る skill の写し。正本のファイル全体をそのまま templates/ の配布原本へ写す。
