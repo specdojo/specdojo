@@ -35,7 +35,15 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 理解の負債の定義を `specdojo-philosophy` に正本として 1 か所だけ書き、ほかの文書はそこを wikilink で参照する。定義は「つくったものや決めたことの背景・意図・前提を十分に共有・記録・更新しないことで、将来の理解・変更・引き継ぎに余計な労力が要る状態」とし、問題は文書の不足ではなく判断の経緯と成果物のつながりが失われることだと書く。コードから戻せるのは主に「何をしているか」で、「なぜ」は戻らないことも含める。
+- `specdojo-philosophy` と `needs-to-implementation-philosophy` で、理解の負債を SpecDojo の解く中心の課題として位置づけ、Continuous Specification Engineering（CSpE）・型・技・流・Sustainable Participation との関係を書く。略称は CSpE だけを使い、初出は「Continuous Specification Engineering（CSpE）」とする。
+- `specdojo-overview-guide` の冒頭に、解く課題（理解の負債）、答え（記して・形にして・磨き続ける。register から成果物へつなぎ、確かめて次につなぐ）、kata による 4 段（復元・確認状態・人の確定・記録）を短く示す。
+- prj-0001 の `prj-overview` の背景と目的に、理解の負債を中心の課題として書き、PJR-Y5RD の位置づけ（kata による理解の負債の解消で、シビックテックを持続可能にする）とそろえる。
+- シビックテック入門ガイドの「理解の負債と型」と、定義・用語・段の名前が食い違わない。食い違いがあれば、正本の定義に合わせる案を個票の対応結果に書く。
+- README・英語版（`docs/en/`）・LP（prj-0002）は変えない。
+- `npm run -s lint:md` と `npm run validate:history-links` を通し、親の検証を通す。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 
 ## 4. 作業内容
 
