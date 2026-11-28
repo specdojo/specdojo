@@ -76,3 +76,16 @@
       from: "-"
       to: "2026-11-05"
   previous_event_id: reg_1ab058902805437399d6abded8a03bd8
+- v: 1
+  id: reg_9c4f369686b34c04b9cfb20cb8ed617b
+  ts: "2026-11-28T10:36:54Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: v0.10.0 に含めず期限を延ばす（indie、2026-11-28）
+  changes:
+    - field: due
+      from: "2026-11-30"
+      to: "2026-12-31"
+  previous_event_id: reg_bbeb859b04a74a928fb91ffd24fdaf65

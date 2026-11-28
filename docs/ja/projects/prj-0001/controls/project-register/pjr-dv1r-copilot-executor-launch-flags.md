@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-dv1r-copilot-executor-launch-flags
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-28T09:56:16Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T10:32:52Z"
+  conclusion: Copilot の executor の起動の雛形から廃止された --no-remote・--no-remote-export を外して --sync-session=off を足し、許可と拒否の指定を引数のない形と :* 付きの形の両方にそろえた。配布原本・説明の文書・.specdojo/exec-defaults.yaml に反映した
   derived_from:
     - PJR-GDMB
 ---

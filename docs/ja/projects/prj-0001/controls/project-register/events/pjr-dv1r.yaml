@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_14b029849bc74f80b87c3d30603ea961
+- v: 1
+  id: reg_c7775e36430743a79b0334d0107d94e6
+  ts: "2026-11-28T10:32:52Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 直した雛形で copilot -p を起動し、起動できること、git push（指示の文書のない空のリポジトリで権限の設定により）と specdojo guarded-push が拒まれることを確かめた。保護された設定の反映は indie が承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: Copilot の executor の起動の雛形から廃止された --no-remote・--no-remote-export を外して --sync-session=off を足し、許可と拒否の指定を引数のない形と :* 付きの形の両方にそろえた。配布原本・説明の文書・.specdojo/exec-defaults.yaml に反映した
+  previous_event_id: reg_8e61f392497e4799a58747c5eff79752
