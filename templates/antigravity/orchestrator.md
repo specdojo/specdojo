@@ -148,6 +148,10 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 
 `note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
 
+別の project の登録簿へ起票するときは `register add --project <project-id> --commit` を使い、起票の元は `--from <project-id>:PJR-XXXX` で指す。close などの状態遷移は、その project の作業ツリーで行う。別のリポジトリの project は `external_projects` に宣言してから起票する。`register_sync` を有効にした project では、記帳が専用ブランチへ commit・push されるため、develop への取り込みは登録簿運用ガイドに従う。どちらも設定リファレンスを確かめてから案内する。
+
+個票の本文に素の URL を書くと markdownlint の MD034 で commit が止まるため、`<https://...>` と書く。
+
 ## 実践の型（kata）の扱い
 
 rulebook・standard・recipe・sample・template は、既定では npm package（`node_modules/specdojo`）から参照する。利用リポジトリへコピーされていないのが正常である。
@@ -202,6 +206,8 @@ npx specdojo exec validate --project <project-id>
 - 完了条件にない変更（特に保護された設定や、利用者の環境に関わる設定）が入っていないかを確かめる。
 - runner や CLI の動きを変えた項目は、統合の後に実際の `exec run --register` を 1 回流して動作を確かめてから close する。生成物を変えた項目は、空のリポジトリで生成して確かめる。
 - 確かめられない条件（ホストでの確認など）が残る場合は close せず `review` のまま残し、利用者に確かめ方を示す。
+- result に `requires_human` と書かれた検証は、手元で流せるものは自分で流して確かめる。
+- 外部の事実（モデルのタグ名・版・価格など）は、result に確かめ方がなければ一次情報で確かめる。
 - 確かめた結果、または利用者の確認で直す点が出たら、同じ目的・同じ対象のファイルの手直しは新しく起票しない。元の todo の完了条件に「n 回目の実行（日付）」として直す点を足し、`review` のまま `exec run --register` で流し直す。人の確定を待つ decision は、確定するまで開けたままにし、各回の指摘と判断を個票に足していく。目的が変わる、対象の型やファイルが変わる、元の項目を close してから時間がたっている、のどれかに当たるときだけ新しく起票する。
 - 見つけた別の問題は、元の項目を `--from` で記録して起票する。完了条件の範囲を勝手に広げない。
 
@@ -218,11 +224,19 @@ npx specdojo exec validate --project <project-id>
 | 既に統合済みで再開できない                     | 新しい run として `--force-restart` で流す                                                                                                                                                                                                                   |
 | 別の agent が claim したまま停止               | `exec release --by specdojo-orchestrator --force` を使う。CLI が runner の停止を確認できない場合や実行中の場合は拒否理由を示し、人の `--force` に引き継ぐ。`--by` に人の名前を代用しない。`--reset-worktree` と `--all-blocked` は利用者の承認を得てから使う |
 
+- 再開の前に追加の指示を入れるときは、plan を直さず `exec run --register <PJR-XXXX> --resume --resume-from executor --resume-note <text>` を使う。worktree の plan を直すと、統合の前に範囲外の変更として止まる。
+- executor が個票の完了条件を壊した（完了条件の中に対応の記録を差し込んだなど）ときは、worktree で完了条件を統合先の版に戻し、記録を対応結果へ移してから `--resume` する。
+- reporter の result の書式の違反が直らずに `waiting` になったときは、worktree の result の該当行だけを直し、統合だけを流し直す。成果物は変えない。
+- schedule のタスクの再開は `exec resume --task <task-id>` を使う。`exec run --register` の `--resume` とは別のコマンドである。
+
 ## 完了条件の書き方
 
 - 検証できる形で書く。完了条件は `exec plan` の入力になり、曖昧だと agent が意図と違う範囲を実装する。
 - 作業を終える前に流す検査（型検査・lint・単体テスト）と、通すべき親の検証を書く。
 - CHANGELOG の書き方は、プロジェクトの運用メモの決まりに従うと書く。決まりがなければ、各項目が CHANGELOG の同じ節へ直接書くと並べて流したときに統合で衝突しやすいことを踏まえ、書き方を利用者と決める。公開済みの版の節は変えないと書く。
+- 決まりがないときの推奨は、項目では `CHANGELOG.md` を変えず、個票の対応結果に「CHANGELOG に書く事項」の小節を作って区分（追加・変更・不具合修正など）と行の文案を書かせ、リリースでその小節を集める方式である。
+- 完了条件の中に、見出しの形の文字列（連番付きの小節の見出しなど）をそのまま書かない。executor が見出しと取り違え、完了条件の文の途中に記録を差し込む。
+- 読むだけの文書はパスで書かず、名前で書く。runner は完了条件に書かれたパスを変更の範囲と推定し、同じパスを書いた項目どうしを順番待ちにする。
 - 保護された設定に触れる場合、register の項目では案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。反映は利用者の承認のもとで行うと書く。「result に書く」は executor が result を直接書ける実行形式に限る。
 - 未決の点は `_UNDECIDED_` で残すか、executor に決めさせて理由を記録させるかを明記する。register の項目では個票の対応結果に書かせ、pipeline では報告の `handoff` にも書かせる。「result に書く」は executor が result を直接書ける実行形式に限る。
 - Markdown では、`*` や `_` を含む語（glob など）をコードの書式にする。コードの書式の中を空白で始めたり終えたりしない。
