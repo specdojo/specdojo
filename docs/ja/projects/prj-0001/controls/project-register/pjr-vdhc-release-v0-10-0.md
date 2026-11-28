@@ -41,9 +41,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                          | 担当         | 状態 | メモ |
+| --- | ------------------------------------------------------------- | ------------ | ---- | ---- |
+| 1   | 範囲の項目が close されていることを確かめる                   | orchestrator | open |      |
+| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | open |      |
+| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | open |      |
+| 4   | WSL の導入確認                                                | PO           | open |      |
+| 5   | push・PR の merge・タグ・npm の公開の承認                     | PO           | open |      |
+| 6   | 公開後の確認                                                  | orchestrator | open |      |
 
 ## 5. 対応結果
 
