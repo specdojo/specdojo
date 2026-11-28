@@ -122,3 +122,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_827417d899ff4740a38e70ea3adae2c3
+- v: 1
+  id: reg_e2fc7a993071458785be1f2f6f23c2fe
+  ts: "2026-11-28T14:22:20Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_6085edd849e84db7af7aeb6a8aa9b790
