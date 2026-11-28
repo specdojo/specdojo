@@ -45,3 +45,16 @@
       from: _TODO_
       to: "- 引き継ぎ元: 2026-11-28〜29 の対話のオーケストレーターのセッション（Claude Code、Opus 5.5）。PJR-8NRN を受け取り、夜の列で 5 件を流して確かめるところまで行った。 - 引き継ぎ先: 次のオーケストレーターのセッション（LLM は問わない）。受け取ったら、受け取った主体を `--by` にして close する。"
   previous_event_id: reg_8aa0ee52be024f278a7e71d86dce4d57
+- v: 1
+  id: reg_a80be967fd084927965270f64e58cf49
+  ts: "2026-11-28T15:50:19Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "有効な承認の範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 有効な承認の範囲
+  previous_event_id: reg_6edc1afeace2481aad5b8ffbf76d2c37
