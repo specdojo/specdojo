@@ -137,6 +137,20 @@ prj-0001 と external_projects で起票している別のプロジェクトで�
 
 - なし。この項目は手順と判断の条件を個票に書くもので、製品の挙動を変えない。切り替えを既定にした時点で、その項目が区分「Changed」に「register を専用ブランチで同期する運用を標準にした」旨を書く。
 
+### 5.7. prj-0001 での試し（オーケストレーター、2026-11-28）
+
+手順の後に PJR-VKY2 で同期のブランチを `project/prj-0001/sync/register` と `project/prj-0001/sync/exec-events` の 2 本に分けたため、prj-0001 では 2 本の形で移し替えた。
+
+| 段             | 行ったこと                                                                                               | 確かめたこと                                                                                                                                   |
+| -------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| 取り込み       | `register branch-merge`                                                                                  | 旧 `project/prj-0001/register` は develop に取り込み済みだった                                                                                 |
+| 設定の切り替え | `register_sync` を `sync` に書き換えて develop に merge（`8539d4d9a3`）し、利用者が develop を push した | 設定の読み込みと `register branch-push --dry-run` が通った                                                                                     |
+| ブランチの作成 | `register branch-push` で 2 本を develop の先端（`7865b1fe9a`）から作った                                | `--dry-run` で 2 本とも remote にあることを確かめた。旧 register の worktree を外し、旧ブランチは残した                                        |
+| 記帳           | `register ... --commit`、`exec run --register`、PJR-JSEY の smoke                                        | 記帳が `sync/register` に push され、`branch-merge` と run の前後の自動取り込みで develop に入った。コンテナの再起動の後も記帳が失われなかった |
+
+- schedule の claim・complete が `sync/exec-events` に入ることは、まだ確かめていない（PJR-VKY2 で確かめる）。
+- 別のプロジェクト（`external_projects`）からの起票は、sync への移し替えの後にまだ行っていない。次に実際に起票するときに確かめ、その後に close を判断する。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-2tx0-register-branch-remote-ssot|PJR-2TX0]]
