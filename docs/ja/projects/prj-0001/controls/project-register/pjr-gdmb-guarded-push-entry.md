@@ -120,6 +120,10 @@ SSOT から Claude・Codex・Copilot・OpenCode と agy の本文・配布テン
 - Prettier 整形、変更した Markdown の markdownlint、`npm run check:src-imports`、`npm run validate:history-links`、カタログ検証、register build、`git diff --check` が成功した。カタログには既存の未作成文書・参照等の警告があるが、エラーはない。カタログ検証と register build は `dotenv.config` をプロセス内で無効化して実行し、`.env` を読んでいない。YAML の変更はなく、`npm run validate:schema:file` は非適用。
 - 外部 remote への push、実 agent CLI の起動、保護設定・Git 設定・result・登録簿の一覧・個票のステータスの変更は行っていない。
 
+- 反映（2026-11-28、オーケストレーター）: 5.2 と 5.3 の案を `feature/prj-0001/guarded-push-permissions` に反映した（1b159b605f、1d7e3091ea）。Codex はこのリポジトリに project-local rules がなかったため、配布原本を `.codex/rules/specdojo.rules` に置いた。Claude の `.claude/settings.json` の ask だけは、許可を狭める変更のため先に develop へ取り込んだ。
+- executor の拒否（オーケストレーター）: Claude の `settings.edit.json` で `claude -p` に入口の dry-run を頼み、権限で拒まれることを確かめた。Codex の rules は `codex execpolicy check` で、入口が `prompt`、`git push` が `forbidden` になることを確かめた。
+- 対話のオーケストレーターの実機の確認（indie、2026-11-28）: feature ブランチの worktree から Claude（`orch:sonnet`）・Codex（`orch:sol`）・Copilot（`orch:copilot`）・OpenCode（`orch:qwen`）・agy（直接起動）を起動し、`guarded-push --branch project/prj-0001/develop --dry-run` を頼んだ。5 環境とも毎回確認が出て、許可すると dry-run だけが動いて送らず、断ると何も実行されなかった。
+
 ### 5.5. CHANGELOG に書く事項
 
 - 区分: Added（v0.10.0）
