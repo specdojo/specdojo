@@ -1,0 +1,27 @@
+remote にまだないブランチを `guarded-push --dry-run` で示すとき、`Commits` が全履歴ではなく、送り先のどのブランチにもない commit だけを数えるように直しました。`guarded-push.integration.test.ts` だけを流し、新しく足した 1 件を含む 9 件が通りました。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` はまだ流しておらず、親 runner に任せています。
+
+**直したこと**（`src/commands/guarded-push.ts`）
+- remote にないブランチでは、送り先から全ブランチの一覧と先端を取り、そのどれにも含まれない commit の数を `Commits` にしました。
+- 基準にしたブランチは `Range` に出します。例: `(new branch) <tip>, excluding commits on 2 origin branches (project/p/develop, project/p/other)`。名前は名前順の先頭 5 件まで出し、残りは `+N more` とします。
+- remote にブランチが 1 つもないときは `(new branch) <tip>; origin has no branches, so the full history is counted` と出し、全履歴を数えます。
+- remote にあるブランチの表示（`<remote の先端>..<送る先端>` と件数）は変えていません。
+
+**私が決めた点**
+- 基準は手元の `refs/remotes/origin/*` ではなく、送り先から直接取った一覧にしました。古い tracking ref や、fetch と push の URL の違いで件数がずれないようにするためで、既存の fast-forward の確認と同じ考え方です。
+- 基準の先端の commit が手元にないときは、`--dry-run` でもその commit だけを fetch してから数えます。ref と `FETCH_HEAD` は書きません。fetch しないと、remote 側で進んだブランチの古い commit まで「remote にない」と数えて件数が膨らみます。代わりに、新しいブランチでは通信量が少し増えます。
+
+**テスト**
+- 統合テストを 1 件足しました。remote にブランチがない場合の表示と、手元にない commit を持つブランチが remote にある場合の件数（2 件）・`Range` を確かめます。
+
+**個票の更新**
+- 「影響範囲」の表を埋めました。
+- 「対応結果」に作業の表・解決内容・決めた点・「CHANGELOG に書く事項」（区分 Fixed と文案）を書きました。`CHANGELOG.md` は変えていません。
+- 作業の表のうち次の 2 行は `open` のまま残しています。
+  - 検証の行: 親 runner が実行するため。
+  - 統合後に remote にない feature ブランチで `--dry-run` を流して確かめる行: オーケストレーターが行うため。
+
+変更したファイルは `src/commands/guarded-push.ts`、`tests/src/commands/guarded-push.integration.test.ts`、個票の 3 つです。`pipeline-state.json` の差分は runner が書いたもので、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Changed guarded-push so that, for a branch the remote does not have yet, Commits counts only commits missing from every branch the push endpoint advertises, and Range names the base remote branches (first 5 by name, then +N more). The display for branches already on the remote is unchanged. Added one integration test and ran only the guarded-push integration test file: all 9 tests passed. Updated the ticket's impact table and response section, including the CHANGELOG draft.","handoff":["Decision: the base for a new branch is the branch list taken directly from the push endpoint (`ls-remote --heads`), not local `refs/remotes/<remote>/*`. This keeps the count from being thrown off by stale tracking refs or a push URL that differs from the fetch URL, the same approach as the existing fast-forward check.","Decision: when a base tip commit is missing locally, it is fetched as objects only, even during `--dry-run`, without writing refs or `FETCH_HEAD`. Without this, ancestors of remote branches that moved ahead would also be counted as missing from the remote. Only missing tips are fetched.","Decision: listing every branch name in Range would make it long, so it shows the first 5 by name plus `+N more`.","CHANGELOG draft (category Fixed): when `guarded-push` shows a branch the remote does not have yet, `Commits` now counts only commits missing from every remote branch instead of the full history, and `Range` shows the remote branches used as the base. `CHANGELOG.md` was not changed.","Open in the ticket's work table: after integration, the orchestrator runs `--dry-run` on a feature branch the remote does not have and checks that the count and range are clear, then closes the ticket."],"validations":[{"command":"npx vitest run --config vitest.integration.config.ts tests/src/commands/guarded-push.integration.test.ts","status":"passed","summary":"9 tests passed, including the new test for the new-branch count and range"},{"command":"npm run validate:history-links","status":"passed","summary":"Every file was reported valid; no violations, including the updated ticket"},{"command":"npx prettier --write src/commands/guarded-push.ts tests/src/commands/guarded-push.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-ag0c-guarded-push-new-branch-count.md","status":"passed","summary":"Formatted the changed files"}]}
+</specdojo_executor_evidence>

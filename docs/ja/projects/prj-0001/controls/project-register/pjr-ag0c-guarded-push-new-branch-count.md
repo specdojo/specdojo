@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ag0c-guarded-push-new-branch-count
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-28T08:48:25Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T11:00:40Z"
+  conclusion: remote にないブランチの guarded-push の表示で、Commits を remote のどのブランチにもない commit の数にし、基準にした remote のブランチを Range に示すようにした
   derived_from:
     - PJR-GDMB
 ---
@@ -30,13 +32,13 @@ remote にないブランチを guarded-push --dry-run で示すと、送る範�
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                    |
+| ------------ | --------------------------------------------------------------------------------------- |
+| スコープ     | `guarded-push` の新しいブランチの `Range`・`Commits` の表示だけ。push の動きは変えない  |
+| スケジュール | 影響なし                                                                                |
+| コスト       | 新しいブランチで、手元にない remote のブランチの先端の object を fetch する分だけ増える |
+| 品質         | 承認の前に送る commit の数を正しく示せる                                                |
+| 関係者       | push を承認する利用者とオーケストレーター                                               |
 
 ## 4. 対応方針
 
@@ -57,8 +59,32 @@ remote にないブランチを guarded-push --dry-run で示すと、送る範�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 作業                                                          | 状態 | メモ                                                                                        |
+| ------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------- |
+| 新しいブランチの `Commits` を remote にない commit の数にする | done | `src/commands/guarded-push.ts` の `newBranchRange`                                          |
+| 基準にした remote のブランチを `Range` に示す                 | done | ブランチ数と先頭 5 件の名前、残りの件数を出す                                               |
+| remote にあるブランチの表示を変えない                         | done | `<remote の先端>..<送る先端>` と件数は従来どおり。既存の統合テストで確かめた                |
+| 統合テストを足す                                              | done | `tests/src/commands/guarded-push.integration.test.ts`                                       |
+| 検証（typecheck・lint:ts・test:unit・親の検証）               | open | 親 runner が実行する。executor は統合テストのファイル単体を流し、9 件とも通ることを確かめた |
+| 統合後に remote にない feature ブランチで `--dry-run` を流す  | open | 統合の後にオーケストレーターが行う                                                          |
+
+### 5.1. 解決内容
+
+- remote にないブランチでは、送り先（push URL）の `ls-remote --heads` で得た全ブランチの先端を基準にし、`git rev-list --count <tip> --not <各先端>` で数える。
+- 基準の先端の commit が手元にない場合は、既存の fast-forward 確認と同じく、ref と `FETCH_HEAD` を書かずに object だけを fetch してから数える。`--dry-run` でも fetch する。
+- `Range` は例えば `(new branch) <tip>, excluding commits on 2 origin branches (project/p/develop, project/p/other)` と出す。remote にブランチが 1 つもない場合は `(new branch) <tip>; origin has no branches, so the full history is counted` と出し、全履歴を数える。
+
+### 5.2. executor が決めた点
+
+- 基準は手元の remote-tracking ref（`refs/remotes/origin/*`）ではなく、送り先から直接得た広告にした。古い tracking ref や fetch URL と push URL の違いで件数がずれないようにするため。既存の fast-forward 確認と同じ方針である。
+- 基準の commit が手元にないときは fetch して正確に数える。fetch しないと、remote 側で進んだブランチの祖先も「remote にない」と数えて件数が膨らむため。fetch するのは手元にない先端だけに絞った。
+- `Range` に全ブランチの名前を並べると長くなるため、名前順の先頭 5 件と残りの件数（`+N more`）に絞った。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `guarded-push` で remote にまだないブランチを示すとき、`Commits` が全履歴ではなく remote のどのブランチにもない commit の数になり、`Range` に基準にした remote のブランチを示すようにした。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-index]]

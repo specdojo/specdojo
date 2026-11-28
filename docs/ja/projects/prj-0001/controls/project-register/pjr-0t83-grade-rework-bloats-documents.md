@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: BA
   registered_at: "2026-11-16T22:28:27Z"
-  due_on: "2026-11-30"
+  due_on: "2026-12-31"
   derived_from:
     - PJR-CPZH
   commit_type: docs

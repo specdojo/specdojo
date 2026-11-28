@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-V5AZ"]'
+- v: 1
+  id: reg_dd9838a1515340178ef3b6865a4e6c54
+  ts: "2026-11-28T10:38:33Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: v0.10.0 に含めず期限を延ばす（indie、2026-11-28）
+  changes:
+    - field: due
+      from: "2026-11-30"
+      to: "2026-12-31"
+  previous_event_id: reg_725af6ac20cc408e8399d05b8ae4b5ca

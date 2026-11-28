@@ -86,6 +86,7 @@ import {
 } from "./views.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { registerLifecyclePoolPath } from "./lifecycle-lock.js";
+import { ensureSyncWorktreeRegisterIndexes } from "./sync-worktree-index.js";
 import { inCrossProjectWorktree, resolveCrossProjectMutationTarget } from "./cross-project.js";
 import {
   assertRegisterBranchPaths,
@@ -483,6 +484,7 @@ export async function runRegisterMutationInCurrentWorktree(
     const originalDirectory = process.cwd();
     try {
       process.chdir(worktree);
+      ensureSyncWorktreeRegisterIndexes(worktree);
       await runRegisterMutationLocally(command, opts, mutate, true, target);
       pushRegisterBranch(target, worktree);
     } finally {

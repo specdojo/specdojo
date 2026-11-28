@@ -12,7 +12,7 @@ specdojo:
   priority: medium
   owner: BA
   registered_at: "2026-11-17T23:19:13Z"
-  due_on: "2026-11-30"
+  due_on: "2026-12-31"
 ---
 
 # PJR-DJZD 残りの rulebook と recipe から文書の運用の記述を外し、簡潔にする

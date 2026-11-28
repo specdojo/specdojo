@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b5ddcf3beb52461392320d51017f4510
+- v: 1
+  id: reg_c07572b3d6884efca2e7ba285ca2dec0
+  ts: "2026-11-28T11:08:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: schedule の claim と complete（T-KATA-REVIEW-CALIBRATION-opr-sample-150、2026-11-28）と人の reopen が sync/exec-events に commit・push され、branch-merge で develop に入ることを確かめた。登録簿の記帳は sync/register に届いている
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 同期のブランチを project/prj-0001/sync/register と project/prj-0001/sync/exec-events の 2 本に分け、設定を sync に移した
+  previous_event_id: reg_085e30a6c41c47bb97a7676ca9bfa86b

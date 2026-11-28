@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0c5c4198055c40dca97aa8462193a8b9
+  ts: "2026-11-28T10:53:59Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "VM2S の試し: prj-0002 の作業ツリーから prj-0001 へ起票する"
+    - field: description
+      from: ""
+      to: PJR-VM2S の別のプロジェクトでの試しとして、prj-0002 の作業ツリー（sync の設定に移した feature ブランチ）から prj-0001 の登録簿へ起票した記録
+    - field: type
+      from: ""
+      to: note
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-VM2S"]'
+- v: 1
+  id: reg_c793a84cd7b742959547af214e4f3d88
+  ts: "2026-11-28T10:55:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: VM2S の試しの起票として役目を終えたため
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 試しの記録は PJR-VM2S の対応結果へ移した。prj-0002 から起票した項目が sync/register に届き、remote へ送られたことを確かめた
+  previous_event_id: reg_0c5c4198055c40dca97aa8462193a8b9

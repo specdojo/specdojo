@@ -37,6 +37,7 @@ import {
   pushRegisterBranch,
   execEventsBranchForSchedule,
 } from "../shared/register-branch.js";
+import { ensureSyncWorktreeRegisterIndexes } from "../register/sync-worktree-index.js";
 
 export { collectRepeatable };
 
@@ -379,6 +380,7 @@ export function writeEventFile(
     assertClaimAvailable();
     const path = writeEventToDirectory(execDir, event, dependencies);
     const relativePath = repoRelative(worktree, path);
+    ensureSyncWorktreeRegisterIndexes(worktree);
     gitOutput(worktree, ["add", "--", relativePath]);
     gitOutput(worktree, [
       "commit",

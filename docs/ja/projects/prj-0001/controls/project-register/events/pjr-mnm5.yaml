@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: kata
+- v: 1
+  id: reg_bc36af5f10874339a310676f9c85a652
+  ts: "2026-11-28T10:34:26Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: v0.10.0 に含めず期限を延ばす（indie、2026-11-28）
+  changes:
+    - field: due
+      from: "2026-11-30"
+      to: "2026-12-31"
+  previous_event_id: reg_e1c24daa15ad4b358084c04600c91cc7

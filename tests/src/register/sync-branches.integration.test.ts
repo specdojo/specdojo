@@ -1,5 +1,14 @@
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { Command } from "commander";
@@ -9,7 +18,11 @@ import { registerRegisterCommands } from "../../../src/register/register.js";
 import { checkRegisterPush } from "../../../src/register/push-check.js";
 import { gitEnvironment } from "../../../src/shared/git.js";
 import { checkRegisterGuard, mergeRegisterBranch } from "../../../src/shared/register-merge.js";
-import { resolveSyncBranchTargets } from "../../../src/shared/register-branch.js";
+import {
+  registerBranchWorktree,
+  resolveSyncBranchTargets,
+  resolveSyncBranchTarget,
+} from "../../../src/shared/register-branch.js";
 
 const PROJECT = "sample";
 const DEVELOP = "project/sample/develop";
@@ -176,6 +189,33 @@ describe("sync branches split into register and exec-events", () => {
       status: "checked",
       violations: [],
     });
+  });
+
+  it("commits an exec event when a pre-commit hook requires the git-ignored register index", async () => {
+    fixture();
+    await addItem();
+    mergeRegisterBranch(PROJECT);
+    // The exec-events branch follows develop, so its fresh worktree has tickets but no views.
+    git(repo, "push", "origin", `${DEVELOP}:${EVENTS_BRANCH}`);
+    git(repo, "fetch", "origin", `${EVENTS_BRANCH}:${EVENTS_BRANCH}`);
+    // Stands in for lefthook's index-build, which fails when generated/pjr-index.md is missing.
+    const hook = join(git(repo, "rev-parse", "--git-common-dir"), "hooks", "pre-commit");
+    write(
+      resolve(repo, hook),
+      `#!/bin/sh\n[ -f ${REGISTER}/generated/pjr-index.md ] || { echo "index missing" >&2; exit 1; }\n`,
+    );
+    chmodSync(resolve(repo, hook), 0o755);
+    const base = git(repo, "rev-parse", `origin/${EVENTS_BRANCH}`);
+
+    claim();
+
+    const eventPaths = changedPaths(base, EVENTS_BRANCH);
+    expect(eventPaths).toHaveLength(1);
+    expect(eventPaths[0]!.startsWith(`${EVENTS}/`)).toBe(true);
+    const target = resolveSyncBranchTarget(PROJECT, "exec-events")!;
+    const worktree = registerBranchWorktree(target).worktree!;
+    const index = readFileSync(join(worktree, REGISTER, "generated", "pjr-index.md"), "utf8");
+    expect(index).toContain("PJR-AB12");
   });
 
   it("flags a direct edit of exec events on develop", () => {

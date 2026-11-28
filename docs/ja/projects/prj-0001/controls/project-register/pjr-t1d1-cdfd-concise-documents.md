@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: BA
   registered_at: "2026-10-31T14:16:17Z"
-  due_on: "2026-11-30"
+  due_on: "2026-12-31"
   derived_from:
     - PJR-8TQJ
   depends_on:

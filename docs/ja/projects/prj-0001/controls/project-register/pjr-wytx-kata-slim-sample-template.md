@@ -12,7 +12,7 @@ specdojo:
   priority: medium
   owner: BA
   registered_at: "2026-11-17T23:20:25Z"
-  due_on: "2026-11-30"
+  due_on: "2026-12-31"
   depends_on:
     - PJR-DJZD
 ---
