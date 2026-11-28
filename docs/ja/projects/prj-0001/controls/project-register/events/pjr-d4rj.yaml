@@ -51,3 +51,58 @@
       from: "-"
       to: 選択肢 B。develop と feature ブランチへの普通の push を、毎回の承認を前提にオーケストレーターに許す。main・force・タグ・npm の公開は人が行い、同期ブランチは specdojo のコマンドに任せる
   previous_event_id: reg_5913d2b2f6784b00917f1de6e22ca327
+- v: 1
+  id: reg_b12f380cd0a94c2d9056c1e7aba2faae
+  ts: "2026-11-28T03:25:59Z"
+  action: reopen
+  actor: indie
+  from_status: decided
+  to_status: open
+  reason: 各環境の権限の設定が push を拒んでおり、specdojo git が push を通す穴もあると分かったため、決め直す（2026-11-28）
+  changes:
+    - field: status
+      from: decided
+      to: open
+    - field: completed
+      from: "2026-11-28"
+      to: "-"
+  previous_event_id: reg_152297c8130d4a0b8c28ba99d74727ff
+- v: 1
+  id: reg_6b79a4efd5a340d0a18f6467630f6255
+  ts: "2026-11-28T03:26:39Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_b12f380cd0a94c2d9056c1e7aba2faae
+- v: 1
+  id: reg_f58ef07fa0da40ceaf2245ea79d9305a
+  ts: "2026-11-28T03:27:21Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_6b79a4efd5a340d0a18f6467630f6255
+- v: 1
+  id: reg_b111c8f6d1fd49c2a2f385a49a2cd408
+  ts: "2026-11-28T03:28:32Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_f58ef07fa0da40ceaf2245ea79d9305a
