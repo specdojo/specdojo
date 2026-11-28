@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: decided
+  item_status: open
   priority: medium
   owner: indie
   registered_at: "2026-11-27T23:42:08Z"
   due_on: null
-  completed_at: "2026-11-27T23:43:25Z"
   conclusion: 選択肢 B。develop と feature ブランチへの普通の push を、毎回の承認を前提にオーケストレーターに許す。main・force・タグ・npm の公開は人が行い、同期ブランチは specdojo のコマンドに任せる
 ---
 
