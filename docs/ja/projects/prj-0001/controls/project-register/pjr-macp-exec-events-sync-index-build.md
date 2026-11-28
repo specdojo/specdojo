@@ -31,13 +31,13 @@ specdojo:
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                             |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| スコープ     | 同期ブランチへ commit する exec のイベントの記帳・個票の対応結果の公開・`register ... --commit`  |
+| スケジュール | 人の記帳が止まるたびに、手で `register build` と `register branch-push` をやり直す手間が出ていた |
+| コスト       | 一覧の生成は同期用の worktree ごとに最初の 1 回だけで、以後は存在の確認だけ                      |
+| 品質         | 記帳が手元に残ったまま push されず、ほかの worktree から見えない状態が生じていた                 |
+| 関係者       | 記帳を流す人（indie）とオーケストレーター、同期ブランチを使う runner                             |
 
 ## 4. 対応方針
 
@@ -57,8 +57,34 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- 同期用の worktree で commit する前に、runner が登録簿の一覧を作る方式にした。新しい `src/register/sync-worktree-index.ts` の `ensureSyncWorktreeRegisterIndexes` が、設定の全 project のうち `generated/pjr-index.md` が無いか壊れている登録簿だけ、その worktree を起点に `register build` と同じ派生ビュー（scope `all`）を書く。
+- 呼び出し元は、同期ブランチで commit する 3 か所である。exec のイベントの記帳（`src/exec/events.ts` の `writeEventFile`）、個票の対応結果の公開（`src/exec/run/register-sync.ts` の `publishRegisterTicket`）、`register ... --commit` の記帳（`src/register/register.ts`）。
+- 生成に失敗しても警告だけを出して commit へ進む。hook のない利用先リポジトリでは一覧が要らないため、記帳を止めない。hook のあるリポジトリでは hook 自身のエラーが出る。
+
+### 5.2. 方式を選んだ理由
+
+- hook を飛ばす案は採らなかった。`--no-verify` は `evidence-secret-scan` などほかの hook もまとめて飛ばす。`LEFTHOOK_EXCLUDE=index-build` は、配布する CLI がこのリポジトリの hook 名に依存することになる。
+- 一覧を作る案なら `lefthook.yml`（保護された設定）を変えずに済み、`index build` を pre-commit に置くどのリポジトリでも効く。
+- 一覧は git 管理外で同期用の worktree に残るため、作り直すのは最初の 1 回だけになる。2 回目以降は存在の確認だけで済む。
+
+### 5.3. 確認結果
+
+- `tests/src/register/sync-branches.integration.test.ts` に、`generated/pjr-index.md` が無いと失敗する pre-commit hook を置いたうえで exec のイベントを記帳するテストを足した。手で `register build` を流さずに commit と push が通り、同期用の worktree に一覧ができることを確かめた。
+- 修正を外すと同じテストが `git commit failed: index missing` で失敗し、報告どおりの症状を再現することも確かめた。
+- `npx tsc -b`・変更したファイルへの `npx eslint`・`tests/src/exec/events.test.ts`・`tests/src/register/register-branch.integration.test.ts` は通った。全件の検証は親の runner が流す。
+- 実機での確認（人の actor による `exec reopen` と元に戻す記帳）は、統合の後にオーケストレーターが行う。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: exec のイベントや登録簿の記帳を同期ブランチへ commit するとき、同期用の worktree に登録簿の一覧（`generated/pjr-index.md`）が無いと pre-commit の `index build` で止まっていた問題を直した。commit の前に一覧を作るため、手で `register build` を流してから commit と `register branch-push` をやり直す必要がなくなった（PJR-MACP）。
+
+### 5.5. 再発防止策
+
+- 上記の統合テストで、同期用の worktree の commit が git 管理外の生成物を要求する hook の下でも通ることを継続して確かめる。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 派生元: PJR-QCJ5
