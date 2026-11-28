@@ -52,7 +52,31 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 範囲と CHANGELOG
+
+- 範囲の項目（GDMB・HPAW・AVCB・CA6G・MACP・AG0C・DV1R・ZF6Q・QCJ5・D5RS・VKY2・VM2S など）が close 済みであることを確かめた（2026-11-28）。
+- 0.9.2 の公開（PJR-1FMG の close、2026-11-21T01:58:41Z）の後に close した項目は 182 件で、register event の close・complete の件数（182 件）と一致した。「CHANGELOG に書く事項」がある個票は 149 件、小節のない個票は 33 件（decision・question・note と内部の作業）。
+- PJR-DMSM（2026-11-24）で 0.10.0 の節をまとめた後に close した項目のうち、まだ載っていなかった 39 件と、小節はないが利用者に関わる 4 件（1TYG・5C3M・MWKE・G5DY）を足した。BM07・VCER は個票が「なし」としているため載せていない。
+- 「削除」の agy の行から `templates/antigravity/` を外した（PJR-D5RS で利用者の直接起動のために戻したため）。
+
+### 5.2. 版と検査
+
+- 版は本体 0.10.0、`packages/docs-site` 0.7.0（前の公開の後に機能の追加がある）、`packages/docs-lint` 0.5.1（修正と依存の更新だけ）とし、`packages/vscode-specdojo` は上げない（依存の更新 1 件だけで、Marketplace に未公開）。indie が確認した（2026-11-28）。
+- `feature/prj-0001/release-v0.10.0`（6c047a458d）で、ルートと `packages/*` の `npm ci`、`npm run check:release`（329 ファイル・5394 件のテストが通った）、`npm audit --omit=dev --audit-level=high`（0 件）、`npm run docs:build`、`npm pack` が通った。
+
+### 5.3. 配布物の確かめ
+
+`specdojo-0.10.0.tgz` を空の Git リポジトリへ `npm install --save-dev` で入れて確かめた（2026-11-28）。
+
+| 確かめたこと                                     | 結果                                                                                         |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `npx specdojo --version`                         | 0.10.0                                                                                       |
+| `init --yes --provider claude --no-tmux --exec`  | 成功。agent の名簿と exec-defaults ができた                                                  |
+| `register add`（todo・note）                     | 成功                                                                                         |
+| note の `register close`                         | `--conclusion` なしは拒まれ、付けると `done` になった                                        |
+| `exec run --register --worktree`（claude）       | start から review まで通り、成果が commit された                                             |
+| `guarded-push --dry-run`                         | 範囲と件数を示した。`SPECDOJO_AGENT_ROLE` を付けると拒み、`main` は範囲外として拒んだ        |
+| `sync` の設定と `register branch-push --dry-run` | 設定を読み込み、最初の push では統合先のブランチを先に送るよう案内した（送信は行っていない） |
 
 ## 6. 関連ドキュメント
 
