@@ -213,9 +213,11 @@ SpecDojoは、作業を記録するだけでなく、成果物を継続的に育
 ## 3. 完了条件
 
 - 理解の負債の定義を `specdojo-philosophy` に正本として 1 か所だけ書き、ほかの文書はそこを wikilink で参照する。定義は「つくったものや決めたことの背景・意図・前提を十分に共有・記録・更新しないことで、将来の理解・変更・引き継ぎに余計な労力が要る状態」とし、問題は文書の不足ではなく判断の経緯と成果物のつながりが失われることだと書く。コードから戻せるのは主に「何をしているか」で、「なぜ」は戻らないことも含める。
-- `specdojo-philosophy` と `needs-to-implementation-philosophy` で、理解の負債を SpecDojo の解く中心の課題として位置づけ、Continuous Specification Engineering（CSpE）・型・技・流・Sustainable Participation との関係を書く。略称は CSpE だけを使い、初出は「Continuous Specification Engineering（CSpE）」とする。
-- `specdojo-overview-guide` の冒頭に、解く課題（理解の負債）、答え（記して・形にして・磨き続ける。register から成果物へつなぎ、確かめて次につなぐ）、kata による 4 段（復元・確認状態・人の確定・記録）を短く示す。
-- prj-0001 の `prj-overview` の背景と目的に、理解の負債を中心の課題として書き、PJR-Y5RD の位置づけ（kata による理解の負債の解消で、シビックテックを持続可能にする）とそろえる。
+- `specdojo-philosophy` に、理解の負債の 4 つの症状（なぜ決めたのか分からない・何が正しい仕様なのか分からない・誰かがいないと進まない・AI がつくったものを説明できない）と、「速くつくるだけでは、未来に残らない」（必要なのは文書の量ではなく、何を目指し・なぜ決め・何をつくり・どう確かめたかを後からたどれること）を書く。
+- `specdojo-philosophy` と `needs-to-implementation-philosophy` で、理解の負債を SpecDojo の解く中心の課題として位置づけ、Continuous Specification Engineering（CSpE）・型・技・流・Sustainable Participation との関係を書く。`needs-to-implementation-philosophy` には「一度きりの文書化から、継続的な理解の維持へ」と CSpE の関係を書く。略称は CSpE だけを使い、初出は「Continuous Specification Engineering（CSpE）」とする。
+- `specdojo-overview-guide` の冒頭に、解く課題（理解の負債）、答え（記して・形にして・磨き続ける。register から成果物へつなぎ、確かめて次につなぐ）、kata による 4 段（復元・確認状態・人の確定・記録）を短く示す。あわせて、人と AI の分担（人が目的を伝える・AI と整理して register に残す・AI が完了条件に沿って進める・人が確かめる）、既存の道具との関係（置き換えずにつなぐ。ツールが変わっても何を決めたかが失われないこと）、小さな記録から始められることを書く。
+- prj-0001 の `prj-overview` の背景と目的に、理解の負債を中心の課題として書き、PJR-Y5RD の位置づけ（kata による理解の負債の解消で、シビックテックを持続可能にする）とそろえる。目的には「未来の誰かが理解できるように」（開発者や AI のモデルが変わっても、プロジェクトが続いても、なぜつくりなぜ決めたかを調べ直さなくてよいこと）を書く。
+- 入力の文案の表現を参考にしてよいが、「人類最大の借金」などのブランドの比喩と、文案の「実装メモ」は文書に持ち込まない。提供している機能の範囲は、今の版の文書に合わせて書く。
 - シビックテック入門ガイドの「理解の負債と型」と、定義・用語・段の名前が食い違わない。食い違いがあれば、正本の定義に合わせる案を個票の対応結果に書く。
 - README・英語版（`docs/en/`）・LP（prj-0002）は変えない。
 - `npm run -s lint:md` と `npm run validate:history-links` を通し、親の検証を通す。
