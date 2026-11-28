@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qcj5-kata-review-report-table
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-24T13:32:47Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T10:31:10Z"
+  conclusion: 段の result の指摘の表を、runner が実施内容の後に Markdown の表として 1 回だけ描き、申し送りから表に移した指摘を取り除くようにした。指摘でない申し送りは残す
   derived_from:
     - PJR-0BGE
   commit_type: docs

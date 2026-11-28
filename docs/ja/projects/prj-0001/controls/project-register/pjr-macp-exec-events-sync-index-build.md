@@ -41,12 +41,19 @@ specdojo:
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | 同期用の worktree には git 管理外の生成物（`pjr-index.md`）がなく、pre-commit の index-build（`index build`）が一覧の欠落で失敗する |
+| 対応策   | 同期のブランチへの記帳の commit が、生成物の有無に左右されずに通るようにする                                                        |
+| 依存事項 | なし                                                                                                                                |
+| 完了条件 | 下の一覧のとおり                                                                                                                    |
+
+- 人や runner が exec のイベント（reopen・claim・complete など）や登録簿の記帳を同期のブランチへ commit するとき、同期用の worktree に一覧の生成物がなくても commit が通るようにする。runner が commit の前に一覧を作るか、同期のブランチでは index-build の hook を飛ばすか（`lefthook.yml` は保護された設定のため、hook を変える場合は案を個票の対応結果と報告の `handoff` に書く）は executor が決め、理由を個票の対応結果に書く。
+- 回避の手順（同期用の worktree で `register build` を流してから commit し、`register branch-push` で送る）が要らなくなることを、統合テストか単体テストで確かめる。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証を通す。
+- 統合の後に、オーケストレーターが人の actor の exec の記帳（例: 終わったタスクの `exec reopen` と、元に戻す記帳）を 1 回流し、止まらずに同期のブランチへ送られることを確かめてから close する。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 
 ## 5. 対応結果
 
