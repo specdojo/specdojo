@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-GDMB"]'
+- v: 1
+  id: reg_c4e8758116fc461aae3fa6d209247ee6
+  ts: "2026-11-28T10:27:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 対応方針と完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_846983767e774990a75df32a240c8137
