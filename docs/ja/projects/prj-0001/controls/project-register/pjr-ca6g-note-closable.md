@@ -36,7 +36,7 @@ specdojo:
 
 ## 4. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+案 A を採る。使い終わった note（中身を別の項目・文書・運用メモへ移した、または古くなった）は `register close` で `done` にする。conclusion に、移した先または古くなった理由を書く。`rejected` と `deferred` は note に使わない。必要になれば `register reopen` で open に戻す。
 
 ## 5. 採択理由
 
