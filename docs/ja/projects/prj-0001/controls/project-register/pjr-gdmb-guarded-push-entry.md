@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gdmb-guarded-push-entry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-28T04:25:36Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T05:40:09Z"
+  conclusion: specdojo guarded-push を足した。同じ project の develop と feature ブランチを同名の remote ref へ fast-forward でだけ送り、main・他 project・タグ・force・全件・mirror・削除を持たない。executor・reporter の実行中は git の起動前に拒む。各環境の設定と文言の案は個票に書いた（未反映）
   derived_from:
     - PJR-D4RJ
   depends_on:
