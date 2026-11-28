@@ -210,7 +210,22 @@ SpecDojoは、作業を記録するだけでなく、成果物を継続的に育
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 入力の文案をもとに、specdojo-lp の日本語の本文を、理解の負債を中心の課題とするメッセージに書き直す。文案の「実装メモ」に沿って、次を満たす。
+  - Hero（`src/components/sections/Hero.astro`）の見出しを「人類最大の借金、理解の負債。」にし、今の標語はブランドの署名として残す。マスコットと愛称の Spec道 は残す。
+  - Problems（`Problems.astro`）を「理解の負債とは」と「速くつくるだけでは、未来に残らない」の問題提起に組み直す。
+  - RegisterTypes（`RegisterTypes.astro`）の 8 種類の定義は残し、「小さな記録から始められる」の導入文を足す。plan モードとの比較の詳しい説明は補助として残す。
+  - ToolFit（`ToolFit.astro`）は、置き換えではなく「競うよりつなぐ」関係に整える。SDD との比較の行は、正本の関係の表（SDD の上流・併用）と矛盾しない。
+  - GetStarted（`GetStarted.astro`）の具体的な手順とコード例は残し、文案はその前の導入に使う。NextSteps（`NextSteps.astro`）の導線は残す。
+  - Roadmap（`Roadmap.astro`）に Continuous Specification Engineering（CSpE）の説明を足す。提供している範囲は、公開する時点の SpecDojo の版で確かめて書く。
+- Hero で、正式名称 Continuous Specification Engineering と、SpecDojo がその道場であることが読み取れる（PJR-T1TH）。
+- 略称を使う場合は CSpE で、初出が「Continuous Specification Engineering（CSpE）」になっている。CSE などの別の略称を使っていない（PJR-T1TH）。
+- ページの title と description は文案の frontmatter の案を使うか、使わない場合はその理由を個票の対応結果に書く。正式名称を description に含めるかの判断と理由も書く（PJR-T1TH）。
+- 「人類最大の借金」が実証の主張ではなく比喩であることの注記を、ページのどこか（ヒーローの下かフッターなど）に置く。
+- 理解の負債の定義と「記して・形にして・磨き続ける」の言い方が、prj-0001 の PJR-6V26 で直す正本の定義と食い違わない。6V26 がまだ終わっていなければ、文案の定義を使い、食い違いがあれば後で合わせることを個票の対応結果に書く。
+- 英語版の本文は、この todo では変えない。英語の文案（`Humanity's Greatest Debt. Comprehension Debt.` など）は、英語話者の確認の後に別の todo で扱う。
+- specdojo-lp のビルドと検査が通る。
+- CHANGELOG は prj-0002 の決まりに従う。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 
 ## 4. 作業内容
 

@@ -54,3 +54,16 @@
       from: '["担当 BA・期限 2026-12-31 は indie の指示（2026-11-28）。章の本文は prj-0002 の作業ツリーで書く"]'
       to: '["担当 BA・期限 2026-12-31 は indie の指示（2026-11-28）。","起票の元: prj-0001 の PJR-6V26（理解の負債を中心の課題として、概要・ガイド・philosophy の記述を見直す）。定義の正本は prj-0001 の `specdojo-philosophy` に置くため、LP の用語・定義はそれと食い違わないようにする。","PJR-Y5RD（prj-0001）の位置づけ: kata による理解の負債の解消で、シビックテックを持続可能にする。","PJR-T1TH（Continuous Specification Engineering の名称と位置付けを LP に載せる）は、この todo に含める（indie の指示、2026-11-28）。T1TH の完了条件は下の完了条件に移した。","Continuous Specification Engineering の略称は CSpE とする。CSE などの別の略称は使わない。","文案は indie が作成した（2026-11-28）。次がその全文で、末尾の「実装メモ」は公開する本文に含めない。英語版は英語話者による自然さの確認を経てから出す。"]'
   previous_event_id: reg_bdb7f9ad97624b98b57ef9d564ea9bcb
+- v: 1
+  id: reg_cb9d121f9ad44e0c920068df394b44ee
+  ts: "2026-11-28T13:46:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_1f2a98b287aa471b82fdbb7276bf77f1
