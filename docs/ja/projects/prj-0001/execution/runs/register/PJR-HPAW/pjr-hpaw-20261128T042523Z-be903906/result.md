@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-HPAW
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-HPAW/pjr-hpaw-20261128T042523Z-be903906/plan.md
   started_at: "2026-11-28T04:25:29.509Z"
-  completed_at: "2026-11-28T05:13:37.946Z"
+  completed_at: "2026-11-28T05:16:50.234Z"
   agent: sol-executor
-  block_reason: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
 ---
 
 # Edit Result

@@ -2,31 +2,39 @@
   "schema_version": 1,
   "task_id": "PJR-HPAW",
   "run_id": "pjr-hpaw-20261128T042523Z-be903906",
-  "updated_at": "2026-11-28T05:02:33.957Z",
+  "updated_at": "2026-11-28T05:16:50.262Z",
   "stages": {
     "executor": {
-      "status": "blocked",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
-      "started_at": "2026-11-28T05:00:12.405Z",
-      "completed_at": "2026-11-28T05:02:33.957Z",
+      "started_at": "2026-11-28T05:07:59.627Z",
+      "completed_at": "2026-11-28T05:09:58.784Z",
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HPAW/pjr-hpaw-20261128T042523Z-be903906/evidence.json"
     },
     "reporter": {
-      "status": "pending",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "started_at": "2026-11-28T05:13:34.067Z",
+      "completed_at": "2026-11-28T05:13:34.067Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HPAW/pjr-hpaw-20261128T042523Z-be903906/result.md"
     },
-    "prepare": {
-      "status": "succeeded",
-      "actor": "sol-executor",
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-reporter",
       "attempts": 2,
-      "started_at": "2026-11-28T04:59:30.714Z",
-      "completed_at": "2026-11-28T05:00:12.395Z",
-      "artifact_ref": null
+      "started_at": "2026-11-28T05:16:50.262Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume\nRegister bookkeeping is preserved locally; inspect worktree /workspaces/specdojo-workspace/specdojo/.git/specdojo/sync/register/58dcb83dc5fcd08e/worktree and branch project/prj-0001/sync/register. If the remote branch is missing, create it from the project develop branch with specdojo register branch-push --project prj-0001 --sync register. Fix connectivity/permissions, resolve conflicts (git add the resolved files) and commit any remaining bookkeeping in that worktree, then run specdojo register branch-push --project prj-0001 --sync register; it finishes git rebase --continue, rebases onto origin/project/prj-0001/sync/register and pushes (git rebase --abort returns to the local commits). Do not repeat add to retry a push."
+        }
+      }
     }
   },
   "artifacts": {

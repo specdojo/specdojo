@@ -25,7 +25,7 @@ import { gitEnvironment } from "../../../src/shared/git-environment.js";
 
 // Expose configurable exports so spies can observe the native ESM process boundary.
 vi.mock("node:child_process", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("node:child_process")>()),
+  ...(await importOriginal<typeof childProcess>()),
 }));
 
 describe("commitPathspecs", () => {
