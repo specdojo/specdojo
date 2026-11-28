@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-HPAW",
+  "run_id": "pjr-hpaw-20261128T042523Z-be903906",
+  "updated_at": "2026-11-28T04:26:57.586Z",
+  "stages": {
+    "executor": {
+      "status": "pending",
+      "actor": "sol-executor",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    },
+    "prepare": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-28T04:26:57.586Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HPAW/pjr-hpaw-20261128T042523Z-be903906/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HPAW/pjr-hpaw-20261128T042523Z-be903906/result.md"
+  }
+}
