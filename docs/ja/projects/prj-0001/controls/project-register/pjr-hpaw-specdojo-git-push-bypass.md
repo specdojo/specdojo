@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-11-28T04:16:53Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: Concurrent register ticket edits conflict: docs/ja/projects/prj-0001/controls/project-register/pjr-hpaw-specdojo-git-push-bypass.md; resolve and resume Register bookkeeping …"
   derived_from:
     - PJR-D4RJ
 ---
