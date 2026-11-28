@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_17c1ea09fcef4d7db6ecc5f6ce2541f6
+  ts: "2026-11-28T13:58:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD の図を、種類ごとに囲み・担当のレーン・時系列で描く
+    - field: description
+      from: ""
+      to: CDFD の sample の図が分かりにくいため、全体概要は業務のまとまりの囲み、プロセスグループ別は担当ごとのレーンと受け渡しの番号、ユースケース別は D2 の sequence\_diagram で描く
+    - field: input
+      from: ""
+      to: '["indie の指摘（2026-11-28）: CDFD の図が分かりにくい。担当ごとのレーン、時系列の並び、業務のまとまりの囲みなどがないと頭に入らない。分かりにくいのは全部で、まず型の sample から直す","今の cdfd-d2-rulebook は direction: down と PDCA の順の並びを決め、コンテナはプロセスグループ別で関連プロセスを見た目でまとめるときだけ許し、全体概要でグループを囲むことを禁じている。担当のレーンと手順の番号の決まりはない","比べた案: A 担当ごとのレーン / B 時系列（ユースケース別は `sequence_diagram`、ほかは受け渡しの番号） / C 業務のまとまりの囲み。図の種類ごとに使い分ける推奨を indie が採った（2026-11-28）","担当 BA・期限 2026-12-31 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-12-31"
