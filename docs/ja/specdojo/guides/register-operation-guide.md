@@ -212,17 +212,17 @@ specdojo register close --id PJR-AB12 --by <受け取った主体>
 
 登録項目の状態はコマンドで遷移させます。手で status セルを書き換えるより、遷移ガードの効くコマンドを優先します。
 
-| 場面                     | コマンド          | 遷移後の状態                                                          |
-| ------------------------ | ----------------- | --------------------------------------------------------------------- |
-| 登録する                 | `register add`    | `open`                                                                |
-| 着手する                 | `register start`  | `in-progress`                                                         |
-| 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                             |
-| 確認・レビューに回す     | `register review` | `review`                                                              |
-| 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は終端させない） |
-| 対応しないと判断する     | `register reject` | `rejected`（`note` と `handoff` は拒否）                              |
-| 延期する                 | `register defer`  | `deferred`（`note` と `handoff` は拒否）                              |
-| 終了済み項目を再開する   | `register reopen` | `open`                                                                |
-| 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
+| 場面                     | コマンド          | 遷移後の状態                                                                |
+| ------------------------ | ----------------- | --------------------------------------------------------------------------- |
+| 登録する                 | `register add`    | `open`                                                                      |
+| 着手する                 | `register start`  | `in-progress`                                                               |
+| 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                                   |
+| 確認・レビューに回す     | `register review` | `review`                                                                    |
+| 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は `conclusion` 必須） |
+| 対応しないと判断する     | `register reject` | `rejected`（`note` と `handoff` は拒否）                                    |
+| 延期する                 | `register defer`  | `deferred`（`note` と `handoff` は拒否）                                    |
+| 終了済み項目を再開する   | `register reopen` | `open`                                                                      |
+| 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                            |
 
 - 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
 - 起票と完了は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`register reopen` は `completed_at` を削除します。
@@ -264,7 +264,7 @@ specdojo register close --id PJR-AB12 --by <受け取った主体>
 - 状態遷移は `open` から終端まで順に辿る必要はありません。人が対応した項目や、対話型 orchestrator がその場で処理した項目は、`start` を経ずに `close` / `reject` して構いません。着手を記録していない時点の遷移を後から補うと、実際には起きていない事実がイベントログに残ります。詳しい基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `中間状態を経ない終端` を参照します。
 - 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
 - agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。
-- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。ただし `note` の `open` は生きている記録を意味し、終端させません。`register close` / `register reject` / `register defer` は `note` をエラー終了し、対応・回答・判断が必要な場合は、目的に合う別項目の起票を案内します。
+- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。`note` の `open` は生きている記録を意味します。使い終わった note は `register close --conclusion <text>` で `done` にし、移した先または古くなった理由を残します。`--status` を省いた場合も `done` になり、`decided` など他の状態は拒否します。`register reject` / `register defer` は使いません。必要になれば `register reopen` で `open` に戻せます。対応・回答・判断が必要な場合は、目的に合う別項目を起票します。
 - `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは `waiting` 中だけの現在値であり、`start` / `review` / `close` などで別の状態へ遷移すると個票から削除されます。削除前の理由は項目別イベントログに残り、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。誤った現在値を状態遷移なしで削除する場合は `register update --block-reason -` を使います。
 
 すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。

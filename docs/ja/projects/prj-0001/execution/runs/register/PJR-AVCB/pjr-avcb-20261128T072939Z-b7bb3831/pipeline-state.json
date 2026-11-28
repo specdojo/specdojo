@@ -2,35 +2,43 @@
   "schema_version": 1,
   "task_id": "PJR-AVCB",
   "run_id": "pjr-avcb-20261128T072939Z-b7bb3831",
-  "updated_at": "2026-11-28T07:40:42.541Z",
+  "updated_at": "2026-11-28T07:51:03.325Z",
   "stages": {
     "executor": {
       "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
-      "started_at": "2026-11-28T07:31:28.706Z",
-      "completed_at": "2026-11-28T07:36:39.835Z",
+      "started_at": "2026-11-28T07:43:40.385Z",
+      "completed_at": "2026-11-28T07:47:19.295Z",
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/evidence.json"
     },
     "reporter": {
-      "status": "failed",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
-      "attempts": 1,
-      "started_at": "2026-11-28T07:40:32.842Z",
-      "completed_at": "2026-11-28T07:40:42.541Z",
+      "attempts": 0,
+      "started_at": "2026-11-28T07:51:00.101Z",
+      "completed_at": "2026-11-28T07:51:00.101Z",
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/result.md"
     },
-    "prepare": {
-      "status": "succeeded",
+    "integrate": {
+      "status": "running",
       "actor": "sol-executor",
       "attempts": 1,
-      "started_at": "2026-11-28T07:30:42.774Z",
-      "completed_at": "2026-11-28T07:31:28.703Z",
+      "started_at": "2026-11-28T07:51:03.325Z",
+      "completed_at": null,
       "artifact_ref": null
     }
   },
   "artifacts": {
     "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/plan.md",
     "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AVCB/pjr-avcb-20261128T072939Z-b7bb3831/result.md"
-  }
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-28T07:43:40.369Z",
+      "notes": [
+        "親の検証の test-unit で tests/src/register/commands.test.ts の note の reopen のテスト 2 件が失敗した（reopen の後に process.exitCode が 1）。close した note を register reopen で open に戻せるように実装を直し、npm run test:unit を流して通ることを確かめる"
+      ]
+    }
+  ]
 }
