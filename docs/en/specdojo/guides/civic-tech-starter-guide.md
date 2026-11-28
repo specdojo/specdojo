@@ -39,14 +39,14 @@ This guide introduces five starter kata for small civic tech teams with limited 
 
 Comprehension debt occurs when the purpose of what was built and the reasons behind it exist only in someone's head. When that person leaves, others cannot take over. Small teams with changing participants often cannot ask the previous developer. The faster AI writes code, the faster unexplained parts can accumulate.
 
-Kata are rules and examples for what to write and in which form. Following them gives future participants and AI a consistent place to find information without asking the original author. This guide uses four stages:
+Kata are rules and examples for what to write and in which form. Documents that follow them give future participants and AI a consistent place to find information without asking the original author. This guide uses four stages:
 
 | Stage               | Action                                                                                |
 | ------------------- | ------------------------------------------------------------------------------------- |
 | Reconstruction      | An agent creates documents from existing code and fragmentary records using kata      |
-| Verification status | Mark which reconstructed content has been checked and which is inferred               |
+| Verification status | The agent marks which reconstructed content is inferred                               |
 | Human confirmation  | Ask affected people or experienced participants to check and confirm inferred content |
-| Recording           | Preserve future reasons in the register when decisions are made                       |
+| Recording           | Have future reasons recorded in the register when decisions are made                  |
 
 Code mainly reveals what a system does. It cannot recover people's problems, design rationale, or decisions to exclude something. Plausible AI guesses can create an illusion of understanding and hide the debt. Verification status and human confirmation prevent that.
 
@@ -71,7 +71,7 @@ Why these five:
 
 ## 3. When to add other kata
 
-Do not start with the following. File and add one at a time when its triggering problem actually occurs.
+Do not start with the following. Ask the orchestrator to file and add one at a time when its triggering problem actually occurs.
 
 | Kata                                                                                                           | When to add it                                                                             |
 | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -154,25 +154,32 @@ When a working system exists but its creators or reasons are unavailable, distin
 5. Have issues and approach created when the direction for changes or additions is decided.
 6. Continue having decisions recorded as in step 5 for new work.
 
-When reconstructing several kata, split the work into an epic and child todos as for new work. The orchestrator files a `retrofit` todo with a command like the following and puts the code location in the ticket before execution. The path and rulebook below are examples.
+When you tell the orchestrator where the code is, it proposes filing a `retrofit` todo. When reconstructing several kata, it splits the work into an epic and child todos as for new work. IDs and paths are examples.
 
-```bash
-specdojo register add --project <project-id> --type todo --title "Reconstruct benefit eligibility rules" \
-  --owner BA --approach retrofit --target <project-id>:br-benefit-eligibility \
-  --target-path docs/ja/product/010-business-specs/030-business-model/br-benefit-eligibility.md \
-  --target-rulebook specdojo:br-rulebook
+```chat
+You: Please document the eligibility rules from the current benefit eligibility code (under src/eligibility/). The person who wrote it is gone.
+
+Orchestrator: I will file a `retrofit` todo, "Reconstruct benefit eligibility rules." Its completion conditions will say to examine src/eligibility/, to state as fact only the current behavior confirmed in code, and to mark "why it works this way" and "whether that is correct" with `_ASSUMPTION_`. If you also want the function index reconstructed, I will split the work into an epic and two child todos. Which do you prefer?
+
+You: Please include the function index too.
+
+Orchestrator: I filed epic PJR-JK12 and child todos PJR-LM34 (business rules) and PJR-NP56 (function index). I will have agents create them with `exec run`, starting with PJR-LM34. May I start?
+
+You: Please start.
 ```
 
-Replace `<project-id>` with your project's ID. Follow its catalog for deliverable placement when available. See `register add` in the [[specdojo:command-reference|CLI Command Reference]] for options.
+The orchestrator uses the commands for filing and execution. See `register add` and `exec run` in the [[specdojo:command-reference|CLI Command Reference]] for details.
 
 ## 5. Mark verification status
 
-Even kata-based documents can mix verified content and speculation. Later readers may mistake speculation for fact. Prefix unverified paragraphs with these markers:
+Even kata-based documents can mix verified content and speculation. Later readers may mistake speculation for fact. Agents therefore prefix unverified paragraphs with these markers. People check the marked content, tell the orchestrator the results, and have the markers removed.
 
-| Marker         | When to use                                                            | When to remove                                                               |
-| -------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `_ASSUMPTION_` | Inferred or provisional content, especially a “why” inferred from code | After affected or experienced people check it; record checker and date first |
-| `_UNDECIDED_`  | Information is sufficient, but nobody has chosen an option             | After a register decision; reference that decision ticket first              |
+| Marker         | When the agent adds it                                                 | When to have it removed                                                                |
+| -------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `_ASSUMPTION_` | Inferred or provisional content, especially a “why” inferred from code | After affected or experienced people check it; have the checker and date written first |
+| `_UNDECIDED_`  | Information is sufficient, but nobody has chosen an option             | After a register decision; have that decision ticket referenced first                  |
+
+In a document written by an agent, markers look like this:
 
 ```markdown
 _ASSUMPTION_: The month-end application cutoff may match the municipality's closing date. Inferred from date checks in code; not confirmed with staff.
@@ -181,8 +188,8 @@ _UNDECIDED_: Whether household size includes family members living elsewhere. De
 ```
 
 - Absence of a marker is not proof. Without a checker and date in the text, treat the content as unverified.
-- Require the agent to mark content `_ASSUMPTION_` when it cannot identify evidence in sources, code, or interviews. Put this in the completion conditions when filing the item.
-- A document's `ready` state does not confirm marked content. A person must review remaining markers before finalization.
+- When filing an item, the orchestrator writes into its completion conditions that the agent marks content `_ASSUMPTION_` when it cannot identify evidence in sources, code, or interviews.
+- Instructing finalization (`ready`) does not confirm marked content. A person must check for remaining markers before instructing finalization.
 - The [[specdojo:document-metadata-standard|Document Metadata Standard]] is authoritative for context-marker notation.
 
 ## 6. Do not require every kata
@@ -190,6 +197,6 @@ _UNDECIDED_: Whether household size includes family members living elsewhere. De
 Sustainable Participation means counting participants' time and ongoing burden as costs alongside money, choosing only needed documents, and sharing work. This is why the starter set has five kata and others wait for actual problems.
 
 - Do not fill every chapter of even these five at once. Have the agent mark unknown sections with `_ASSUMPTION_` or explain blanks, so someone with knowledge can explain them later and have them filled.
-- File kata when the triggers above actually occur, rather than because they might help someday.
+- Ask for kata to be filed when the triggers above actually occur, rather than because they might help someday.
 - Leave writing to agents and limit human work to the four roles in `The basic flow`. Do not concentrate it on one person: affected people explain and check, experienced participants resolve markers, facilitators gather requests to the orchestrator and close instructions, and developers verify reconstructed content against code.
 - Have decisions to add or stop using kata recorded, with reasons, in the register. Later participants can trace why this set was chosen.
