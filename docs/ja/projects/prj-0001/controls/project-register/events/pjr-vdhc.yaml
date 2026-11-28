@@ -61,3 +61,16 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_5c0a6f4c51ba4f8d89a3ccc491d6619f
+- v: 1
+  id: reg_be9fcdae36bf437e9a18ccf89cf38f20
+  ts: "2026-11-28T11:39:27Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: CHANGELOG の集計と検査・配布物の確かめの結果を記録する
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_0713904148734b4c84150ca4c3807184
