@@ -83,3 +83,19 @@
       from: "parent validation failed: lint-ts"
       to: "-"
   previous_event_id: reg_4628323a4c25487595716d0da0c6b85d
+- v: 1
+  id: reg_0e692b6f1dde42848dbeea8a28708295
+  ts: "2026-11-28T05:02:41Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
+  previous_event_id: reg_1e6f85c97b094f58bb0a6fb50997f7d2

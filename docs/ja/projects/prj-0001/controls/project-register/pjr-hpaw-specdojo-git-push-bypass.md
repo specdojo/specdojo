@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-11-28T04:16:53Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: 前回の親 lint 失敗原因を修正し、個票を更新した。別項目 PJR-D5RS の result にあるリンク違反3件で全体検査が失敗したため未完了。"
   derived_from:
     - PJR-D4RJ
 ---
