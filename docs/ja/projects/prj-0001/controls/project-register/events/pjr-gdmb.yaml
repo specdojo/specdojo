@@ -86,3 +86,29 @@
       from: "-"
       to: specdojo guarded-push を足した。同じ project の develop と feature ブランチを同名の remote ref へ fast-forward でだけ送り、main・他 project・タグ・force・全件・mirror・削除を持たない。executor・reporter の実行中は git の起動前に拒む。各環境の設定と文言の案は個票に書いた（未反映）
   previous_event_id: reg_16a281f776e6449d84584bfcd41099bb
+- v: 1
+  id: reg_2903c5cd0e3e4ae4843468c530f34636
+  ts: "2026-11-28T09:39:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: 設定の反映と実機の確認の結果を記録する
+  changes:
+    - field: section
+      from: ""
+      to: 検証結果
+  previous_event_id: reg_e0f4f7a880404e65a24c0f28d3f165c2
+- v: 1
+  id: reg_c093b932dae54ae3b264a39be6b8bb1c
+  ts: "2026-11-28T09:44:51Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: executor の拒否の実機の確認を記録する
+  changes:
+    - field: section
+      from: ""
+      to: 検証結果
+  previous_event_id: reg_2903c5cd0e3e4ae4843468c530f34636
