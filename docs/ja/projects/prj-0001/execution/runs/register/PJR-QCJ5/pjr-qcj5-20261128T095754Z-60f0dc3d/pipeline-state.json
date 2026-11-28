@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-QCJ5",
   "run_id": "pjr-qcj5-20261128T095754Z-60f0dc3d",
-  "updated_at": "2026-11-28T10:08:34.334Z",
+  "updated_at": "2026-11-28T10:09:57.019Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -29,11 +29,11 @@
       "artifact_ref": null
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-28T10:08:34.334Z",
-      "completed_at": null,
+      "completed_at": "2026-11-28T10:09:57.019Z",
       "artifact_ref": null
     }
   },
