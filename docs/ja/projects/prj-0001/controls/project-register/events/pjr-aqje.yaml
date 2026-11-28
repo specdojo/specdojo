@@ -67,3 +67,16 @@
       from: "-"
       to: medium
   previous_event_id: reg_1e0168cc2f0942a2a273513c8f70a900
+- v: 1
+  id: reg_8b1fdc20923a412d9013528949af110f
+  ts: "2026-11-28T15:01:02Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dfa1661f346442dd8cf9bc734c62a737
