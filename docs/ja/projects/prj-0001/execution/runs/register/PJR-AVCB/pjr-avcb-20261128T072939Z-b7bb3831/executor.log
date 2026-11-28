@@ -1,0 +1,91 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "前回失敗の原因だったテストデータのイベント履歴不足を修正しました。note の close → build → reopen は既定・明示の done とも成功。単体テスト全件は指示どおり親 runner が実行します。",
+  "handoff": [
+    "前回の失敗 2 件は、比較用 todo のイベント履歴不足で build が設定した終了コード 1 が reopen 後まで残ったことが原因。初期イベントと build 直後の成功検証を追加した。reopen の実装変更は不要と判断し、一時登録簿で open への復帰、完了日時の削除、結論保持を確認した。原因と判断は個票の対応結果にも記録済み。",
+    "保護された `.agents/specdojo-orchestrator.agent.md` の変更案: type 表の note 行を「| `note` | 記録として残す観測・分析 | `done` |」へ変更する。note の段落は、open を継続更新できる記録とし、使い終わった note は `register close --conclusion <text>` で done にして移した先または古くなった理由を必須で残す、status 省略時も done、decided・rejected・deferred は使わない、必要なら register reopen で open に戻す、対応・回答・判断は別 type の項目を起票して note を参照元にする、という内容へ置換する。個票 5.2 に全文を記録済み。承認後の反映と `npm run orchestrator:sync`、`npm run lint:orchestrator-sync` は後続担当が行う。",
+    "ステータス定義（登録項目個票）には note の終了を認めない旧記述が残る。指定された規範 3 文書とは分け、PJR-CA6G に沿った設計更新を後続で扱う。CHANGELOG の区分と文案は個票 5.4 に記録済み。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/en/specdojo/rulebooks/pjr-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-avcb-note-close-support.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/rulebooks/pjr-rulebook.md src/register/transition-commands.ts src/register/update.ts tests/src/register/commands.test.ts",
+      "status": "passed",
+      "summary": "成果物 8 ファイルの整形に成功。個票追記後も再整形済み。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-avcb-note-smoke.mjs",
+      "status": "passed",
+      "summary": "一時登録簿で既定・明示の done による close、状態別一覧、reopen、完了日時削除、結論保持を確認。一時ファイルは削除済み。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。既存の参照・未作成文書などに関する警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査が終了コード 0 で成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成が終了コード 0 で成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は適用外。",
+      "reason": "executor の成果物に変更した YAML ファイルがない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/en/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "changed",
+      "path": "docs/en/specdojo/rulebooks/pjr-rulebook.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-avcb-note-close-support.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-avcb-note-close-support.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md"
+    },
+    {
+      "target": "src/register/transition-commands.ts",
+      "status": "changed",
+      "path": "src/register/transition-commands.ts"
+    },
+    {
+      "target": "src/register/update.ts",
+      "status": "changed",
+      "path": "src/register/update.ts"
+    },
+    {
+      "target": "tests/src/register/commands.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/commands.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

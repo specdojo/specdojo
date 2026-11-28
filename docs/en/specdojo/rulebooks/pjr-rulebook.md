@@ -165,26 +165,26 @@ Use `register renumber` for ID changes and `register update --topic` for topic c
 
 Use normal termination only when the registered purpose has been achieved.
 
-| `item_type`      | Terminal state | Condition                                                                 | `conclusion`                  |
-| ---------------- | -------------- | ------------------------------------------------------------------------- | ----------------------------- |
-| `epic`           | `done`         | A person judges track criteria met using child items and schedule         | Evidence and remaining issues |
-| `todo`           | `done`         | All ticket completion criteria are met                                    | Work and completion evidence  |
-| `question`       | `decided`      | Answer confirmed; need for follow-up can be judged                        | Confirmed answer              |
-| `decision`       | `decided`      | Options, rationale, impact, and required approval recorded                | Decision                      |
-| `note`           | None           | Keep `open` and append knowledge                                          | Not used                      |
-| `handoff`        | `done`         | Next session, LLM, or person has read and received it                     | Summary received              |
-| `risk`           | `done`         | Risk expired unrealized, or response finished and tracking is unnecessary | Evidence                      |
-| `issue`          | `done`         | Problem resolved and checks completed                                     | Resolution and checks         |
-| `change-request` | `done`         | Adopted change applied and checks completed                               | Applied change and checks     |
+| `item_type`      | Terminal state | Condition                                                                        | `conclusion`                                      |
+| ---------------- | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `epic`           | `done`         | A person judges track criteria met using child items and schedule                | Evidence and remaining issues                     |
+| `todo`           | `done`         | All ticket completion criteria are met                                           | Work and completion evidence                      |
+| `question`       | `decided`      | Answer confirmed; need for follow-up can be judged                               | Confirmed answer                                  |
+| `decision`       | `decided`      | Options, rationale, impact, and required approval recorded                       | Decision                                          |
+| `note`           | `done`         | Contents moved to another item or document, or no longer needed because obsolete | Destination or reason for obsolescence (required) |
+| `handoff`        | `done`         | Next session, LLM, or person has read and received it                            | Summary received                                  |
+| `risk`           | `done`         | Risk expired unrealized, or response finished and tracking is unnecessary        | Evidence                                          |
+| `issue`          | `done`         | Problem resolved and checks completed                                            | Resolution and checks                             |
+| `change-request` | `done`         | Adopted change applied and checks completed                                      | Applied change and checks                         |
 
 - Epics use todo's states and exceptional termination but do not run with `exec run --register`; filters and nightly queues skip them. Execute work through child todos.
 - Handoffs use only `open` (awaiting receipt) and `done` (received). Close with the receiver as `--by`. They do not run with exec; filters and nightly queues skip them.
 - File pending user answers separately as questions. Closing a handoff does not close those questions.
-- An open note is a continuing record, not unhandled work. File separate items for action, answers, or decisions. If obsolete or replaced, append that fact and a reference; never terminate the note itself.
+- An open note is a continuing record, not unhandled work. File separate items for action, answers, or decisions. Close a no-longer-needed note with `register close --conclusion <text>` and use `register reopen` to return it to `open` if needed. Close defaults to `done` when `--status` is omitted; other states such as `decided` are not allowed.
 
 #### 5.3.2. Exceptional termination of tracking
 
-Except for notes and handoffs, tracking may end before normal completion:
+Notes can be closed as `done`, but do not use `rejected` or `deferred`. Except for notes and handoffs, tracking may end before normal completion:
 
 | `item_status` | Condition                                                            | Required record                                       |
 | ------------- | -------------------------------------------------------------------- | ----------------------------------------------------- |
