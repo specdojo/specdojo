@@ -2,29 +2,37 @@
   "schema_version": 1,
   "task_id": "PJR-DV1R",
   "run_id": "pjr-dv1r-20261128T101104Z-866c3717",
-  "updated_at": "2026-11-28T10:12:01.980Z",
+  "updated_at": "2026-11-28T10:16:31.719Z",
   "stages": {
     "executor": {
-      "status": "pending",
+      "status": "succeeded",
       "actor": "opus-executor",
-      "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "attempts": 1,
+      "started_at": "2026-11-28T10:12:44.903Z",
+      "completed_at": "2026-11-28T10:16:13.186Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DV1R/pjr-dv1r-20261128T101104Z-866c3717/evidence.json"
     },
     "reporter": {
-      "status": "pending",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 0,
-      "started_at": null,
-      "completed_at": null,
-      "artifact_ref": null
+      "started_at": "2026-11-28T10:16:31.709Z",
+      "completed_at": "2026-11-28T10:16:31.709Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DV1R/pjr-dv1r-20261128T101104Z-866c3717/result.md"
     },
     "prepare": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-28T10:12:01.980Z",
+      "completed_at": "2026-11-28T10:12:44.898Z",
+      "artifact_ref": null
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-28T10:16:31.719Z",
       "completed_at": null,
       "artifact_ref": null
     }

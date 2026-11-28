@@ -901,21 +901,28 @@ providers:
   copilot:
     command_template: >-
       copilot -p "$(cat)" --no-color --no-ask-user
-      --no-remote --no-remote-export --disable-builtin-mcps
+      --sync-session=off --disable-builtin-mcps
       --allow-tool write
-      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
-      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
-      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git status:*)'
+      --allow-tool 'shell(git diff)' --allow-tool 'shell(git diff:*)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git log:*)'
+      --allow-tool 'shell(git show)' --allow-tool 'shell(git show:*)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm run:*)'
+      --allow-tool 'shell(npm test)' --allow-tool 'shell(npm test:*)'
       --allow-tool 'shell(specdojo:*)'
-      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
-      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git add:*)'
+      --deny-tool 'shell(git commit)' --deny-tool 'shell(git commit:*)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git push:*)'
+      --deny-tool 'shell(git reset)' --deny-tool 'shell(git reset:*)'
+      --deny-tool 'shell(specdojo guarded-push)' --deny-tool 'shell(specdojo guarded-push:*)'
+      --deny-tool 'shell(npx specdojo guarded-push)' --deny-tool 'shell(npx specdojo guarded-push:*)'
 ```
 
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使いません（claude の bypassPermissions 相当）。
 - ファイルアクセスはデフォルトで cwd（= worktree）配下 + 一時ディレクトリに制限されます。`--allow-all-paths` を使わないことで codex の `workspace-write` 相当の境界になります。
 - `write` はパス単位に絞れない（worktree 全域に書ける）ため、review agent でも `write` を許可して result を記入させ、変更の境界は commit 許可リストで作ります。
-- shell は `--allow-tool 'shell(...)'` の許可リストです。git / gh は第1サブコマンド単位でマッチするため読み取り系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` を明示 deny します（deny 優先の保険です。許可リストの追記で誤って開くことを防ぎます）。
-- 外部送信面を閉じます: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化します。セッションの GitHub web / mobile への共有・遠隔操作は `--no-remote --no-remote-export` で無効化します。URL アクセスはデフォルト確認制のため `--allow-url` を追加しません（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow します）。
+- shell は `--allow-tool 'shell(...)'` の許可リストです。読み取り系・検証系のみ列挙し、`--deny-tool` で `git add` / `git commit` / `git push` / `git reset` と `guarded-push` の入口を明示 deny します（deny 優先の保険です。許可リストの追記で誤って開くことを防ぎます）。末尾に `:*` のない `shell(<command>)` は引数付きのコマンドに当たらないことがあるため、allow・deny とも素の形と `:*` 付きの形を並べます。`:*` はコマンドの先頭部分に空白が続く形に当たり、引数のない素のコマンドに当たるかは公式の説明にないためです。
+- 外部送信面を閉じます: 組み込み GitHub MCP server は issue / PR 作成などの外部アクションを持つため `--disable-builtin-mcps` で無効化します。セッション履歴の同期は `--sync-session=off` で止めます。遠隔操作は `-p` の起動では有効にできないため、起動引数を置きません（`--no-remote` は廃止され、`--no-remote-export` は `--sync-session=off` に改名されました）。URL アクセスはデフォルト確認制のため `--allow-url` を追加しません（`web_search` capability を持たせる場合のみ、必要ドメインを個別に allow します）。
 - `-p` は引数必須のため、stdin で渡される plan は `-p "$(cat)"` で受けます。`--no-ask-user` で質問ツールを無効化し、無人実行で停止しないようにします。
 - shell パターンのマッチ粒度（`shell(npm run)` が `npm run <script>` 全体を許可するか等）は、member 追加時に最初のタスクで permission ログを確認して調整します。
 
