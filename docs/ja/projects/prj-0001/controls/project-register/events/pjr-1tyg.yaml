@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_658dfff613de491689efe99e80fac9a1
+- v: 1
+  id: reg_1f9cf62535584e47b5ee9d55f62e0a3e
+  ts: "2026-11-28T08:32:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 止めていた kra-day2-2026-11-26 を同じ exec queue run で再開し、止めた段から始まって succeeded になることを実際の run で確かめた（2026-11-28）。止める前に失敗があった場合は単体テストで確かめた。この 2 つで close することを indie が承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: exec stop で止めた段を、止める前の失敗の有無に依らず止めた扱いにし、同じ exec queue run で止めた段から再開できるようにした
+  previous_event_id: reg_2094d4c96e4a4212adc4717c5bd3317a
