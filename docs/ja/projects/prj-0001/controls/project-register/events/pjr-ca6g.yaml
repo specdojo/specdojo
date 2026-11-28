@@ -113,3 +113,22 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_4089feab1f5648fcad05a4fd68ff5db0
+- v: 1
+  id: reg_48be2101b4344bbead405f95d22d93b5
+  ts: "2026-11-28T07:28:35Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が 3 案から案 A を選んだ（2026-11-28）。反映は PJR-AVCB で行う
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-28"
+    - field: conclusion
+      from: "-"
+      to: 案 A を採る。使い終わった note は register close で done にし、conclusion に移した先または古くなった理由を書く。rejected・deferred は note に使わない。必要なら reopen で戻す
+  previous_event_id: reg_7b6e676d6dc745238d68574b6f95d70f

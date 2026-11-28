@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ca6g-note-closable
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: BA
   registered_at: "2026-11-28T07:19:56Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-28T07:28:35Z"
+  conclusion: 案 A を採る。使い終わった note は register close で done にし、conclusion に移した先または古くなった理由を書く。rejected・deferred は note に使わない。必要なら reopen で戻す
 ---
 
 # PJR-CA6G note を done で close できるようにする
