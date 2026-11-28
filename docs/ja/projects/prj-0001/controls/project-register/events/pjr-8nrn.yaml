@@ -58,3 +58,16 @@
       from: _TODO_
       to: "- 引き継ぎ元: 2026-11-28 の対話のオーケストレーターのセッション（Claude Code、Opus 5.5）。v0.10.0 のリリース（PJR-VDHC）までを行った。 - 引き継ぎ先: 次のオーケストレーターのセッション（LLM は問わない）。受け取ったら、受け取った主体を `--by` にして close する。"
   previous_event_id: reg_788c34847c294266b50ce6f460c951fb
+- v: 1
+  id: reg_cbdabf22c37b4f6aa38daff8e66be035
+  ts: "2026-11-28T13:26:31Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 有効な承認の範囲 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 有効な承認の範囲
+  previous_event_id: reg_4f9d4ea7cf364d2da132f5b4eb0f9482

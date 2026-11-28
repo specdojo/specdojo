@@ -23,7 +23,10 @@ specdojo:
 
 ## 2. 有効な承認の範囲
 
-_TODO_: 夜の間に close してよい条件、使わない agent など、引き継ぎ先が従う承認の範囲を記載する。長く効くものは playbook や個票の入力へ移す。ない場合は `-` とする。
+- codex（sol・terra・luna・watch-diagnoser）は、2026-12-01 1:00 JST まで使わない（indie の依頼、週間の利用上限が近いため）。代わりは opus-executor と sonnet-executor、reporter は sonnet-reporter。
+- routine はすべて止めている（`enabled: false`）。再開は indie の指示による（[[prj-0001:pjr-cjnv-routine-resume-timing|PJR-CJNV]] で判断を待つ）。
+- push は `npx specdojo guarded-push` だけで行う。先に `--dry-run` で範囲と件数を示し、送るたびに indie の承認を得る。直接の `git push`、main・タグへの push は行わない。
+- PJR-6PD7 は今のまま、PJR-B0B8 は範囲外として review に残す（indie の決定）。
 
 ## 3. 進行中
 
