@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-f4mg-english-edition-first-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T22:53:08Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-28T00:19:08Z"
+  conclusion: 英語版の最初の範囲（README の英語の節、文書サイトの英語の入口とクイックスタート、入門ガイド、入門の型の組 5 つ）を作り、npm package に含めた。kata の言語の選び方（kata_locale）は設計を決め、実装は v0.10.0 の後に入れる
   derived_from:
     - PJR-BHJM
   depends_on:
