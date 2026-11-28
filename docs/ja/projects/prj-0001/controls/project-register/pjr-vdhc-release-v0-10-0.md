@@ -90,6 +90,15 @@ indie が運用メモの「WSL の導入確認」の手順で、`specdojo-0.10.0
 | 手元    | `doctor`（警告なし）・`init --yes --provider claude --no-tmux`・`register add` が成功し、個票にタイトル「WSL check」があった                                                                                                  |
 | tmux    | `doctor --tmux`（警告なし）・`init --yes --provider claude --tmux`・`register add` が成功し、個票にタイトルがあった。`tmux new -s specdojo-check` から `Ctrl-b`、`d` で離脱し、`tmux attach -t specdojo-check` で再接続できた |
 
+### 5.5. 公開と公開後の確認
+
+- PR #43（develop から main）の CI 11 件が通り、indie が merge commit（`ebf2692e0c`）で merge し、`v0.10.0`・`docs-site-v0.7.0`・`docs-lint-v0.5.1` のタグを push した。
+- `docs-site-v0.7.0` の公開の workflow は、`.vitepress/config.mts` の型の誤り（TS2353、PJR-98HS で足した `themeConfig` の項目が型にない）で、npm に送る前に止まった。押したタグを書き換えず、型を直して版を 0.7.1 に上げ（86c01a0694）、PR #45（merge commit `70ddba79e9`、CI 11 件が通った）を経て `docs-site-v0.7.1` で出し直した（indie の決定）。0.7.0 は npm に出ていない。再発の防止は PJR-SVKR で扱う。
+- indie が 3 つの stage を 2FA の経路で承認した。npm の `latest` は `specdojo` 0.10.0、`@specdojo/docs-site` 0.7.1、`@specdojo/docs-lint` 0.5.1 で、3 つとも provenance（`https://slsa.dev/provenance/v1`）が付いている。
+- タグで起動した `publish-specdojo`・`publish-docs-site`（0.7.1）・`publish-docs-lint`・文書サイトの `deploy`（`v0.10.0`）の workflow は成功した。
+- npm から `specdojo@0.10.0` を空の Git リポジトリへ入れ、`--version`（0.10.0）、`doctor`（前提がそろっている）、`init --yes --provider claude --no-tmux --exec`、`register add`、`guarded-push --help` が動くことを確かめた（2026-11-28）。
+- 残り: PJR-PXNQ で、main の Dependabot の警告が 0 件になったかを確かめる。
+
 ## 6. 関連ドキュメント
 
 - _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
