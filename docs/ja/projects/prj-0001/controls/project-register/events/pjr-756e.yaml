@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f4c602f1504443a2af72d838d06c9161
+  ts: "2026-11-28T14:00:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD の D2 の記法と 3 つの sample を、囲み・担当のレーン・時系列で描き直す
+    - field: description
+      from: ""
+      to: PJR-DM1N の決定に沿って cdfd-d2-rulebook に図の種類ごとの描き方を足し、cdfd-overview-sample・cdfd-sample・cdfd-uc-sample の図を描き直す
+    - field: input
+      from: ""
+      to: '["PJR-DM1N で、全体概要は業務のまとまりの囲み、プロセスグループ別は担当ごとのレーンと受け渡しの番号、ユースケース別は `sequence_diagram` で描くと決めた（indie、2026-11-28）","まず型の sample から直す。製品の CDFD は sample の形が決まってから PJR-T1D1 でそろえる（indie、2026-11-28）","担当 BA・期限 2026-12-31 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PYS2","PJR-DM1N"]'
