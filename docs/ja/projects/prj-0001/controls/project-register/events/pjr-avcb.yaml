@@ -135,3 +135,29 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_71acf01ef0e44edc8cacfc85776c9dcd
+- v: 1
+  id: reg_ac44998cfbe944729f5d7e34b8d53cb5
+  ts: "2026-11-28T07:58:15Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_ac000f217db0434bb079397ca40dba7a
+- v: 1
+  id: reg_34085171a6ae4c9b96cf380a8f00e68f
+  ts: "2026-11-28T08:04:25Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ac44998cfbe944729f5d7e34b8d53cb5

@@ -58,6 +58,7 @@ PJR-CA6G の決定に沿って、register close で note を done にできる�
 3. done: 規範の文書 3 つと、対応する英語版 rulebook を更新した。ガイドとコマンドリファレンスには対応する英語版がない。
 4. done: 保護されたオーケストレーター本文の変更案を 5.2 に記録した。
 5. done: executor 担当の整形・検査を実施し、検証の分担と CHANGELOG の文案を対応結果に記録した。親検証は runner が後続で実行する。
+6. done: 2 回目の実行で、ステータス遷移仕様の図・表・共通条件・CLI 制約と、分類一覧の note の説明を更新した。src・tests・v0.3.0 移行ガイドは変更していない。
 
 ## 5. 対応結果
 
@@ -69,6 +70,9 @@ PJR-CA6G の決定に沿って、register close で note を done にできる�
 - 再開時に前回の親検証ログを確認した。失敗 2 件は、比較用 todo 2 件のイベント履歴がなく `register build` が終了コード 1 を設定し、その値が reopen 後まで残ったことが原因だった。比較用 todo に初期イベントを追加し、build 直後にも終了コードを検証するよう修正した。reopen の実装変更は不要と判断し、一時登録簿で既定・明示の done から open へ戻せること、完了日時の削除と結論保持を確認した。
 - 結論の空文字・空白だけ・未設定値を表す `-` も未記入として拒否する。既存の結論があっても、今回使い終わった根拠を残すため `--conclusion` の明示を必須にした。
 - プロジェクト登録簿 作成ルール、登録簿運用ガイド、CLI コマンドリファレンスと、英語版 rulebook を更新した。
+- 2 回目の実行では、[[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] に note の利用終了（`T-41`、起票済み → 完了）と再開（`T-42`、完了 → 起票済み）を図と表の両方へ追加した。既存の `T-01`〜`T-40` は番号を維持し、note 以外に適用することを共通条件で明示した。CLI 制約には note の close は `done` のみ・結論必須、reject・defer は拒否、reopen は旧結論保持・完了日時削除と記載した。
+- [[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]] の note を、使い終わったら close で done にし、移した先または古くなった理由を結論に残す記録へ更新した。両文書に対応する英語版は存在しない。
+- 判断: 新しい遷移は既存参照を壊さないよう末尾の番号で追加した。note の終了・再開の確認者は、既存仕様の人間による終了判断に合わせて「項目 owner・レビュー担当」とした。note の着手・待機・審査など、PJR-CA6G で決まっていない経路の採否は既存の `M-01` に残し、決定済みの close・reopen と区別した。
 
 ### 5.2. オーケストレーター本文の変更案
 
@@ -89,7 +93,8 @@ note の扱いの段落は次へ置き換える。
 - Prettier 整形、変更 Markdown の lint、`node --import tsx tools/catalog-validate-if-configured.mjs`、`npm run validate:history-links`、`node --import tsx src/specdojo.ts register build --project prj-0001`、`git diff --check` は成功した。catalog 検証は既存の参照・未作成文書に関する警告を出したが、終了コードは 0。正確なコマンドは executor evidence にも記録する。
 - 再開時は整形、catalog 検証、履歴リンク検査、register build を再実行した。一時スクリプト `node --import tsx tmp/pjr-avcb-note-smoke.mjs` で note の close → build → reopen を既定・明示の done の両方で確認し、すべて成功した。スクリプトと一時登録簿は検証後に削除した。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・Markdown lint など指定済みの親検証は、pipeline の指示に従い runner に委ねる。
-- 確認したステータス定義（登録項目個票）には、note を継続記録とする旧い業務遷移と、close が note を拒むという現行制約の説明が残る。本項目で指定された規範 3 文書の修正と分け、PJR-CA6G の決定に合わせた設計の更新を後続で扱う。
+- 前回申し送ったステータス定義と分類一覧の旧い note の説明は、2 回目の実行で PJR-CA6G の決定に合わせて更新した。
+- 2 回目の検証: 変更した 3 Markdown ファイルの Prettier 整形、`node --import tsx tools/catalog-validate-if-configured.mjs`、`npm run validate:history-links`、`node --import tsx src/specdojo.ts register build --project prj-0001`、`git diff --check` が成功した。catalog の既存警告は残るが終了コードは 0。図と直下の表の新規遷移、既存番号の維持、CLI 実装との対応を差分で確認した。Markdown・Mermaid・frontmatter の lint と単体テストなどの指定済み親検証は runner が実行する。
 
 ### 5.4. CHANGELOG に書く事項
 
