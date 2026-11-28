@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-DV1R",
   "run_id": "pjr-dv1r-20261128T101104Z-866c3717",
-  "updated_at": "2026-11-28T10:16:31.719Z",
+  "updated_at": "2026-11-28T10:17:46.237Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -29,11 +29,11 @@
       "artifact_ref": null
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-28T10:16:31.719Z",
-      "completed_at": null,
+      "completed_at": "2026-11-28T10:17:46.237Z",
       "artifact_ref": null
     }
   },
