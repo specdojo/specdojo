@@ -60,4 +60,8 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-y5rd-civic-tech-comprehension-debt|PJR-Y5RD]] 理解の負債の位置づけの決定
+- [[specdojo:specdojo-philosophy]]
+- [[specdojo:needs-to-implementation-philosophy]]
+- [[specdojo:specdojo-overview-guide]]
+- [[specdojo:civic-tech-starter-guide]]
