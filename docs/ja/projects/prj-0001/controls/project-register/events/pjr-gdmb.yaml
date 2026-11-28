@@ -41,3 +41,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-HPAW"]'
+- v: 1
+  id: reg_9de75e8d02c14cf1b9cb6bfef26a275c
+  ts: "2026-11-28T05:21:01Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45371a3b87ea4692981b69d92f04cb1f
+- v: 1
+  id: reg_16a281f776e6449d84584bfcd41099bb
+  ts: "2026-11-28T05:37:55Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9de75e8d02c14cf1b9cb6bfef26a275c
