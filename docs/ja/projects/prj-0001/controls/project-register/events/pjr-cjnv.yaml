@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e3bf2812b2f848c9bab90c9a7c704100
+  ts: "2026-11-28T13:23:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 止めた routine をいつ、どれから再開するか
+    - field: description
+      from: ""
+      to: 2026-11-28 に codex の週間上限が近いため止めた 5 つの routine（dashboard-refresh・exec-cycle・exec-watch-scan・night-approved-register・nightly-integration-tests）を、いつ、どれから、どの agent で再開するかを決める
+    - field: input
+      from: ""
+      to: '["2026-11-28 に indie の依頼で、有効だった 5 つの routine を enabled: false にした（feature/prj-0001/pause-routines を develop に取り込み）。再開は indie の指示による","rtn-exec-cycle は `edit_by`・`review_by` が sol（codex）、見張りの診断は watch-diagnoser（codex terra）を使う。codex は 2026-12-01 1:00 JST まで使わない","担当 DEV・期限 2026-12-31 は indie の指示（2026-11-28）"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+    - field: due
+      from: ""
+      to: "2026-12-31"

@@ -1,0 +1,99 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_98070d73aef74d608b5a3a96f64b5823
+  ts: "2026-11-28T13:24:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの引き継ぎ（2026-11-28 13:24 UTC）
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: handoff
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-28"
+- v: 1
+  id: reg_788c34847c294266b50ce6f460c951fb
+  ts: "2026-11-28T13:25:13Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 期限を indie が決めた
+  changes:
+    - field: due
+      from: "-"
+      to: "2026-11-30"
+  previous_event_id: reg_98070d73aef74d608b5a3a96f64b5823
+- v: 1
+  id: reg_4f9d4ea7cf364d2da132f5b4eb0f9482
+  ts: "2026-11-28T13:25:51Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 引き継ぎ元と先 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 引き継ぎ元と先
+    - field: description
+      from: _TODO_
+      to: "- 引き継ぎ元: 2026-11-28 の対話のオーケストレーターのセッション（Claude Code、Opus 5.5）。v0.10.0 のリリース（PJR-VDHC）までを行った。 - 引き継ぎ先: 次のオーケストレーターのセッション（LLM は問わない）。受け取ったら、受け取った主体を `--by` にして close する。"
+  previous_event_id: reg_788c34847c294266b50ce6f460c951fb
+- v: 1
+  id: reg_cbdabf22c37b4f6aa38daff8e66be035
+  ts: "2026-11-28T13:26:31Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 有効な承認の範囲 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 有効な承認の範囲
+  previous_event_id: reg_4f9d4ea7cf364d2da132f5b4eb0f9482
+- v: 1
+  id: reg_4234dd7c63784e0b9fb478fc2638c158
+  ts: "2026-11-28T13:27:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 注意点 を書く
+  changes:
+    - field: section
+      from: ""
+      to: 注意点
+  previous_event_id: reg_cbdabf22c37b4f6aa38daff8e66be035
+- v: 1
+  id: reg_57d48f3115114e6cb5033c969120456a
+  ts: "2026-11-28T13:27:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 関連ドキュメント を書く
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_4234dd7c63784e0b9fb478fc2638c158
